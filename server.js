@@ -6,6 +6,9 @@ const app = express();
 // Connect to MongoDB (Database)
 connectDB();
 
+// Init Middleware for testing to send body in JSON
+app.use(express.json({ extended: false }));
+
 //EndPoint
 app.get('/', (req, res) =>
   res.json({
