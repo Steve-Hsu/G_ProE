@@ -17,13 +17,19 @@ app.get('/', (req, res) =>
   })
 );
 
-// Defines Routes -------------------
-// Authentication
-app.use('/api/company', require('./routes/company'));
-app.use('/api/users', require('./routes/users'));
-app.use('/api/auth', require('./routes/auth'));
-// Papers
-app.use('/api/bom', require('./routes/bom'));
+// Defines Routes ---------------------------------------------------------------
+// Authentication -------------------------
+// Only me access  - Register a company
+app.use('/registercomp', require('./routes/00_company'));
+// Compnay login
+app.use('/api/auth/company', require('./routes/10_authCom'));
+// Register a User
+app.use('/api/users', require('./routes/11_users'));
+// User login
+app.use('/api/auth/users', require('./routes/20_authUser'));
+
+// Cases          -------------------------
+// app.use('/api/bom', require('./routes/bom'));
 
 const PORT = process.env.PORT || 5000;
 

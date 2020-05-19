@@ -6,21 +6,13 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 
 // Schema
-const Company = require('../models/Company');
 const User = require('../models/User');
 
-// @route   GET api/auth for company
-// @desc    Get logged in user
-// @access  Private
-router.get('/company', (req, res) => {
-  res.send('Get loggoed in user');
-});
-
-// @route   POST api/auth for company
-// @desc    Register a user
+// @route   POST api/auth for user
+// @desc    loggin a user
 // @access  Public
 router.post(
-  '/company',
+  '/',
   [
     check('email', 'Please include a valid email').isEmail(),
     check('password', 'Password is required').exists(),
@@ -34,13 +26,13 @@ router.post(
     const { email, password } = req.body;
     try {
       // Check if database has this company
-      let company = await Company.findOne({ email });
-      if (!company) {
+      let user = await User.findOne({ email });
+      if (!user) {
         return res.status(400).json({ msg: 'Invalid Credentials' });
       }
 
       // Check the password
-      const isMatch = await bcrypt.compare(password, company.password);
+      const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
         return res.status(400).json({ msg: 'Invalid Credentials' });
       }
@@ -48,8 +40,8 @@ router.post(
       // JWT
       // payload : Waht we send to generate a JWT
       const payload = {
-        company: {
-          id: company.id,
+        user: {
+          id: user.id,
         },
       };
 
@@ -76,15 +68,8 @@ router.post(
 // @route   GET api/auth for user
 // @desc    Get logged in user
 // @access  Private
-router.get('/', (req, res) => {
+router.get('/company', (req, res) => {
   res.send('Get loggoed in user');
-});
-
-// @route   POST api/auth for user
-// @desc    Register a user
-// @access  Public
-router.post('/', (req, res) => {
-  res.send('Log in user');
 });
 
 module.exports = router;

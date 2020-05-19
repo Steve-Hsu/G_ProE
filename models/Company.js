@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const comSchema = mongoose.Schema({
+const ComSchema = mongoose.Schema({
   comName: {
     type: String,
     required: true,
@@ -20,4 +20,4 @@ const comSchema = mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('company', comSchema);
+module.exports = mongoose.model('company', ComSchema);
