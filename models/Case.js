@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const CaseSchema = mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'users',
+  },
   style: {
     type: String,
     required: true,
@@ -10,10 +14,10 @@ const CaseSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  // ColorWay
   cWay: {
     type: Array,
     required: true,
+    // ColorWay
   },
   size: {
     type: Array,

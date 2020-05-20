@@ -45,6 +45,7 @@ router.post(
         name,
         email,
         password,
+        company: req.company.id,
       });
 
       //bcrypt the password

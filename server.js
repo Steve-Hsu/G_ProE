@@ -29,7 +29,7 @@ app.use('/api/users', require('./routes/11_users'));
 app.use('/api/auth/users', require('./routes/20_authUser'));
 
 // Cases          -------------------------
-// app.use('/api/bom', require('./routes/bom'));
+app.use('/api/case', require('./routes/21_case'));
 
 const PORT = process.env.PORT || 5000;
 

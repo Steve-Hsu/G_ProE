@@ -9,7 +9,7 @@ const authUser = require('../middleware/authUser');
 // Schema
 const User = require('../models/User');
 
-// @route   Get api/auth
+// @route   Get api/auth/users
 // @desc    Get logged in as a user
 // @access  Private
 router.get('/', authUser, async (req, res) => {
@@ -22,7 +22,7 @@ router.get('/', authUser, async (req, res) => {
   }
 });
 
-// @route   POST api/auth for user
+// @route   POST api/auth/users
 // @desc    Auth user & get token
 // @access  Public
 router.post(

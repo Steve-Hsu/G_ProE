@@ -14,6 +14,16 @@ const ComSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  userLimit: {
+    // defines the company can have how many users
+    type: Number,
+    default: 5,
+  },
+  userNum: {
+    // defines how many user the company has generated
+    type: Number,
+    default: 0,
+  },
   date: {
     type: Date,
     default: Date.now,

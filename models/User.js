@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 
 const UserSchema = mongoose.Schema({
   // Crendential of the User
+  company: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'companies',
+  },
   name: {
     type: String,
     required: true,
