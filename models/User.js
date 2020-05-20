@@ -20,22 +20,27 @@ const UserSchema = mongoose.Schema({
   case: {
     type: Boolean,
     required: true,
+    default: false,
   },
   bom: {
     type: Boolean,
     required: true,
+    default: false,
   },
   cspt: {
     type: Boolean,
     required: true,
+    default: false,
   },
   mp: {
     type: Boolean,
     required: true,
+    default: false,
   },
   po: {
     type: Boolean,
     required: true,
+    default: false,
   },
 
   // Date

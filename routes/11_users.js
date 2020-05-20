@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const { check, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const config = require('config');
+const authCom = require('../middleware/authCom');
 
 // Schema
 const User = require('../models/User');
@@ -11,7 +14,8 @@ const User = require('../models/User');
 // @access  Public
 router.post(
   '/',
-  // The [] is a middleware 'express-validator' for checking the values the user enter is in right format or not
+  // 1st middleware
+  //The [] is a middleware 'express-validator' for checking the values the user enter is in right format or not
   [
     check('name', 'Please add name').not().isEmpty(),
     check('email', 'Please include a valid email').isEmail(),
@@ -20,6 +24,8 @@ router.post(
       'Please enter a password with 6 or more characters'
     ).isLength({ min: 6 }),
   ],
+  // 2nd middleware - Only the authrized company can register a new user
+  authCom,
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -47,7 +53,25 @@ router.post(
 
       await user.save();
 
-      res.send('User saved');
+      // JWT
+      const payload = {
+        user: {
+          id: user.id,
+        },
+      };
+
+      // Generate JWT
+      jwt.sign(
+        payload,
+        config.get('jwtSecret'),
+        {
+          expiresIn: 36000,
+        },
+        (err, token) => {
+          if (err) throw err;
+          res.json({ token });
+        }
+      );
     } catch (err) {
       console.log(err.message);
       res.status(500).send('Server Error');

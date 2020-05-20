@@ -5,12 +5,26 @@ const { check, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('config');
+const authCom = require('../middleware/authCom');
 
 // Schema
 const Company = require('../models/Company');
 
+// @route   Get api/auth
+// @desc    Get logged in as a company
+// @access  Private
+router.get('/', authCom, async (req, res) => {
+  try {
+    const company = await Company.findById(req.company.id).select('-password');
+    res.json(company);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 // @route   POST api/auth for company
-// @desc    loggin a user
+// @desc    Auth company & get token
 // @access  Public
 router.post(
   '/',
