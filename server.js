@@ -19,16 +19,20 @@ app.get('/', (req, res) =>
 
 // Defines Routes ---------------------------------------------------------------
 // Authentication -------------------------
+// @Steve   --------------
 // Only me access  - Register a company
 app.use('/registercomp', require('./routes/00_company'));
+
+// @COMPANY --------------
 // Compnay login
 app.use('/api/auth/company', require('./routes/10_authCom'));
 // Register a User
 app.use('/api/users', require('./routes/11_users'));
+
+// @Users   --------------
 // User login
 app.use('/api/auth/users', require('./routes/20_authUser'));
-
-// Cases          -------------------------
+// Cases
 app.use('/api/case', require('./routes/21_case'));
 
 const PORT = process.env.PORT || 5000;

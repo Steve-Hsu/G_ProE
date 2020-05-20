@@ -5,6 +5,10 @@ const CaseSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'users',
   },
+  company: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'companies',
+  },
   style: {
     type: String,
     required: true,

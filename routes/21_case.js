@@ -5,10 +5,10 @@ const { check, validationResult } = require('express-validator');
 
 const Case = require('../models/Case');
 
-// @route   GET api/cases/:id
-// @desc    Read the cases from database
+// @route   GET api/case/user/:id
+// @desc    Read the user's cases from database
 // @access  Private
-router.get('/', authUser, async (req, res) => {
+router.get('/user', authUser, async (req, res) => {
   try {
     const cases = await Case.find({ user: req.user.id }).sort({
       date: -1,
@@ -20,7 +20,22 @@ router.get('/', authUser, async (req, res) => {
   }
 });
 
-// @route   POST api/cases/:id
+// @route   GET api/case/company/:id
+// @desc    Read the company's cases from database
+// @access  Private
+router.get('/company', authUser, async (req, res) => {
+  try {
+    const cases = await Case.find({ company: req.user.company }).sort({
+      date: -1,
+    });
+    res.json(cases);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route   POST api/case/:id
 // @desc    Add a new case to database
 // @access  Private
 router.post(
@@ -36,7 +51,7 @@ router.post(
       const newCase = new Case({
         user: req.user.id,
         // I want insert the grandparent ID, the company id, but it seems not allow
-        // company: req.user.company,
+        company: req.user.company,
         style,
         client,
         cWay,

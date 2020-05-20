@@ -9,6 +9,21 @@ const authCom = require('../middleware/authCom');
 // Schema
 const User = require('../models/User');
 
+// @route   GET api/users
+// @desc    Get the list of all user
+// @access  Private
+router.get('/', authCom, async (req, res) => {
+  try {
+    const users = await User.find({ company: req.company.id }).sort({
+      date: -1,
+    });
+    res.json(users);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 // @route   POST api/users
 // @desc    Register a user
 // @access  Public
@@ -58,6 +73,7 @@ router.post(
       const payload = {
         user: {
           id: user.id,
+          company: req.company.id,
         },
       };
 
