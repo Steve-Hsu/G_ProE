@@ -110,7 +110,7 @@ router.post(
       );
       // Update the userNum in Company -------------------------------------------
       // If the user added, add 1 for the userNum of the company to restrict the number of user.
-      Company.find({ _id: req.company.id }, function (err, obj) {
+      await Company.find({ _id: req.company.id }, function (err, obj) {
         const userNum = obj[0].userNum + 1;
         Company.findOneAndUpdate(
           { _id: req.company.id },

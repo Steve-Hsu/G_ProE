@@ -4,6 +4,7 @@ const authUser = require('../middleware/authUser');
 const { check, validationResult } = require('express-validator');
 
 const Case = require('../models/Case');
+const User = require('../models/User');
 
 // @route   GET api/case/user/:id
 // @desc    Read the user's cases from database
@@ -42,6 +43,13 @@ router.post(
   '/',
   [authUser, [check('style', 'Style is required')]],
   async (req, res) => {
+    // Check the authority of the user for add new case --------------------------
+    let user = await User.findById(req.user.id);
+    if (!user.cases) {
+      return res.status(400).json({ msg: 'Out of authority' });
+    }
+
+    // Generate case --------------------------------------------
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -73,24 +81,37 @@ router.post(
 // @Steve   Don't allow to change the name of style. Prevent messing up the jobs of user.
 // @access  Private
 router.put('/:id', authUser, async (req, res) => {
+  // Check the authority of the user for add new case --------------------------
+  let user = await User.findById(req.user.id);
+  if (!user.cases) {
+    return res.status(400).json({
+      msg: 'Out of authority',
+    });
+  }
+
+  // Update case ---------------------------------------------------------------
   // req.body, fetch the body of browser.
-  const { client, cWay, size, materials } = req.body;
+  const { client, cWay, size } = req.body;
 
   // Build contact object
   const caseFields = {};
   if (client) caseFields.client = client;
   if (cWay) caseFields.cWay = cWay;
   if (size) caseFields.size = size;
-  if (materials) caseFields.materials = materials;
 
   try {
     // Get the id of case from URL by params
     let cases = await Case.findById(req.params.id);
-    if (!cases) return res.status(404).json({ msg: 'Case not found' });
+    if (!cases)
+      return res.status(404).json({
+        msg: 'Case not found',
+      });
 
     // Make sure user owns case
     if (cases.user.toString() !== req.user.id) {
-      return res.status(401).json({ msg: 'Not authorized' });
+      return res.status(401).json({
+        msg: 'Not authorized',
+      });
     }
 
     cases = await Case.findByIdAndUpdate(
