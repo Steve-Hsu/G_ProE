@@ -8,6 +8,7 @@ const authCom = require('../middleware/authCom');
 
 // Schema
 const User = require('../models/User');
+const Company = require('../models/Company');
 
 // @route   GET api/users
 // @desc    Get the list of all user
@@ -42,6 +43,24 @@ router.post(
   // 2nd middleware - Only the authrized company can register a new user
   authCom,
   async (req, res) => {
+    // check if the user number is out of limit of the company -------------------
+    let isUserFull = false;
+    await Company.find({ _id: req.company.id }, function (err, obj) {
+      const userNumLimit = obj[0].userNumLimit;
+      const userNum = obj[0].userNum;
+      try {
+        if (userNum >= userNumLimit) {
+          return (isUserFull = true);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    });
+    if (isUserFull) {
+      return res.status(400).json({ msg: 'User is full' });
+    }
+
+    // Generate user --------------------------------------------------------------
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -89,6 +108,23 @@ router.post(
           res.json({ token });
         }
       );
+      // Update the userNum in Company -------------------------------------------
+      // If the user added, add 1 for the userNum of the company to restrict the number of user.
+      Company.find({ _id: req.company.id }, function (err, obj) {
+        const userNum = obj[0].userNum + 1;
+        Company.findOneAndUpdate(
+          { _id: req.company.id },
+          { $set: { userNum: userNum } },
+          function (err, results) {
+            if (err) {
+              return res.status(500).json({
+                msg: 'Server Error, In setting userNum',
+              });
+            }
+          }
+        );
+        console.log(`New user is set up, userNum is now ${userNum}`);
+      });
     } catch (err) {
       console.log(err.message);
       res.status(500).send('Server Error');

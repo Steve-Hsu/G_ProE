@@ -1,4 +1,8 @@
 const mongoose = require('mongoose');
+// Make Mongoose use `findOneAndUpdate()`. Note that this option is `true`
+// Check : https://mongoosejs.com/docs/deprecations.html#findandmodify
+// by default, you need to set it to false.
+mongoose.set('useFindAndModify', false);
 
 const UserSchema = mongoose.Schema({
   // Crendential of the User

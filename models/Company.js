@@ -1,4 +1,8 @@
 const mongoose = require('mongoose');
+// Make Mongoose use `findOneAndUpdate()`. Note that this option is `true`
+// Check : https://mongoosejs.com/docs/deprecations.html#findandmodify
+// by default, you need to set it to false.
+mongoose.set('useFindAndModify', false);
 
 const ComSchema = mongoose.Schema({
   comName: {
@@ -14,7 +18,7 @@ const ComSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  userLimit: {
+  userNumLimit: {
     // defines the company can have how many users
     type: Number,
     default: 5,
