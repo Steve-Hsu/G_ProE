@@ -50,7 +50,6 @@ router.post(
     try {
       const newCase = new Case({
         user: req.user.id,
-        // I want insert the grandparent ID, the company id, but it seems not allow
         company: req.user.company,
         style,
         client,
@@ -69,8 +68,8 @@ router.post(
   }
 );
 
-// @route   PUT api/bom/:id
-// @desc    Update bom
+// @route   PUT api/case/:id
+// @desc    Update case
 // @access  Private
 router.put('/:id', (req, res) => {
   res.send('Update a bom');

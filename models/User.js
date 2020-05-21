@@ -25,7 +25,8 @@ const UserSchema = mongoose.Schema({
 
     // Right of the user
   },
-  case: {
+  cases: {
+    // case is a keyword in javaScript so here call case as cases.
     type: Boolean,
     required: true,
     default: false,

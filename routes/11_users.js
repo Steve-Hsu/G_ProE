@@ -136,4 +136,43 @@ router.post(
   }
 );
 
+// @route   PUT api/users/:id
+// @desc    Update a user
+// @Steve   Don't allow the company to update the password of the user. It will prevent some dispution. Whereas the user miss his password, the account will not lock down any function, the company jsut need to create a new account to take care the cases of the order missing accout. Or use another account with same right to take care the cases.
+// @access  Private
+router.put('/:id', authCom, async (req, res) => {
+  const { cases, bom, cspt, mp, po, name, email } = req.body;
+
+  // Build a user object
+  const userFields = {};
+  if (cases) userFields.cases = cases;
+  if (bom) userFields.bom = bom;
+  if (cspt) userFields.cspt = cspt;
+  if (mp) userFields.mp = mp;
+  if (po) userFields.po = po;
+  if (name) userFields.name = name;
+  if (email) userFields.email = email;
+
+  try {
+    // Get the id from URL by params
+    let user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ msg: 'User not found' });
+
+    // Make sure company own this user
+    if (user.company.toString() !== req.company.id) {
+      return res.status(401).json({ msg: 'Not authorized' });
+    }
+    user = await User.findByIdAndUpdate(
+      req.params.id,
+      { $set: userFields },
+      // if there are no this user, just create a new user.
+      { new: true }
+    );
+    res.json(user);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 module.exports = router;
