@@ -130,11 +130,33 @@ router.put('/:id', authUser, async (req, res) => {
   }
 });
 
-// @route   DELETE api/bom/:id
-// @desc    Delete bom
+// @route   DELETE api/case/:id
+// @desc    Delete case
+// @Steve   Only the creator of the case have the right to delete the case.
 // @access  Private
-router.delete('/:id', (req, res) => {
-  res.send('Delete contacts');
+router.delete('/:id', authUser, async (req, res) => {
+  try {
+    // Get the id of the case from URL by params
+    let cases = await Case.findById(req.params.id);
+
+    if (!cases) return res.status(404).json({ msg: 'Contact not found' });
+
+    // Make sure user owns contact
+    if (cases.user.toString() !== req.user.id) {
+      return res
+        .status(401)
+        .json({ msg: 'Not authorized to delete this case' });
+    }
+
+    await Case.findByIdAndRemove(req.params.id);
+
+    res.json({
+      msg: 'Case removed',
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
 });
 
 module.exports = router;
