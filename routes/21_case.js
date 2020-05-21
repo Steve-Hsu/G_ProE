@@ -70,9 +70,41 @@ router.post(
 
 // @route   PUT api/case/:id
 // @desc    Update case
+// @Steve   Don't allow to change the name of style. Prevent messing up the jobs of user.
 // @access  Private
-router.put('/:id', (req, res) => {
-  res.send('Update a bom');
+router.put('/:id', authUser, async (req, res) => {
+  // req.body, fetch the body of browser.
+  const { client, cWay, size, materials } = req.body;
+
+  // Build contact object
+  const caseFields = {};
+  if (client) caseFields.client = client;
+  if (cWay) caseFields.cWay = cWay;
+  if (size) caseFields.size = size;
+  if (materials) caseFields.materials = materials;
+
+  try {
+    // Get the id of case from URL by params
+    let cases = await Case.findById(req.params.id);
+    if (!cases) return res.status(404).json({ msg: 'Case not found' });
+
+    // Make sure user owns case
+    if (cases.user.toString() !== req.user.id) {
+      return res.status(401).json({ msg: 'Not authorized' });
+    }
+
+    cases = await Case.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: caseFields,
+      },
+      { new: true }
+    );
+    res.json(cases);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
 });
 
 // @route   DELETE api/bom/:id
