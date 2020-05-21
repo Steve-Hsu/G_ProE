@@ -43,7 +43,7 @@ router.post(
   '/',
   [authUser, [check('style', 'Style is required')]],
   async (req, res) => {
-    // Check the authority of the user for add new case --------------------------
+    // Check if the user has authority to add a new case --------------------------
     let user = await User.findById(req.user.id);
     if (!user.cases) {
       return res.status(400).json({ msg: 'Out of authority' });
@@ -81,7 +81,7 @@ router.post(
 // @Steve   Don't allow to change the name of style. Prevent messing up the jobs of user.
 // @access  Private
 router.put('/:id', authUser, async (req, res) => {
-  // Check the authority of the user for add new case --------------------------
+  // Check if the user has authority to update case ---------------------------
   let user = await User.findById(req.user.id);
   if (!user.cases) {
     return res.status(400).json({
@@ -89,30 +89,32 @@ router.put('/:id', authUser, async (req, res) => {
     });
   }
 
+  // Check if the user have the authority to update the case -------------------
+  let cases = await Case.findById(req.params.id);
+  // If the user is case creator, pass !
+  if (cases.user.toString() === req.user.id) {
+    // if the user's id is added to authorizedUser of this case, pass !
+  } else if (cases.authorizedUser.includes(req.user.id)) {
+  } else {
+    return res.status(400).json({ msg: 'Not an authorized user.' });
+  }
+
   // Update case ---------------------------------------------------------------
   // req.body, fetch the body of browser.
-  const { client, cWay, size } = req.body;
+  const { client, cWay, size, authorizedUser } = req.body;
 
   // Build contact object
   const caseFields = {};
   if (client) caseFields.client = client;
   if (cWay) caseFields.cWay = cWay;
   if (size) caseFields.size = size;
-
+  if (authorizedUser) caseFields.authorizedUser = authorizedUser;
   try {
     // Get the id of case from URL by params
-    let cases = await Case.findById(req.params.id);
     if (!cases)
       return res.status(404).json({
         msg: 'Case not found',
       });
-
-    // Make sure user owns case
-    if (cases.user.toString() !== req.user.id) {
-      return res.status(401).json({
-        msg: 'Not authorized',
-      });
-    }
 
     cases = await Case.findByIdAndUpdate(
       req.params.id,
