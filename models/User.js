@@ -22,9 +22,8 @@ const UserSchema = mongoose.Schema({
   password: {
     type: String,
     required: true,
-
-    // Right of the user
   },
+  // Authorities of the user
   cases: {
     // case is a keyword in javaScript so here call case as cases.
     type: Boolean,

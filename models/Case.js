@@ -45,6 +45,14 @@ const CaseSchema = mongoose.Schema({
       material: {
         type: String,
       },
+      position: {
+        // Which part of the garment use this material.
+        type: String,
+      },
+      description: {
+        // Describing how the material used in this garment. This column bascically only for human not for machines to read.
+        type: String,
+      },
       color: {
         type: String,
       },
@@ -52,13 +60,14 @@ const CaseSchema = mongoose.Schema({
         // Such as zip,  L:79cm, the L is sizeOfCloth, the 79cm is specForSize
         type: String,
       },
-      cspt: {
-        // consumption, The fabric will be float like 1.79, and zip may be 1 or 2
-        type: Number,
-      },
       unit: {
         // pcs, yd, m, etc. In thw browser, we must constrain the way to enter the unit. It affect how to count the number of the material.
         type: String,
+      },
+      // Authority for cspt only ----
+      cspt: {
+        // consumption, The fabric will be float like 1.79, and zip may be 1 or 2
+        type: Number,
       },
     },
   ],
