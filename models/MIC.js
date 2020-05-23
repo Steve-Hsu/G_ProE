@@ -4,7 +4,9 @@ const mongoose = require('mongoose');
 // by default, you need to set it to false.
 mongoose.set('useFindAndModify', false);
 
-const MaterialSchema = mongoose.Schema({
+// MIC : Material Identify Code.
+// It will help to check if the materials is a same material
+const MICSchema = mongoose.Schema({
   item: {
     // it a term to describe the material, such as "fabric", "zip", "snap"
     type: String,
@@ -32,4 +34,4 @@ const MaterialSchema = mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('material', MaterialSchema);
+module.exports = mongoose.model('MIC', MICSchema);

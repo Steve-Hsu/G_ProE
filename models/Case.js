@@ -42,8 +42,26 @@ const CaseSchema = mongoose.Schema({
         type: String,
       },
       // Actually this "material" should be an object, however, I want it saved as ID in database. When user need it, it will fetch the object by ID from database to from a complete mateiral on the browser for the user.
-      material: {
-        type: String,
+      mic: {
+        _id: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'MICs',
+        },
+        item: {
+          // it a term to describe the material, such as "fabric", "zip", "snap"
+          type: String,
+        },
+        spec: {
+          type: String,
+        },
+        supplier: {
+          type: String,
+          required: true,
+        },
+        ref_no: {
+          type: String,
+          required: true,
+        },
       },
       position: {
         // Which part of the garment use this material.
