@@ -5,7 +5,6 @@ const { check, validationResult } = require('express-validator');
 
 const Case = require('../models/Case');
 const User = require('../models/User');
-const MIC = require('../models/MIC');
 
 // @route   GET api/bom/user/:id
 // @desc    Read the user's cases from database
@@ -16,6 +15,7 @@ router.get('/user', authUser, async (req, res) => {
 
 // @route   PUT api/bom/:id
 // @desc    Update bom in case
+// @Steve   Notice: The method put have the feature updating entire data, as well as in this route, we instance the req.body.mateirals and push it to the mongoDB, both way are updating entire .materials in collection "case", it means if there are some you don't wnat to update, you have to keep it there with the updated one to be pushed together to the cloud. Or, it will be, similar to be deleted, repalced to be empty. 2020/05/24
 // @access  Private
 router.put('/:id', authUser, async (req, res) => {
   // Check if the user has authority to update case ---------------------------
@@ -26,8 +26,16 @@ router.put('/:id', authUser, async (req, res) => {
     });
   }
 
-  // Check if the user have the authority to update the case -------------------
+  // Check if the user have the authority to update this specific case -------------------
+  // Get the id of case from URL by params
   let cases = await Case.findById(req.params.id);
+
+  // If the case dosen't exist
+  if (!cases)
+    return res.status(404).json({
+      msg: 'Case not found',
+    });
+
   // If the user is case creator, pass !
   if (cases.user.toString() === req.user.id) {
     // if the user's id is added to authorizedUser of this case, pass !
@@ -35,85 +43,27 @@ router.put('/:id', authUser, async (req, res) => {
   } else {
     return res.status(400).json({ msg: 'Not an authorized user.' });
   }
-  // Get the id of case from URL by params
-  if (!cases)
-    return res.status(404).json({
-      msg: 'Case not found',
-    });
 
-  // Update case and update or generate material ---------------------------------------------------------------
+  // Update entire case.materials and it some are not exist before, just generate it -------------------------------------------
   // req.body, fetch the body of browser.
-  async function makefields(body) {
-    let caseFields = { materials: [] };
-    caseFields.materials = await body;
+  const caseFields = { materials: [] };
+  caseFields.materials = await req.body.materials;
 
-    // Generate MIC or fatch _id of MIC
-    caseFields.materials.forEach(async (m) => {
-      if (m.mic) {
-        let mic = await MIC.findOne({
-          IC: `${m.mic.spec}${m.mic.supplier}${m.mic.ref_no}`
-            .toString()
-            .toLowerCase()
-            .trim(),
-        });
-
-        if (!mic) {
-          // If not, generate a new mic
-          let mic = new MIC({
-            item: m.mic.item,
-            spec: m.mic.spec,
-            supplier: m.mic.supplier,
-            ref_no: m.mic.ref_no,
-            IC: (m.mic.spec + m.mic.supplier + m.mic.ref_no)
-              .toString()
-              .toLowerCase()
-              .trim(),
-          });
-          await mic.save();
-        }
-        console.log('1 - this is No-', m.key, ' mic:', mic);
-
-        // If the mic exist, insert it to the material.mic
-        m.mic._id = await mic._id;
-        m.mic.item = await mic.item;
-        m.mic.spec = await mic.spec;
-        m.mic.supplier = await mic.supplier;
-        m.mic.ref_no = await mic.ref_no;
-      } else {
-        console.log("The body don't have mic");
-        res.status(500).send('Server Error');
-      }
-      console.log('2 - this is No-', m.key, ' m.mic:', m.mic);
-    });
-    return caseFields;
-  }
-
-  async function updateDB(field, id) {
-    let cases = await Case.findById(id);
-    // Generate or Update Materials
-
-    try {
-      cases = await Case.findByIdAndUpdate(
-        { _id: id },
-        {
-          $set: field,
-          //   $set: { color: 'white' },
-        },
-        { new: true }
-      );
-      console.log('4 - write in the dataBase');
-      res.json(cases);
-    } catch (err) {
-      console.log(err);
-      res.status(500).send('Server Error');
-    }
-  }
-  const field = await makefields(req.body.materials);
   try {
-    updateDB(field, req.params.id);
+    cases = await Case.findByIdAndUpdate(
+      { _id: req.params.id },
+      {
+        $set: caseFields,
+        //   $set: { color: 'white' },
+      },
+      { new: true }
+    );
+
+    console.log('Written in dataBase');
+    return res.json(cases);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server Error');
+    return res.status(500).send('Server Error');
   }
 });
 
