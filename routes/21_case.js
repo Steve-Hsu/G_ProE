@@ -106,6 +106,7 @@ router.put('/:id', authUser, async (req, res) => {
   // Build case object
   const caseFields = {};
   if (client) caseFields.client = client;
+  // The 3 varaible below are arries, so if you update you must put new data with old datas all together, or you will only get new data in the database, and old data all deleted.
   if (cWay) caseFields.cWay = cWay;
   if (size) caseFields.size = size;
   if (authorizedUser) caseFields.authorizedUser = authorizedUser;

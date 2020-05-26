@@ -79,7 +79,7 @@ const CaseSchema = mongoose.Schema({
         type: String,
       },
       // Authority for cspt only ----
-      cspt: {
+      cst: {
         // consumption, The fabric will be float like 1.79, and zip may be 1 or 2
         type: Number,
       },

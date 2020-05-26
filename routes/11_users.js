@@ -141,13 +141,13 @@ router.post(
 // @Steve   Don't allow the company to update the password of the user. It will prevent some dispution. Whereas the user miss his password, the account will not lock down any function, the company jsut need to create a new account to take care the cases of the order missing accout. Or use another account with same right to take care the cases.
 // @access  Private
 router.put('/:id', authCom, async (req, res) => {
-  const { cases, bom, cspt, mp, po, name, email } = req.body;
+  const { cases, bom, cst, mp, po, name, email } = req.body;
 
   // Build a user object
   const userFields = {};
   if (cases) userFields.cases = cases;
   if (bom) userFields.bom = bom;
-  if (cspt) userFields.cspt = cspt;
+  if (cst) userFields.cst = cst;
   if (mp) userFields.mp = mp;
   if (po) userFields.po = po;
   if (name) userFields.name = name;
@@ -155,6 +155,7 @@ router.put('/:id', authCom, async (req, res) => {
 
   try {
     // Get the id from URL by params
+    // The method .select('-password) is for not showing the password on result
     let user = await User.findById(req.params.id);
     if (!user) return res.status(404).json({ msg: 'User not found' });
 
@@ -167,7 +168,8 @@ router.put('/:id', authCom, async (req, res) => {
       { $set: userFields },
       // if there are no this user, just create a new user.
       { new: true }
-    );
+      // The method .select('-password) is for not showing the password on result
+    ).select('-password');
     res.json(user);
   } catch (err) {
     console.error(err.message);
@@ -214,12 +216,12 @@ router.delete('/:id/', authCom, async (req, res) => {
           );
           console.log(`New user is set up, userNum is now ${userNum}`);
         });
-        console.log('Removed the item');
+        console.log('Removed the User');
       }
     });
 
     res.json({
-      msg: 'the material is removed from Bom',
+      msg: 'the User is removed from Bom',
     });
   } catch (err) {
     console.error(err.message);
