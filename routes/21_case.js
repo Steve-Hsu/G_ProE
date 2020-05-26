@@ -5,8 +5,9 @@ const { check, validationResult } = require('express-validator');
 
 const Case = require('../models/Case');
 const User = require('../models/User');
+const CaseMtrl = require('../models/CaseMaterial');
 
-// @route   GET api/case/user/:id
+// @route   GET api/case/user
 // @desc    Read the user's cases from database
 // @access  Private
 router.get('/user', authUser, async (req, res) => {
@@ -21,7 +22,7 @@ router.get('/user', authUser, async (req, res) => {
   }
 });
 
-// @route   GET api/case/company/:id
+// @route   GET api/case/company
 // @desc    Read the company's cases from database
 // @access  Private
 router.get('/company', authUser, async (req, res) => {
@@ -36,7 +37,7 @@ router.get('/company', authUser, async (req, res) => {
   }
 });
 
-// @route   POST api/case/:id
+// @route   POST api/case
 // @desc    Add a new case to database
 // @access  Private
 router.post(
@@ -150,6 +151,8 @@ router.delete('/:id', authUser, async (req, res) => {
     }
 
     await Case.findByIdAndRemove(req.params.id);
+    // Delete the caseMaterials belong to the case
+    await CaseMtrl.deleteMany({ caseId: req.params.id });
 
     res.json({
       msg: 'Case removed',

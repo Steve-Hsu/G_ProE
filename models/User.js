@@ -30,7 +30,8 @@ const UserSchema = mongoose.Schema({
     required: true,
     default: false,
   },
-  bom: {
+  mtrl: {
+    // Material,
     type: Boolean,
     required: true,
     default: false,

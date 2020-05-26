@@ -31,60 +31,6 @@ const CaseSchema = mongoose.Schema({
     type: Array,
     required: true,
   },
-  // * materials: array, contains the IDs of materials.
-  materials: [
-    {
-      // ColorWay, for which colorWay to use this material
-      cWay: {
-        type: String,
-      },
-      size: {
-        type: String,
-      },
-      item: {
-        // it a term to describe the material, such as "fabric", "zip", "snap"
-        type: String,
-      },
-      spec: {
-        // -- ** Used to be 1 of the 3 Mics, crucial info of material ** --
-        type: String,
-      },
-      supplier: {
-        // -- ** Used to be 1 of the 3 Mics, crucial info of material ** --
-        type: String,
-        required: true,
-      },
-      ref_no: {
-        // -- ** Used to be 1 of the 3 Mics, crucial info of material ** --
-        type: String,
-        required: true,
-      },
-      position: {
-        // Which part of the garment use this material.
-        type: String,
-      },
-      description: {
-        // Describing how the material used in this garment. This column bascically only for human not for machines to read.
-        type: String,
-      },
-      color: {
-        type: String,
-      },
-      specForSize: {
-        // Such as zip,  L:79cm, the L is sizeOfCloth, the 79cm is specForSize
-        type: String,
-      },
-      unit: {
-        // pcs, yd, m, etc. In thw browser, we must constrain the way to enter the unit. It affect how to count the number of the material.
-        type: String,
-      },
-      // Authority for cspt only ----
-      cst: {
-        // consumption, The fabric will be float like 1.79, and zip may be 1 or 2
-        type: Number,
-      },
-    },
-  ],
   date: {
     // The date, this "case" established on the date base, it can be the register date of the case,
     type: Date,

@@ -141,12 +141,12 @@ router.post(
 // @Steve   Don't allow the company to update the password of the user. It will prevent some dispution. Whereas the user miss his password, the account will not lock down any function, the company jsut need to create a new account to take care the cases of the order missing accout. Or use another account with same right to take care the cases.
 // @access  Private
 router.put('/:id', authCom, async (req, res) => {
-  const { cases, bom, cst, mp, po, name, email } = req.body;
+  const { cases, mtrl, cst, mp, po, name, email } = req.body;
 
   // Build a user object
   const userFields = {};
   if (cases) userFields.cases = cases;
-  if (bom) userFields.bom = bom;
+  if (mtrl) userFields.mtrl = mtrl;
   if (cst) userFields.cst = cst;
   if (mp) userFields.mp = mp;
   if (po) userFields.po = po;
