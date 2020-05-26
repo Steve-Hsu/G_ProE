@@ -35,17 +35,20 @@ const UserSchema = mongoose.Schema({
     required: true,
     default: false,
   },
-  cspt: {
+  cst: {
+    // consumption of materials, for sample room to fill in
     type: Boolean,
     required: true,
     default: false,
   },
   mp: {
+    // material price.
     type: Boolean,
     required: true,
     default: false,
   },
   po: {
+    // purchase order
     type: Boolean,
     required: true,
     default: false,

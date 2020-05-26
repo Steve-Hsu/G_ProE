@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const authUser = require('../middleware/authUser');
+// Not set up yet, for check the value entered by user at the some specific column
 const { check, validationResult } = require('express-validator');
 
 const Case = require('../models/Case');
@@ -9,13 +10,14 @@ const User = require('../models/User');
 // @route   GET api/bom/user/:id
 // @desc    Read the user's cases from database
 // @access  Private
+// This read might not necessary, for the bom will be read when user to check the case.
 router.get('/user', authUser, async (req, res) => {
   res.send('You got bom');
 });
 
 // @route   PUT api/bom/:id
 // @desc    Update bom in case
-// @Steve   Notice: The method put have the feature updating entire data, as well as in this route, we instance the req.body.mateirals and push it to the mongoDB, both way are updating entire .materials in collection "case", it means if there are some you don't wnat to update, you have to keep it there with the updated one to be pushed together to the cloud. Or, it will be, similar to be deleted, repalced to be empty. 2020/05/24
+// @Steve   Notice: The method PUT have the feature updating entire data, as well as in this route, we instance the req.body.mateirals and push it to the mongoDB, both way are updating entire .materials in collection "case", it means if there are some you don't wnat to update, you have to keep it there with the updated one to be pushed together to the cloud. Or, it will be, similar to be deleted, repalced to be empty. 2020/05/24
 // @access  Private
 router.put('/:id', authUser, async (req, res) => {
   // Check if the user has authority to update case ---------------------------
@@ -70,7 +72,7 @@ router.put('/:id', authUser, async (req, res) => {
 // @route   DELETE api/bom/:id
 // @desc    Delete material in bom
 // @access  Private
-router.delete('/:caseID/:bomID', authUser, async (req, res) => {
+router.delete('/:caseID/:materialID', authUser, async (req, res) => {
   // Check if the user has authority to update case ---------------------------
   let user = await User.findById(req.user.id);
   if (!user.bom) {
@@ -91,12 +93,12 @@ router.delete('/:caseID/:bomID', authUser, async (req, res) => {
   try {
     // Get the id of the case from URL by params
     let cases = await Case.findById(req.params.caseID);
-    if (!cases) return res.status(404).json({ msg: 'Contact not found' });
+    if (!cases) return res.status(404).json({ msg: 'Case not found' });
 
     // Delete the object in the array materials
     await Case.updateOne(
       { _id: req.params.caseID },
-      { $pull: { materials: { _id: req.params.bomID } } },
+      { $pull: { materials: { _id: req.params.materialID } } },
       function (err) {
         if (err) {
           console.log(err);

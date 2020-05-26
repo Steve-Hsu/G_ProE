@@ -175,4 +175,56 @@ router.put('/:id', authCom, async (req, res) => {
   }
 });
 
+// @route   DELETE api/users/:id
+// @desc    Delete User
+// @access  Private
+router.delete('/:id/', authCom, async (req, res) => {
+  // Get the id from URL by params
+  let user = await User.findById(req.params.id);
+  if (!user) return res.status(404).json({ msg: 'User not found' });
+  // Make sure company own this user --------------------------------------
+  if (user.company.toString() !== req.company.id) {
+    return res.status(401).json({ msg: 'Not authorized' });
+  }
+
+  try {
+    // Get the id of the case from URL by params
+    let user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ msg: 'User not found' });
+
+    // Delete the User
+    await User.deleteOne({ _id: req.params.id }, async function (err) {
+      if (err) {
+        console.log(err);
+      } else {
+        // Update the userNum in Company -------------------------------------------
+        // If the user deleted, minus 1 for the userNum of the company for restriction of user quantity.
+        await Company.find({ _id: req.company.id }, function (err, obj) {
+          const userNum = obj[0].userNum - 1;
+          Company.findOneAndUpdate(
+            { _id: req.company.id },
+            { $set: { userNum: userNum } },
+            function (err, results) {
+              if (err) {
+                return res.status(500).json({
+                  msg: 'Server Error, In setting userNum',
+                });
+              }
+            }
+          );
+          console.log(`New user is set up, userNum is now ${userNum}`);
+        });
+        console.log('Removed the item');
+      }
+    });
+
+    res.json({
+      msg: 'the material is removed from Bom',
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 module.exports = router;

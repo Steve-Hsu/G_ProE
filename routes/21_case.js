@@ -103,7 +103,7 @@ router.put('/:id', authUser, async (req, res) => {
   // req.body, fetch the body of browser.
   const { client, cWay, size, authorizedUser } = req.body;
 
-  // Build contact object
+  // Build case object
   const caseFields = {};
   if (client) caseFields.client = client;
   if (cWay) caseFields.cWay = cWay;

@@ -36,6 +36,8 @@ app.use('/api/auth/user', require('./routes/20_authUser'));
 app.use('/api/case', require('./routes/21_case'));
 // Bom, it treat bom in the case and materials
 app.use('/api/bom', require('./routes/22_bom'));
+// cst, it treat consumption of the material in the case
+app.use('/api/cst', require('./routes/30_cst'));
 
 const PORT = process.env.PORT || 5000;
 
