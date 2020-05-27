@@ -10,7 +10,7 @@ const config = require('config');
 require('dotenv').config();
 
 // Schema
-const Company = require('../models/Company');
+const Company = require('../models/00_Company');
 
 // @route   POST api/company
 // @desc    Register a company

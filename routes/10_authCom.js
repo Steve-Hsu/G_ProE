@@ -8,7 +8,7 @@ const config = require('config');
 const authCom = require('../middleware/authCom');
 
 // Schema
-const Company = require('../models/Company');
+const Company = require('../models/00_Company');
 
 // @route   Get api/auth
 // @desc    Get logged in as a company

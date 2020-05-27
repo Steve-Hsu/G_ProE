@@ -7,8 +7,8 @@ const config = require('config');
 const authCom = require('../middleware/authCom');
 
 // Schema
-const User = require('../models/User');
-const Company = require('../models/Company');
+const Company = require('../models/00_Company');
+const User = require('../models/10_User');
 
 // @route   GET api/users
 // @desc    Get the list of all user

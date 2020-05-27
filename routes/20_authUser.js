@@ -7,7 +7,7 @@ const config = require('config');
 const authUser = require('../middleware/authUser');
 
 // Schema
-const User = require('../models/User');
+const User = require('../models/10_User');
 
 // @route   Get api/auth/users
 // @desc    Get logged in as a user

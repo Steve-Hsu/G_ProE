@@ -4,9 +4,9 @@ const authUser = require('../middleware/authUser');
 // Not set up yet, for check the value entered by user at the some specific column
 const { check, validationResult } = require('express-validator');
 
-const Case = require('../models/Case');
-const User = require('../models/User');
-const CaseMtrl = require('../models/CaseMaterial');
+const User = require('../models/10_User');
+const Case = require('../models/20_Case');
+const CaseMtrl = require('../models/21_CaseMrtl');
 
 // @route   GET api/mtrl/:caseId
 // @desc    Read the materals of the case from database

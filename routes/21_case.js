@@ -3,9 +3,9 @@ const router = express.Router();
 const authUser = require('../middleware/authUser');
 const { check, validationResult } = require('express-validator');
 
-const Case = require('../models/Case');
-const User = require('../models/User');
-const CaseMtrl = require('../models/CaseMaterial');
+const User = require('../models/10_User');
+const Case = require('../models/20_Case');
+const CaseMtrl = require('../models/21_CaseMrtl');
 
 // @route   GET api/case/user
 // @desc    Read the user's cases from database
