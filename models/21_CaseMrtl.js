@@ -14,13 +14,13 @@ const CaseMtrlSchema = mongoose.Schema({
   },
   cWay: [
     {
-      // Size of cloth, it should grab the data from Case
+      // Size of cloth, Set frontend Auto grab the data from Case
       type: String,
     },
   ],
   size: [
     {
-      // Size of cloth, it should grab the data from Case
+      // Size of cloth, Set frontend Auto grab the data from Case
       type: String,
     },
   ],
