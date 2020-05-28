@@ -30,10 +30,17 @@ const ComState = (props) => {
 
   const [state, dispatch] = useReducer(comReducer, initialState);
 
+  // Add company
+  const addCompany = (company) => {
+    company.id = uuidv4();
+    dispatch({ type: ADD_COMPANY, payload: company });
+  };
+
   return (
     <ComContext.Provider
       value={{
         companies: state.companies,
+        addCompany,
       }}
     >
       {props.children}

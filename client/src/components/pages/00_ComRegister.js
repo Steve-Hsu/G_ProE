@@ -1,10 +1,13 @@
 import React from 'react';
 import Companies from '../companies/Companies';
+import CompanyForm from '../companies/CompanyForm';
 
 export const ComRegister = () => {
   return (
     <div className='grid-2'>
-      <div>{/* ContactForm */}</div>
+      <div>
+        <CompanyForm />
+      </div>
       <div>
         <Companies />
       </div>
