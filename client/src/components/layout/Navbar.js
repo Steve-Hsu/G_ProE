@@ -18,7 +18,7 @@ Navbar.propTypes = {
 
 Navbar.defaultProps = {
   title: 'G-ProE',
-  icon: 'fas fa-id-card-alt',
+  icon: 'fas fa-tshirt',
 };
 
 export default Navbar;

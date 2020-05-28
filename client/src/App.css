@@ -1,11 +1,15 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto');
+/* This sheet is based by App.css from Brad Traversy */
+/* I customized some features of this sheet */
 
 /* Global Styles */
 :root {
-  --primary-color: #ffffff;
-  --primary-text: #ffab0f;
+  /* The theme */
+  --primary-color: #ffab0f;
+  --primary-text: #474643;
+  /* Others */
   --dark-color: #333333;
-  --light-color: #eeff58;
+  --light-color: #fff5bd;
   --danger-color: #dc3545;
   --success-color: #28a745;
 }
