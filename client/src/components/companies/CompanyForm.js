@@ -4,22 +4,30 @@ import ComContext from '../../context/company/comContext';
 const CompanyForm = () => {
   const comContext = useContext(ComContext);
 
+  //Set state for this CompanyForm
   const [company, setCompany] = useState({
     comName: '',
     email: '',
     userNumLimit: '',
-    userNum: '',
+    userNum: 1,
     type: 'unpaid',
   });
 
   const { comName, email, userNumLimit, type } = company;
 
   const onChange = (e) =>
+    // Link each input to CompanyForm.state, input name matcked to state name
     setCompany({ ...company, [e.target.name]: e.target.value });
 
   const onSubmit = (e) => {
+    // Prevent renew all the variables on browser(client), the ComState and CompanyForm.state
     e.preventDefault();
+
+    // Grab the "company" from CompanyForm.state.
+    // Add the "company" to ComState.companies
     comContext.addCompany(company);
+
+    // Clear and make the CompanyForm.state ready to use again
     setCompany({
       comName: '',
       email: '',

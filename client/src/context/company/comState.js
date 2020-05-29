@@ -2,7 +2,7 @@ import React, { useReducer } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import ComContext from './comContext';
 import comReducer from './comReducer';
-import { ADD_COMPANY } from '../types';
+import { ADD_COMPANY, DELETE_COMPANY } from '../types';
 
 const ComState = (props) => {
   const initialState = {
@@ -36,11 +36,17 @@ const ComState = (props) => {
     dispatch({ type: ADD_COMPANY, payload: company });
   };
 
+  //Delete Company
+  const deleteCompany = (id) => {
+    dispatch({ type: DELETE_COMPANY, payload: id });
+  };
+
   return (
     <ComContext.Provider
       value={{
         companies: state.companies,
         addCompany,
+        deleteCompany,
       }}
     >
       {props.children}
