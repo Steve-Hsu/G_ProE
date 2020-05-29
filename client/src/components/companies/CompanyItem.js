@@ -4,11 +4,12 @@ import ComContext from '../../context/company/comContext';
 
 const CompanyItem = ({ company }) => {
   const comContext = useContext(ComContext);
-  const { deleteCompany } = comContext;
+  const { deleteCompany, setCurrent, clearCurrent } = comContext;
   const { id, comName, email, userNumLimit, userNum, type } = company;
 
   const onDelete = () => {
     deleteCompany(id);
+    clearCurrent();
   };
 
   return (
@@ -36,7 +37,12 @@ const CompanyItem = ({ company }) => {
         </li>
       </ul>
       <p>
-        <button className='btn btn-dark btn-sm'>Edit</button>
+        <button
+          className='btn btn-dark btn-sm'
+          onClick={() => setCurrent(company)}
+        >
+          Edit
+        </button>
         <buttom className='btn btn-danger btn-sm' onClick={onDelete}>
           delete
         </buttom>
