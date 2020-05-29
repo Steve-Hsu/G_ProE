@@ -8,6 +8,8 @@ import {
   SET_CURRENT,
   CLEAR_CURRENT,
   UPDATE_COMPANY,
+  FILTER_COMPANY,
+  CLEAR_FILTER_COMPANY,
 } from '../types';
 
 const ComState = (props) => {
@@ -33,6 +35,7 @@ const ComState = (props) => {
       },
     ],
     current: null,
+    filtered: null,
   };
 
   const [state, dispatch] = useReducer(comReducer, initialState);
@@ -63,16 +66,29 @@ const ComState = (props) => {
     dispatch({ type: UPDATE_COMPANY, payload: company });
   };
 
+  //Filter Company
+  const filterCompany = (text) => {
+    dispatch({ type: FILTER_COMPANY, payload: text });
+  };
+
+  //Clear Filter
+  const clearFilterCompany = () => {
+    dispatch({ type: CLEAR_FILTER_COMPANY });
+  };
+
   return (
     <ComContext.Provider
       value={{
         companies: state.companies,
         current: state.current,
+        filtered: state.filtered,
         addCompany,
         deleteCompany,
         setCurrent,
         clearCurrent,
         updateCompany,
+        filterCompany,
+        clearFilterCompany,
       }}
     >
       {props.children}

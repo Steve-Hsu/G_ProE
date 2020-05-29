@@ -1,5 +1,8 @@
+// Company
 export const ADD_COMPANY = 'ADD_COMPANY';
 export const DELETE_COMPANY = 'DELETE_COMPANY';
 export const SET_CURRENT = 'SET_CURRENT';
 export const CLEAR_CURRENT = 'CLEAR_CURRENT';
 export const UPDATE_COMPANY = 'UPDATE_COMPANY';
+export const FILTER_COMPANY = 'FILTER_COMPANY';
+export const CLEAR_FILTER_COMPANY = 'CLEAR_FILTER_COMPANY';

@@ -1,6 +1,7 @@
 import React from 'react';
 import Companies from '../companies/Companies';
 import CompanyForm from '../companies/CompanyForm';
+import CompanyFilter from '../companies/CompanyFilter';
 
 export const ComRegister = () => {
   return (
@@ -9,6 +10,7 @@ export const ComRegister = () => {
         <CompanyForm />
       </div>
       <div>
+        <CompanyFilter />
         <Companies />
       </div>
     </div>

@@ -4,6 +4,8 @@ import {
   SET_CURRENT,
   CLEAR_CURRENT,
   UPDATE_COMPANY,
+  FILTER_COMPANY,
+  CLEAR_FILTER_COMPANY,
 } from '../types';
 
 export default (state, action) => {
@@ -39,6 +41,19 @@ export default (state, action) => {
       return {
         ...state,
         current: null,
+      };
+    case FILTER_COMPANY:
+      return {
+        ...state,
+        filtered: state.companies.filter((company) => {
+          const regex = new RegExp(`${action.payload}`, 'gi');
+          return company.comName.match(regex) || company.email.match(regex);
+        }),
+      };
+    case CLEAR_FILTER_COMPANY:
+      return {
+        ...state,
+        filtered: null,
       };
     default:
       return state;
