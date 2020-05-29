@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
-import { COM_REGISTER_FAIL } from '../../context/types';
+import React, { useState, useContext } from 'react';
+import AlertContext from '../../context/alert/alertContext';
 
 const ComRegister = () => {
+  // Initialize Alert
+  const alertContext = useContext(AlertContext);
+  const { setAlert } = alertContext;
+
   const [company, setCompany] = useState({
     comName: '',
     email: '',
@@ -10,13 +14,21 @@ const ComRegister = () => {
     code: '',
   });
 
-  const { name, email, password, password2, code } = company;
+  const { comName, email, password, password2, code } = company;
   const onChange = (e) =>
     setCompany({ ...company, [e.target.name]: e.target.value });
 
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log('Register sumit');
+    if (comName === '' || email === '' || password === '') {
+      setAlert('Please enter all fields', 'danger');
+    } else if (password !== password2) {
+      setAlert('Passwords do not match', 'danger');
+    } else if (code !== process.env.REACT_APP_STEVE_ID) {
+      setAlert('Wrong Code, you are not Steve', 'danger');
+    } else {
+      console.log('Register Submit');
+    }
   };
 
   return (
@@ -28,7 +40,12 @@ const ComRegister = () => {
         {/* {Name} */}
         <div className='form-group'>
           <label htmlFor='name'>Name</label>
-          <input type='text' name='name' value={name} onChange={onChange} />
+          <input
+            type='text'
+            name='comName'
+            value={comName}
+            onChange={onChange}
+          />
         </div>
         {/* {Email Address} */}
         <div className='form-group'>
