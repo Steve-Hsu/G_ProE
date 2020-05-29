@@ -6,7 +6,7 @@ import ComRegister from './components/authCom/00_ComRegister';
 //sRouter
 import ComManager from './components/pages/01_ComManager';
 //ComRouter
-import ComLogin from './components/pages/10_ComLogin';
+import ComLogin from './components/authCom/10_ComLogin';
 import './App.css';
 
 //Context API
