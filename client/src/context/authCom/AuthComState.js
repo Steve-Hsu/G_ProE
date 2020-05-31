@@ -31,6 +31,12 @@ const AuthComState = (props) => {
 
   // Load Users of Company
   const loadUser = async () => {
+    // const config = {
+    //   headers: {
+    //     'Content-type': 'application/json',
+    //   },
+    // };
+
     if (localStorage.token) {
       setAuthToken(localStorage.token);
     }
@@ -73,6 +79,26 @@ const AuthComState = (props) => {
   };
 
   // Login Company
+  const loginCom = async (formData) => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    try {
+      const res = await axios.post('/api/auth/company', formData, config);
+      dispatch({
+        type: COM_LOGIN_SUCCESS,
+        payload: res.data,
+      });
+      loadUser();
+    } catch (err) {
+      dispatch({
+        type: COM_REGISTER_FAIL,
+        payload: err.response.data.msg,
+      });
+    }
+  };
 
   // Logout Company
 
@@ -91,6 +117,7 @@ const AuthComState = (props) => {
         loadUser,
         registerCom,
         clearErrors,
+        loginCom,
       }}
     >
       {props.children}

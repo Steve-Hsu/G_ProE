@@ -12,6 +12,8 @@ import ComLogin from './components/authCom/10_ComLogin';
 //Alert
 import Alerts from './components/layout/Alerts';
 import './App.css';
+//Private route
+import PrivateRoute from './components/routing/PrivateRoute';
 
 //Context API
 import ComState from './context/company/ComState';
@@ -37,18 +39,23 @@ const App = () => {
                 <div className='container'>
                   <Alerts />
                   <Switch>
+                    <Route exact path='/registercom' component={ComRegister} />
                     <Route
                       exact
                       path='/registercom/manager'
                       component={ComManager}
                     />
+
                     <Route
                       exact
                       path='/api/auth/company'
                       component={ComLogin}
                     />
-                    <Route exact path='/registercom' component={ComRegister} />
-                    <Route exact path='/api/users' component={UserManager} />
+                    <PrivateRoute
+                      exact
+                      path='/api/users'
+                      component={UserManager}
+                    />
                   </Switch>
                 </div>
               </Fragment>

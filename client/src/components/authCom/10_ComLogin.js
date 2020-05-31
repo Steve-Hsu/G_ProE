@@ -1,7 +1,25 @@
-import React, { useState } from 'react';
-import { STATES } from 'mongoose';
+import React, { useState, useContext, useEffect } from 'react';
+import AlertContext from '../../context/alert/alertContext';
+import AuthComContext from '../../context/authCom/authComContext';
 
-const ComLogin = () => {
+const ComLogin = (props) => {
+  const alertContext = useContext(AlertContext);
+  const authComContext = useContext(AuthComContext);
+
+  const { setAlert } = alertContext;
+  const { loginCom, error, clearErrors, isAuthenticated } = authComContext;
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      props.history.push('/api/users');
+    }
+    if (error === 'Invalid Credential') {
+      setAlert(error, 'danger');
+      clearErrors();
+    }
+    // eslint-disable-next-line
+  }, [error, isAuthenticated, props.history]);
+
   const [company, setCompany] = useState({
     email: '',
     password: '',
@@ -11,12 +29,20 @@ const ComLogin = () => {
 
   const onChange = (e) =>
     setCompany({
-      ...STATES,
+      ...company,
       [e.target.name]: e.target.value,
     });
 
   const onSubmit = (e) => {
     e.preventDefault();
+    if (email === '' || password === '') {
+      setAlert('Please fill in all fields', 'danger');
+    } else {
+      loginCom({
+        email,
+        password,
+      });
+    }
     console.log('Login submit');
   };
   return (
@@ -28,7 +54,13 @@ const ComLogin = () => {
         {/* {Email Address} */}
         <div className='form-group'>
           <label htmlFor='email'>Email Address</label>
-          <input type='email' name='email' value={email} onChange={onChange} />
+          <input
+            type='email'
+            name='email'
+            value={email}
+            onChange={onChange}
+            required
+          />
         </div>
         {/* {Password} */}
         <div className='form-group'>
@@ -38,6 +70,7 @@ const ComLogin = () => {
             name='password'
             value={password}
             onChange={onChange}
+            required
           />
         </div>
         {/* Submit button */}
