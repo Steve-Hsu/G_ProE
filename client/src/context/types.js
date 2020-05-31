@@ -10,12 +10,12 @@ export const CLEAR_FILTER_COMPANY = 'CLEAR_FILTER_COMPANY';
 // Company auth
 export const COM_REGISTER_SUCCESS = 'COM_REGISTER_SUCCESS';
 export const COM_REGISTER_FAIL = 'COM_REGISTER_FAIL';
-export const USER_LOADED = 'USE_LOADED';
+export const COM_LOADED = 'COM_LOADED';
 export const COM_AUTH_ERROR = 'COM_AUTH_ERROR';
 export const COM_LOGIN_SUCCESS = 'COM_LOGIN_SUCCESS';
 export const COM_LOGIN_FAIL = 'COM_LOGIN_FAIL';
 export const COM_LOGOUT = 'COM_LOGOUT';
-export const CLEAR_ERRORS = 'CLEAR_ERRORS';
+export const COM_CLEAR_ERRORS = 'COM_CLEAR_ERRORS';
 
 // Alert
 export const SET_ALERT = 'SET_ALERT';

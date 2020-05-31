@@ -1,4 +1,5 @@
 import React, { useReducer } from 'react';
+import axios from 'axios';
 import AuthComContext from './authComContext';
 import AuthComReducer from './authComReducer';
 import {
@@ -9,7 +10,7 @@ import {
   COM_LOGIN_SUCCESS,
   COM_LOGIN_FAIL,
   COM_LOGOUT,
-  CLEAR_ERRORS,
+  COM_CLEAR_ERRORS,
 } from '../types';
 
 const AuthComState = (props) => {
@@ -25,14 +26,38 @@ const AuthComState = (props) => {
   const [state, dispatch] = useReducer(AuthComReducer, initialState);
   //Action -------
   // Load Company
+  const laodCom = () => console.log('loader company');
 
   // Register Company
+  const registerCom = async (formData) => {
+    // Use axios sent out a POST, must use "config" warpping the headers
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    try {
+      const res = await axios.post('/registercom', formData, config);
+      dispatch({
+        type: COM_REGISTER_SUCCESS,
+        payload: res.data,
+      });
+    } catch (err) {
+      dispatch({
+        type: COM_REGISTER_FAIL,
+        payload: err.response.data.msg,
+      });
+      console.log('you fucked up');
+    }
+  };
 
   // Login Company
 
   // Logout Company
 
   // Clear Error
+  const clearErrors = () => dispatch({ type: COM_CLEAR_ERRORS });
 
   //Return -------
   return (
@@ -43,6 +68,9 @@ const AuthComState = (props) => {
         loading: state.loading,
         company: state.company,
         error: state.error,
+        laodCom,
+        registerCom,
+        clearErrors,
       }}
     >
       {props.children}

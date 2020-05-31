@@ -21,7 +21,7 @@ app.get('/', (req, res) =>
 // Authentication -------------------------
 // @Steve   --------------
 // Only me access  - Register a company
-app.use('/registercomp', require('./routes/00_company'));
+app.use('/registercom', require('./routes/00_company'));
 
 // @COMPANY --------------
 // Compnay login

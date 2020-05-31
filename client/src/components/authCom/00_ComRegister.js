@@ -1,10 +1,22 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import AlertContext from '../../context/alert/alertContext';
+import AuthComContext from '../../context/authCom/authComContext';
 
 const ComRegister = () => {
   // Initialize Alert
   const alertContext = useContext(AlertContext);
+  const authComContext = useContext(AuthComContext);
+
   const { setAlert } = alertContext;
+  const { registerCom, error, clearErrors } = authComContext;
+
+  useEffect(() => {
+    if (error === 'User already exists') {
+      setAlert(error, 'danger');
+      clearErrors();
+    }
+    // eslint-disable-next-line
+  }, [error]);
 
   const [company, setCompany] = useState({
     comName: '',
@@ -15,6 +27,7 @@ const ComRegister = () => {
   });
 
   const { comName, email, password, password2, code } = company;
+
   const onChange = (e) =>
     setCompany({ ...company, [e.target.name]: e.target.value });
 
@@ -27,7 +40,14 @@ const ComRegister = () => {
     } else if (code !== process.env.REACT_APP_STEVE_ID) {
       setAlert('Wrong Code, you are not Steve', 'danger');
     } else {
-      console.log('Register Submit');
+      registerCom({
+        //This is a formData
+        comName,
+        email,
+        password,
+        // This code is essential in form, since I set an authenticat-code on backend
+        code,
+      });
     }
   };
 
