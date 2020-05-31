@@ -31,7 +31,7 @@ const CompanyForm = () => {
     type: 'unpaid',
   });
 
-  const { comName, email, userNumLimit, type } = company;
+  const { comName, email, type } = company;
 
   const onChange = (e) =>
     // Link each input to CompanyForm.state, input name matcked to state name

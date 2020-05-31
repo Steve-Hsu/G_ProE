@@ -1,7 +1,7 @@
 import {
   COM_REGISTER_SUCCESS,
   COM_REGISTER_FAIL,
-  COM_LOADED,
+  COM_USER_LOADED,
   COM_AUTH_ERROR,
   COM_LOGIN_SUCCESS,
   COM_LOGIN_FAIL,
@@ -11,6 +11,13 @@ import {
 
 export default (state, action) => {
   switch (action.type) {
+    case COM_USER_LOADED:
+      return {
+        ...state,
+        isAuthenticated: true,
+        loading: false,
+        user: action.payload,
+      };
     case COM_REGISTER_SUCCESS:
       localStorage.setItem('token', action.payload.token);
       return {
@@ -20,6 +27,7 @@ export default (state, action) => {
         loading: false,
       };
     case COM_REGISTER_FAIL:
+    case COM_AUTH_ERROR:
       localStorage.removeItem('token');
       return {
         ...state,

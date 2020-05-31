@@ -1,9 +1,9 @@
 import React from 'react';
-import Companies from '../companies/Companies';
-import CompanyForm from '../companies/CompanyForm';
-import CompanyFilter from '../companies/CompanyFilter';
+import Companies from '../00_companies/Companies';
+import CompanyForm from '../00_companies/CompanyForm';
+import CompanyFilter from '../00_companies/CompanyFilter';
 
-export const ComRegister = () => {
+export const ComManager = () => {
   return (
     <div className='grid-2'>
       <div>
@@ -17,4 +17,4 @@ export const ComRegister = () => {
   );
 };
 
-export default ComRegister;
+export default ComManager;

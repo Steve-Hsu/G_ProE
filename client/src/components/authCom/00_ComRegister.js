@@ -2,21 +2,24 @@ import React, { useState, useContext, useEffect } from 'react';
 import AlertContext from '../../context/alert/alertContext';
 import AuthComContext from '../../context/authCom/authComContext';
 
-const ComRegister = () => {
+const ComRegister = (props) => {
   // Initialize Alert
   const alertContext = useContext(AlertContext);
   const authComContext = useContext(AuthComContext);
 
   const { setAlert } = alertContext;
-  const { registerCom, error, clearErrors } = authComContext;
+  const { registerCom, error, clearErrors, isAuthenticated } = authComContext;
 
   useEffect(() => {
+    if (isAuthenticated) {
+      props.history.push('/api/users');
+    }
     if (error === 'User already exists') {
       setAlert(error, 'danger');
       clearErrors();
     }
     // eslint-disable-next-line
-  }, [error]);
+  }, [error, isAuthenticated, props.history]);
 
   const [company, setCompany] = useState({
     comName: '',

@@ -2,10 +2,14 @@ import React, { useReducer } from 'react';
 import axios from 'axios';
 import AuthComContext from './authComContext';
 import AuthComReducer from './authComReducer';
+
+//Global Header for token
+import setAuthToken from '../../utils/setAuthToken';
+
 import {
   COM_REGISTER_SUCCESS,
   COM_REGISTER_FAIL,
-  USER_LOADED,
+  COM_USER_LOADED,
   COM_AUTH_ERROR,
   COM_LOGIN_SUCCESS,
   COM_LOGIN_FAIL,
@@ -14,7 +18,7 @@ import {
 } from '../types';
 
 const AuthComState = (props) => {
-  //State -------------------------------------------
+  //State --------
   const initialState = {
     token: localStorage.getItem('token'),
     isAuthenticated: null,
@@ -24,9 +28,23 @@ const AuthComState = (props) => {
   };
 
   const [state, dispatch] = useReducer(AuthComReducer, initialState);
-  //Action -------
-  // Load Company
-  const laodCom = () => console.log('loader company');
+
+  // Load Users of Company
+  const loadUser = async () => {
+    if (localStorage.token) {
+      setAuthToken(localStorage.token);
+    }
+
+    try {
+      const res = await axios.get('/api/users');
+      dispatch({
+        type: COM_USER_LOADED,
+        payloady: res.data,
+      });
+    } catch (err) {
+      dispatch({ type: COM_AUTH_ERROR });
+    }
+  };
 
   // Register Company
   const registerCom = async (formData) => {
@@ -43,6 +61,8 @@ const AuthComState = (props) => {
         type: COM_REGISTER_SUCCESS,
         payload: res.data,
       });
+      // If register is success loading the users of the company
+      loadUser();
     } catch (err) {
       dispatch({
         type: COM_REGISTER_FAIL,
@@ -68,7 +88,7 @@ const AuthComState = (props) => {
         loading: state.loading,
         company: state.company,
         error: state.error,
-        laodCom,
+        loadUser,
         registerCom,
         clearErrors,
       }}
