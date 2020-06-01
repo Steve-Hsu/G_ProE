@@ -7,10 +7,17 @@ import {
   FILTER_USER,
   CLEAR_FILTER_USER,
   USER_ERROR,
+  GET_USERS,
 } from '../types';
 
 export default (state, action) => {
   switch (action.type) {
+    case GET_USERS:
+      return {
+        ...state,
+        users: action.payload,
+        loading: false,
+      };
     case ADD_USER:
       return {
         ...state,

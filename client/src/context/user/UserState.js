@@ -12,6 +12,8 @@ import {
   FILTER_USER,
   CLEAR_FILTER_USER,
   USER_ERROR,
+  GET_USERS,
+  CLEAR_USER_FORM,
 } from '../types';
 
 const UserState = (props) => {
@@ -23,8 +25,19 @@ const UserState = (props) => {
   };
 
   const [state, dispatch] = useReducer(userReducer, initialState);
-
-  // Add USER
+  // Get User
+  const getUsers = async () => {
+    try {
+      const res = await axios.get('/api/users');
+      dispatch({ type: GET_USERS, payload: res.data });
+    } catch (err) {
+      dispatch({
+        type: USER_ERROR,
+        payload: err.response.msg,
+      });
+    }
+  };
+  // Add User
   const addUser = async (user) => {
     const config = {
       headers: {
@@ -88,6 +101,7 @@ const UserState = (props) => {
         updateUser,
         filterUser,
         clearFilterUser,
+        getUsers,
       }}
     >
       {props.children}

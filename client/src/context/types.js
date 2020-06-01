@@ -37,3 +37,6 @@ export const USER_LOGIN_FAIL = 'USER_LOGIN_FAIL';
 export const USER_LOGOUT = 'USER_LOGOUT';
 export const USER_CLEAR_ERRORS = 'USER_CLEAR_ERRORS';
 export const USER_ERROR = 'USER_ERROR';
+export const GET_USERS = 'GET_USERS';
+// may not need this one
+export const CLEAR_USER_FORM = 'CLEAR_USERS';
