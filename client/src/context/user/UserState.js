@@ -100,7 +100,7 @@ const UserState = (props) => {
       const res = await axios.put(`/api/users/${user._id}`, user, config);
       dispatch({
         type: UPDATE_USER,
-        payload: res.data._id,
+        payload: res.data,
       });
     } catch (err) {
       dispatch({

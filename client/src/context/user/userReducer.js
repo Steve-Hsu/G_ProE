@@ -31,7 +31,7 @@ export default (state, action) => {
         ...state,
         users: state.users.map((user) =>
           //If the id of the USER passed in match to any id in the UserState.users, then set the values of this USER passed in to the id matched USER in ComState.users
-          user._id === action.payload ? action.payload : user
+          user._id === action.payload._id ? action.payload : user
         ),
         loading: false,
       };

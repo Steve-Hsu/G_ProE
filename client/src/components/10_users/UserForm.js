@@ -103,7 +103,7 @@ const UserForm = () => {
         onChange={onChange}
       />
       <input type='checkbox' name='cases' onChange={onChangeCB} /> Case{' '}
-      <input type='checkbox' name='mrtl' onChange={onChangeCB} /> Material{' '}
+      <input type='checkbox' name='mtrl' onChange={onChangeCB} /> Material{' '}
       <input type='checkbox' name='cst' onChange={onChangeCB} /> Cunsumption{' '}
       <input type='checkbox' name='mp' onChange={onChangeCB} /> Material Price{' '}
       <input type='checkbox' name='po' onChange={onChangeCB} /> Purchase order{' '}

@@ -119,9 +119,11 @@ router.post(
         },
         (err, token) => {
           if (err) throw err;
-          res.json({ token });
+          // res.json({ token });
+          // This res.json is for test when in the frontend to get token
         }
       );
+      res.json(user);
       // Update the userNum in Company -------------------------------------------
       // If the user added, add 1 for the userNum of the company to restrict the number of user.
       await Company.find({ _id: req.company.id }, function (err, obj) {
@@ -184,6 +186,7 @@ router.put('/:id', authCom, async (req, res) => {
       { new: true }
       // The method .select('-password) is for not showing the password on result
     ).select('-password');
+    console.log(user);
     res.json(user);
   } catch (err) {
     console.error(err.message);
