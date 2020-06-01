@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { check, validationResult } = require('express-validator');
+const { check, body, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('config');
@@ -39,6 +39,12 @@ router.post(
       'password',
       'Please enter a password with 6 or more characters'
     ).isLength({ min: 6 }),
+    // body('password2').custom((value, { req }) => {
+    //   if (value !== req.body.password) {
+    //     throw new Error('Password confirmation does not match password');
+    //   }
+    //   return true;
+    // }),
   ],
   // 2nd middleware - Only the authrized company can register a new user
   authCom,
@@ -57,21 +63,24 @@ router.post(
       }
     });
     if (isUserFull) {
+      console.log('Hit User nubmer Limit');
       return res.status(400).json({ msg: 'User is full' });
     }
 
     // Generate user --------------------------------------------------------------
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      console.log('Validation problem');
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { name, email, password } = req.body;
+    const { name, email, password, cases, mtrl, cst, mp, po } = req.body;
 
     try {
       let user = await User.findOne({ email });
 
       if (user) {
+        console.log('User already exist');
         return res.status(400).json({ msg: 'User already exists' });
       }
 
@@ -80,6 +89,11 @@ router.post(
         email,
         password,
         company: req.company.id,
+        cases,
+        mtrl,
+        cst,
+        mp,
+        po,
       });
 
       //bcrypt the password
@@ -126,7 +140,7 @@ router.post(
         console.log(`New user is set up, userNum is now ${userNum}`);
       });
     } catch (err) {
-      console.log(err.message);
+      // console.log(err.message);
       res.status(500).send('Server Error');
       // dispatch({
       //   type: REGISTER_FAIL,

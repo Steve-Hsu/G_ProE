@@ -51,6 +51,7 @@ const App = () => {
                       path='/api/auth/company'
                       component={ComLogin}
                     />
+                    {/* <PrivateRoute */}
                     <PrivateRoute
                       exact
                       path='/api/users'

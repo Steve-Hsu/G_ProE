@@ -1,4 +1,5 @@
 import React, { useReducer } from 'react';
+import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import UserContext from './userContext';
 import userReducer from './userReducer';
@@ -10,32 +11,37 @@ import {
   UPDATE_USER,
   FILTER_USER,
   CLEAR_FILTER_USER,
+  USER_ERROR,
 } from '../types';
 
 const UserState = (props) => {
   const initialState = {
-    users: [
-      {
-        id: 1,
-        name: 'Soluna',
-        email: 'steve@soluna.com',
-      },
-      {
-        id: 2,
-        name: 'Infinity',
-        email: 'steve@infinity.com',
-      },
-    ],
+    users: null,
     current: null,
     filtered: null,
+    error: null,
   };
 
   const [state, dispatch] = useReducer(userReducer, initialState);
 
   // Add USER
-  const addUser = (user) => {
-    user.id = uuidv4();
-    dispatch({ type: ADD_USER, payload: user });
+  const addUser = async (user) => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    try {
+      const res = await axios.post('/api/users', user, config);
+      dispatch({ type: ADD_USER, payload: res.data });
+    } catch (err) {
+      dispatch({
+        type: USER_ERROR,
+        // payload: err.response.msg,
+        payload: 'add user err',
+      });
+    }
   };
 
   //Delete USER
@@ -74,6 +80,7 @@ const UserState = (props) => {
         users: state.users,
         current: state.current,
         filtered: state.filtered,
+        error: state.error,
         addUser,
         deleteUser,
         setCurrent,

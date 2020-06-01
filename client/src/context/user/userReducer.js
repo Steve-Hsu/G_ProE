@@ -6,6 +6,7 @@ import {
   UPDATE_USER,
   FILTER_USER,
   CLEAR_FILTER_USER,
+  USER_ERROR,
 } from '../types';
 
 export default (state, action) => {
@@ -15,6 +16,7 @@ export default (state, action) => {
         ...state,
         // ...State.users are users existing alread, the action.payload is the new USER just set
         users: [...state.users, action.payload],
+        loading: false,
       };
     case UPDATE_USER:
       return {
@@ -52,6 +54,11 @@ export default (state, action) => {
       return {
         ...state,
         filtered: null,
+      };
+    case USER_ERROR:
+      return {
+        ...state,
+        error: action.payload,
       };
     default:
       return state;

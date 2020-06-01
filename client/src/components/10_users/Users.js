@@ -9,7 +9,7 @@ const Users = () => {
   //Destructure, pull out the variables form userContext
   const { users, filtered } = userContext;
 
-  if (users.length === 0) {
+  if (users === null) {
     return <h4>Please Enter A New User</h4>;
   }
 
@@ -19,13 +19,13 @@ const Users = () => {
         {filtered !== null
           ? // if the filtered is not empty, then show the company in the filtered
             filtered.map((user) => (
-              <CSSTransition key={user.id} timeout={500} classNames='item'>
+              <CSSTransition key={user._id} timeout={500} classNames='item'>
                 <UserItem user={user} />
               </CSSTransition>
             ))
           : // else show all user in users
             users.map((user) => (
-              <CSSTransition key={user.id} timeout={500} classNames='item'>
+              <CSSTransition key={user._id} timeout={500} classNames='item'>
                 <UserItem user={user} />
               </CSSTransition>
             ))}

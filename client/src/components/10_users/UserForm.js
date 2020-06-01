@@ -14,12 +14,12 @@ const UserForm = () => {
       setUser({
         name: '',
         email: '',
-        cases: '',
-        mtrl: '',
-        cst: '',
-        mp: '',
-        po: '',
-        date: '',
+        password: '',
+        cases: false,
+        mtrl: false,
+        cst: false,
+        mp: false,
+        po: false,
       });
     }
     // make useEffect only check the changing of userContext and current
@@ -29,28 +29,38 @@ const UserForm = () => {
   const [user, setUser] = useState({
     name: '',
     email: '',
-    cases: '',
-    mtrl: '',
-    cst: '',
-    mp: '',
-    po: '',
+    password: '',
+    // password2: '',
+    cases: false,
+    mtrl: false,
+    cst: false,
+    mp: false,
+    po: false,
   });
 
-  const { name, email, cases, mtrl, cst, mp, po } = user;
+  const { name, email, password, password2, cases, mtrl, cst, mp, po } = user;
 
   const onChange = (e) =>
     // Link each input to UserForm.state, input name matcked to state name
     setUser({ ...user, [e.target.name]: e.target.value });
+
+  const onChangeCB = (e) => {
+    if (e.target.checked) {
+      setUser({ ...user, [e.target.name]: true });
+    } else if (!e.target.checked) {
+      setUser({ ...user, [e.target.name]: false });
+    }
+  };
 
   const onSubmit = (e) => {
     // Prevent renew all the variables on browser(client), the userState and UserForm.state
     e.preventDefault();
 
     if (current === null) {
-      //   // Grab the "User" from UserForm.state.
-      //   // Add the "User" to userState.userpanies
-      //   addUser(User);
-      // } else {
+      // Grab the "User" from UserForm.state.
+      // Add the "User" to userState.userpanies
+      addUser(user);
+    } else {
       updateUser(user);
     }
     // Default the current and UserForm.state
@@ -67,7 +77,7 @@ const UserForm = () => {
       <input
         type='text'
         placeholder='User Name'
-        name='userName'
+        name='name'
         value={name}
         onChange={onChange}
       />
@@ -78,6 +88,25 @@ const UserForm = () => {
         value={email}
         onChange={onChange}
       />
+      <input
+        type='password'
+        placeholder='Setting password'
+        name='password'
+        value={password}
+        onChange={onChange}
+      />
+      <input
+        type='password'
+        placeholder='Setting password'
+        name='password2'
+        value={password2}
+        onChange={onChange}
+      />
+      <input type='checkbox' name='cases' onChange={onChangeCB} /> Case{' '}
+      <input type='checkbox' name='mrtl' onChange={onChangeCB} /> Material{' '}
+      <input type='checkbox' name='cst' onChange={onChangeCB} /> Cunsumption{' '}
+      <input type='checkbox' name='mp' onChange={onChangeCB} /> Material Price{' '}
+      <input type='checkbox' name='po' onChange={onChangeCB} /> Purchase order{' '}
       <div>
         <input
           type='submit'
