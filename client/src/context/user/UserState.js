@@ -13,7 +13,6 @@ import {
   CLEAR_FILTER_USER,
   USER_ERROR,
   GET_USERS,
-  CLEAR_USER_FORM,
   CLEAR_USERS_STATE,
 } from '../types';
 
@@ -59,8 +58,19 @@ const UserState = (props) => {
   };
 
   //Delete USER
-  const deleteUser = (id) => {
-    dispatch({ type: DELETE_USER, payload: id });
+  const deleteUser = async (id) => {
+    try {
+      await axios.delete(`/api/users/${id}`);
+      dispatch({
+        type: DELETE_USER,
+        payload: id,
+      });
+    } catch (err) {
+      dispatch({
+        type: USER_ERROR,
+        payload: 'Delete User error',
+      });
+    }
   };
 
   //Clear Users in UserState
@@ -80,8 +90,24 @@ const UserState = (props) => {
   };
 
   //Update USER
-  const updateUser = (user) => {
-    dispatch({ type: UPDATE_USER, payload: user });
+  const updateUser = async (user) => {
+    const config = {
+      header: {
+        'Content-Type:': 'application/json',
+      },
+    };
+    try {
+      const res = await axios.put(`/api/users/${user._id}`, user, config);
+      dispatch({
+        type: UPDATE_USER,
+        payload: res.date,
+      });
+    } catch (err) {
+      dispatch({
+        type: USER_ERROR,
+        payload: 'Update user Error',
+      });
+    }
   };
 
   //Filter USER

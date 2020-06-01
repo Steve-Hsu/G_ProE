@@ -29,16 +29,16 @@ export default (state, action) => {
     case UPDATE_USER:
       return {
         ...state,
-        users: state.users.map((USER) =>
+        users: state.users.map((user) =>
           //If the id of the USER passed in match to any id in the ComState.users, then set the values of this USER passed in to the id matched USER in ComState.users
-          USER.id === action.payload.id ? action.payload : USER
+          user._id === action.payload._id ? action.payload : user
         ),
       };
     case DELETE_USER:
       return {
         ...state,
         // Set ComState.users equals to USER that with different Id in payload
-        users: state.users.filter((USER) => USER.id !== action.payload),
+        users: state.users.filter((user) => user._id !== action.payload),
       };
     case SET_CURRENT:
       return {
