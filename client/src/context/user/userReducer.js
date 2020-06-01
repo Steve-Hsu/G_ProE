@@ -8,6 +8,7 @@ import {
   CLEAR_FILTER_USER,
   USER_ERROR,
   GET_USERS,
+  CLEAR_USERS_STATE,
 } from '../types';
 
 export default (state, action) => {
@@ -22,7 +23,7 @@ export default (state, action) => {
       return {
         ...state,
         // ...State.users are users existing alread, the action.payload is the new USER just set
-        users: [...state.users, action.payload],
+        users: [action.payload, ...state.users],
         loading: false,
       };
     case UPDATE_USER:
@@ -43,6 +44,14 @@ export default (state, action) => {
       return {
         ...state,
         current: action.payload,
+      };
+    case CLEAR_USERS_STATE:
+      return {
+        ...state,
+        users: null,
+        filtered: null,
+        error: null,
+        current: null,
       };
     case CLEAR_CURRENT:
       return {

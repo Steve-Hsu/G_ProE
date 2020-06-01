@@ -101,6 +101,7 @@ const AuthComState = (props) => {
   };
 
   // Logout Company
+  const logoutCom = () => dispatch({ type: COM_LOGOUT });
 
   // Clear Error
   const clearErrors = () => dispatch({ type: COM_CLEAR_ERRORS });
@@ -118,6 +119,7 @@ const AuthComState = (props) => {
         registerCom,
         clearErrors,
         loginCom,
+        logoutCom,
       }}
     >
       {props.children}

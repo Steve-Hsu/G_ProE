@@ -14,6 +14,7 @@ import {
   USER_ERROR,
   GET_USERS,
   CLEAR_USER_FORM,
+  CLEAR_USERS_STATE,
 } from '../types';
 
 const UserState = (props) => {
@@ -62,6 +63,12 @@ const UserState = (props) => {
     dispatch({ type: DELETE_USER, payload: id });
   };
 
+  //Clear Users in UserState
+  //When the company logout, we need clear the state in the client end for security
+  const clearUsers = () => {
+    dispatch({ type: CLEAR_USERS_STATE });
+  };
+
   //Set Current USER
   const setCurrent = (user) => {
     dispatch({ type: SET_CURRENT, payload: user });
@@ -102,6 +109,7 @@ const UserState = (props) => {
         filterUser,
         clearFilterUser,
         getUsers,
+        clearUsers,
       }}
     >
       {props.children}

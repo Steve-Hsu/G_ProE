@@ -2,16 +2,20 @@ import React, { Fragment, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import AuthComContext from '../../context/authCom/authComContext';
+import UserContext from '../../context/user/userContext';
 
 const Navbar = ({ title, icon }) => {
   const authComContext = useContext(AuthComContext);
+  const userContext = useContext(UserContext);
 
   const { isAuthenticated, logoutCom, company } = authComContext;
+  const { clearUsers } = userContext;
 
   const onLogoutCom = () => {
     logoutCom();
+    clearUsers();
   };
-  const authComLink = (
+  const authComLinks = (
     <Fragment>
       <li>Hello ! {company && company.comName}</li>
       <li>
@@ -23,10 +27,10 @@ const Navbar = ({ title, icon }) => {
     </Fragment>
   );
 
-  const guestComLink = (
+  const guestComLinks = (
     <Fragment>
       <li>
-        <Link to='/Login'>Login</Link>
+        <Link to='/api/auth/user'>Login as User</Link>
       </li>
     </Fragment>
   );
@@ -34,16 +38,11 @@ const Navbar = ({ title, icon }) => {
   return (
     <div className='navbar bg-primary'>
       <h1>
-        <i className={icon} /> {title}
+        <Link to='/'>
+          <i className={icon} /> {title}
+        </Link>
       </h1>
-      <ul>
-        <li>
-          <Link to='/api/auth/company'>Company</Link>
-        </li>
-        <li>
-          <Link to='/api/auth/user'>Login</Link>
-        </li>
-      </ul>
+      <ul>{isAuthenticated ? authComLinks : guestComLinks}</ul>
     </div>
   );
 };

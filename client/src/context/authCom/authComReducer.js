@@ -30,6 +30,7 @@ export default (state, action) => {
     case COM_REGISTER_FAIL:
     case COM_AUTH_ERROR:
     case COM_LOGIN_FAIL:
+    case COM_LOGOUT:
       localStorage.removeItem('token');
       return {
         ...state,
