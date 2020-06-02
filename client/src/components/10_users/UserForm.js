@@ -30,7 +30,6 @@ const UserForm = () => {
     name: '',
     email: '',
     password: '',
-    // password2: '',
     cases: false,
     mtrl: false,
     cst: false,
@@ -44,12 +43,18 @@ const UserForm = () => {
     // Link each input to UserForm.state, input name matcked to state name
     setUser({ ...user, [e.target.name]: e.target.value });
 
+  //@ onChange for checkbox -------
+  // const onChangeCB = (e) => {
+  //   if (e.target.checked) {
+  //     setUser({ ...user, [e.target.name]: true });
+  //   } else if (!e.target.checked) {
+  //     setUser({ ...user, [e.target.name]: false });
+  //   }
+  // };
+  // @ Offered by gdh form stackOverflow, works as the above one
   const onChangeCB = (e) => {
-    if (e.target.checked) {
-      setUser({ ...user, [e.target.name]: true });
-    } else if (!e.target.checked) {
-      setUser({ ...user, [e.target.name]: false });
-    }
+    const target = e.target;
+    setUser((prev) => ({ ...prev, [target.name]: !prev[target.name] }));
   };
 
   const onSubmit = (e) => {
@@ -102,11 +107,41 @@ const UserForm = () => {
         value={password2}
         onChange={onChange}
       />
-      <input type='checkbox' name='cases' onChange={onChangeCB} /> Case{' '}
-      <input type='checkbox' name='mtrl' onChange={onChangeCB} /> Material{' '}
-      <input type='checkbox' name='cst' onChange={onChangeCB} /> Cunsumption{' '}
-      <input type='checkbox' name='mp' onChange={onChangeCB} /> Material Price{' '}
-      <input type='checkbox' name='po' onChange={onChangeCB} /> Purchase order{' '}
+      <input
+        type='checkbox'
+        name='cases'
+        checked={cases === true}
+        onChange={onChangeCB}
+      />{' '}
+      Case{' '}
+      <input
+        type='checkbox'
+        name='mtrl'
+        checked={mtrl === true}
+        onChange={onChangeCB}
+      />{' '}
+      Material{' '}
+      <input
+        type='checkbox'
+        name='cst'
+        checked={cst === true}
+        onChange={onChangeCB}
+      />{' '}
+      Cunsumption{' '}
+      <input
+        type='checkbox'
+        name='mp'
+        checked={mp === true}
+        onChange={onChangeCB}
+      />{' '}
+      Material Price{' '}
+      <input
+        type='checkbox'
+        name='po'
+        checked={po === true}
+        onChange={onChangeCB}
+      />{' '}
+      Purchase order{' '}
       <div>
         <input
           type='submit'

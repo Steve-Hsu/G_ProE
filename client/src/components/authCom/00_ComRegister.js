@@ -14,7 +14,7 @@ const ComRegister = (props) => {
     if (isAuthenticated) {
       props.history.push('/api/users');
     }
-    if (error === 'User already exists') {
+    if (error) {
       setAlert(error, 'danger');
       clearErrors();
     }

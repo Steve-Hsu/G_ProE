@@ -13,7 +13,7 @@ const ComLogin = (props) => {
     if (isAuthenticated) {
       props.history.push('/api/users');
     }
-    if (error === 'Invalid Credential') {
+    if (error) {
       setAlert(error, 'danger');
       clearErrors();
     }

@@ -74,7 +74,7 @@ const AuthComState = (props) => {
         type: COM_REGISTER_FAIL,
         payload: err.response.data.msg,
       });
-      console.log('you fucked up');
+      // console.log('you fucked up');
     }
   };
 

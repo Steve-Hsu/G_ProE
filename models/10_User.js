@@ -27,32 +27,32 @@ const UserSchema = mongoose.Schema({
   cases: {
     // case is a keyword in javaScript so here call case as cases.
     type: Boolean,
-    required: true,
-    default: false,
+    // required: true,
+    // default: false,
   },
   mtrl: {
     // Material,
     type: Boolean,
-    required: true,
-    default: false,
+    // required: true,
+    // default: false,
   },
   cst: {
     // consumption of materials, for sample room to fill in
     type: Boolean,
-    required: true,
-    default: false,
+    // required: true,
+    // default: false,
   },
   mp: {
     // material price.
     type: Boolean,
-    required: true,
-    default: false,
+    // required: true,
+    // default: false,
   },
   po: {
     // purchase order
     type: Boolean,
-    required: true,
-    default: false,
+    // required: true,
+    // default: false,
   },
 
   // Date
