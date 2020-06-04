@@ -434,6 +434,13 @@ table th {
   z-index: 11;
 }
 
+/* FlexBox */
+.flexBox {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+}
+
 /* Mobile Styles  -------------------------------- */
 @media (max-width: 700px) {
   .hide-sm {

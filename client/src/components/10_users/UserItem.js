@@ -11,7 +11,7 @@ const UserItem = ({ user }) => {
     clearCurrent,
     confirmDelete,
   } = userContext;
-  const { _id, name, email } = user;
+  const { _id, name, email, cases, bom, cst, mp, po } = user;
 
   const onDelete = () => {
     confirmDeleteUser(name);
@@ -25,25 +25,44 @@ const UserItem = ({ user }) => {
       ) : null}
       <div className='card bg-light'>
         <h3 className='text-primary text-let'>{name} </h3>
-        <ul>
-          <li>
-            <i className='fas fa-envelope-open' /> {email}
-          </li>
-          <li>
-            <i className='fas fa-user-check' /> {name}
-          </li>
-        </ul>
-        <p>
-          <button
-            className='btn btn-dark btn-sm'
-            onClick={() => setCurrent(user)}
-          >
-            Edit
-          </button>
-          <buttom className='btn btn-danger btn-sm' onClick={onDelete}>
-            delete
-          </buttom>
-        </p>
+        <div className='grid-2'>
+          {/* Child element of grid - 1 */}
+          <div>
+            <ul>
+              <li>
+                <i className='fas fa-envelope-open' /> {email}
+              </li>
+              <li>
+                <i className='fas fa-user-check' /> {name}
+              </li>
+            </ul>
+            <p>
+              <button
+                className='btn btn-dark btn-sm'
+                onClick={() => setCurrent(user)}
+              >
+                Edit
+              </button>
+              <buttom className='btn btn-danger btn-sm' onClick={onDelete}>
+                delete
+              </buttom>
+            </p>
+          </div>
+          {/* Child element of grid - 2 */}
+          <div className='flexBox'>
+            {cases ? <span className='badge badge-success'>cases</span> : null}
+            {bom ? <span className='badge badge-success'>Material</span> : null}
+            {cst ? (
+              <span className='badge badge-success'>Consumption</span>
+            ) : null}
+            {mp ? (
+              <span className='badge badge-success'>Material price</span>
+            ) : null}
+            {po ? (
+              <span className='badge badge-success'>Purchase Order</span>
+            ) : null}
+          </div>
+        </div>
       </div>
     </Fragment>
   );

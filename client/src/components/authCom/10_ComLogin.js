@@ -48,7 +48,7 @@ const ComLogin = (props) => {
   return (
     <div className='form-container'>
       <h1>
-        Account <span className='text-primary'>Login</span>
+        Company <span className='text-primary'>Login</span>
       </h1>
       <form onSubmit={onSubmit}>
         {/* {Email Address} */}

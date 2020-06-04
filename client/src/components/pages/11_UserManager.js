@@ -8,7 +8,6 @@ import UserContext from '../../context/user/userContext';
 
 export const UserManager = () => {
   const userContext = useContext(UserContext);
-  const { confirmDelete } = userContext;
 
   // Check if there are any update in data, then update the UI
   const authComContext = useContext(AuthComContext);
