@@ -23,6 +23,9 @@ import UserState from './context/user/UserState';
 
 //Global Header for token
 import setAuthToken from './utils/setAuthToken';
+
+//Test element
+
 if (localStorage.token) {
   setAuthToken(localStorage.token);
 }
@@ -36,6 +39,7 @@ const App = () => {
             <Router>
               <Fragment>
                 <Navbar />
+
                 <div className='container'>
                   <Alerts />
                   <Switch>

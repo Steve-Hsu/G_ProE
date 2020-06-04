@@ -9,6 +9,8 @@ import {
   USER_ERROR,
   GET_USERS,
   CLEAR_USERS_STATE,
+  CONFIRM_DELETE_USER,
+  CLEAR_CONFIRM_DELETE,
 } from '../types';
 
 export default (state, action) => {
@@ -34,6 +36,17 @@ export default (state, action) => {
           user._id === action.payload._id ? action.payload : user
         ),
         loading: false,
+      };
+    case CONFIRM_DELETE_USER:
+      return {
+        ...state,
+        confirmDelete: action.payload,
+      };
+
+    case CLEAR_CONFIRM_DELETE:
+      return {
+        ...state,
+        confirmDelete: null,
       };
     case DELETE_USER:
       return {

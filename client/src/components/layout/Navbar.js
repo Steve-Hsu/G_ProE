@@ -15,6 +15,7 @@ const Navbar = ({ title, icon }) => {
     logoutCom();
     clearUsers();
   };
+
   const authComLinks = (
     <Fragment>
       <li>Hello ! {company && company.comName}</li>

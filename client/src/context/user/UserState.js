@@ -14,6 +14,8 @@ import {
   USER_ERROR,
   GET_USERS,
   CLEAR_USERS_STATE,
+  CONFIRM_DELETE_USER,
+  CLEAR_CONFIRM_DELETE,
 } from '../types';
 
 const UserState = (props) => {
@@ -22,6 +24,7 @@ const UserState = (props) => {
     current: null,
     filtered: null,
     error: null,
+    confirmDelete: null,
   };
 
   const [state, dispatch] = useReducer(userReducer, initialState);
@@ -55,6 +58,21 @@ const UserState = (props) => {
         payload: 'add user err',
       });
     }
+  };
+
+  // Confirm Delete User
+  // Before delete User check again with the name of the user
+  const confirmDeleteUser = (name) => {
+    dispatch({
+      type: CONFIRM_DELETE_USER,
+      payload: name,
+    });
+  };
+
+  const clearConfirmDelete = () => {
+    dispatch({
+      type: CLEAR_CONFIRM_DELETE,
+    });
   };
 
   //Delete USER
@@ -127,6 +145,7 @@ const UserState = (props) => {
         current: state.current,
         filtered: state.filtered,
         error: state.error,
+        confirmDelete: state.confirmDelete,
         addUser,
         deleteUser,
         setCurrent,
@@ -136,6 +155,8 @@ const UserState = (props) => {
         clearFilterUser,
         getUsers,
         clearUsers,
+        confirmDeleteUser,
+        clearConfirmDelete,
       }}
     >
       {props.children}

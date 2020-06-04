@@ -52,9 +52,13 @@ const UserForm = () => {
   //   }
   // };
   // @ Offered by gdh form stackOverflow, works as the above one
+  // const onChangeCB = (e) => {
+  //   const target = e.target;
+  //   setUser((prev) => ({ ...prev, [target.name]: !prev[target.name] }));
+  // };
   const onChangeCB = (e) => {
-    const target = e.target;
-    setUser((prev) => ({ ...prev, [target.name]: !prev[target.name] }));
+    const { name, checked } = e.target;
+    setUser({ ...user, [name]: checked ? true : false });
   };
 
   const onSubmit = (e) => {
@@ -145,7 +149,7 @@ const UserForm = () => {
       <div>
         <input
           type='submit'
-          value='Update User'
+          value={current ? 'Update User' : 'Add User'}
           className='btn btn-primary btn-block'
         />
       </div>
