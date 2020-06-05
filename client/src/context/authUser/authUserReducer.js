@@ -1,51 +1,50 @@
 import {
-  COM_REGISTER_SUCCESS,
-  COM_REGISTER_FAIL,
-  COM_LOADED,
-  COM_GET_USERS,
-  COM_AUTH_ERROR,
-  COM_LOGIN_SUCCESS,
-  COM_LOGIN_FAIL,
-  COM_LOGOUT,
-  COM_CLEAR_ERRORS,
+  USER_CASE_LOADED,
+  USER_AUTH_ERROR,
+  USER_LOGIN_SUCCESS,
+  USER_LOGIN_FAIL,
+  USER_LOGOUT,
+  USER_CLEAR_ERRORS,
+  USER_LOADED,
 } from '../types';
 
 export default (state, action) => {
   switch (action.type) {
-    case COM_LOADED:
+    case USER_LOADED:
       return {
         ...state,
-        company: action.payload,
+        // The code below means, generate new state if the payload have some and the initial state don't have
+        ...action.payload,
       };
-    case COM_GET_USERS:
+    case USER_CASE_LOADED:
       return {
         ...state,
         isAuthenticated: true,
         loading: false,
-        user: action.payload,
+        cases: action.payload,
       };
-    case COM_REGISTER_SUCCESS:
-    case COM_LOGIN_SUCCESS:
+    case USER_LOGIN_SUCCESS:
       localStorage.setItem('token', action.payload.token);
       return {
         ...state,
+        // The code below means, generate new state if the payload have and the initial state don't have
+        ...action.payload,
         isAuthenticated: true,
         loading: false,
       };
-    case COM_REGISTER_FAIL:
-    case COM_AUTH_ERROR:
-    case COM_LOGIN_FAIL:
-    case COM_LOGOUT:
+    case USER_AUTH_ERROR:
+    case USER_LOGIN_FAIL:
+    case USER_LOGOUT:
       localStorage.removeItem('token');
       return {
         ...state,
         token: null,
         isAuthenticated: false,
         loading: false,
-        company: null,
+        user: null,
         error: action.payload,
       };
-    case COM_CLEAR_ERRORS:
+    case USER_CLEAR_ERRORS:
       return {
         ...state,
         error: null,

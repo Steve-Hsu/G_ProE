@@ -2,13 +2,15 @@ import React, { Fragment } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 
-import ComRegister from './components/authCom/00_ComRegister';
-import UserManager from './components/pages/11_UserManager';
+import ComRegister from './components/authPage/00_ComRegister';
 
 //sRouter
 import ComManager from './components/pages/01_ComManager';
+import UserManager from './components/pages/11_UserManager';
+import CaseManager from './components/pages/21_CaseManager';
 //ComRouter
-import ComLogin from './components/authCom/10_ComLogin';
+import ComLogin from './components/authPage/10_ComLogin';
+import UserLogin from './components/authPage/20_UserLogin';
 //Alert
 import Alerts from './components/layout/Alerts';
 import './App.css';
@@ -20,6 +22,8 @@ import ComState from './context/company/ComState';
 import AuthComState from './context/authCom/AuthComState';
 import AlertState from './context/alert/AlterState';
 import UserState from './context/user/UserState';
+// 20 Cases
+import AuthUserState from './context/authUser/AuthUserState';
 
 //Global Header for token
 import setAuthToken from './utils/setAuthToken';
@@ -35,37 +39,53 @@ const App = () => {
     <AuthComState>
       <ComState>
         <UserState>
-          <AlertState>
-            <Router>
-              <Fragment>
-                <Navbar />
+          <AuthUserState>
+            <AlertState>
+              <Router>
+                <Fragment>
+                  <Navbar />
 
-                <div className='container'>
-                  <Alerts />
-                  <Switch>
-                    <Route exact path='/registercom' component={ComRegister} />
-                    <Route
-                      exact
-                      path='/registercom/manager'
-                      component={ComManager}
-                    />
-
-                    <Route
-                      exact
-                      path='/api/auth/company'
-                      component={ComLogin}
-                    />
-                    {/* <PrivateRoute */}
-                    <PrivateRoute
-                      exact
-                      path='/api/users'
-                      component={UserManager}
-                    />
-                  </Switch>
-                </div>
-              </Fragment>
-            </Router>
-          </AlertState>
+                  <div className='container'>
+                    <Alerts />
+                    <Switch>
+                      <Route
+                        exact
+                        path='/registercom'
+                        component={ComRegister}
+                      />
+                      <Route
+                        exact
+                        path='/registercom/manager'
+                        component={ComManager}
+                      />
+                      {/* LoginPages */}
+                      <Route
+                        exact
+                        path='/api/auth/company'
+                        component={ComLogin}
+                      />
+                      <Route
+                        exact
+                        path='/api/auth/user'
+                        component={UserLogin}
+                      />
+                      {/* <PrivateRoute */}
+                      <PrivateRoute
+                        exact
+                        path='/api/users'
+                        component={UserManager}
+                      />
+                      <PrivateRoute
+                        exact
+                        path='/api/case/user'
+                        component={CaseManager}
+                      />
+                    </Switch>
+                  </div>
+                </Fragment>
+              </Router>
+            </AlertState>
+          </AuthUserState>
         </UserState>
       </ComState>
     </AuthComState>

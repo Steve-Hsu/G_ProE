@@ -1,10 +1,13 @@
 import React, { useState, useContext, useEffect } from 'react';
 import UserContext from '../../context/user/userContext';
+import AlertContext from '../../context/alert/alertContext';
 
 const UserForm = () => {
   const userContext = useContext(UserContext);
+  const alertContext = useContext(AlertContext);
 
   const { addUser, current, clearCurrent, updateUser } = userContext;
+  const { setAlert } = alertContext;
   useEffect(() => {
     if (current !== null) {
       // If UserState.current is not empty, set UserForm.state === UserState.current
@@ -15,6 +18,7 @@ const UserForm = () => {
         name: '',
         email: '',
         password: '',
+        password2: '',
         cases: false,
         mtrl: false,
         cst: false,
@@ -30,6 +34,7 @@ const UserForm = () => {
     name: '',
     email: '',
     password: '',
+    password2: '',
     cases: false,
     mtrl: false,
     cst: false,
@@ -64,16 +69,19 @@ const UserForm = () => {
   const onSubmit = (e) => {
     // Prevent renew all the variables on browser(client), the userState and UserForm.state
     e.preventDefault();
-
-    if (current === null) {
-      // Grab the "User" from UserForm.state.
-      // Add the "User" to userState.userpanies
-      addUser(user);
+    if (password2 !== password) {
+      setAlert('Password and password confirmation not matched', 'danger');
     } else {
-      updateUser(user);
+      if (current === null) {
+        // Grab the "User" from UserForm.state.
+        // Add the "User" to userState.userpanies
+        addUser(user);
+      } else {
+        updateUser(user);
+      }
+      // Default the current and UserForm.state
+      clearAll();
     }
-    // Default the current and UserForm.state
-    clearAll();
   };
 
   const clearAll = () => {
@@ -99,14 +107,14 @@ const UserForm = () => {
       />
       <input
         type='password'
-        placeholder='Setting password'
+        placeholder='Password - Setting password'
         name='password'
         value={password}
         onChange={onChange}
       />
       <input
         type='password'
-        placeholder='Setting password'
+        placeholder='Password confirmation - Enter the password again.'
         name='password2'
         value={password2}
         onChange={onChange}

@@ -1,17 +1,17 @@
 import React, { useState, useContext, useEffect } from 'react';
 import AlertContext from '../../context/alert/alertContext';
-import AuthComContext from '../../context/authCom/authComContext';
+import AuthUserContext from '../../context/authUser/authUserContext';
 
-const ComLogin = (props) => {
+const UserLogin = (props) => {
   const alertContext = useContext(AlertContext);
-  const authComContext = useContext(AuthComContext);
+  const authUserContext = useContext(AuthUserContext);
 
   const { setAlert } = alertContext;
-  const { loginCom, error, clearErrors, isAuthenticated } = authComContext;
+  const { loginUser, error, clearErrors, isAuthenticated } = authUserContext;
 
   useEffect(() => {
     if (isAuthenticated) {
-      props.history.push('/api/users');
+      props.history.push('/api/case/user');
     }
     if (error) {
       setAlert(error, 'danger');
@@ -20,16 +20,16 @@ const ComLogin = (props) => {
     // eslint-disable-next-line
   }, [error, isAuthenticated, props.history]);
 
-  const [company, setCompany] = useState({
+  const [user, setUser] = useState({
     email: '',
     password: '',
   });
 
-  const { email, password } = company;
+  const { email, password } = user;
 
   const onChange = (e) =>
-    setCompany({
-      ...company,
+    setUser({
+      ...user,
       [e.target.name]: e.target.value,
     });
 
@@ -38,7 +38,7 @@ const ComLogin = (props) => {
     if (email === '' || password === '') {
       setAlert('Please fill in all fields', 'danger');
     } else {
-      loginCom({
+      loginUser({
         email,
         password,
       });
@@ -48,7 +48,7 @@ const ComLogin = (props) => {
   return (
     <div className='form-container'>
       <h1>
-        Company <span className='text-primary'>Login</span>
+        User <span className='text-primary'>Login</span>
       </h1>
       <form onSubmit={onSubmit}>
         {/* {Email Address} */}
@@ -84,4 +84,4 @@ const ComLogin = (props) => {
   );
 };
 
-export default ComLogin;
+export default UserLogin;

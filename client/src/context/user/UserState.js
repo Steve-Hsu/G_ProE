@@ -12,7 +12,7 @@ import {
   FILTER_USER,
   CLEAR_FILTER_USER,
   USER_ERROR,
-  GET_USERS,
+  COM_GET_USERS,
   CLEAR_USERS_STATE,
   CONFIRM_DELETE_USER,
   CLEAR_CONFIRM_DELETE,
@@ -32,7 +32,7 @@ const UserState = (props) => {
   const getUsers = async () => {
     try {
       const res = await axios.get('/api/users');
-      dispatch({ type: GET_USERS, payload: res.data });
+      dispatch({ type: COM_GET_USERS, payload: res.data });
     } catch (err) {
       dispatch({
         type: USER_ERROR,
@@ -109,6 +109,7 @@ const UserState = (props) => {
 
   //Update USER
   const updateUser = async (user) => {
+    console.log('right before put', user);
     const config = {
       header: {
         'Content-Type:': 'application/json',
@@ -116,6 +117,7 @@ const UserState = (props) => {
     };
     try {
       const res = await axios.put(`/api/users/${user._id}`, user, config);
+      console.log('right before dispatch', user);
       dispatch({
         type: UPDATE_USER,
         payload: res.data,

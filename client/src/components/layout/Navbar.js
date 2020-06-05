@@ -31,7 +31,10 @@ const Navbar = ({ title, icon }) => {
   const guestComLinks = (
     <Fragment>
       <li>
-        <Link to='/api/auth/user'>Login as User</Link>
+        <Link to='/api/auth/company'>Company Login</Link>
+      </li>
+      <li>
+        <Link to='/api/auth/user'>User Login</Link>
       </li>
     </Fragment>
   );

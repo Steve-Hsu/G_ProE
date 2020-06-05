@@ -7,7 +7,7 @@ import {
   FILTER_USER,
   CLEAR_FILTER_USER,
   USER_ERROR,
-  GET_USERS,
+  COM_GET_USERS,
   CLEAR_USERS_STATE,
   CONFIRM_DELETE_USER,
   CLEAR_CONFIRM_DELETE,
@@ -15,7 +15,7 @@ import {
 
 export default (state, action) => {
   switch (action.type) {
-    case GET_USERS:
+    case COM_GET_USERS:
       return {
         ...state,
         users: action.payload,

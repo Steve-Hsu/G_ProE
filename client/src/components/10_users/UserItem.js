@@ -43,9 +43,9 @@ const UserItem = ({ user }) => {
               >
                 Edit
               </button>
-              <buttom className='btn btn-danger btn-sm' onClick={onDelete}>
+              <button className='btn btn-danger btn-sm' onClick={onDelete}>
                 delete
-              </buttom>
+              </button>
             </p>
           </div>
           {/* Child element of grid - 2 */}
@@ -69,8 +69,8 @@ const UserItem = ({ user }) => {
 };
 
 UserItem.propTypes = {
-  //Set the variable, the user, passedin must be an array.
-  user: PropTypes.array.isRequired,
+  //Set the variable, the user, passedin must be an object.
+  user: PropTypes.object.isRequired,
 };
 
 export default UserItem;

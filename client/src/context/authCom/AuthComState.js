@@ -9,7 +9,8 @@ import setAuthToken from '../../utils/setAuthToken';
 import {
   COM_REGISTER_SUCCESS,
   COM_REGISTER_FAIL,
-  COM_USER_LOADED,
+  COM_LOADED,
+  COM_GET_USERS,
   COM_AUTH_ERROR,
   COM_LOGIN_SUCCESS,
   COM_LOGIN_FAIL,
@@ -31,22 +32,31 @@ const AuthComState = (props) => {
 
   // Load Users of Company
   const loadUser = async () => {
-    // const config = {
-    //   headers: {
-    //     'Content-type': 'application/json',
-    //   },
-    // };
-
-    if (localStorage.token) {
-      setAuthToken(localStorage.token);
-    }
+    //Set auth token to the latest token, if you don't set, it may take the previous token to login
+    // if (localStorage.token) {
+    //   setAuthToken(localStorage.token);
+    // }
 
     try {
       const res = await axios.get('/api/users');
       dispatch({
-        type: COM_USER_LOADED,
+        type: COM_GET_USERS,
         payloady: res.data,
       });
+    } catch (err) {
+      dispatch({ type: COM_AUTH_ERROR });
+    }
+  };
+
+  // Get the information of the Company
+  const loadCom = async () => {
+    //Set auth token to the latest token, if you don't set, it may take the previous token to login
+    // if (localStorage.token) {
+    //   setAuthToken(localStorage.token);
+    // }
+    try {
+      const res = await axios.get('/api/auth/company');
+      dispatch({ type: COM_LOADED, payload: res.data });
     } catch (err) {
       dispatch({ type: COM_AUTH_ERROR });
     }
@@ -64,11 +74,22 @@ const AuthComState = (props) => {
     try {
       const res = await axios.post('/registercom', formData, config);
       dispatch({
+        //Get token
         type: COM_REGISTER_SUCCESS,
         payload: res.data,
       });
       // If register is success loading the users of the company
+      //@ Very important !! Set auth token to the latest token, if not, the following function may take the previous token to login
+      if (localStorage.token) {
+        setAuthToken(localStorage.token);
+      }
+      //@ Very important !! Set auth token to the latest token, if not, the following function may take the previous token to login
+      if (localStorage.token) {
+        setAuthToken(localStorage.token);
+      }
+
       loadUser();
+      loadCom();
     } catch (err) {
       dispatch({
         type: COM_REGISTER_FAIL,
@@ -91,12 +112,18 @@ const AuthComState = (props) => {
         type: COM_LOGIN_SUCCESS,
         payload: res.data,
       });
+      //@ Very important !! Set auth token to the latest token, if not, the following function may take the previous token to login
+      if (localStorage.token) {
+        setAuthToken(localStorage.token);
+      }
+      loadCom();
       loadUser();
     } catch (err) {
       dispatch({
-        type: COM_REGISTER_FAIL,
-        payload: err.response.data.msg,
+        type: COM_LOGIN_FAIL,
+        payload: 'company Login fail',
       });
+      console.log(err);
     }
   };
 
@@ -116,6 +143,7 @@ const AuthComState = (props) => {
         company: state.company,
         error: state.error,
         loadUser,
+        loadCom,
         registerCom,
         clearErrors,
         loginCom,

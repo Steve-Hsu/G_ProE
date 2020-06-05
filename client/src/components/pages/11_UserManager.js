@@ -1,14 +1,10 @@
-import React, { useContext, useEffect, Fragment, useState } from 'react';
+import React, { useContext, useEffect, Fragment } from 'react';
 import Users from '../10_users/Users';
 import UserForm from '../10_users/UserForm';
 import UserFilter from '../10_users/UserFilter';
 import AuthComContext from '../../context/authCom/authComContext';
 
-import UserContext from '../../context/user/userContext';
-
 export const UserManager = () => {
-  const userContext = useContext(UserContext);
-
   // Check if there are any update in data, then update the UI
   const authComContext = useContext(AuthComContext);
   useEffect(() => {
