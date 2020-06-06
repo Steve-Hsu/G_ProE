@@ -27,7 +27,7 @@ const Navbar = ({ title, icon }) => {
 
   const authComLinks = (
     <Fragment>
-      <li>Hello ! {com.company && com.company.comName}</li>
+      <li>Hello ! {com.company && com.company.comName.toUpperCase()}</li>
       <li>
         <a onClick={onLogoutCom} href='#!'>
           <i className='fas fa-sign-out-alt'></i>{' '}
@@ -39,7 +39,9 @@ const Navbar = ({ title, icon }) => {
 
   const authUserLinks = (
     <Fragment>
-      <li>Hello ! {u.user && u.user.name}</li>
+      <li>
+        Hello ! {u.name && u.name.charAt(0).toUpperCase() + u.name.slice(1)}
+      </li>
       <li>
         <a onClick={onLogoutUser} href='#!'>
           <i className='fas fa-sign-out-alt'></i>{' '}

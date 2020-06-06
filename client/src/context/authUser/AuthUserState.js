@@ -23,6 +23,7 @@ const AuthUserState = (props) => {
     isAuthenticated: null,
     loading: true,
     company: null,
+    name: null,
     cases: null,
     error: null,
   };
@@ -96,7 +97,8 @@ const AuthUserState = (props) => {
         token: state.token,
         isAuthenticated: state.isAuthenticated,
         loading: state.loading,
-        user: state.user,
+        name: state.name,
+        // user: state.user,
         error: state.error,
         loadCases,
         loginUser,
