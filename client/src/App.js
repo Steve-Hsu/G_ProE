@@ -15,7 +15,8 @@ import UserLogin from './components/authPage/20_UserLogin';
 import Alerts from './components/layout/Alerts';
 import './App.css';
 //Private route
-import PrivateRoute from './components/routing/PrivateRoute';
+import PrivateComRoute from './components/routing/PrivateComRoute';
+import PrivateUserRoute from './components/routing/PrivateUserRoute';
 
 //Context API
 import ComState from './context/company/ComState';
@@ -45,7 +46,7 @@ const App = () => {
                 <Fragment>
                   <Navbar />
 
-                  <div className='container'>
+                  <div>
                     <Alerts />
                     <Switch>
                       <Route
@@ -70,12 +71,12 @@ const App = () => {
                         component={UserLogin}
                       />
                       {/* <PrivateRoute */}
-                      <PrivateRoute
+                      <PrivateComRoute
                         exact
                         path='/api/users'
                         component={UserManager}
                       />
-                      <PrivateRoute
+                      <PrivateUserRoute
                         exact
                         path='/api/case/user'
                         component={CaseManager}

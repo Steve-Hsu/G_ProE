@@ -18,7 +18,10 @@ export const CaseManager = () => {
   return (
     <Fragment>
       {/* content */}
-      <h1>Here is the case</h1>
+      <div className='container'>
+        <div style={{ backgroundColor: 'yellow' }}>I'm grid 1</div>
+        <div style={{ backgroundColor: 'blue' }}>I'm grid 2</div>
+      </div>
     </Fragment>
   );
 };

@@ -14,13 +14,15 @@ export const UserManager = () => {
 
   return (
     <Fragment>
-      <div className='grid-2'>
-        <div>
-          <UserForm />
-        </div>
-        <div>
-          <UserFilter />
-          <Users />
+      <div className='container'>
+        <div className='grid-2'>
+          <div>
+            <UserForm />
+          </div>
+          <div>
+            <UserFilter />
+            <Users />
+          </div>
         </div>
       </div>
     </Fragment>

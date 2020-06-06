@@ -83,7 +83,7 @@ const AuthUserState = (props) => {
     }
   };
 
-  // Logout Company
+  // Logout User
   const logoutUser = () => dispatch({ type: USER_LOGOUT });
 
   // Clear Error

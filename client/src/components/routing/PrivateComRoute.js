@@ -2,7 +2,7 @@ import React, { useContext, Component } from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import AuthComContext from '../../context/authCom/authComContext';
 
-const PrivateRoute = ({ component: Component, ...rest }) => {
+const PrivateComRoute = ({ component: Component, ...rest }) => {
   const authComContext = useContext(AuthComContext);
   const { isAuthenticated, loading } = authComContext;
   return (
@@ -19,4 +19,4 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
   );
 };
 
-export default PrivateRoute;
+export default PrivateComRoute;

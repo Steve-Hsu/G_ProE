@@ -1,3 +1,4 @@
+/* Import google font */
 @import url('https://fonts.googleapis.com/css?family=Roboto');
 /* This sheet is based by App.css from Brad Traversy */
 /* I customized some features of this sheet */
@@ -182,6 +183,12 @@ img {
 .grid-4 {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+  grid-gap: 2rem;
+}
+
+.grid-1-4 {
+  display: grid;
+  grid-template-columns: 1fr 4fr;
   grid-gap: 2rem;
 }
 

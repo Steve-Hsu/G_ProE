@@ -2,23 +2,32 @@ import React, { Fragment, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import AuthComContext from '../../context/authCom/authComContext';
+import AuthUserContext from '../../context/authUser/authUserContext';
 import UserContext from '../../context/user/userContext';
 
 const Navbar = ({ title, icon }) => {
   const authComContext = useContext(AuthComContext);
+  const authUserContext = useContext(AuthUserContext);
   const userContext = useContext(UserContext);
 
-  const { isAuthenticated, logoutCom, company } = authComContext;
+  // Destructure
+  const com = authComContext;
+  const u = authUserContext;
   const { clearUsers } = userContext;
 
   const onLogoutCom = () => {
-    logoutCom();
+    com.logoutCom();
+    clearUsers();
+  };
+
+  const onLogoutUser = () => {
+    u.logoutUser();
     clearUsers();
   };
 
   const authComLinks = (
     <Fragment>
-      <li>Hello ! {company && company.comName}</li>
+      <li>Hello ! {com.company && com.company.comName}</li>
       <li>
         <a onClick={onLogoutCom} href='#!'>
           <i className='fas fa-sign-out-alt'></i>{' '}
@@ -28,7 +37,19 @@ const Navbar = ({ title, icon }) => {
     </Fragment>
   );
 
-  const guestComLinks = (
+  const authUserLinks = (
+    <Fragment>
+      <li>Hello ! {u.user && u.user.name}</li>
+      <li>
+        <a onClick={onLogoutUser} href='#!'>
+          <i className='fas fa-sign-out-alt'></i>{' '}
+          <span className='hide-sm'>Logout</span>
+        </a>
+      </li>
+    </Fragment>
+  );
+
+  const guestLinks = (
     <Fragment>
       <li>
         <Link to='/api/auth/company'>Company Login</Link>
@@ -46,7 +67,13 @@ const Navbar = ({ title, icon }) => {
           <i className={icon} /> {title}
         </Link>
       </h1>
-      <ul>{isAuthenticated ? authComLinks : guestComLinks}</ul>
+      <ul>
+        {com.isAuthenticated !== true && u.isAuthenticated !== true
+          ? guestLinks
+          : null}
+        {com.isAuthenticated ? authComLinks : null}
+        {u.isAuthenticated ? authUserLinks : null}
+      </ul>
     </div>
   );
 };
