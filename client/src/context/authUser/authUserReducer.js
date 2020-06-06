@@ -40,6 +40,9 @@ export default (state, action) => {
         ...state,
         token: null,
         isAuthenticated: false,
+        name: null,
+        company: null,
+        cases: null,
         loading: false,
         error: action.payload,
       };

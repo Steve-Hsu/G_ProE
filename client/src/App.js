@@ -4,10 +4,12 @@ import Navbar from './components/layout/Navbar';
 
 import ComRegister from './components/authPage/00_ComRegister';
 
-//sRouter
+//Pages
+import NotFound from './components/pages/NotFound';
 import ComManager from './components/pages/01_ComManager';
 import UserManager from './components/pages/11_UserManager';
 import CaseManager from './components/pages/21_CaseManager';
+import NewCase from './components/pages/22_NewCase';
 //ComRouter
 import ComLogin from './components/authPage/10_ComLogin';
 import UserLogin from './components/authPage/20_UserLogin';
@@ -21,15 +23,12 @@ import PrivateUserRoute from './components/routing/PrivateUserRoute';
 //Context API
 import ComState from './context/company/ComState';
 import AuthComState from './context/authCom/AuthComState';
+import AuthUserState from './context/authUser/AuthUserState';
 import AlertState from './context/alert/AlterState';
 import UserState from './context/user/UserState';
-// 20 Cases
-import AuthUserState from './context/authUser/AuthUserState';
 
 //Global Header for token
 import setAuthToken from './utils/setAuthToken';
-
-//Test element
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
@@ -81,6 +80,12 @@ const App = () => {
                         path='/api/case/user'
                         component={CaseManager}
                       />
+                      <PrivateUserRoute
+                        exact
+                        path='/api/case/user/newcase'
+                        component={NewCase}
+                      />
+                      <Route component={NotFound} />
                     </Switch>
                   </div>
                 </Fragment>

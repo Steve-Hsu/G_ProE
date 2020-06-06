@@ -16,11 +16,13 @@ const Navbar = ({ title, icon }) => {
   const { clearUsers } = userContext;
 
   const onLogoutCom = () => {
+    u.logoutUser();
     com.logoutCom();
     clearUsers();
   };
 
   const onLogoutUser = () => {
+    com.logoutCom();
     u.logoutUser();
     clearUsers();
   };

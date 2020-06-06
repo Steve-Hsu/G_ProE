@@ -74,7 +74,7 @@ const AuthUserState = (props) => {
         setAuthToken(localStorage.token);
       }
       console.log('User Login success');
-      loadCases();
+      // loadCases();
       loadUser();
     } catch (err) {
       dispatch({

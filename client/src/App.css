@@ -448,6 +448,11 @@ table th {
   align-content: flex-start;
 }
 
+/* Cursor */
+.cursor:hover {
+  cursor: pointer;
+}
+
 /* Mobile Styles  -------------------------------- */
 @media (max-width: 700px) {
   .hide-sm {
