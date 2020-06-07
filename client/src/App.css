@@ -311,7 +311,8 @@ img {
 
 /* Forms */
 input {
-  margin: 1.2rem 0;
+  margin: 1rem 0;
+  border-radius: 5px;
 }
 
 .form-text {
@@ -492,4 +493,10 @@ table th {
     text-align: center;
     justify-content: center;
   }
+}
+
+/* test */
+
+.caseform {
+  background: gray;
 }
