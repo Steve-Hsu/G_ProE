@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 // Components
-import Sizes from './1_1_Sizes';
-import ColorWays from './1_2_ColorWays';
+import Size from './1_1_Size';
+import ColorWay from './1_2_ColorWay';
 
 const CaseForm = () => {
   const [cases, setCases] = useState({
@@ -84,9 +84,28 @@ const CaseForm = () => {
           <input type='text' name='style' id='style' />
           {'Client'}
           <input type='text' name='client' />
-          <Sizes sizes={sizes} addSize={addSize} deleteSize={deleteSize} />
 
-          <ColorWays cWays={cWays} addcWay={addcWay} deletecWay={deletecWay} />
+          {/* Size -------------------------- */}
+          <div>
+            {'Size'}
+            <button name='btn1' className='btn' onClick={addSize}>
+              Size button
+            </button>
+            {sizes.map((size) => (
+              <Size key={size.id} size={size} deleteSize={deleteSize} />
+            ))}
+          </div>
+
+          {/* ColorWay -------------------------- */}
+          <div>
+            {'Color Way'}
+            <button name='btn2' className='btn' onClick={addcWay}>
+              +
+            </button>
+            {cWays.map((cWay) => (
+              <ColorWay key={cWay.id} cWay={cWay} deletecWay={deletecWay} />
+            ))}
+          </div>
         </form>
       </div>
     </div>
