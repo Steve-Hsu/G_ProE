@@ -76,7 +76,7 @@ const CaseForm = () => {
   };
 
   return (
-    <div className='caseform container'>
+    <div className='p-1 test-2'>
       <div>
         <form>
           {/* <label for='style'>Style</label> */}
@@ -88,9 +88,15 @@ const CaseForm = () => {
           {/* Size -------------------------- */}
           <div>
             {'Size'}
-            <button name='btn1' className='btn' onClick={addSize}>
-              Size button
+            <button
+              name='sizeBtn'
+              className='btn btn-sm btn-primary'
+              onClick={addSize}
+            >
+              +
             </button>
+          </div>
+          <div className='grid-5'>
             {sizes.map((size) => (
               <Size key={size.id} size={size} deleteSize={deleteSize} />
             ))}
@@ -99,9 +105,15 @@ const CaseForm = () => {
           {/* ColorWay -------------------------- */}
           <div>
             {'Color Way'}
-            <button name='btn2' className='btn' onClick={addcWay}>
+            <button
+              name='cWayBtn'
+              className='btn btn-sm btn-primary'
+              onClick={addcWay}
+            >
               +
             </button>
+          </div>
+          <div className='grid-5'>
             {cWays.map((cWay) => (
               <ColorWay key={cWay.id} cWay={cWay} deletecWay={deletecWay} />
             ))}

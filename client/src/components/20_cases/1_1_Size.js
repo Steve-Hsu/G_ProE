@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 
 const Size = ({ size, deleteSize }) => {
   return (
-    <p>
+    <div className='grid-3-1 grid-gap-sm test-1'>
       <input type='text' name='style' placeholder='Size' />
-      <button value={size.id} onClick={deleteSize} className='btn'>
-        X
+      <button value={size.id} onClick={deleteSize} className='btn btn-danger'>
+        x
       </button>
-    </p>
+    </div>
   );
 };
 

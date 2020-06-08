@@ -13,6 +13,7 @@
   --light-color: #fff5bd;
   --danger-color: #dc3545;
   --success-color: #28a745;
+  --gap: 0.5rem;
 }
 
 * {
@@ -171,30 +172,60 @@ img {
 .grid-2 {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-gap: 2rem;
+  grid-gap: var(--gap);
 }
 
 .grid-3 {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-gap: 1rem;
+  grid-gap: var(--gap);
 }
 
 .grid-4 {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-gap: 2rem;
+  grid-gap: var(--gap);
 }
 
+.grid-5 {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: var(--gap);
+}
+
+/* grid - 2 block*/
 .grid-1-4 {
   display: grid;
   grid-template-columns: 1fr 4fr;
-  grid-gap: 2rem;
+  grid-gap: var(--gap);
 }
 
 .grid-2-3 {
   display: grid;
   grid-template-columns: 2fr 3fr;
+  grid-gap: var(--gap);
+}
+
+.grid-3-1 {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  grid-gap: var(--gap);
+}
+
+/* grid gap */
+.grid-gap-ti {
+  grid-gap: 0.2rem;
+}
+
+.grid-gap-sm {
+  grid-gap: 0.3rem;
+}
+
+.grid-gap-md {
+  grid-gap: 1.2rem;
+}
+
+.grid-gap-lg {
   grid-gap: 2rem;
 }
 
@@ -497,6 +528,10 @@ table th {
 
 /* test */
 
-.caseform {
+.test-1 {
   background: gray;
+}
+
+.test-2 {
+  background: rgb(246, 247, 187);
 }

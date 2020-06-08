@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 
 const ColorWay = ({ cWay, deletecWay }) => {
   return (
-    <p>
+    <div className='grid-3-1 grid-gap-sm test-1'>
       <input type='text' name='style' placeholder='Color Way' />
-      <button value={cWay.id} onClick={deletecWay} className='btn'>
-        X
+      <button value={cWay.id} onClick={deletecWay} className='btn btn-danger'>
+        x
       </button>
-    </p>
+    </div>
   );
 };
 
