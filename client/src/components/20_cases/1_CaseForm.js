@@ -145,24 +145,18 @@ const CaseForm = () => {
   const toggleColorSet = async (e) => {
     // the e here is the app itself. Prevent it set back to default value
     e.preventDefault();
-    const MID = e.target.value;
-    const MtrlObj = cases.mtrls.find(({ id }) => id === MID);
-    MtrlObj.expandColor = !MtrlObj.expandColor;
-    const existingMtrl = mtrls.filter((mtrl) => mtrl.id !== MID);
+    const targetID = e.target.value;
 
-    if (existingMtrl.length === 0) {
-      setCases({
-        // ...cases, = keep the rest of data
-        ...cases,
-        mtrls: [MtrlObj],
-      });
-    } else {
-      setCases({
-        // ...cases, = keep the rest of data
-        ...cases,
-        mtrls: [...existingMtrl, MtrlObj],
-      });
-    }
+    const materials = cases.mtrls;
+    materials.find(({ id }) => id === targetID).expandColor = !materials.find(
+      ({ id }) => id === targetID
+    ).expandColor;
+
+    setCases({
+      // ...cases, = keep the rest of data
+      ...cases,
+      mtrls: materials,
+    });
   };
 
   return (
