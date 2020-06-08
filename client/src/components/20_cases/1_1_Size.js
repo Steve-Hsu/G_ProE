@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Size = ({ size, deleteSize }) => {
+const Size = ({ size, deleteSize, theArray }) => {
   return (
     <div className='grid-3-1 grid-gap-sm test-1'>
       <input type='text' name='style' placeholder='Size' />

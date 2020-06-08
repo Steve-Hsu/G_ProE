@@ -4,8 +4,10 @@ import { v4 as uuidv4 } from 'uuid';
 // Components
 import Size from './1_1_Size';
 import ColorWay from './1_2_ColorWay';
+import Mtrl from './1_3_Mtrl';
 
 const CaseForm = () => {
+  //Set State
   const [cases, setCases] = useState({
     style: '',
     client: '',
@@ -21,11 +23,30 @@ const CaseForm = () => {
         value: '',
       },
     ],
+    mtrls: [
+      {
+        id: uuidv4(),
+        item: '',
+        spec: '',
+        supplier: '',
+        ref_no: '',
+        position: '',
+        description: '',
+        unit: '',
+        mtrlColor: [
+          {
+            id: uuidv4(),
+          },
+        ],
+        expandColor: false,
+      },
+    ],
   });
 
-  const { sizes, cWays } = cases;
+  const { sizes, cWays, mtrls } = cases;
 
   const addSize = (e) => {
+    // the e here is the app itself. Prevent it set back to default value
     e.preventDefault();
     try {
       if (sizes.length < 15) {
@@ -41,6 +62,7 @@ const CaseForm = () => {
   };
 
   const deleteSize = (e) => {
+    // the e here is the app itself. Prevent it set back to default value
     e.preventDefault();
     console.log(e.target);
     setCases({
@@ -51,6 +73,7 @@ const CaseForm = () => {
   };
 
   const addcWay = (e) => {
+    // the e here is the app itself. Prevent it set back to default value
     e.preventDefault();
     try {
       if (cWays.length < 20) {
@@ -66,6 +89,7 @@ const CaseForm = () => {
   };
 
   const deletecWay = (e) => {
+    // the e here is the app itself. Prevent it set back to default value
     e.preventDefault();
     console.log(e.target);
     setCases({
@@ -75,11 +99,78 @@ const CaseForm = () => {
     });
   };
 
+  const addMtrl = (e) => {
+    // the e here is the app itself. Prevent it set back to default value
+    e.preventDefault();
+    try {
+      if (mtrls.length < 500) {
+        setCases({
+          // ...cases, = keep the rest of data.
+          ...cases,
+          mtrls: [
+            ...mtrls,
+            {
+              id: uuidv4(),
+              item: '',
+              spec: '',
+              supplier: '',
+              ref_no: '',
+              position: '',
+              description: '',
+              unit: '',
+              mtrlColor: [
+                {
+                  id: uuidv4(),
+                },
+              ],
+              expandColor: false,
+            },
+          ],
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const deleteMtrl = (e) => {
+    e.preventDefault();
+    setCases({
+      // ...cases, = keep the rest of data.
+      ...cases,
+      mtrls: mtrls.filter((mtrl) => mtrl.id !== e.target.value),
+    });
+  };
+
+  const toggleColorSet = async (e) => {
+    // the e here is the app itself. Prevent it set back to default value
+    e.preventDefault();
+    const MID = e.target.value;
+    const MtrlObj = cases.mtrls.find(({ id }) => id === MID);
+    MtrlObj.expandColor = !MtrlObj.expandColor;
+    const existingMtrl = mtrls.filter((mtrl) => mtrl.id !== MID);
+
+    if (existingMtrl.length === 0) {
+      setCases({
+        // ...cases, = keep the rest of data
+        ...cases,
+        mtrls: [MtrlObj],
+      });
+    } else {
+      setCases({
+        // ...cases, = keep the rest of data
+        ...cases,
+        mtrls: [...existingMtrl, MtrlObj],
+      });
+    }
+  };
+
   return (
     <div className='p-1 test-2'>
       <div>
         <form>
-          {/* <label for='style'>Style</label> */}
+          {'Import style from Excel'}
+          <input type='text' name='import' id='imoprt' />
           {'Style'}
           <input type='text' name='style' id='style' />
           {'Client'}
@@ -116,6 +207,27 @@ const CaseForm = () => {
           <div className='grid-5'>
             {cWays.map((cWay) => (
               <ColorWay key={cWay.id} cWay={cWay} deletecWay={deletecWay} />
+            ))}
+          </div>
+          {/* Material -------------------------- */}
+          <div>
+            {'Material'}
+            <button
+              name='mtrlBtn'
+              className='btn btn-sm btn-primary'
+              onClick={addMtrl}
+            >
+              +
+            </button>
+          </div>
+          <div>
+            {mtrls.map((mtrl) => (
+              <Mtrl
+                key={mtrl.id}
+                mtrl={mtrl}
+                deleteMtrl={deleteMtrl}
+                toggleColorSet={toggleColorSet}
+              />
             ))}
           </div>
         </form>

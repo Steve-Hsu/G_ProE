@@ -118,7 +118,7 @@ img {
 
 /* Padding */
 .p {
-  padding: 0.5rem;
+  padding: var(--gap);
 }
 .p-1 {
   padding: 1rem;
@@ -130,7 +130,7 @@ img {
   padding: 3rem;
 }
 .py {
-  padding: 0.5rem 0;
+  padding: var(--gap) 0;
 }
 .py-1 {
   padding: 1rem 0;
@@ -141,10 +141,22 @@ img {
 .py-3 {
   padding: 3rem 0;
 }
+.pb {
+  padding: var(--gap);
+}
+.pb-1 {
+  padding: 0 0 1rem;
+}
+.pb-2 {
+  padding: 0 0 2rem;
+}
+.pb-3 {
+  padding: 0 0 3rem;
+}
 
 /* Margin */
 .m {
-  margin: 0.5rem;
+  margin: var(--gap);
 }
 .m-1 {
   margin: 1rem;
@@ -156,7 +168,7 @@ img {
   margin: 3rem;
 }
 .my {
-  margin: 0.5rem 0;
+  margin: var(--gap) 0;
 }
 .my-1 {
   margin: 1rem 0;
@@ -190,6 +202,12 @@ img {
 .grid-5 {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
+  grid-gap: var(--gap);
+}
+
+.grid-6 {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
   grid-gap: var(--gap);
 }
 
@@ -534,4 +552,8 @@ table th {
 
 .test-2 {
   background: rgb(246, 247, 187);
+}
+
+.test-3 {
+  background: hotpink;
 }
