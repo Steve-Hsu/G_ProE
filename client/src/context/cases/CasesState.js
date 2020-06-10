@@ -24,21 +24,23 @@ const CasesState = (props) => {
   // For setting state more convenient
   const newCWay = {
     id: uuidv4(),
-    gClr: null,
+    gClr: '',
   };
   const newSize = {
     id: uuidv4(),
     value: null,
   };
+
+  // React : default input should not be an 'null'
   const newMtrl = {
     id: uuidv4(),
-    item: null,
-    spec: null,
-    supplier: null,
-    ref_no: null,
-    position: null,
-    description: null,
-    unit: null,
+    item: '',
+    spec: '',
+    supplier: '',
+    ref_no: '',
+    position: '',
+    description: '',
+    unit: '',
     mtrlColors: [],
     expandColor: false,
   };
@@ -63,7 +65,7 @@ const CasesState = (props) => {
         id: uuidv4(),
         mtrl: mtrl.id,
         cWay: cWayId,
-        mColor: null,
+        mColor: '',
       });
     });
     dispatch({ type: MTRL_UPDATE, payload: materials });
@@ -129,7 +131,7 @@ const CasesState = (props) => {
         id: uuidv4(),
         mtrl: newMtrl.id,
         cWay: cWay.id,
-        mColor: null,
+        mColor: '',
       });
     });
 
