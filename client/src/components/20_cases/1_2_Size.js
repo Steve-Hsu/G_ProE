@@ -2,16 +2,18 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import CasesContext from '../../context/cases/casesContext';
 
-const Size = ({ size, deleteSize }) => {
+const Size = ({ size }) => {
   const casesContext = useContext(CasesContext);
+  const { deleteSize, updateSize } = casesContext;
   return (
     <div className='grid-3-1 grid-gap-sm test-1'>
-      <input type='text' name='style' placeholder='Size' />
-      <button
-        value={size.id}
-        onClick={casesContext.deleteSize}
-        className='btn btn-danger'
-      >
+      <input
+        id={size.id}
+        type='text'
+        placeholder='Size'
+        onChange={updateSize}
+      />
+      <button value={size.id} onClick={deleteSize} className='btn btn-danger'>
         x
       </button>
     </div>

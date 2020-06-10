@@ -28,10 +28,10 @@ const CasesState = (props) => {
   };
   const newSize = {
     id: uuidv4(),
-    value: null,
+    gSize: '',
   };
 
-  // React : default input should not be an 'null'
+  // According to React : default input should not be an 'null'
   const newMtrl = {
     id: uuidv4(),
     item: '',
@@ -42,7 +42,10 @@ const CasesState = (props) => {
     description: '',
     unit: '',
     mtrlColors: [],
+    sizeSPECs: [],
     expandColor: false,
+    expandSizeSPEC: false,
+    expandCspt: false,
   };
   // State
   const initialStete = {
@@ -81,20 +84,30 @@ const CasesState = (props) => {
     dispatch({ type: MTRL_UPDATE, payload: materials });
   };
 
+  const updateMtrlSizeSPEC = (sizeId) => {
+    let materials = mtrls;
+    materials.map((mtrl) => {
+      mtrl.sizeSPECs.push({
+        id: uuidv4(),
+        mtrl: mtrl.id,
+        size: sizeId,
+        mSizeSPEC: '',
+      });
+    });
+    dispatch({ type: MTRL_UPDATE, payload: materials });
+  };
+
+  const deleteMtrlSizeSPEC = (sizeId) => {
+    let materials = mtrls;
+    materials.map((mtrl) => {
+      mtrl.sizeSPECs = mtrl.sizeSPECs.filter(
+        (mtrlSPEC) => mtrlSPEC.size !== sizeId
+      );
+    });
+    dispatch({ type: MTRL_UPDATE, payload: materials });
+  };
+
   // Export using functions --------------
-  const addSize = (e) => {
-    // e.preventDefault : the e here is the app itself. Prevent it set back to default value
-    e.preventDefault();
-    if (sizes.length < 15) {
-      dispatch({ type: SIZE_ADD, payload: newCWay });
-    }
-  };
-
-  const deleteSize = (e) => {
-    e.preventDefault();
-    dispatch({ type: SIZE_DELETE, payload: e.target.value });
-  };
-
   const addcWay = (e) => {
     e.preventDefault();
     const cWayId = uuidv4();
@@ -123,6 +136,35 @@ const CasesState = (props) => {
     dispatch({ type: CLR_WAY_DELETE, payload: cWayId });
   };
 
+  const addSize = (e) => {
+    // e.preventDefault : the e here is the app itself. Prevent it set back to default value
+    e.preventDefault();
+    const sizeId = uuidv4();
+    // Add the new Size to each material
+    updateMtrlSizeSPEC(sizeId);
+    if (sizes.length < 15) {
+      dispatch({ type: SIZE_ADD, payload: { id: sizeId, gSize: '' } });
+    }
+  };
+
+  const updateSize = (e) => {
+    e.preventDefault();
+    const targetID = e.target.id;
+    // Prevent the computer confused two cWays so the variable named "colorWay"
+    const gSizes = sizes;
+    //Toggle the value
+    gSizes.find(({ id }) => id === targetID).gSize = e.target.value;
+    dispatch({ type: SIZE_UPDATE, payload: gSizes });
+  };
+
+  const deleteSize = (e) => {
+    e.preventDefault();
+    const sizeId = e.target.value;
+    //Delete the size SPEC in eatch mtrl
+    deleteMtrlSizeSPEC(sizeId);
+    dispatch({ type: SIZE_DELETE, payload: sizeId });
+  };
+
   const addMtrl = (e) => {
     e.preventDefault();
     //Update the mtrlColors to the new mtrl, before adding it to mtrls
@@ -132,6 +174,15 @@ const CasesState = (props) => {
         mtrl: newMtrl.id,
         cWay: cWay.id,
         mColor: '',
+      });
+    });
+
+    sizes.map((size) => {
+      newMtrl.sizeSPECs.push({
+        id: uuidv4(),
+        mtrl: newMtrl.id,
+        size: size.id,
+        mSizeSPEC: '',
       });
     });
 
@@ -154,6 +205,18 @@ const CasesState = (props) => {
     materials.find(({ id }) => id === mtrlId).expandColor = !materials.find(
       ({ id }) => id === mtrlId
     ).expandColor;
+
+    dispatch({ type: MTRL_UPDATE, payload: materials });
+  };
+
+  const expandSizeSPEC = (e) => {
+    e.preventDefault();
+    //The id is set in the value of the btn when which is created. so here we fetch id by e.target.value.
+    const mtrlId = e.target.value;
+    const materials = mtrls;
+    materials.find(({ id }) => id === mtrlId).expandSizeSPEC = !materials.find(
+      ({ id }) => id === mtrlId
+    ).expandSizeSPEC;
 
     dispatch({ type: MTRL_UPDATE, payload: materials });
   };
@@ -185,6 +248,19 @@ const CasesState = (props) => {
     dispatch({ type: MTRL_UPDATE, payload: materials });
   };
 
+  const addValueMtrlSizeSPEC = (e) => {
+    e.preventDefault();
+    const mtrlId = e.target.name;
+    const targetId = e.target.id;
+    //??? This code works, however I still don't know why the sup variable will affect parent variable here.
+    let materials = mtrls;
+    let material = materials.find(({ id }) => id === mtrlId);
+    material.sizeSPECs.find(({ id }) => id === targetId).mSizeSPEC =
+      e.target.value;
+
+    dispatch({ type: MTRL_UPDATE, payload: materials });
+  };
+
   return (
     <CasesContext.Provider
       value={{
@@ -193,15 +269,18 @@ const CasesState = (props) => {
         cWays: state.cWays,
         sizes: state.sizes,
         mtrls: state.mtrls,
-        addSize,
-        deleteSize,
         addcWay,
         updatecWay,
         deletecWay,
+        addSize,
+        updateSize,
+        deleteSize,
         addMtrl,
         deleteMtrl,
         expandMtrlColor,
+        expandSizeSPEC,
         addValueMtrlColor,
+        addValueMtrlSizeSPEC,
       }}
     >
       {props.children}

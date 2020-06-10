@@ -2,10 +2,11 @@ import React, { Fragment, useContext } from 'react';
 import PropTypes from 'prop-types';
 import CasesContext from '../../context/cases/casesContext';
 import MtrlClr from './1_3_1_MtrlClr';
+import MtrlSizeSPEC from './1_3_2_MtrlSizeSPEC';
 
 const Mtrl = ({ mtrl }) => {
   const casesContext = useContext(CasesContext);
-  const { deleteMtrl, expandMtrlColor } = casesContext;
+  const { deleteMtrl, expandMtrlColor, expandSizeSPEC } = casesContext;
   return (
     <div className='grid-6 pb test-3'>
       {/* Row_1  */}
@@ -46,10 +47,13 @@ const Mtrl = ({ mtrl }) => {
       >
         Color set
       </button>
-      <div className='test-1'>
-        <p>MtrlSize</p>
-        <input type='text' name='mtrlSize' placeholder='MtrlSize' />
-      </div>
+      <button
+        value={mtrl.id}
+        onClick={expandSizeSPEC}
+        className='btn btn-primary'
+      >
+        Size SPEC
+      </button>
       <div className='test-1'>
         <p>Consumption</p>
         <input type='text' name='cspt' placeholder='Consumption' />
@@ -64,6 +68,18 @@ const Mtrl = ({ mtrl }) => {
             <MtrlClr
               key={mtrlColor.id}
               mtrlColor={mtrlColor}
+              mtrlId={mtrl.id}
+            />
+          ))}
+        </Fragment>
+      ) : null}
+      {/* Row_4  */}
+      {mtrl.expandSizeSPEC ? (
+        <Fragment>
+          {mtrl.sizeSPECs.map((sizeSPEC) => (
+            <MtrlSizeSPEC
+              key={sizeSPEC.id}
+              sizeSPEC={sizeSPEC}
               mtrlId={mtrl.id}
             />
           ))}
