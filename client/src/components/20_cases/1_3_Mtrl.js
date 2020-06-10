@@ -1,15 +1,11 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useContext } from 'react';
 import PropTypes from 'prop-types';
+import CasesContext from '../../context/cases/casesContext';
 import MtrlClr from './1_3_1_MtrlClr';
 
-const Mtrl = ({
-  sizes,
-  cWays,
-  mtrl,
-  deleteMtrl,
-  toggleColorSet,
-  addMtrlColor,
-}) => {
+const Mtrl = ({ mtrl }) => {
+  const casesContext = useContext(CasesContext);
+  const { sizes, cWays, deleteMtrl, expandMtrlColor } = casesContext;
   return (
     <div className='grid-6 pb test-3'>
       {/* Row_1  */}
@@ -45,7 +41,7 @@ const Mtrl = ({
       </div>
       <button
         value={mtrl.id}
-        onClick={toggleColorSet}
+        onClick={expandMtrlColor}
         className='btn btn-primary'
       >
         Color set
@@ -65,12 +61,7 @@ const Mtrl = ({
       {mtrl.expandColor ? (
         <Fragment>
           {cWays.map((cWay) => (
-            <MtrlClr
-              key={mtrl.id + cWay.id}
-              mtrlId={mtrl.id}
-              cWay={cWay}
-              addMtrlColor={addMtrlColor}
-            />
+            <MtrlClr key={mtrl.id + cWay.id} mtrlId={mtrl.id} cWay={cWay} />
           ))}
         </Fragment>
       ) : null}
@@ -82,10 +73,5 @@ export default Mtrl;
 
 // PropTyeps
 Mtrl.propTypes = {
-  sizes: PropTypes.array.isRequired,
-  cWays: PropTypes.array.isRequired,
   mtrl: PropTypes.object.isRequired,
-  toggleColorSet: PropTypes.func.isRequired,
-  deleteMtrl: PropTypes.func.isRequired,
-  addMtrlColor: PropTypes.func.isRequired,
 };

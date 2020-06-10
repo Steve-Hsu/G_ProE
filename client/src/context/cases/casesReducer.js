@@ -45,7 +45,7 @@ export default (state, action) => {
     case MTRL_ADD:
       return {
         ...state,
-        mtrls: [...mtrls, action.payload],
+        mtrls: [...state.mtrls, action.payload],
       };
     case MTRL_UPDATE:
       return {
@@ -55,7 +55,7 @@ export default (state, action) => {
     case MTRL_DELETE:
       return {
         ...state,
-        mtrls: mtrls.filter((mtrl) => mtrl.id !== action.payload),
+        mtrls: state.mtrls.filter((mtrl) => mtrl.id !== action.payload),
       };
   }
 };

@@ -1,5 +1,5 @@
 import React, { useReducer } from 'react';
-import { v4 as uuid4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 import CasesContext from './casesContext';
 import CasesReducer from './casesReducer';
@@ -22,6 +22,14 @@ import {
 const CasesState = (props) => {
   // object Model
   // For setting state more convenient
+  const newCWay = {
+    id: uuidv4(),
+    gClr: null,
+  };
+  const newSize = {
+    id: uuidv4(),
+    value: null,
+  };
   const newMtrl = {
     id: uuidv4(),
     item: null,
@@ -38,30 +46,21 @@ const CasesState = (props) => {
   const initialStete = {
     style: null,
     client: null,
-    cWays: [
-      {
-        id: uuidv4(),
-        gClr: null,
-      },
-    ],
-    sizes: [
-      {
-        id: uuidv4(),
-        value: null,
-      },
-    ],
-    mtrls: [newMtrl],
+    cWays: [],
+    sizes: [],
+    mtrls: [],
   };
 
   const [state, dispatch] = useReducer(CasesReducer, initialStete);
+  const { sizes, cWays, mtrls } = state;
 
   // Actions --------------------------------------------------------
   // Only applying in this scope for other functions ----------
-  const addMtrlColor = (cWayId) => {
+  const updateMtrlColor = (cWayId) => {
     let materials = mtrls;
     materials.map((mtrl) => {
       mtrl.mtrlColors.push({
-        id: uuid4(),
+        id: uuidv4(),
         mtrl: mtrl.id,
         cWay: cWayId,
         mColor: null,
@@ -74,7 +73,7 @@ const CasesState = (props) => {
     let materials = mtrls;
     materials.map((mtrl) => {
       mtrl.mtrlColors = mtrl.mtrlColors.filter(
-        (mtrlColor) => mtrlColor.colorway !== id
+        (mtrlColor) => mtrlColor.cWay !== cWayId
       );
     });
     dispatch({ type: MTRL_UPDATE, payload: materials });
@@ -85,7 +84,7 @@ const CasesState = (props) => {
     // e.preventDefault : the e here is the app itself. Prevent it set back to default value
     e.preventDefault();
     if (sizes.length < 15) {
-      dispatch({ type: SIZE_ADD, payload: { id: uuidv4(), gClr: '' } });
+      dispatch({ type: SIZE_ADD, payload: newCWay });
     }
   };
 
@@ -99,7 +98,7 @@ const CasesState = (props) => {
     const cWayId = uuidv4();
     if (cWays.length < 20) {
       // Add the new color way to each material
-      addMtrlColor(cWayId);
+      updateMtrlColor(cWayId);
       dispatch({ type: CLR_WAY_ADD, payload: { id: cWayId, gClr: '' } });
     }
   };
@@ -127,7 +126,7 @@ const CasesState = (props) => {
     //Update the mtrlColors to the new mtrl, before adding it to mtrls
     cWays.map((cWay) => {
       newMtrl.mtrlColors.push({
-        id: uuid4(),
+        id: uuidv4(),
         mtrl: newMtrl.id,
         cWay: cWay.id,
         mColor: null,
@@ -150,9 +149,10 @@ const CasesState = (props) => {
     //The id is set in the value of the btn when which is created. so here we fetch id by e.target.value.
     const mtrlId = e.target.value;
     const materials = mtrls;
-    materials.find(
-      ({ mtrlId }.expandColor = !materials.find({ mtrlId }.expandColor))
-    );
+    materials.find(({ id }) => id === mtrlId).expandColor = !materials.find(
+      ({ id }) => id === mtrlId
+    ).expandColor;
+
     dispatch({ type: MTRL_UPDATE, payload: materials });
   };
 

@@ -26,6 +26,7 @@ import AuthComState from './context/authCom/AuthComState';
 import AuthUserState from './context/authUser/AuthUserState';
 import AlertState from './context/alert/AlterState';
 import UserState from './context/user/UserState';
+import CasesState from './context/cases/CasesState';
 
 //Global Header for token
 import setAuthToken from './utils/setAuthToken';
@@ -41,55 +42,57 @@ const App = () => {
         <UserState>
           <AuthUserState>
             <AlertState>
-              <Router>
-                <Fragment>
-                  <Navbar />
+              <CasesState>
+                <Router>
+                  <Fragment>
+                    <Navbar />
 
-                  <div>
-                    <Alerts />
-                    <Switch>
-                      <Route
-                        exact
-                        path='/registercom'
-                        component={ComRegister}
-                      />
-                      <Route
-                        exact
-                        path='/registercom/manager'
-                        component={ComManager}
-                      />
-                      {/* LoginPages */}
-                      <Route
-                        exact
-                        path='/api/auth/company'
-                        component={ComLogin}
-                      />
-                      <Route
-                        exact
-                        path='/api/auth/user'
-                        component={UserLogin}
-                      />
-                      {/* <PrivateRoute */}
-                      <PrivateComRoute
-                        exact
-                        path='/api/users'
-                        component={UserManager}
-                      />
-                      <PrivateUserRoute
-                        exact
-                        path='/api/case/user'
-                        component={CaseManager}
-                      />
-                      <Route
-                        exact
-                        path='/api/case/user/newcase'
-                        component={NewCase}
-                      />
-                      <Route component={NotFound} />
-                    </Switch>
-                  </div>
-                </Fragment>
-              </Router>
+                    <div>
+                      <Alerts />
+                      <Switch>
+                        <Route
+                          exact
+                          path='/registercom'
+                          component={ComRegister}
+                        />
+                        <Route
+                          exact
+                          path='/registercom/manager'
+                          component={ComManager}
+                        />
+                        {/* LoginPages */}
+                        <Route
+                          exact
+                          path='/api/auth/company'
+                          component={ComLogin}
+                        />
+                        <Route
+                          exact
+                          path='/api/auth/user'
+                          component={UserLogin}
+                        />
+                        {/* <PrivateRoute */}
+                        <PrivateComRoute
+                          exact
+                          path='/api/users'
+                          component={UserManager}
+                        />
+                        <PrivateUserRoute
+                          exact
+                          path='/api/case/user'
+                          component={CaseManager}
+                        />
+                        <Route
+                          exact
+                          path='/api/case/user/newcase'
+                          component={NewCase}
+                        />
+                        <Route component={NotFound} />
+                      </Switch>
+                    </div>
+                  </Fragment>
+                </Router>
+              </CasesState>
             </AlertState>
           </AuthUserState>
         </UserState>
