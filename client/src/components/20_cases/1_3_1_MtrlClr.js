@@ -5,6 +5,7 @@ import CasesContext from '../../context/cases/casesContext';
 const MtrlClr = ({ mtrlColor, mtrlId }) => {
   const casesContext = useContext(CasesContext);
   const { addValueMtrlColor, cWays } = casesContext;
+  const { mColor } = mtrlColor;
   const cWayLable = cWays.find(({ id }) => id === mtrlColor.cWay).gClr;
 
   return (
@@ -15,6 +16,7 @@ const MtrlClr = ({ mtrlColor, mtrlId }) => {
         id={mtrlColor.id}
         type='text'
         placeholder='color'
+        value={mColor}
         onChange={addValueMtrlColor}
       />
     </div>

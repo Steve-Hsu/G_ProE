@@ -63,7 +63,7 @@ const CasesState = (props) => {
         id: uuidv4(),
         mtrl: mtrl.id,
         cWay: cWayId,
-        mColor: { type: String },
+        mColor: null,
       });
     });
     dispatch({ type: MTRL_UPDATE, payload: materials });
