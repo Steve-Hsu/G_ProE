@@ -14,7 +14,7 @@ const CaseForm = () => {
     cWays: [
       {
         id: uuidv4(),
-        value: '',
+        gClr: '',
       },
     ],
     sizes: [
@@ -33,17 +33,15 @@ const CaseForm = () => {
         position: '',
         description: '',
         unit: '',
-        mtrlColor: [
-          {
-            id: uuidv4(),
-          },
-        ],
+        mtrlColors: [],
         expandColor: false,
       },
     ],
   });
 
   const { sizes, cWays, mtrls } = cases;
+
+  //   Size func---------------------------------------------------------------------------
 
   const addSize = (e) => {
     // the e here is the app itself. Prevent it set back to default value
@@ -72,6 +70,8 @@ const CaseForm = () => {
     });
   };
 
+  //   ColorWay func---------------------------------------------------------------------------
+
   const addcWay = (e) => {
     // the e here is the app itself. Prevent it set back to default value
     e.preventDefault();
@@ -80,24 +80,52 @@ const CaseForm = () => {
         setCases({
           // ...cases, = keep the rest of data.
           ...cases,
-          cWays: [...cWays, { id: uuidv4(), value: '' }],
+          cWays: [...cWays, { id: uuidv4(), gClr: '' }],
         });
       }
     } catch (err) {
       console.log(err);
     }
+
+    mtrls.map((id) => {
+      updateMtrlColor(id);
+    });
+  };
+
+  const labelMtrlClr = (e) => {
+    e.preventDefault();
+    const targetID = e.target.id;
+    // Prevent the computer confused two cWays so the variable named "colorWay"
+    const colorWays = cWays;
+    //Toggle the value
+    colorWays.find(({ id }) => id === targetID).gClr = e.target.value;
+    // Link each input to UserForm.state, input name matcked to state name
+    setCases({ ...cases, cWays: colorWays });
   };
 
   const deletecWay = (e) => {
     // the e here is the app itself. Prevent it set back to default value
     e.preventDefault();
-    console.log(e.target);
+
+    // Delete the colorWay in the material
+    // const will not allow me to sign new value in, therefore here use 'let'
+    let materials = mtrls;
+    materials.map((mtrl) => {
+      mtrl.mtrlColors = mtrl.mtrlColors.filter(
+        (mtrlColor) => mtrlColor.colorWay !== e.target.value
+      );
+    });
+
     setCases({
       // ...cases, = keep the rest of data.
       ...cases,
       cWays: cWays.filter((cWay) => cWay.id !== e.target.value),
+      // Don't need this line, the state still be update, seems the inheritance is working, I still can't get it. For prevent bug, better to add this line below
+      mtrls: materials,
     });
   };
+
+  //   Materials func---------------------------------------------------------------------------
 
   const addMtrl = (e) => {
     // the e here is the app itself. Prevent it set back to default value
@@ -118,11 +146,7 @@ const CaseForm = () => {
               position: '',
               description: '',
               unit: '',
-              mtrlColor: [
-                {
-                  id: uuidv4(),
-                },
-              ],
+              mtrlColors: [],
               expandColor: false,
             },
           ],
@@ -142,16 +166,73 @@ const CaseForm = () => {
     });
   };
 
-  const toggleColorSet = async (e) => {
+  const updateMtrlColor = (targetID) => {
+    const materials = mtrls;
+    const material = materials.find(({ id }) => id === targetID);
+    if (cWays.length > 0) {
+      cWays.map((cWay) => {
+        if (material.mtrlColors.lenth === 0) {
+          // if mtrlColor is empty, make a new mtrlColor
+          material.mtrlColors.push({
+            id: uuidv4(),
+            mtrl: targetID,
+            colorWay: cWay.id,
+            mColor: '',
+          });
+        } else {
+          let mtrlColor = material.mtrlColors.find(
+            ({ colorWay }) => colorWay === cWay.id
+          );
+          if (!mtrlColor) {
+            // if mtrlColor dosen't match to the cWay, make a new mtrlColor
+            material.mtrlColors.push({
+              id: uuidv4(),
+              mtrl: targetID,
+              colorWay: cWay.id,
+              mColor: '',
+            });
+          }
+        }
+      });
+    } else {
+      // No colorway set the colorway of mtrl to null
+      materials.find(({ id }) => id === targetID).mtrlColors = null;
+    }
+    // Update the cases.matrls
+    setCases({
+      // ...cases, = keep the rest of data
+      ...cases,
+      mtrls: materials,
+    });
+  };
+
+  const toggleColorSet = (e) => {
     // the e here is the app itself. Prevent it set back to default value
     e.preventDefault();
+    //The id is set in the value of the btn when which is created. so here we fetch id by e.target.value.
     const targetID = e.target.value;
+    const materials = mtrls;
+    const material = materials.find(({ id }) => id === targetID);
 
-    const materials = cases.mtrls;
-    materials.find(({ id }) => id === targetID).expandColor = !materials.find(
-      ({ id }) => id === targetID
-    ).expandColor;
+    //Toggle the value
+    material.expandColor = !materials.find(({ id }) => id === targetID)
+      .expandColor;
 
+    updateMtrlColor(targetID);
+  };
+
+  const addMtrlColor = (e) => {
+    e.preventDefault();
+
+    const mtrlID = e.target.name;
+    const targetID = e.target.id;
+    const materials = mtrls;
+    console.log(targetID);
+    materials
+      .find(({ id }) => id === mtrlID)
+      .mtrlColors.find(({ id }) => id === targetID).mColor = e.target.value;
+
+    // Update the cases.matrls
     setCases({
       // ...cases, = keep the rest of data
       ...cases,
@@ -200,7 +281,12 @@ const CaseForm = () => {
           </div>
           <div className='grid-5'>
             {cWays.map((cWay) => (
-              <ColorWay key={cWay.id} cWay={cWay} deletecWay={deletecWay} />
+              <ColorWay
+                key={cWay.id}
+                cWay={cWay}
+                deletecWay={deletecWay}
+                labelMtrlClr={labelMtrlClr}
+              />
             ))}
           </div>
           {/* Material -------------------------- */}
@@ -218,9 +304,12 @@ const CaseForm = () => {
             {mtrls.map((mtrl) => (
               <Mtrl
                 key={mtrl.id}
+                sizes={sizes}
+                cWays={cWays}
                 mtrl={mtrl}
                 deleteMtrl={deleteMtrl}
                 toggleColorSet={toggleColorSet}
+                addMtrlColor={addMtrlColor}
               />
             ))}
           </div>

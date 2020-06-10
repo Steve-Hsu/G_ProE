@@ -1,7 +1,15 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
+import MtrlClr from './1_3_1_MtrlClr';
 
-const Mtrl = ({ mtrl, deleteMtrl, toggleColorSet }) => {
+const Mtrl = ({
+  sizes,
+  cWays,
+  mtrl,
+  deleteMtrl,
+  toggleColorSet,
+  addMtrlColor,
+}) => {
   return (
     <div className='grid-6 pb test-3'>
       {/* Row_1  */}
@@ -53,6 +61,19 @@ const Mtrl = ({ mtrl, deleteMtrl, toggleColorSet }) => {
       <button value={mtrl.id} onClick={deleteMtrl} className='btn btn-danger'>
         x
       </button>
+      {/* Row_3  */}
+      {mtrl.expandColor ? (
+        <Fragment>
+          {cWays.map((cWay) => (
+            <MtrlClr
+              key={mtrl.id + cWay.id}
+              mtrlId={mtrl.id}
+              cWay={cWay}
+              addMtrlColor={addMtrlColor}
+            />
+          ))}
+        </Fragment>
+      ) : null}
     </div>
   );
 };
@@ -61,7 +82,10 @@ export default Mtrl;
 
 // PropTyeps
 Mtrl.propTypes = {
+  sizes: PropTypes.array.isRequired,
+  cWays: PropTypes.array.isRequired,
   mtrl: PropTypes.object.isRequired,
   toggleColorSet: PropTypes.func.isRequired,
   deleteMtrl: PropTypes.func.isRequired,
+  addMtrlColor: PropTypes.func.isRequired,
 };
