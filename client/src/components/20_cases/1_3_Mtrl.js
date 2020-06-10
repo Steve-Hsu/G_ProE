@@ -5,7 +5,7 @@ import MtrlClr from './1_3_1_MtrlClr';
 
 const Mtrl = ({ mtrl }) => {
   const casesContext = useContext(CasesContext);
-  const { sizes, cWays, deleteMtrl, expandMtrlColor } = casesContext;
+  const { deleteMtrl, expandMtrlColor } = casesContext;
   return (
     <div className='grid-6 pb test-3'>
       {/* Row_1  */}
@@ -60,8 +60,12 @@ const Mtrl = ({ mtrl }) => {
       {/* Row_3  */}
       {mtrl.expandColor ? (
         <Fragment>
-          {cWays.map((cWay) => (
-            <MtrlClr key={mtrl.id + cWay.id} mtrlId={mtrl.id} cWay={cWay} />
+          {mtrl.mtrlColors.map((mtrlColor) => (
+            <MtrlClr
+              key={mtrlColor.id}
+              mtrlColor={mtrlColor}
+              mtrlId={mtrl.id}
+            />
           ))}
         </Fragment>
       ) : null}

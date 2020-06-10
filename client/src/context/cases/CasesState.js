@@ -63,7 +63,7 @@ const CasesState = (props) => {
         id: uuidv4(),
         mtrl: mtrl.id,
         cWay: cWayId,
-        mColor: null,
+        mColor: { type: String },
       });
     });
     dispatch({ type: MTRL_UPDATE, payload: materials });
@@ -156,6 +156,33 @@ const CasesState = (props) => {
     dispatch({ type: MTRL_UPDATE, payload: materials });
   };
 
+  // This code works too, but seems foo much useless looping.
+  // const addValueMtrlColor = (e) => {
+  //   e.preventDefault();
+  //   const targetId = e.target.id;
+  //   const materials = mtrls;
+
+  //   materials.map((mtrl) => {
+  //     mtrl.mtrlColors.map((mtrlColor) => {
+  //       if (mtrlColor.id === targetId) {
+  //         mtrlColor.mColor = e.target.value;
+  //       }
+  //     });
+  //   });
+
+  const addValueMtrlColor = (e) => {
+    e.preventDefault();
+    const mtrlId = e.target.name;
+    const targetId = e.target.id;
+    //??? This code works, however I still don't know why the sup variable will affect parent variable here.
+    let materials = mtrls;
+    let material = materials.find(({ id }) => id === mtrlId);
+    material.mtrlColors.find(({ id }) => id === targetId).mColor =
+      e.target.value;
+
+    dispatch({ type: MTRL_UPDATE, payload: materials });
+  };
+
   return (
     <CasesContext.Provider
       value={{
@@ -172,6 +199,7 @@ const CasesState = (props) => {
         addMtrl,
         deleteMtrl,
         expandMtrlColor,
+        addValueMtrlColor,
       }}
     >
       {props.children}
