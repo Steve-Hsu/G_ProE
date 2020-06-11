@@ -9,7 +9,7 @@ const MtrlClr = ({ mtrlColor, mtrlId }) => {
   const cWayLable = cWays.find(({ id }) => id === mtrlColor.cWay).gClr;
 
   return (
-    <div className='test-1'>
+    <div className='test-1 p'>
       <p>{cWayLable}</p>
       <input
         name={mtrlId}

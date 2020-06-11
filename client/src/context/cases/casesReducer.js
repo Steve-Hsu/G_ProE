@@ -8,6 +8,9 @@ import {
   MTRL_ADD,
   MTRL_UPDATE,
   MTRL_DELETE,
+  CASE_TOGGLE_POPOVER,
+  CURRENT_ADD,
+  CURRENT_DELETE,
 } from '../types';
 
 export default (state, action) => {
@@ -56,6 +59,21 @@ export default (state, action) => {
       return {
         ...state,
         mtrls: state.mtrls.filter((mtrl) => mtrl.id !== action.payload),
+      };
+    case CASE_TOGGLE_POPOVER:
+      return {
+        ...state,
+        popover: action.payload,
+      };
+    case CURRENT_ADD:
+      return {
+        ...state,
+        current: action.payload,
+      };
+    case CURRENT_DELETE:
+      return {
+        ...state,
+        current: null,
       };
   }
 };

@@ -9,7 +9,7 @@ const MtrlSizeSPEC = ({ sizeSPEC, mtrlId }) => {
   const sizeLable = sizes.find(({ id }) => id === sizeSPEC.size).gSize;
 
   return (
-    <div className='test-1'>
+    <div className='test-1 p'>
       <p>{sizeLable}</p>
       <input
         name={mtrlId}

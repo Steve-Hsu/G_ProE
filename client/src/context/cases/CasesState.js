@@ -17,7 +17,11 @@ import {
   MTRL_ADD,
   MTRL_UPDATE,
   MTRL_DELETE,
+  CASE_TOGGLE_POPOVER,
+  CURRENT_ADD,
+  CURRENT_DELETE,
 } from '../types';
+import casesContext from './casesContext';
 
 const CasesState = (props) => {
   // object Model
@@ -54,6 +58,8 @@ const CasesState = (props) => {
     cWays: [],
     sizes: [],
     mtrls: [],
+    popover: false,
+    current: null,
   };
 
   const [state, dispatch] = useReducer(CasesReducer, initialStete);
@@ -110,11 +116,10 @@ const CasesState = (props) => {
   // Export using functions --------------
   const addcWay = (e) => {
     e.preventDefault();
-    const cWayId = uuidv4();
     if (cWays.length < 20) {
       // Add the new color way to each material
-      updateMtrlColor(cWayId);
-      dispatch({ type: CLR_WAY_ADD, payload: { id: cWayId, gClr: '' } });
+      updateMtrlColor(newCWay.id);
+      dispatch({ type: CLR_WAY_ADD, payload: newCWay });
     }
   };
 
@@ -139,11 +144,10 @@ const CasesState = (props) => {
   const addSize = (e) => {
     // e.preventDefault : the e here is the app itself. Prevent it set back to default value
     e.preventDefault();
-    const sizeId = uuidv4();
     // Add the new Size to each material
-    updateMtrlSizeSPEC(sizeId);
+    updateMtrlSizeSPEC(newSize.id);
     if (sizes.length < 15) {
-      dispatch({ type: SIZE_ADD, payload: { id: sizeId, gSize: '' } });
+      dispatch({ type: SIZE_ADD, payload: newSize });
     }
   };
 
@@ -158,6 +162,7 @@ const CasesState = (props) => {
   };
 
   const deleteSize = (e) => {
+    console.log('This is e', e.target);
     e.preventDefault();
     const sizeId = e.target.value;
     //Delete the size SPEC in eatch mtrl
@@ -261,6 +266,35 @@ const CasesState = (props) => {
     dispatch({ type: MTRL_UPDATE, payload: materials });
   };
 
+  const togglePopover = (e) => {
+    e.preventDefault();
+    //The id is set in the value of the btn when which is created. so here we fetch id by e.target.value.
+
+    const newPopover = !state.popover;
+    dispatch({ type: CASE_TOGGLE_POPOVER, payload: newPopover });
+    if (newPopover) {
+      const targetId = e.target.value;
+      let subject = {};
+      switch (e.target.name) {
+        case 'cWay':
+          subject = cWays.find(({ id }) => id === targetId);
+          break;
+        case 'size':
+          subject = sizes.find(({ id }) => id === targetId);
+          break;
+        case 'mtrl':
+          subject = mtrls.find(({ id }) => id === targetId);
+          break;
+        default:
+          subject = { key: 'no target id' };
+      }
+
+      dispatch({ type: CURRENT_ADD, payload: subject });
+    } else {
+      dispatch({ type: CURRENT_DELETE });
+    }
+  };
+
   return (
     <CasesContext.Provider
       value={{
@@ -269,6 +303,8 @@ const CasesState = (props) => {
         cWays: state.cWays,
         sizes: state.sizes,
         mtrls: state.mtrls,
+        popover: state.popover,
+        current: state.current,
         addcWay,
         updatecWay,
         deletecWay,
@@ -281,6 +317,7 @@ const CasesState = (props) => {
         expandSizeSPEC,
         addValueMtrlColor,
         addValueMtrlSizeSPEC,
+        togglePopover,
       }}
     >
       {props.children}

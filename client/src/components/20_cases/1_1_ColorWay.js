@@ -4,9 +4,17 @@ import CasesContext from '../../context/cases/casesContext';
 
 const ColorWay = ({ cWay }) => {
   const casesContext = useContext(CasesContext);
-  const { deletecWay, updatecWay } = casesContext;
+  const { togglePopover, updatecWay } = casesContext;
+  //For sparete the postion of btn, here use an inline style.
+  //deleteBtn in ColorWay.
+  const deleteBtnPosition = {
+    top: ' 50%',
+    left: '30%',
+    transform: 'translate(-1rem, -1rem)',
+  };
+
   return (
-    <div className='grid-3-1 grid-gap-sm test-1'>
+    <div className='grid-3-1 grid-gap-sm test-1 p'>
       <input
         id={cWay.id}
         type='text'
@@ -14,7 +22,13 @@ const ColorWay = ({ cWay }) => {
         placeholder='Color Way'
         onChange={updatecWay}
       />
-      <button value={cWay.id} onClick={deletecWay} className='btn btn-danger'>
+      <button
+        value={cWay.id}
+        name='cWay'
+        onClick={togglePopover}
+        className='btn btn-danger btn-rounded-square'
+        style={deleteBtnPosition}
+      >
         x
       </button>
     </div>

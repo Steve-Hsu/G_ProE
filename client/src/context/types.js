@@ -54,6 +54,9 @@ export const MTRL_ADD = 'MTRL_ADD';
 export const MTRL_UPDATE = 'MTRL_UPDATE';
 export const MTRL_DELETE = 'MTRL_DELETE';
 export const MTRL_COLOR_EXPAND = 'MTRL_COLOR_EXPAND';
+export const CASE_TOGGLE_POPOVER = 'CASE_TOGGLE_POPOVER';
+export const CURRENT_ADD = 'CURRENT_ADD';
+export const CURRENT_DELETE = 'CURRENT_DELETE';
 
 // may not need this one --------------------------------------------
 export const CLEAR_USERS_STATE = 'CLEAR_USERS_STATE';

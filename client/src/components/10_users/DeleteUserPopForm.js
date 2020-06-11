@@ -50,18 +50,18 @@ const DeleteUserPopForm = (props) => {
         </div>{' '}
         Enter the user name to delete{' '}
         <div>
-          <buttom
+          <button
             value={state.confrimUseName}
             className='btn btn-danger btn-block'
             onClick={onChangeDelete}
           >
             Delete User
-          </buttom>
+          </button>
         </div>
         <div>
-          <buttom className='btn btn-primary btn-block' onClick={onChangeBack}>
+          <button className='btn btn-primary btn-block' onClick={onChangeBack}>
             Back
-          </buttom>
+          </button>
         </div>
       </div>
     </div>
