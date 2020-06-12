@@ -20,8 +20,9 @@ import {
   CASE_TOGGLE_POPOVER,
   CURRENT_ADD,
   CURRENT_DELETE,
+  STYLE_UPDATE,
+  CLIENT_UPDATE,
 } from '../types';
-import casesContext from './casesContext';
 
 const CasesState = (props) => {
   // object Model
@@ -47,6 +48,7 @@ const CasesState = (props) => {
     unit: '',
     mtrlColors: [],
     sizeSPECs: [],
+    cspts: [],
     expandColor: false,
     expandSizeSPEC: false,
     expandCspt: false,
@@ -112,6 +114,55 @@ const CasesState = (props) => {
     });
     dispatch({ type: MTRL_UPDATE, payload: materials });
   };
+  const updateMtrlCsptBycWay = (cWayId) => {
+    let materials = mtrls;
+    sizes.map((size) => {
+      materials.map((mtrl) => {
+        mtrl.cspts.push({
+          id: uuidv4(),
+          mtrl: mtrl.id,
+          cWay: cWayId,
+          size: size.id,
+          cspt: null,
+        });
+      });
+    });
+
+    dispatch({ type: MTRL_UPDATE, payload: materials });
+  };
+
+  const updateMtrlCsptBySize = (sizeId) => {
+    let materials = mtrls;
+    cWays.map((cWay) => {
+      materials.map((mtrl) => {
+        mtrl.cspts.push({
+          id: uuidv4(),
+          mtrl: mtrl.id,
+          cWay: cWay.id,
+          size: sizeId,
+          cspt: null,
+        });
+      });
+    });
+
+    dispatch({ type: MTRL_UPDATE, payload: materials });
+  };
+
+  const deleteMtrlCsptBycWay = (cWayId) => {
+    let materials = mtrls;
+    materials.map((mtrl) => {
+      mtrl.cspts = mtrl.cspts.filter((cspt) => cspt.cWay !== cWayId);
+    });
+    dispatch({ type: MTRL_UPDATE, payload: materials });
+  };
+
+  const deleteMtrlCsptBySize = (sizeId) => {
+    let materials = mtrls;
+    materials.map((mtrl) => {
+      mtrl.cspts = mtrl.cspts.filter((cspt) => cspt.size !== sizeId);
+    });
+    dispatch({ type: MTRL_UPDATE, payload: materials });
+  };
 
   // Export using functions --------------
   const addcWay = (e) => {
@@ -119,6 +170,7 @@ const CasesState = (props) => {
     if (cWays.length < 20) {
       // Add the new color way to each material
       updateMtrlColor(newCWay.id);
+      updateMtrlCsptBycWay(newCWay.id);
       dispatch({ type: CLR_WAY_ADD, payload: newCWay });
     }
   };
@@ -138,6 +190,7 @@ const CasesState = (props) => {
     const cWayId = e.target.value;
     //Delete the cWay in eatch mtrl
     deleteMtrlColor(cWayId);
+    deleteMtrlCsptBycWay(cWayId);
     dispatch({ type: CLR_WAY_DELETE, payload: cWayId });
   };
 
@@ -146,6 +199,7 @@ const CasesState = (props) => {
     e.preventDefault();
     // Add the new Size to each material
     updateMtrlSizeSPEC(newSize.id);
+    updateMtrlCsptBySize(newSize.id);
     if (sizes.length < 15) {
       dispatch({ type: SIZE_ADD, payload: newSize });
     }
@@ -167,6 +221,7 @@ const CasesState = (props) => {
     const sizeId = e.target.value;
     //Delete the size SPEC in eatch mtrl
     deleteMtrlSizeSPEC(sizeId);
+    deleteMtrlCsptBySize(sizeId);
     dispatch({ type: SIZE_DELETE, payload: sizeId });
   };
 
@@ -181,13 +236,25 @@ const CasesState = (props) => {
         mColor: '',
       });
     });
-
+    //Update the mtrlSizeSPEC to the new mtrl, before adding it to mtrls
     sizes.map((size) => {
       newMtrl.sizeSPECs.push({
         id: uuidv4(),
         mtrl: newMtrl.id,
         size: size.id,
         mSizeSPEC: '',
+      });
+    });
+    //Update the cspt to the new mtrl, before adding it to mtrls
+    sizes.map((size) => {
+      cWays.map((cWay) => {
+        newMtrl.cspts.push({
+          id: uuidv4(),
+          mtrl: newMtrl.id,
+          cWay: cWay.id,
+          size: size.id,
+          cspt: null,
+        });
       });
     });
 
@@ -226,6 +293,18 @@ const CasesState = (props) => {
     dispatch({ type: MTRL_UPDATE, payload: materials });
   };
 
+  const expandMtrlCspt = (e) => {
+    e.preventDefault();
+    //The id is set in the value of the btn when which is created. so here we fetch id by e.target.value.
+    const mtrlId = e.target.value;
+    const materials = mtrls;
+    materials.find(({ id }) => id === mtrlId).expandCspt = !materials.find(
+      ({ id }) => id === mtrlId
+    ).expandCspt;
+
+    dispatch({ type: MTRL_UPDATE, payload: materials });
+  };
+
   // This code works too, but seems foo much useless looping.
   // const addValueMtrlColor = (e) => {
   //   e.preventDefault();
@@ -243,11 +322,12 @@ const CasesState = (props) => {
   const addValueMtrlColor = (e) => {
     e.preventDefault();
     const mtrlId = e.target.name;
-    const targetId = e.target.id;
+    const mtrlColorId = e.target.id;
     //??? This code works, however I still don't know why the sup variable will affect parent variable here.
+    //There is something chainning the materials to the sub array material
     let materials = mtrls;
     let material = materials.find(({ id }) => id === mtrlId);
-    material.mtrlColors.find(({ id }) => id === targetId).mColor =
+    material.mtrlColors.find(({ id }) => id === mtrlColorId).mColor =
       e.target.value;
 
     dispatch({ type: MTRL_UPDATE, payload: materials });
@@ -256,14 +336,68 @@ const CasesState = (props) => {
   const addValueMtrlSizeSPEC = (e) => {
     e.preventDefault();
     const mtrlId = e.target.name;
-    const targetId = e.target.id;
+    const mtrlSizeSPECId = e.target.id;
     //??? This code works, however I still don't know why the sup variable will affect parent variable here.
+    //There is something chainning the materials to the sub array material
     let materials = mtrls;
     let material = materials.find(({ id }) => id === mtrlId);
-    material.sizeSPECs.find(({ id }) => id === targetId).mSizeSPEC =
+    material.sizeSPECs.find(({ id }) => id === mtrlSizeSPECId).mSizeSPEC =
       e.target.value;
 
     dispatch({ type: MTRL_UPDATE, payload: materials });
+  };
+
+  const addValueMtrlCspt = (e) => {
+    e.preventDefault();
+    const mtrlId = e.target.name;
+    const mtrlCspt = e.target.id;
+    //??? This code works, however I still don't know why the sup variable will affect parent variable here.
+    //There is something chainning the materials to the sub array material
+    let materials = mtrls;
+    let material = materials.find(({ id }) => id === mtrlId);
+    material.cspts.find(({ id }) => id === mtrlCspt).cspt = e.target.value;
+
+    dispatch({ type: MTRL_UPDATE, payload: materials });
+  };
+
+  const addMtrlValue = (e) => {
+    e.preventDefault();
+    const mtrlId = e.target.id;
+    let materials = mtrls;
+    switch (e.target.name) {
+      case 'item':
+        materials.find(({ id }) => id === mtrlId).item = e.target.value;
+        break;
+      case 'spec':
+        materials.find(({ id }) => id === mtrlId).spec = e.target.value;
+        break;
+      case 'supplier':
+        materials.find(({ id }) => id === mtrlId).supplier = e.target.value;
+        break;
+      case 'ref_no':
+        materials.find(({ id }) => id === mtrlId).ref_no = e.target.value;
+        break;
+      case 'position':
+        materials.find(({ id }) => id === mtrlId).position = e.target.value;
+        break;
+      case 'description':
+        materials.find(({ id }) => id === mtrlId).description = e.target.value;
+        break;
+      case 'unit':
+        materials.find(({ id }) => id === mtrlId).unit = e.target.value;
+        break;
+      default:
+    }
+    dispatch({ type: MTRL_UPDATE, payload: materials });
+  };
+
+  const addCaseValue = (e) => {
+    e.preventDefault();
+    if (e.target.name === 'style') {
+      dispatch({ type: STYLE_UPDATE, payload: e.target.value });
+    } else if (e.target.name === 'client') {
+      dispatch({ type: CLIENT_UPDATE, payload: e.target.value });
+    }
   };
 
   const togglePopover = (e) => {
@@ -305,6 +439,7 @@ const CasesState = (props) => {
         mtrls: state.mtrls,
         popover: state.popover,
         current: state.current,
+        addCaseValue,
         addcWay,
         updatecWay,
         deletecWay,
@@ -315,8 +450,11 @@ const CasesState = (props) => {
         deleteMtrl,
         expandMtrlColor,
         expandSizeSPEC,
+        expandMtrlCspt,
         addValueMtrlColor,
         addValueMtrlSizeSPEC,
+        addValueMtrlCspt,
+        addMtrlValue,
         togglePopover,
       }}
     >

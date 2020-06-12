@@ -1,10 +1,14 @@
 import {
+  STYLE_UPDATE,
+  CLIENT_UPDATE,
   SIZE_ADD,
   SIZE_UPDATE,
   SIZE_DELETE,
   CLR_WAY_ADD,
   CLR_WAY_UPDATE,
   CLR_WAY_DELETE,
+  CSPT_ADD,
+  CSPT_UPDATE,
   MTRL_ADD,
   MTRL_UPDATE,
   MTRL_DELETE,
@@ -15,6 +19,16 @@ import {
 
 export default (state, action) => {
   switch (action.type) {
+    case STYLE_UPDATE:
+      return {
+        ...state,
+        style: action.payload,
+      };
+    case CLIENT_UPDATE:
+      return {
+        ...state,
+        client: action.payload,
+      };
     case SIZE_ADD:
       return {
         ...state,
@@ -44,6 +58,16 @@ export default (state, action) => {
       return {
         ...state,
         cWays: state.cWays.filter((cWay) => cWay.id !== action.payload),
+      };
+    case CSPT_ADD:
+      return {
+        ...state,
+        cspts: [...state.cspts, action.payload],
+      };
+    case CSPT_UPDATE:
+      return {
+        ...state,
+        cspts: action.payload,
       };
     case MTRL_ADD:
       return {

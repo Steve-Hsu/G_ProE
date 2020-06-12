@@ -18,6 +18,7 @@ const CaseForm = () => {
     cWays,
     sizes,
     mtrls,
+    addCaseValue,
     addSize,
     deleteSize,
     addcWay,
@@ -39,9 +40,9 @@ const CaseForm = () => {
             {'Import style from Excel'}
             <input type='text' name='import' id='imoprt' />
             {'Style'}
-            <input type='text' name='style' id='style' />
+            <input type='text' name='style' onChange={addCaseValue} />
             {'Client'}
-            <input type='text' name='client' />
+            <input type='text' name='client' onChange={addCaseValue} />
             {/* ColorWay -------------------------- */}
             <div>
               {'Color Way'}

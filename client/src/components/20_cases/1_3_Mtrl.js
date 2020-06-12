@@ -3,10 +3,18 @@ import PropTypes from 'prop-types';
 import CasesContext from '../../context/cases/casesContext';
 import MtrlClr from './1_3_1_MtrlClr';
 import MtrlSizeSPEC from './1_3_2_MtrlSizeSPEC';
+import MtrlCspt from './1_3_3_MtrlCspt';
 
 const Mtrl = ({ mtrl }) => {
   const casesContext = useContext(CasesContext);
-  const { togglePopover, expandMtrlColor, expandSizeSPEC } = casesContext;
+  const {
+    cWays,
+    togglePopover,
+    expandMtrlColor,
+    expandSizeSPEC,
+    expandMtrlCspt,
+    addMtrlValue,
+  } = casesContext;
   //For sparete the postion of btn, here use an inline style.
   //deleteBtn in mtrl.
   const deleteBtnPosition = {
@@ -21,27 +29,63 @@ const Mtrl = ({ mtrl }) => {
       <div className='grid-6 pb test-3'>
         <div className='test-1'>
           <p>item</p>
-          <input type='text' name='item' placeholder='Item' />
+          <input
+            id={mtrl.id}
+            type='text'
+            name='item'
+            placeholder='Item'
+            onChange={addMtrlValue}
+          />
         </div>
         <div className='test-1'>
           <p>SPEC</p>
-          <input type='text' name='spec' placeholder='spec' />
+          <input
+            id={mtrl.id}
+            type='text'
+            name='spec'
+            placeholder='spec'
+            onChange={addMtrlValue}
+          />
         </div>
         <div className='test-1'>
           <p>Supplier</p>
-          <input type='text' name='supplier' placeholder='Supplier' />
+          <input
+            id={mtrl.id}
+            type='text'
+            name='supplier'
+            placeholder='Supplier'
+            onChange={addMtrlValue}
+          />
         </div>
         <div className='test-1'>
           <p>REF_No</p>
-          <input type='text' name='ref_no' placeholder='Reference Number' />
+          <input
+            id={mtrl.id}
+            type='text'
+            name='ref_no'
+            placeholder='Reference Number'
+            onChange={addMtrlValue}
+          />
         </div>
         <div className='test-1'>
           <p>Position</p>
-          <input type='text' name='position' placeholder='Position' />
+          <input
+            id={mtrl.id}
+            type='text'
+            name='position'
+            placeholder='Position'
+            onChange={addMtrlValue}
+          />
         </div>
         <div className='test-1'>
           <p>Description</p>
-          <input type='text' name='description' placeholder='Description' />
+          <input
+            id={mtrl.id}
+            type='text'
+            name='description'
+            placeholder='Description'
+            onChange={addMtrlValue}
+          />
         </div>
       </div>
       {/* Row_2  */}
@@ -49,7 +93,13 @@ const Mtrl = ({ mtrl }) => {
         <div>Icon</div>
         <div className='test-1'>
           <p>Unit</p>
-          <input type='text' name='unit' placeholder='Unit' />
+          <input
+            id={mtrl.id}
+            type='text'
+            name='unit'
+            placeholder='Unit'
+            onChange={addMtrlValue}
+          />
         </div>
         <button
           value={mtrl.id}
@@ -65,10 +115,13 @@ const Mtrl = ({ mtrl }) => {
         >
           Size SPEC
         </button>
-        <div className='test-1'>
-          <p>Consumption</p>
-          <input type='text' name='cspt' placeholder='Consumption' />
-        </div>
+        <button
+          value={mtrl.id}
+          onClick={expandMtrlCspt}
+          className='btn btn-primary'
+        >
+          Consumption
+        </button>
         <div>
           <button
             value={mtrl.id}
@@ -84,7 +137,7 @@ const Mtrl = ({ mtrl }) => {
       {/* Row_3  */}
       {mtrl.expandColor ? (
         <div className='grid-1-5 test-3'>
-          <div className='test-5'>se</div>
+          <div></div>
           <div className='grid-5 test-4'>
             {mtrl.mtrlColors.map((mtrlColor) => (
               <MtrlClr
@@ -99,7 +152,7 @@ const Mtrl = ({ mtrl }) => {
       {/* Row_4  */}
       {mtrl.expandSizeSPEC ? (
         <div className='grid-1-5'>
-          <div>se</div>
+          <div></div>
           <div className='grid-5 test-3'>
             {mtrl.sizeSPECs.map((sizeSPEC) => (
               <MtrlSizeSPEC
@@ -111,6 +164,19 @@ const Mtrl = ({ mtrl }) => {
           </div>
         </div>
       ) : null}
+      {/* Row_5  */}
+      {mtrl.expandCspt
+        ? cWays.map((cWay) => (
+            <div className='grid-1-5' key={`ColorTitle${cWay.id}`}>
+              <div>{`${cWay.gClr}`}</div>
+              <MtrlCspt
+                key={`Fragment${cWay.id}${mtrl.id}`}
+                cWay={cWay}
+                mtrl={mtrl}
+              />
+            </div>
+          ))
+        : null}
     </div>
   );
 };

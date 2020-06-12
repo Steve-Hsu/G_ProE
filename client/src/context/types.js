@@ -44,17 +44,21 @@ export const USER_CLEAR_ERRORS = 'USER_CLEAR_ERRORS';
 export const USER_ERROR = 'USER_ERROR';
 
 //Cases -----------------------------------------------------------
+export const STYLE_UPDATE = 'STYLE_UPDATE';
+export const CLIENT_UPDATE = 'CLIENT_UPDATE';
+export const CASE_TOGGLE_POPOVER = 'CASE_TOGGLE_POPOVER';
 export const SIZE_ADD = 'SIZE_ADD';
 export const SIZE_UPDATE = 'SIZE_UPDATE';
 export const SIZE_DELETE = 'DELETE_SIZE';
 export const CLR_WAY_ADD = 'CLR_WAY_ADD';
 export const CLR_WAY_UPDATE = 'CLR_WAY_UPDATE';
 export const CLR_WAY_DELETE = 'CLR_WAY_DELETE';
+export const CSPT_ADD = 'CSPT_ADD';
+export const CSPT_UPDATE = 'CSPT_UPDATE';
 export const MTRL_ADD = 'MTRL_ADD';
 export const MTRL_UPDATE = 'MTRL_UPDATE';
 export const MTRL_DELETE = 'MTRL_DELETE';
 export const MTRL_COLOR_EXPAND = 'MTRL_COLOR_EXPAND';
-export const CASE_TOGGLE_POPOVER = 'CASE_TOGGLE_POPOVER';
 export const CURRENT_ADD = 'CURRENT_ADD';
 export const CURRENT_DELETE = 'CURRENT_DELETE';
 
