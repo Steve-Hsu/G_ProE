@@ -13,12 +13,24 @@ import {
   MTRL_UPDATE,
   MTRL_DELETE,
   CASE_TOGGLE_POPOVER,
+  CASE_DOWNLOAD,
   CURRENT_ADD,
   CURRENT_DELETE,
 } from '../types';
 
 export default (state, action) => {
   switch (action.type) {
+    case CASE_DOWNLOAD:
+      return {
+        ...state,
+        user: action.payload.user,
+        company: action.payload.company,
+        style: action.payload.style,
+        client: action.payload.client,
+        cWays: action.payload.cWays,
+        sizes: action.payload.sizes,
+        mtrls: action.payload.mtrls,
+      };
     case STYLE_UPDATE:
       return {
         ...state,

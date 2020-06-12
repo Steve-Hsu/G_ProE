@@ -18,6 +18,7 @@ import {
   MTRL_UPDATE,
   MTRL_DELETE,
   CASE_TOGGLE_POPOVER,
+  CASE_DOWNLOAD,
   CURRENT_ADD,
   CURRENT_DELETE,
   STYLE_UPDATE,
@@ -55,6 +56,8 @@ const CasesState = (props) => {
   };
   // State
   const initialStete = {
+    user: null,
+    company: null,
     style: null,
     client: null,
     cWays: [],
@@ -62,6 +65,7 @@ const CasesState = (props) => {
     mtrls: [],
     popover: false,
     current: null,
+    formIsHalfFilledOut: true,
   };
 
   const [state, dispatch] = useReducer(CasesReducer, initialStete);
@@ -429,9 +433,28 @@ const CasesState = (props) => {
     }
   };
 
+  // Add NewCase to database - Submit form
+  const uploadNewCase = async (cases) => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    try {
+      const res = await axios.post('/api/case/user/newcase', cases, config);
+      console.log('Upload');
+      dispatch({ type: CASE_DOWNLOAD, payload: res.data });
+    } catch (err) {
+      console.log('Upload failed');
+    }
+  };
+
   return (
     <CasesContext.Provider
       value={{
+        user: state.user,
+        company: state.company,
         style: state.style,
         client: state.client,
         cWays: state.cWays,
@@ -439,6 +462,7 @@ const CasesState = (props) => {
         mtrls: state.mtrls,
         popover: state.popover,
         current: state.current,
+        formIsHalfFilledOut: state.formIsHalfFilledOut,
         addCaseValue,
         addcWay,
         updatecWay,
@@ -456,6 +480,7 @@ const CasesState = (props) => {
         addValueMtrlCspt,
         addMtrlValue,
         togglePopover,
+        uploadNewCase,
       }}
     >
       {props.children}

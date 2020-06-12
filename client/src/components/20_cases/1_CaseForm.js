@@ -1,4 +1,5 @@
 import React, { useContext, Fragment } from 'react';
+import { Prompt } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import CasesContext from '../../context/cases/casesContext';
 
@@ -13,8 +14,11 @@ const CaseForm = () => {
   const casesContext = useContext(CasesContext);
   //Destructure, pull out the variables form userContext
   const {
+    user,
+    company,
     style,
     client,
+    formIsHalfFilledOut,
     cWays,
     sizes,
     mtrls,
@@ -29,16 +33,34 @@ const CaseForm = () => {
     expandMtrlColor,
     popover,
     current,
+    uploadNewCase,
   } = casesContext;
+
+  const cases = {
+    style: style,
+    client: client,
+    cWays: cWays,
+    sizes: sizes,
+    mtrls: mtrls,
+  };
+
+  const onSubmitCase = (e) => {
+    e.preventDefault();
+    uploadNewCase(cases);
+  };
 
   return (
     <Fragment>
+      {/* // Ask the user when they want to jump to another page wihout saving datas */}
+      <Prompt when={formIsHalfFilledOut} message='Hey' />
       {popover ? <DeletePopover key={current.id} current={current} /> : null}
       <div className='p-1 test-2'>
         <div>
-          <form>
+          <form onSubmit={onSubmitCase}>
             {'Import style from Excel'}
             <input type='text' name='import' id='imoprt' />
+            {'Submit'}
+            <input type='submit' className='btn btn-primary btn-block' />
             {'Style'}
             <input type='text' name='style' onChange={addCaseValue} />
             {'Client'}

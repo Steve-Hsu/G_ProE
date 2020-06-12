@@ -37,11 +37,11 @@ router.get('/company', authUser, async (req, res) => {
   }
 });
 
-// @route   POST api/case
+// @route   POST api/case/user/newcase
 // @desc    Add a new case to database
 // @access  Private
 router.post(
-  '/',
+  '/user/newcase',
   [authUser, [check('style', 'Style is required')]],
   async (req, res) => {
     // Check if the user has authority to add a new case --------------------------
@@ -55,16 +55,16 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const { style, client, cWay, size, materials } = req.body;
+    const { style, client, cWays, sizes, mtrls } = req.body;
     try {
       const newCase = new Case({
         user: req.user.id,
         company: req.user.company,
         style,
         client,
-        cWay,
-        size,
-        materials,
+        cWays,
+        sizes,
+        mtrls,
       });
       // name variable "case" will cause problem, so here name it "nCase"
       const nCase = await newCase.save();

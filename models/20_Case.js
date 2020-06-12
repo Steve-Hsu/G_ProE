@@ -20,16 +20,16 @@ const CaseSchema = mongoose.Schema({
   },
   client: {
     type: String,
-    required: true,
   },
-  cWay: {
+  cWays: {
     type: Array,
-    required: true,
     // ColorWay
   },
-  size: {
+  sizes: {
     type: Array,
-    required: true,
+  },
+  mtrls: {
+    type: Array,
   },
   date: {
     // The date, this "case" established on the date base, it can be the register date of the case,

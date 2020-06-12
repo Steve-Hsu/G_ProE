@@ -82,7 +82,7 @@ const App = () => {
                           path='/api/case/user'
                           component={CaseManager}
                         />
-                        <Route
+                        <PrivateUserRoute
                           exact
                           path='/api/case/user/newcase'
                           component={NewCase}
