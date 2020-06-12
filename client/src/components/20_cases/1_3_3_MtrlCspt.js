@@ -20,6 +20,7 @@ const MtrlCspt = ({ cWay, mtrl }) => {
                 type='text'
                 placeholder={`${sizeLable} in ${colorLable}`}
                 onChange={addValueMtrlCspt}
+                value={cspt.cspt}
               />
             </div>
           );
@@ -27,27 +28,6 @@ const MtrlCspt = ({ cWay, mtrl }) => {
       })}
     </div>
   );
-
-  //   return mtrl.cspts.map((cspt) => {
-  //     if (y) {
-  //       const sizeLable = sizes.find(({ id }) => id === cspt.size).gSize;
-  //       const colorLable = cWays.find(({ id }) => id === cspt.cWay).gClr;
-  //       return (
-  //         <div className='test-1 p'>
-  //           <input
-  //             name={mtrl.id}
-  //             id={cspt.id}
-  //             type='text'
-  //             placeholder={`${sizeLable} in ${colorLable}`}
-  //             value={cspt.cspt}
-  //             onChange={addValueMtrlCspt}
-  //           />
-  //         </div>
-  //       );
-  //     } else {
-  //       return null;
-  //     }
-  //   });
 };
 
 export default MtrlCspt;

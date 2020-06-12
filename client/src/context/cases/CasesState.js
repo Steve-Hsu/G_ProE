@@ -50,6 +50,7 @@ const CasesState = (props) => {
     mtrlColors: [],
     sizeSPECs: [],
     cspts: [],
+    MIC: '',
     expandColor: false,
     expandSizeSPEC: false,
     expandCspt: false,
@@ -127,7 +128,7 @@ const CasesState = (props) => {
           mtrl: mtrl.id,
           cWay: cWayId,
           size: size.id,
-          cspt: null,
+          cspt: '',
         });
       });
     });
@@ -144,7 +145,7 @@ const CasesState = (props) => {
           mtrl: mtrl.id,
           cWay: cWay.id,
           size: sizeId,
-          cspt: null,
+          cspt: '',
         });
       });
     });
@@ -257,7 +258,7 @@ const CasesState = (props) => {
           mtrl: newMtrl.id,
           cWay: cWay.id,
           size: size.id,
-          cspt: null,
+          cspt: '',
         });
       });
     });
