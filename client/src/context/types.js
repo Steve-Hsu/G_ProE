@@ -48,6 +48,7 @@ export const STYLE_UPDATE = 'STYLE_UPDATE';
 export const CLIENT_UPDATE = 'CLIENT_UPDATE';
 export const CASE_TOGGLE_POPOVER = 'CASE_TOGGLE_POPOVER';
 export const CASE_DOWNLOAD = 'CASE_DOWNLOAD';
+export const CASE_QTY_UPDATE = 'CASE_QTY_UPDATE';
 export const CASE_ERROR = 'CASE_ERROR';
 export const SIZE_ADD = 'SIZE_ADD';
 export const SIZE_UPDATE = 'SIZE_UPDATE';

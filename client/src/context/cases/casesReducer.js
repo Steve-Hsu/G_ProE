@@ -14,6 +14,7 @@ import {
   MTRL_DELETE,
   CASE_TOGGLE_POPOVER,
   CASE_DOWNLOAD,
+  CASE_QTY_UPDATE,
   CURRENT_ADD,
   CURRENT_DELETE,
 } from '../types';
@@ -71,6 +72,11 @@ export default (state, action) => {
         ...state,
         cWays: state.cWays.filter((cWay) => cWay.id !== action.payload),
       };
+    case CASE_QTY_UPDATE:
+      return {
+        ...state,
+        gQtys: action.payload,
+      };
     case CSPT_ADD:
       return {
         ...state,
@@ -111,5 +117,6 @@ export default (state, action) => {
         ...state,
         current: null,
       };
+    default:
   }
 };

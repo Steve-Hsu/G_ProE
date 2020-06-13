@@ -55,7 +55,7 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const { style, client, cWays, sizes, mtrls } = req.body;
+    const { style, client, cWays, sizes, gQtys, mtrls } = req.body;
     try {
       const newCase = new Case({
         user: req.user.id,
@@ -64,6 +64,7 @@ router.post(
         client,
         cWays,
         sizes,
+        gQtys,
         mtrls,
       });
       // name variable "case" will cause problem, so here name it "nCase"
@@ -72,7 +73,7 @@ router.post(
       res.json(nCase);
     } catch (err) {
       console.error(err.message);
-      res.status(500).send('Server Error');
+      res.status(500).send('Server Errors');
     }
   }
 );

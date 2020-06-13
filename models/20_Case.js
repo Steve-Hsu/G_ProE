@@ -28,6 +28,9 @@ const CaseSchema = mongoose.Schema({
   sizes: {
     type: Array,
   },
+  gQtys: {
+    type: Array,
+  },
   mtrls: {
     type: Array,
   },

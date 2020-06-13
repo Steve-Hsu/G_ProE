@@ -19,6 +19,7 @@ import {
   MTRL_DELETE,
   CASE_TOGGLE_POPOVER,
   CASE_DOWNLOAD,
+  CASE_QTY_UPDATE,
   CURRENT_ADD,
   CURRENT_DELETE,
   STYLE_UPDATE,
@@ -26,6 +27,21 @@ import {
 } from '../types';
 
 const CasesState = (props) => {
+  // State
+  const initialStete = {
+    user: null,
+    company: null,
+    style: null,
+    client: null,
+    cWays: [],
+    sizes: [],
+    gQtys: [],
+    mtrls: [],
+    popover: false,
+    current: null,
+    formIsHalfFilledOut: true,
+  };
+
   // object Model
   // For setting state more convenient
   const newCWay = {
@@ -35,6 +51,12 @@ const CasesState = (props) => {
   const newSize = {
     id: uuidv4(),
     gSize: '',
+  };
+  let newgQty = {
+    id: uuidv4(),
+    cWay: '',
+    size: '',
+    gQty: '',
   };
 
   // According to React : default input should not be an 'null'
@@ -55,118 +77,186 @@ const CasesState = (props) => {
     expandSizeSPEC: false,
     expandCspt: false,
   };
-  // State
-  const initialStete = {
-    user: null,
-    company: null,
-    style: null,
-    client: null,
-    cWays: [],
-    sizes: [],
-    mtrls: [],
-    popover: false,
-    current: null,
-    formIsHalfFilledOut: true,
+
+  let newMtrlColor = {
+    id: uuidv4(),
+    mtrl: '',
+    cWay: '',
+    mColor: '',
+  };
+
+  let newSizeSPEC = {
+    id: uuidv4(),
+    mtrl: '',
+    size: '',
+    mSizeSPEC: '',
+  };
+
+  let newCspt = {
+    id: uuidv4(),
+    cWay: '',
+    size: '',
+    gClr: '',
+    gSize: '',
+    mtrl: '',
+    mColor: '',
+    mSizeSPEC: '',
+    unit: '',
+    cspt: '',
+    requiredMQty: Number,
   };
 
   const [state, dispatch] = useReducer(CasesReducer, initialStete);
-  const { sizes, cWays, mtrls } = state;
+  const { sizes, cWays, gQtys, mtrls } = state;
 
   // Actions --------------------------------------------------------
   // Only applying in this scope for other functions ----------
-  const updateMtrlColor = (cWayId) => {
-    let materials = mtrls;
-    materials.map((mtrl) => {
-      mtrl.mtrlColors.push({
+  const updateMaterials = (materials) => {
+    dispatch({ type: MTRL_UPDATE, payload: materials });
+  };
+
+  const updateQtyBycWay = (cWayId) => {
+    sizes.map((size) => {
+      newgQty = {
+        ...newgQty,
         id: uuidv4(),
-        mtrl: mtrl.id,
         cWay: cWayId,
-        mColor: '',
+        size: size.id,
+      };
+      return gQtys.push(newgQty);
+    });
+    dispatch({ type: CASE_QTY_UPDATE, payload: gQtys });
+  };
+
+  const updateQtyBySize = (sizeId) => {
+    cWays.map((cWay) => {
+      newgQty = {
+        ...newgQty,
+        id: uuidv4(),
+        cWay: cWay.id,
+        size: sizeId,
+      };
+      return gQtys.push(newgQty);
+    });
+    dispatch({ type: CASE_QTY_UPDATE, payload: gQtys });
+  };
+
+  const deletegQtyBycWay = (cWayId) => {
+    // let Qtys = gQtys;
+    let Qtys = gQtys.filter((gQty) => gQty.cWay !== cWayId);
+    dispatch({ type: CASE_QTY_UPDATE, payload: Qtys });
+  };
+
+  const deletegQtyBySize = (sizeId) => {
+    // let Qtys = gQtys;
+    let Qtys = gQtys.filter((gQty) => gQty.size !== sizeId);
+    dispatch({ type: CASE_QTY_UPDATE, payload: Qtys });
+  };
+
+  const updateMtrlCsptBycWay = (cWay) => {
+    let materials = mtrls;
+    sizes.map((size) => {
+      return materials.map((mtrl) => {
+        newCspt = {
+          ...newCspt,
+          id: uuidv4(),
+          cWay: cWay.id,
+          size: size.id,
+          gClr: cWay.gClr,
+          gSize: size.gSize,
+          mtrl: mtrl.id,
+        };
+        // console.log(
+        //   mtrl.mtrlColors.find(({ cWay }) => cWay === cWay.id).mColor
+        // );
+        return mtrl.cspts.push(newCspt);
       });
     });
-    dispatch({ type: MTRL_UPDATE, payload: materials });
+
+    updateMaterials(materials);
+  };
+
+  const updateMtrlCsptBySize = (size) => {
+    let materials = mtrls;
+    cWays.map((cWay) => {
+      return materials.map((mtrl) => {
+        newCspt = {
+          ...newCspt,
+          id: uuidv4(),
+          cWay: cWay.id,
+          size: size.id,
+          gClr: cWay.gClr,
+          gSize: size.gSize,
+          mtrl: mtrl.id,
+        };
+        return mtrl.cspts.push(newCspt);
+      });
+    });
+
+    updateMaterials(materials);
+  };
+
+  const updateMtrlColor = (cWayId) => {
+    let materials = mtrls;
+
+    materials.map((mtrl) => {
+      newMtrlColor = {
+        ...newMtrlColor,
+        mtrl: mtrl.id,
+        cWay: cWayId,
+      };
+      return mtrl.mtrlColors.push(newMtrlColor);
+    });
+    updateMaterials(materials);
   };
 
   const deleteMtrlColor = (cWayId) => {
     let materials = mtrls;
     materials.map((mtrl) => {
-      mtrl.mtrlColors = mtrl.mtrlColors.filter(
+      return (mtrl.mtrlColors = mtrl.mtrlColors.filter(
         (mtrlColor) => mtrlColor.cWay !== cWayId
-      );
+      ));
     });
-    dispatch({ type: MTRL_UPDATE, payload: materials });
+    updateMaterials(materials);
   };
 
   const updateMtrlSizeSPEC = (sizeId) => {
     let materials = mtrls;
     materials.map((mtrl) => {
-      mtrl.sizeSPECs.push({
-        id: uuidv4(),
+      newSizeSPEC = {
+        ...newSizeSPEC,
         mtrl: mtrl.id,
         size: sizeId,
-        mSizeSPEC: '',
-      });
+      };
+      return mtrl.sizeSPECs.push(newSizeSPEC);
     });
-    dispatch({ type: MTRL_UPDATE, payload: materials });
+    updateMaterials(materials);
   };
 
   const deleteMtrlSizeSPEC = (sizeId) => {
     let materials = mtrls;
     materials.map((mtrl) => {
-      mtrl.sizeSPECs = mtrl.sizeSPECs.filter(
+      return (mtrl.sizeSPECs = mtrl.sizeSPECs.filter(
         (mtrlSPEC) => mtrlSPEC.size !== sizeId
-      );
+      ));
     });
-    dispatch({ type: MTRL_UPDATE, payload: materials });
-  };
-  const updateMtrlCsptBycWay = (cWayId) => {
-    let materials = mtrls;
-    sizes.map((size) => {
-      materials.map((mtrl) => {
-        mtrl.cspts.push({
-          id: uuidv4(),
-          mtrl: mtrl.id,
-          cWay: cWayId,
-          size: size.id,
-          cspt: '',
-        });
-      });
-    });
-
-    dispatch({ type: MTRL_UPDATE, payload: materials });
-  };
-
-  const updateMtrlCsptBySize = (sizeId) => {
-    let materials = mtrls;
-    cWays.map((cWay) => {
-      materials.map((mtrl) => {
-        mtrl.cspts.push({
-          id: uuidv4(),
-          mtrl: mtrl.id,
-          cWay: cWay.id,
-          size: sizeId,
-          cspt: '',
-        });
-      });
-    });
-
-    dispatch({ type: MTRL_UPDATE, payload: materials });
+    updateMaterials(materials);
   };
 
   const deleteMtrlCsptBycWay = (cWayId) => {
     let materials = mtrls;
     materials.map((mtrl) => {
-      mtrl.cspts = mtrl.cspts.filter((cspt) => cspt.cWay !== cWayId);
+      return (mtrl.cspts = mtrl.cspts.filter((cspt) => cspt.cWay !== cWayId));
     });
-    dispatch({ type: MTRL_UPDATE, payload: materials });
+    updateMaterials(materials);
   };
 
   const deleteMtrlCsptBySize = (sizeId) => {
     let materials = mtrls;
     materials.map((mtrl) => {
-      mtrl.cspts = mtrl.cspts.filter((cspt) => cspt.size !== sizeId);
+      return (mtrl.cspts = mtrl.cspts.filter((cspt) => cspt.size !== sizeId));
     });
-    dispatch({ type: MTRL_UPDATE, payload: materials });
+    updateMaterials(materials);
   };
 
   // Export using functions --------------
@@ -174,9 +264,11 @@ const CasesState = (props) => {
     e.preventDefault();
     if (cWays.length < 20) {
       // Add the new color way to each material
+      updateQtyBycWay(newCWay.id);
       updateMtrlColor(newCWay.id);
-      updateMtrlCsptBycWay(newCWay.id);
+
       dispatch({ type: CLR_WAY_ADD, payload: newCWay });
+      updateMtrlCsptBycWay(newCWay);
     }
   };
 
@@ -194,6 +286,7 @@ const CasesState = (props) => {
     e.preventDefault();
     const cWayId = e.target.value;
     //Delete the cWay in eatch mtrl
+    deletegQtyBycWay(cWayId);
     deleteMtrlColor(cWayId);
     deleteMtrlCsptBycWay(cWayId);
     dispatch({ type: CLR_WAY_DELETE, payload: cWayId });
@@ -203,10 +296,12 @@ const CasesState = (props) => {
     // e.preventDefault : the e here is the app itself. Prevent it set back to default value
     e.preventDefault();
     // Add the new Size to each material
-    updateMtrlSizeSPEC(newSize.id);
-    updateMtrlCsptBySize(newSize.id);
+
     if (sizes.length < 15) {
+      updateQtyBySize(newSize.id);
+      updateMtrlSizeSPEC(newSize.id);
       dispatch({ type: SIZE_ADD, payload: newSize });
+      updateMtrlCsptBySize(newSize);
     }
   };
 
@@ -221,10 +316,10 @@ const CasesState = (props) => {
   };
 
   const deleteSize = (e) => {
-    console.log('This is e', e.target);
     e.preventDefault();
     const sizeId = e.target.value;
     //Delete the size SPEC in eatch mtrl
+    deletegQtyBySize(sizeId);
     deleteMtrlSizeSPEC(sizeId);
     deleteMtrlCsptBySize(sizeId);
     dispatch({ type: SIZE_DELETE, payload: sizeId });
@@ -234,7 +329,7 @@ const CasesState = (props) => {
     e.preventDefault();
     //Update the mtrlColors to the new mtrl, before adding it to mtrls
     cWays.map((cWay) => {
-      newMtrl.mtrlColors.push({
+      return newMtrl.mtrlColors.push({
         id: uuidv4(),
         mtrl: newMtrl.id,
         cWay: cWay.id,
@@ -243,7 +338,7 @@ const CasesState = (props) => {
     });
     //Update the mtrlSizeSPEC to the new mtrl, before adding it to mtrls
     sizes.map((size) => {
-      newMtrl.sizeSPECs.push({
+      return newMtrl.sizeSPECs.push({
         id: uuidv4(),
         mtrl: newMtrl.id,
         size: size.id,
@@ -252,14 +347,17 @@ const CasesState = (props) => {
     });
     //Update the cspt to the new mtrl, before adding it to mtrls
     sizes.map((size) => {
-      cWays.map((cWay) => {
-        newMtrl.cspts.push({
+      return cWays.map((cWay) => {
+        newCspt = {
+          ...newCspt,
           id: uuidv4(),
-          mtrl: newMtrl.id,
           cWay: cWay.id,
           size: size.id,
-          cspt: '',
-        });
+          gClr: cWay.gClr,
+          gSize: size.gSize,
+          mtrl: newMtrl.id,
+        };
+        return newMtrl.cspts.push(newCspt);
       });
     });
 
@@ -274,6 +372,7 @@ const CasesState = (props) => {
     dispatch({ type: MTRL_DELETE, payload: id });
   };
 
+  // Layer 2 functions -------------------------------------------------------------------------
   const expandMtrlColor = (e) => {
     e.preventDefault();
     //The id is set in the value of the btn when which is created. so here we fetch id by e.target.value.
@@ -283,7 +382,7 @@ const CasesState = (props) => {
       ({ id }) => id === mtrlId
     ).expandColor;
 
-    dispatch({ type: MTRL_UPDATE, payload: materials });
+    updateMaterials(materials);
   };
 
   const expandSizeSPEC = (e) => {
@@ -295,7 +394,7 @@ const CasesState = (props) => {
       ({ id }) => id === mtrlId
     ).expandSizeSPEC;
 
-    dispatch({ type: MTRL_UPDATE, payload: materials });
+    updateMaterials(materials);
   };
 
   const expandMtrlCspt = (e) => {
@@ -307,22 +406,8 @@ const CasesState = (props) => {
       ({ id }) => id === mtrlId
     ).expandCspt;
 
-    dispatch({ type: MTRL_UPDATE, payload: materials });
+    updateMaterials(materials);
   };
-
-  // This code works too, but seems foo much useless looping.
-  // const addValueMtrlColor = (e) => {
-  //   e.preventDefault();
-  //   const targetId = e.target.id;
-  //   const materials = mtrls;
-
-  //   materials.map((mtrl) => {
-  //     mtrl.mtrlColors.map((mtrlColor) => {
-  //       if (mtrlColor.id === targetId) {
-  //         mtrlColor.mColor = e.target.value;
-  //       }
-  //     });
-  //   });
 
   const addValueMtrlColor = (e) => {
     e.preventDefault();
@@ -335,7 +420,7 @@ const CasesState = (props) => {
     material.mtrlColors.find(({ id }) => id === mtrlColorId).mColor =
       e.target.value;
 
-    dispatch({ type: MTRL_UPDATE, payload: materials });
+    updateMaterials(materials);
   };
 
   const addValueMtrlSizeSPEC = (e) => {
@@ -349,7 +434,7 @@ const CasesState = (props) => {
     material.sizeSPECs.find(({ id }) => id === mtrlSizeSPECId).mSizeSPEC =
       e.target.value;
 
-    dispatch({ type: MTRL_UPDATE, payload: materials });
+    updateMaterials(materials);
   };
 
   const addValueMtrlCspt = (e) => {
@@ -362,7 +447,7 @@ const CasesState = (props) => {
     let material = materials.find(({ id }) => id === mtrlId);
     material.cspts.find(({ id }) => id === mtrlCspt).cspt = e.target.value;
 
-    dispatch({ type: MTRL_UPDATE, payload: materials });
+    updateMaterials(materials);
   };
 
   const addMtrlValue = (e) => {
@@ -393,15 +478,23 @@ const CasesState = (props) => {
         break;
       default:
     }
-    dispatch({ type: MTRL_UPDATE, payload: materials });
+    updateMaterials(materials);
   };
 
   const addCaseValue = (e) => {
     e.preventDefault();
-    if (e.target.name === 'style') {
-      dispatch({ type: STYLE_UPDATE, payload: e.target.value });
-    } else if (e.target.name === 'client') {
-      dispatch({ type: CLIENT_UPDATE, payload: e.target.value });
+    try {
+      if (e.target.name === 'style') {
+        dispatch({ type: STYLE_UPDATE, payload: e.target.value });
+      } else if (e.target.name === 'client') {
+        dispatch({ type: CLIENT_UPDATE, payload: e.target.value });
+      } else if (e.target.name === 'gQty') {
+        let Qtys = gQtys;
+        Qtys.find(({ id }) => id === e.target.id).gQty = e.target.value;
+        dispatch({ type: CASE_QTY_UPDATE, payload: Qtys });
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -444,10 +537,10 @@ const CasesState = (props) => {
 
     try {
       const res = await axios.post('/api/case/user/newcase', cases, config);
-      console.log('Upload');
+      console.log('Upload succeed!');
       dispatch({ type: CASE_DOWNLOAD, payload: res.data });
     } catch (err) {
-      console.log('Upload failed');
+      console.log('Upload new case faild, server problems');
     }
   };
 
@@ -460,6 +553,7 @@ const CasesState = (props) => {
         client: state.client,
         cWays: state.cWays,
         sizes: state.sizes,
+        gQtys: state.gQtys,
         mtrls: state.mtrls,
         popover: state.popover,
         current: state.current,

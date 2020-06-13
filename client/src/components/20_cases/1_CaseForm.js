@@ -6,7 +6,8 @@ import CasesContext from '../../context/cases/casesContext';
 // Components
 import ColorWay from './1_1_ColorWay';
 import Size from './1_2_Size';
-import Mtrl from './1_3_Mtrl';
+import Qty from './1_3_Qty';
+import Mtrl from './1_4_Mtrl';
 import DeletePopover from '../20_cases/DeletePopover';
 
 const CaseForm = () => {
@@ -21,6 +22,7 @@ const CaseForm = () => {
     formIsHalfFilledOut,
     cWays,
     sizes,
+    gQtys,
     mtrls,
     addCaseValue,
     addSize,
@@ -36,14 +38,32 @@ const CaseForm = () => {
     uploadNewCase,
   } = casesContext;
 
+  //Make a body to submit
   const cases = {
     style: style,
     client: client,
     cWays: cWays,
     sizes: sizes,
+    gQtys: gQtys,
     mtrls: mtrls,
   };
 
+  //Style for breakdown Table --------
+
+  const colorWayColumnSize = () => {
+    if (cWays.length < 6) {
+      return 5;
+    } else {
+      return cWays.length;
+    }
+  };
+  const breakDownTable = {
+    display: 'grid',
+    gridTemplateColumns: `repeat(${colorWayColumnSize()}, 1fr)`,
+    gridGap: '0',
+  };
+
+  //OnChange functions ----------
   const onSubmitCase = (e) => {
     e.preventDefault();
     uploadNewCase(cases);
@@ -65,7 +85,7 @@ const CaseForm = () => {
             <input type='text' name='style' onChange={addCaseValue} />
             {'Client'}
             <input type='text' name='client' onChange={addCaseValue} />
-            {/* ColorWay -------------------------- */}
+            {/* CS-Breakdown btns-------------------------- */}
             <div>
               {'Color Way'}
               <button
@@ -75,15 +95,7 @@ const CaseForm = () => {
               >
                 +
               </button>
-            </div>
-            <div className='grid-5'>
-              {cWays.map((cWay) => (
-                <ColorWay key={cWay.id} cWay={cWay} />
-              ))}
-            </div>
-
-            {/* Size -------------------------- */}
-            <div>
+              {'    '}
               {'Size'}
               <button
                 name='sizeBtn'
@@ -93,10 +105,33 @@ const CaseForm = () => {
                 +
               </button>
             </div>
-            <div className='grid-5'>
-              {sizes.map((size) => (
-                <Size key={size.id} size={size} />
-              ))}
+            {/* CS-Breakdown table */}
+            {/* Color -------------------------- */}
+
+            <div className='grid-1-7'>
+              <div></div>
+              <div style={breakDownTable} className='grid-5'>
+                {cWays.map((cWay) => (
+                  <ColorWay key={cWay.id} cWay={cWay} />
+                ))}
+              </div>
+            </div>
+            <div className='grid-1-7'>
+              {/* Size -------------------------- */}
+              <div>
+                {sizes.map((size) => (
+                  <Size key={size.id} size={size} />
+                ))}
+              </div>
+              <div style={breakDownTable} className='grid-5'>
+                {cWays.map((cWay) => (
+                  <div key={`Qty${cWay.id}`}>
+                    {gQtys.map((gQty) => (
+                      <Qty key={gQty.id} cWay={cWay} gQty={gQty} />
+                    ))}
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* Material -------------------------- */}

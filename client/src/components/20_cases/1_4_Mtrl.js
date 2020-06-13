@@ -1,9 +1,9 @@
 import React, { Fragment, useContext } from 'react';
 import PropTypes from 'prop-types';
 import CasesContext from '../../context/cases/casesContext';
-import MtrlClr from './1_3_1_MtrlClr';
-import MtrlSizeSPEC from './1_3_2_MtrlSizeSPEC';
-import MtrlCspt from './1_3_3_MtrlCspt';
+import MtrlClr from './1_4_1_MtrlClr';
+import MtrlSizeSPEC from './1_4_2_MtrlSizeSPEC';
+import MtrlCspt from './1_4_3_MtrlCspt';
 
 const Mtrl = ({ mtrl }) => {
   const casesContext = useContext(CasesContext);

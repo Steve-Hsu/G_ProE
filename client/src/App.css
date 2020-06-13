@@ -223,6 +223,18 @@ img {
   grid-gap: var(--gap);
 }
 
+.grid-1-6 {
+  display: grid;
+  grid-template-columns: 1fr 6fr;
+  grid-gap: var(--gap);
+}
+
+.grid-1-7 {
+  display: grid;
+  grid-template-columns: 1fr 7fr;
+  grid-gap: var(--gap);
+}
+
 .grid-2-3 {
   display: grid;
   grid-template-columns: 2fr 3fr;
