@@ -14,7 +14,8 @@ const Qty = ({ cWay, gQty }) => {
           id={gQty.id}
           placeholder={cWay.gClr}
           type='text'
-          value={gQty.gQty}
+          // Add ||'' to the value to prevent error as uncontrolled to controled.
+          value={gQty.gQty || ''}
           onChange={addCaseValue}
         />
       </div>

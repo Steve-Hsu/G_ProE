@@ -90,7 +90,7 @@ const CaseForm = () => {
                 placeholder='enter your style'
                 className='form-control'
               />
-              <label for='style' className='form-label'>
+              <label htmlFor='style' className='form-label'>
                 Style
               </label>
               {/* <span class='underline'></span> */}
