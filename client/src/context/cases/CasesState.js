@@ -5,7 +5,6 @@ import CasesContext from './casesContext';
 import CasesReducer from './casesReducer';
 
 //Global Header for token
-import setAuthToken from '../../utils/setAuthToken';
 
 import {
   SIZE_ADD,

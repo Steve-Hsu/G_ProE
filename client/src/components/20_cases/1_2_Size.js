@@ -20,6 +20,7 @@ const Size = ({ size }) => {
         type='text'
         placeholder='Size'
         onChange={updateSize}
+        autoFocus
       />
       <button
         name='size'

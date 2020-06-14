@@ -21,6 +21,7 @@ const ColorWay = ({ cWay }) => {
         name='style'
         placeholder='Color Way'
         onChange={updatecWay}
+        autoFocus
       />
       <button
         value={cWay.id}

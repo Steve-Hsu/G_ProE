@@ -386,33 +386,11 @@ img {
 }
 
 /* Forms */
-input {
-  margin: 1rem 0;
-  border-radius: 5px;
-}
 
 .form-text {
   display: block;
   margin-top: 0.3rem;
   color: #888;
-}
-
-input[type='text'],
-input[type='email'],
-input[type='password'],
-input[type='date'],
-select,
-textarea {
-  display: block;
-  width: 100%;
-  padding: 0.4rem;
-  font-size: 1.2rem;
-  border: 1px solid #ccc;
-}
-
-input[type='submit'],
-button {
-  font: inherit;
 }
 
 .form-group {
@@ -436,6 +414,7 @@ h3 {
   text-align: center;
 }
 
+/* table */
 table th,
 table td {
   padding: 1rem;
@@ -445,6 +424,73 @@ table td {
 table th {
   background: var(--light-color);
 }
+
+/* input */
+input {
+  margin: 1rem 0;
+  /* border-radius: 5px; */
+}
+
+input[type='text'],
+input[type='email'],
+input[type='password'],
+input[type='date'],
+select,
+textarea {
+  display: block;
+  width: 100%;
+  padding: 0.4rem;
+  font-size: 1.2rem;
+  border: 0;
+  border-bottom: 1px solid #ccc;
+}
+
+input[type='submit'],
+button {
+  font: inherit;
+}
+
+.form-group {
+  padding: 2rem;
+  margin-bottom: 3em;
+  transition: all 0.3s;
+  z-index: 10;
+}
+
+.form-label {
+  font-size: 1em;
+  display: block;
+  opacity: 1;
+  transform: translateY(-2rem);
+  transform-origin: 0 0;
+  transition: all 0.3s;
+}
+
+.form-control {
+  box-shadow: none;
+  transition: all 0.5s;
+  z-index: 9;
+}
+
+.form-control::placeholder {
+  color: rgba(255, 255, 255, 1);
+}
+
+.form-control:focus {
+  box-shadow: none;
+  outline: none;
+  border-bottom: 2px solid orange;
+  transition: all 0.5s;
+}
+
+.form-control:focus + .form-label,
+.form-control:not(:placeholder-shown) + .form-label {
+  transform: translateY(-3.3rem) scale(0.7);
+}
+
+/* .form-group:focus-within {
+  transform: scale(1.5, 1.5);
+} */
 
 /* Navbar */
 .navbar {

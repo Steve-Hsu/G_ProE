@@ -74,17 +74,35 @@ const CaseForm = () => {
       {/* // Ask the user when they want to jump to another page wihout saving datas */}
       <Prompt when={formIsHalfFilledOut} message='Hey' />
       {popover ? <DeletePopover key={current.id} current={current} /> : null}
-      <div className='p-1 test-2'>
+      <div className='p-1'>
         <div>
           <form onSubmit={onSubmitCase}>
             {'Import style from Excel'}
             <input type='text' name='import' id='imoprt' />
             {'Submit'}
             <input type='submit' className='btn btn-primary btn-block' />
-            {'Style'}
-            <input type='text' name='style' onChange={addCaseValue} />
+            <div className='form-group'>
+              <input
+                id='style'
+                type='text'
+                name='style'
+                onChange={addCaseValue}
+                placeholder='enter your style'
+                className='form-control'
+              />
+              <label for='style' className='form-label'>
+                Style
+              </label>
+              {/* <span class='underline'></span> */}
+            </div>
+
             {'Client'}
-            <input type='text' name='client' onChange={addCaseValue} />
+            <input
+              type='text'
+              name='client'
+              onChange={addCaseValue}
+              style={{ outline: 'none' }}
+            />
             {/* CS-Breakdown btns-------------------------- */}
             <div>
               {'Color Way'}
