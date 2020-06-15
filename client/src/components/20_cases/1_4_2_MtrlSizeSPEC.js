@@ -8,6 +8,11 @@ const MtrlSizeSPEC = ({ sizeSPEC, mtrlId }) => {
   const { mSizeSPEC } = sizeSPEC;
   const sizeLable = sizes.find(({ id }) => id === sizeSPEC.size).gSize;
 
+  //@ Value for input
+  //words length limit
+  const maxWdsLength = '50';
+  const SizeSPECLength = maxWdsLength;
+
   return (
     <div className='test-1 p'>
       <p>{sizeLable}</p>
@@ -18,6 +23,7 @@ const MtrlSizeSPEC = ({ sizeSPEC, mtrlId }) => {
         placeholder='SPEC for Size'
         value={mSizeSPEC}
         onChange={addValueMtrlSizeSPEC}
+        maxLength={SizeSPECLength}
       />
     </div>
   );

@@ -33,7 +33,7 @@ export const CaseManager = (props) => {
   return (
     <Fragment>
       {/* content */}
-      <div className='container'>
+      <div className='form-container'>
         <div>
           <a onClick={goNewCase} className='cursor'>
             <i className='fas fa-sign-out-alt'></i>{' '}

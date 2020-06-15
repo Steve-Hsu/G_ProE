@@ -53,26 +53,39 @@ const UserLogin = (props) => {
       <form onSubmit={onSubmit}>
         {/* {Email Address} */}
         <div className='form-group'>
-          <label htmlFor='email'>Email Address</label>
           <input
+            id='userEmail'
             type='email'
             name='email'
             value={email}
             onChange={onChange}
+            placeholder='.'
+            className='MPH-input'
+            maxlength='100'
             required
           />
+          <label htmlFor='userEmail' className='MPH-input-label'>
+            Email Address
+          </label>
         </div>
         {/* {Password} */}
         <div className='form-group'>
-          <label htmlFor='password'>password</label>
           <input
+            id='userPassword'
             type='password'
             name='password'
             value={password}
             onChange={onChange}
+            placeholder='.'
+            className='MPH-input'
+            maxlength='50'
             required
           />
+          <label htmlFor='userPassword' className='MPH-input-label'>
+            Password
+          </label>
         </div>
+
         {/* Submit button */}
         <input
           type='submit'

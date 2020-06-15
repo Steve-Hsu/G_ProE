@@ -168,7 +168,10 @@ const Mtrl = ({ mtrl }) => {
       {mtrl.expandCspt
         ? cWays.map((cWay) => (
             <div className='grid-1-5' key={`ColorTitle${cWay.id}`}>
-              <div>{`${cWay.gClr}`}</div>
+              <div>
+                {`${cWay.gClr}`.charAt(0).toUpperCase() +
+                  `${cWay.gClr}`.slice(1)}
+              </div>
               <MtrlCspt
                 key={`Fragment${cWay.id}${mtrl.id}`}
                 cWay={cWay}

@@ -3,7 +3,7 @@ import { Prompt } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import CasesContext from '../../context/cases/casesContext';
 
-// Components
+// @ Components
 import ColorWay from './1_1_ColorWay';
 import Size from './1_2_Size';
 import Qty from './1_3_Qty';
@@ -11,9 +11,9 @@ import Mtrl from './1_4_Mtrl';
 import DeletePopover from '../20_cases/DeletePopover';
 
 const CaseForm = () => {
-  //Init Context
+  //@ Init Context
   const casesContext = useContext(CasesContext);
-  //Destructure, pull out the variables form userContext
+  //@ Destructure, pull out the variables form userContext
   const {
     user,
     company,
@@ -38,7 +38,7 @@ const CaseForm = () => {
     uploadNewCase,
   } = casesContext;
 
-  //Make a body to submit
+  //@ Make a body to submit
   const cases = {
     style: style,
     client: client,
@@ -47,23 +47,27 @@ const CaseForm = () => {
     gQtys: gQtys,
     mtrls: mtrls,
   };
+  //@ Value for input
+  //words length limit
+  const maxWdsLength = '50';
+  const styleLength = maxWdsLength;
+  const clientLength = maxWdsLength;
 
-  //Style for breakdown Table --------
-
-  const colorWayColumnSize = () => {
-    if (cWays.length < 6) {
+  //@ Style for breakdown Table --------
+  const SizesColumnSize = () => {
+    if (sizes.length < 6) {
       return 5;
     } else {
-      return cWays.length;
+      return sizes.length;
     }
   };
   const breakDownTable = {
     display: 'grid',
-    gridTemplateColumns: `repeat(${colorWayColumnSize()}, 1fr)`,
+    gridTemplateColumns: `repeat(${SizesColumnSize()}, 1fr)`,
     gridGap: '0',
   };
 
-  //OnChange functions ----------
+  //@ OnChange functions ----------
   const onSubmitCase = (e) => {
     e.preventDefault();
     uploadNewCase(cases);
@@ -74,94 +78,72 @@ const CaseForm = () => {
       {/* // Ask the user when they want to jump to another page wihout saving datas */}
       <Prompt when={formIsHalfFilledOut} message='Hey' />
       {popover ? <DeletePopover key={current.id} current={current} /> : null}
-      <div className='p-1'>
+      <div className='p-1 container container-with-navbar'>
         <div>
-          <form onSubmit={onSubmitCase}>
-            {'Import style from Excel'}
-            <input type='text' name='import' id='imoprt' />
-            {'Submit'}
-            <input type='submit' className='btn btn-primary btn-block' />
+          <form id='caseForm' onSubmit={onSubmitCase}>
             <div className='form-group'>
               <input
-                id='style'
+                id='caseStyle'
+                name='caseStyle'
                 type='text'
                 name='style'
                 onChange={addCaseValue}
-                placeholder='enter your style'
-                className='form-control'
+                maxLength={styleLength}
+                placeholder='.'
+                className='MPH-input'
               />
-              <label htmlFor='style' className='form-label'>
+              <label htmlFor='caseStyle' className='MPH-input-label'>
                 Style
               </label>
-              {/* <span class='underline'></span> */}
+
+              <input
+                id='caseClient'
+                type='text'
+                name='caseClient'
+                onChange={addCaseValue}
+                maxLength={clientLength}
+                placeholder='.'
+                className='MPH-input'
+              />
+              <label htmlFor='caseClient' className='MPH-input-label'>
+                Client
+              </label>
             </div>
 
-            {'Client'}
-            <input
-              type='text'
-              name='client'
-              onChange={addCaseValue}
-              style={{ outline: 'none' }}
-            />
-            {/* CS-Breakdown btns-------------------------- */}
-            <div>
-              {'Color Way'}
-              <button
-                name='cWayBtn'
-                className='btn btn-sm btn-primary btn-rounded-square'
-                onClick={addcWay}
-              >
-                +
-              </button>
-              {'    '}
-              {'Size'}
-              <button
-                name='sizeBtn'
-                className='btn btn-sm btn-primary'
-                onClick={addSize}
-              >
-                +
-              </button>
-            </div>
             {/* CS-Breakdown table */}
             {/* Color -------------------------- */}
-
+            <div>Color-Size-Breakdown</div>
             <div className='grid-1-7'>
               <div></div>
               <div style={breakDownTable} className='grid-5'>
-                {cWays.map((cWay) => (
-                  <ColorWay key={cWay.id} cWay={cWay} />
+                {sizes.map((size) => (
+                  <Size key={size.id} size={size} />
                 ))}
               </div>
             </div>
             <div className='grid-1-7'>
               {/* Size -------------------------- */}
+
               <div>
-                {sizes.map((size) => (
-                  <Size key={size.id} size={size} />
+                {cWays.map((cWay) => (
+                  <ColorWay key={cWay.id} cWay={cWay} />
                 ))}
               </div>
               <div style={breakDownTable} className='grid-5'>
-                {cWays.map((cWay) => (
-                  <div key={`Qty${cWay.id}`}>
+                {sizes.map((size) => (
+                  <div key={`Qty${size.id}`}>
                     {gQtys.map((gQty) => (
-                      <Qty key={gQty.id} cWay={cWay} gQty={gQty} />
+                      <Qty key={gQty.id} size={size} gQty={gQty} />
                     ))}
                   </div>
                 ))}
               </div>
             </div>
+            <br />
 
             {/* Material -------------------------- */}
             <div>
-              {'Material'}
-              <button
-                name='mtrlBtn'
-                className='btn btn-sm btn-primary'
-                onClick={addMtrl}
-              >
-                +
-              </button>
+              Materials<br></br>
             </div>
             <div>
               {mtrls.map((mtrl) => (

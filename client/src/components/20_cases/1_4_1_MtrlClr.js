@@ -8,6 +8,11 @@ const MtrlClr = ({ mtrlColor, mtrlId }) => {
   const { mColor } = mtrlColor;
   const cWayLable = cWays.find(({ id }) => id === mtrlColor.cWay).gClr;
 
+  //@ Value for input
+  //words length limit
+  const maxWdsLength = '50';
+  const mColorLength = maxWdsLength;
+
   return (
     <div className='test-1 p'>
       <p>{cWayLable}</p>
@@ -18,6 +23,7 @@ const MtrlClr = ({ mtrlColor, mtrlId }) => {
         placeholder='color'
         value={mColor}
         onChange={addValueMtrlColor}
+        maxLength={mColorLength}
       />
     </div>
   );

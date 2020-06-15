@@ -39,20 +39,29 @@ const DeletePopover = () => {
 
   return (
     <div className='popup'>
-      <div className='popup_inner'>
-        <div>
-          <button
-            value={current.id}
-            className='btn btn-danger btn-block'
-            onClick={onChangeDelete}
-          >
-            Delete this {`${words()}`}
-          </button>
+      <div className='popup-inner'>
+        <div className='popup-container'>
+          <div>You will delete this {`${words()}`}</div>
+          <h3>Are you sure?</h3>
         </div>
-        <div>
-          <button className='btn btn-primary btn-block' onClick={togglePopover}>
-            Back
-          </button>
+        <div className='popup-btn-holder'>
+          <div>
+            <button
+              value={current.id}
+              className='btn btn-danger btn-block center'
+              onClick={onChangeDelete}
+            >
+              Delete
+            </button>
+          </div>
+          <div>
+            <button
+              className='btn btn-primary btn-block center'
+              onClick={togglePopover}
+            >
+              Back
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -5,6 +5,10 @@ import CasesContext from '../../context/cases/casesContext';
 const MtrlCspt = ({ cWay, mtrl }) => {
   const casesContext = useContext(CasesContext);
   const { addValueMtrlCspt, sizes, cWays } = casesContext;
+  //@ Value for input
+  //words length limit
+  const maxWdsLength = '4';
+  const csptLength = maxWdsLength;
 
   return (
     <div className='grid-5'>
@@ -20,6 +24,7 @@ const MtrlCspt = ({ cWay, mtrl }) => {
                 type='text'
                 placeholder={`${sizeLable} in ${colorLable}`}
                 onChange={addValueMtrlCspt}
+                maxLength={csptLength}
                 value={cspt.cspt}
               />
             </div>

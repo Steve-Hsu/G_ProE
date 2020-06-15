@@ -38,7 +38,7 @@ const DeleteUserPopForm = (props) => {
 
   return (
     <div className='popup'>
-      <div className='popup_inner'>
+      <div className='popup-inner'>
         <div>
           <input
             type='text'

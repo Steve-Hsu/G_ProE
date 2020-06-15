@@ -67,25 +67,37 @@ const ComLogin = (props) => {
             <form onSubmit={onSubmit}>
               {/* {Email Address} */}
               <div className='form-group'>
-                <label htmlFor='email'>Email Address</label>
                 <input
+                  id='comEmail'
                   type='email'
                   name='email'
                   value={email}
                   onChange={onChange}
+                  maxlength='100'
                   required
+                  placeholder='.'
+                  className='MPH-input'
                 />
+                <label htmlFor='comEmail' className='MPH-input-label'>
+                  Email Address
+                </label>
               </div>
               {/* {Password} */}
               <div className='form-group'>
-                <label htmlFor='password'>password</label>
                 <input
+                  id='comPassword'
                   type='password'
                   name='password'
                   value={password}
                   onChange={onChange}
+                  maxlength='50'
                   required
+                  placeholder='.'
+                  className='MPH-input'
                 />
+                <label htmlFor='comPassword' className='MPH-input-label'>
+                  password
+                </label>
               </div>
               {/* Submit button */}
               <input

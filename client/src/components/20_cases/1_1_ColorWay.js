@@ -13,6 +13,11 @@ const ColorWay = ({ cWay }) => {
     transform: 'translate(-1rem, -1rem)',
   };
 
+  //@ Value for input
+  //words length limit
+  const maxWdsLength = '50';
+  const colorWayLength = maxWdsLength;
+
   return (
     <div className='grid-3-1 grid-gap-sm test-1 p'>
       <input
@@ -21,6 +26,7 @@ const ColorWay = ({ cWay }) => {
         name='style'
         placeholder='Color Way'
         onChange={updatecWay}
+        maxLength={colorWayLength}
         autoFocus
       />
       <button

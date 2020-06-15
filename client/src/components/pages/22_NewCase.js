@@ -1,13 +1,14 @@
 import React from 'react';
 
 // Components
+import LeftBar from '../layout/LeftBar';
 import CaseForm from '../20_cases/1_CaseForm';
 
 export const NewCase = () => {
   return (
     <div className='grid-1-4'>
       {/* Grid-1 */}
-      <div>{/* list */}</div>
+      <LeftBar />
 
       {/* Grid-2 */}
       <CaseForm />
