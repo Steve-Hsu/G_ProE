@@ -195,6 +195,20 @@ img {
   margin: 3rem 0;
 }
 
+.mb {
+  margin-bottom: var(--gap);
+}
+
+.mb-1 {
+  margin-bottom: 1rem;
+}
+.mb-2 {
+  margin-bottom: 2rem;
+}
+.mb-3 {
+  margin-bottom: 3rem;
+}
+
 /* @Grid */
 .grid-2 {
   display: grid;
@@ -259,6 +273,12 @@ img {
 .grid-3-1 {
   display: grid;
   grid-template-columns: 3fr 1fr;
+  grid-gap: var(--gap);
+}
+
+.grid-1-6-1 {
+  display: grid;
+  grid-template-columns: 1fr 6fr 1fr;
   grid-gap: var(--gap);
 }
 
@@ -445,14 +465,14 @@ input {
   margin: 1rem 0;
   /* border-radius: 5px; */
 }
-
+input[type='number'],
 input[type='text'],
 input[type='email'],
 input[type='password'],
 input[type='date'],
 select,
 textarea {
-  display: block;
+  display: inline-block;
   width: 100%;
   padding: 0.4rem;
   font-size: 1.2rem;
@@ -472,7 +492,7 @@ button {
   font-size: 1em;
   display: block;
   opacity: 1;
-  transform: translateY(-2rem);
+  transform: translateY(-3rem);
   transform-origin: 0 0;
   transition: all 0.3s;
 }
@@ -490,7 +510,7 @@ button {
 .MPH-input:focus {
   box-shadow: none;
   outline: none;
-  border-bottom: 2px solid orange;
+  border-bottom: 1px solid orange;
   transition: all 0.5s;
 }
 
@@ -500,7 +520,7 @@ button {
 
 .MPH-input:focus + .MPH-input-label,
 .MPH-input:not(:placeholder-shown) + .MPH-input-label {
-  transform: translateY(-3.3rem) scale(0.7);
+  transform: translateY(-4rem) scale(0.7);
   color: orange;
 }
 /* Usage : Use a div with class .MPH-input-group to warp a input and babel, the input will transform it size when focused. */
@@ -553,6 +573,7 @@ button {
 
 .leftbar-component {
   position: fixed;
+  width: 15%;
 }
 
 /* @Animation (Add After) */

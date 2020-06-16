@@ -33,6 +33,8 @@ const Size = ({ size }) => {
       }
       update();
     }
+    // This command prevent useless warning
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sizes]);
 
   //For spareting the postion of btn, here use an inline style.
@@ -79,7 +81,6 @@ const Size = ({ size }) => {
         autoFocus
         style={{ height: '3rem' }}
         default='XS'
-        // ref={mySelect}
       >
         {sizeList.map((s) => {
           return (

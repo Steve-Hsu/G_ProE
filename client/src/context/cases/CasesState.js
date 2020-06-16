@@ -540,28 +540,29 @@ const CasesState = (props) => {
 
   const addMtrlValue = (e) => {
     e.preventDefault();
-    const mtrlId = e.target.id;
+    // For label tag need to target the Id, so here we save the id in the e.target.name
+    const mtrlId = e.target.name;
     let materials = mtrls;
-    switch (e.target.name) {
-      case 'item':
+    switch (e.target.id) {
+      case 'Item':
         materials.find(({ id }) => id === mtrlId).item = e.target.value;
         break;
-      case 'spec':
+      case 'SPEC':
         materials.find(({ id }) => id === mtrlId).spec = e.target.value;
         break;
-      case 'supplier':
+      case 'Supplier':
         materials.find(({ id }) => id === mtrlId).supplier = e.target.value;
         break;
-      case 'ref_no':
+      case 'Ref_no':
         materials.find(({ id }) => id === mtrlId).ref_no = e.target.value;
         break;
-      case 'position':
+      case 'Position':
         materials.find(({ id }) => id === mtrlId).position = e.target.value;
         break;
-      case 'description':
+      case 'Description':
         materials.find(({ id }) => id === mtrlId).description = e.target.value;
         break;
-      case 'unit':
+      case 'Unit':
         materials.find(({ id }) => id === mtrlId).unit = e.target.value;
         break;
       default:

@@ -66,7 +66,7 @@ const ComLogin = (props) => {
             </h1>
             <form onSubmit={onSubmit}>
               {/* {Email Address} */}
-              <div className='form-group'>
+              <div>
                 <input
                   id='comEmail'
                   type='email'
@@ -83,7 +83,7 @@ const ComLogin = (props) => {
                 </label>
               </div>
               {/* {Password} */}
-              <div className='form-group'>
+              <div>
                 <input
                   id='comPassword'
                   type='password'

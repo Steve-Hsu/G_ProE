@@ -23,83 +23,50 @@ const Mtrl = ({ mtrl }) => {
     transform: 'translate(-1rem, -1rem)',
   };
 
+  const row_1_titles = [
+    'Item',
+    'SPEC',
+    'Supplier',
+    'Ref_no',
+    'Position',
+    'Description',
+  ];
+
   return (
-    <div>
+    <div className='mb-1 p-1 card'>
       {/* Row_1  */}
-      <div className='grid-6 pb test-3'>
-        <div className='test-1'>
-          <p>item</p>
-          <input
-            id={mtrl.id}
-            type='text'
-            name='item'
-            placeholder='Item'
-            onChange={addMtrlValue}
-          />
-        </div>
-        <div className='test-1'>
-          <p>SPEC</p>
-          <input
-            id={mtrl.id}
-            type='text'
-            name='spec'
-            placeholder='spec'
-            onChange={addMtrlValue}
-          />
-        </div>
-        <div className='test-1'>
-          <p>Supplier</p>
-          <input
-            id={mtrl.id}
-            type='text'
-            name='supplier'
-            placeholder='Supplier'
-            onChange={addMtrlValue}
-          />
-        </div>
-        <div className='test-1'>
-          <p>REF_No</p>
-          <input
-            id={mtrl.id}
-            type='text'
-            name='ref_no'
-            placeholder='Reference Number'
-            onChange={addMtrlValue}
-          />
-        </div>
-        <div className='test-1'>
-          <p>Position</p>
-          <input
-            id={mtrl.id}
-            type='text'
-            name='position'
-            placeholder='Position'
-            onChange={addMtrlValue}
-          />
-        </div>
-        <div className='test-1'>
-          <p>Description</p>
-          <input
-            id={mtrl.id}
-            type='text'
-            name='description'
-            placeholder='Description'
-            onChange={addMtrlValue}
-          />
-        </div>
+      <div className='grid-6 pb'>
+        {row_1_titles.map((a) => (
+          <div key={`${a}${mtrl.id}`}>
+            <input
+              type='text'
+              id={`${a}${mtrl.id}`}
+              name={mtrl.id}
+              placeholder='.'
+              onChange={addMtrlValue}
+              className='MPH-input'
+            />
+            <label htmlFor={`${a}${mtrl.id}`} className='MPH-input-label'>
+              {a}
+            </label>
+          </div>
+        ))}
       </div>
       {/* Row_2  */}
-      <div className='grid-6 pb test-3'>
+      <div className='grid-6 pb'>
         <div>Icon</div>
-        <div className='test-1'>
-          <p>Unit</p>
+        <div>
           <input
-            id={mtrl.id}
+            id={`Unit${mtrl.id}`}
             type='text'
-            name='unit'
-            placeholder='Unit'
+            name={mtrl.id}
+            placeholder='.'
             onChange={addMtrlValue}
+            className='MPH-input'
           />
+          <label htmlFor={`Unit${mtrl.id}`} className='MPH-input-label'>
+            Unit
+          </label>
         </div>
         <button
           value={mtrl.id}

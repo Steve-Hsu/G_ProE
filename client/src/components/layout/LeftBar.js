@@ -9,7 +9,7 @@ const LeftBar = () => {
   const { addcWay, addSize, addMtrl } = casesContext;
 
   return (
-    <div className='container container-with-navbar leftbar test-1'>
+    <div className='container container-with-navbar leftbar test-2'>
       <div className='leftbar-component test-1'>
         {' '}
         {'Import style from Excel'}

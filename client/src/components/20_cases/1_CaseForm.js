@@ -81,7 +81,7 @@ const CaseForm = () => {
       <div className='p-1 container container-with-navbar'>
         <div>
           <form id='caseForm' onSubmit={onSubmitCase}>
-            <div className='form-group'>
+            <div>
               <input
                 id='caseStyle'
                 name='caseStyle'
@@ -113,23 +113,22 @@ const CaseForm = () => {
             {/* CS-Breakdown table */}
             {/* Color -------------------------- */}
             <div>Color-Size-Breakdown</div>
-            <div className='grid-1-7'>
+            <div className='grid-1-6-1'>
               <div></div>
               <div style={breakDownTable} className='grid-5'>
                 {sizes.map((size) => (
                   <Size key={size.id} size={size} />
                 ))}
               </div>
+              <div>SubTotal</div>
             </div>
-            <div className='grid-1-7'>
-              {/* Size -------------------------- */}
-
+            <div className='grid-1-6-1'>
               <div>
                 {cWays.map((cWay) => (
                   <ColorWay key={cWay.id} cWay={cWay} />
                 ))}
               </div>
-              <div style={breakDownTable} className='grid-5'>
+              <div style={breakDownTable}>
                 {sizes.map((size) => (
                   <div key={`Qty${size.id}`}>
                     {gQtys.map((gQty) => (
@@ -137,6 +136,31 @@ const CaseForm = () => {
                     ))}
                   </div>
                 ))}
+              </div>
+              <div>
+                {cWays.map((cWay) => {
+                  let subtotal = 0;
+                  gQtys.map((gQty) => {
+                    if (gQty.cWay === cWay.id) {
+                      return (subtotal = subtotal + Number(gQty.gQty));
+                    }
+                  });
+                  return (
+                    <div
+                      style={{ height: '68px' }}
+                      key={`subtotalOf${cWay.id}`}
+                    >
+                      {subtotal}
+                    </div>
+                  );
+                })}
+                <div>Total Qantity</div>
+                <div>
+                  {gQtys.reduce(
+                    (partial_sum, gQty) => partial_sum + Number(gQty.gQty),
+                    0
+                  )}
+                </div>
               </div>
             </div>
             <br />

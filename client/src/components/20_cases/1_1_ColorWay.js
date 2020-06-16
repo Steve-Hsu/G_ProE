@@ -19,7 +19,7 @@ const ColorWay = ({ cWay }) => {
   const colorWayLength = maxWdsLength;
 
   return (
-    <div className='grid-3-1 grid-gap-sm test-1 p'>
+    <div className='grid-3-1 test-1 p' style={{ height: '68px' }}>
       <input
         id={cWay.id}
         type='text'
