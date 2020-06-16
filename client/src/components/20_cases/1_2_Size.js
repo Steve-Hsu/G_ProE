@@ -26,7 +26,13 @@ const Size = ({ size }) => {
   useEffect(() => {
     //If sizes is changed, then update the value of gSize"
     //I set this is because I want value update to gSize in state as we create a new select tag, since the user will see the value, it looks like the value is entered into the state, so I must set this way. All about UX.
-    update();
+    if (size.gSize === '') {
+      //Select the next Size depaneds on last gSize
+      if (sizes.length > 1) {
+        selectTagIndex(sizeList);
+      }
+      update();
+    }
   }, [sizes]);
 
   //For spareting the postion of btn, here use an inline style.
@@ -38,17 +44,29 @@ const Size = ({ size }) => {
   };
 
   const update = () => {
-    const selectTag = document.getElementById(size.id);
-    selectTag.addEventListener('change', onChange);
-    selectTag.dispatchEvent(event);
-
-    let trytry = document.getElementById(`2XL${size.id}`);
-    console.log(selectTag);
-    console.log(trytry);
+    document.getElementById(size.id).addEventListener('change', onChange);
+    document.getElementById(size.id).dispatchEvent(event);
+    //If I don't remove the eventListner, it will cause problems when any change happens.
+    document.getElementById(size.id).removeEventListener('change', onChange);
   };
 
   const onChange = (e) => {
     updateSize(e);
+  };
+
+  // @Select the next Size depaneds on last gSize
+  const sizeLength = sizes.length;
+  const selectTagIndex = (sizeList) => {
+    //Find the index of sizeList that value matched to value of previous gSize
+    let previousSize = sizes[sizeLength - 2].gSize;
+    if (previousSize) {
+      let x = sizeList.findIndex((size) => size === previousSize);
+      x = x + 1;
+      console.log(sizeList[x]);
+      return document
+        .getElementById(`${sizeList[x]}${size.id}`)
+        .setAttribute('selected', 'selected');
+    }
   };
 
   return (
@@ -63,11 +81,13 @@ const Size = ({ size }) => {
         default='XS'
         // ref={mySelect}
       >
-        {sizeList.map((s) => (
-          <option key={`${s}${size.id}`} id={`${s}${size.id}`} value={s}>
-            {s}
-          </option>
-        ))}
+        {sizeList.map((s) => {
+          return (
+            <option key={`${s}${size.id}`} id={`${s}${size.id}`} value={s}>
+              {s}
+            </option>
+          );
+        })}
       </select>
 
       <button
@@ -89,15 +109,3 @@ export default Size;
 Size.propTypes = {
   size: PropTypes.object.isRequired,
 };
-
-{
-  /* <input
-        id={size.id}
-        list='garmentSize'
-        placeholder='Size'
-        onChange={updateSize}
-        maxLength={sizeLength}
-        autoFocus
-        style={{ height: '3rem' }}
-      /> */
-}

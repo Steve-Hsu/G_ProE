@@ -4,7 +4,7 @@ import axios from 'axios';
 import CasesContext from './casesContext';
 import CasesReducer from './casesReducer';
 
-//Global Header for token
+//@Global Header for token
 
 import {
   SIZE_ADD,
@@ -26,7 +26,7 @@ import {
 } from '../types';
 
 const CasesState = (props) => {
-  // State
+  // @State
   const initialStete = {
     user: null,
     company: null,
@@ -41,7 +41,7 @@ const CasesState = (props) => {
     formIsHalfFilledOut: true,
   };
 
-  // object Model
+  // @object Model
   // For setting state more convenient
   const newCWay = {
     id: uuidv4(),
@@ -110,13 +110,13 @@ const CasesState = (props) => {
   const [state, dispatch] = useReducer(CasesReducer, initialStete);
   const { sizes, cWays, gQtys, mtrls } = state;
 
-  // Actions ----------------------------------------------------------------------------------------------------------
+  // @Actions ----------------------------------------------------------------------------------------------------------
   // Only applying in this scope for other functions ----------
   const updateMaterials = (materials) => {
     dispatch({ type: MTRL_UPDATE, payload: materials });
   };
 
-  // gQtys.gQty item ----------------------------
+  // @gQtys.gQty item ----------------------------
   const addQtyBycWay = (cWayId) => {
     sizes.map((size) => {
       newgQty = {
@@ -155,7 +155,7 @@ const CasesState = (props) => {
     dispatch({ type: CASE_QTY_UPDATE, payload: Qtys });
   };
 
-  // mtrl.cspts.cspt item ----------------------------
+  // @mtrl.cspts.cspt item ----------------------------
   const addMtrlCsptBygQty = (gQty) => {
     let materials = mtrls;
     materials.map((mtrl) => {
@@ -262,7 +262,7 @@ const CasesState = (props) => {
     updateMaterials(materials);
   };
 
-  // mtrl.mtrlColors.mtrlColor item ----------------------------
+  // @mtrl.mtrlColors.mtrlColor item ----------------------------
   const addMtrlColor = (cWayId) => {
     let materials = mtrls;
 
@@ -287,7 +287,7 @@ const CasesState = (props) => {
     updateMaterials(materials);
   };
 
-  // mtrl.mSizeSPECs.mSizeSPEC item ----------------------------
+  // @mtrl.mSizeSPECs.mSizeSPEC item ----------------------------
   const addMtrlSizeSPEC = (sizeId) => {
     let materials = mtrls;
     materials.map((mtrl) => {
@@ -311,7 +311,7 @@ const CasesState = (props) => {
     updateMaterials(materials);
   };
 
-  // Export using functions ----------------------------------------------------------------------------------------------------------
+  // @Export using functions ----------------------------------------------------------------------------------------------------------
   const addcWay = (e) => {
     e.preventDefault();
     if (cWays.length < 20) {
@@ -387,9 +387,10 @@ const CasesState = (props) => {
     e.preventDefault();
     const targetID = e.target.id;
     // Prevent the computer confused two cWays so the variable named "colorWay"
-    const gSizes = sizes;
+    let gSizes = sizes;
     //Toggle the value
     gSizes.find(({ id }) => id === targetID).gSize = e.target.value;
+    console.log(gSizes);
     dispatch({ type: SIZE_UPDATE, payload: gSizes });
     // update gSize in cspt
     mtrls.map((mtrl) => updateCsptgSize(mtrl.id, targetID));
@@ -451,7 +452,7 @@ const CasesState = (props) => {
     dispatch({ type: MTRL_DELETE, payload: id });
   };
 
-  // Layer 2 functions ----------------------------------------------------------------------------------------------------------
+  // @Layer 2 functions ----------------------------------------------------------------------------------------------------------
   const expandMtrlColor = (e) => {
     e.preventDefault();
     //The id is set in the value of the btn when which is created. so here we fetch id by e.target.value.
@@ -488,7 +489,7 @@ const CasesState = (props) => {
     updateMaterials(materials);
   };
 
-  //Add value from input to state ----------------------------------------------------------------------------------------------------------
+  //@Add value from input to state ----------------------------------------------------------------------------------------------------------
 
   const addValueMtrlColor = (e) => {
     e.preventDefault();
@@ -588,7 +589,7 @@ const CasesState = (props) => {
     }
   };
 
-  // Other functions ----------------------------------------------------------------------------------------------------------
+  // @Other functions ----------------------------------------------------------------------------------------------------------
 
   const togglePopover = (e) => {
     e.preventDefault();
