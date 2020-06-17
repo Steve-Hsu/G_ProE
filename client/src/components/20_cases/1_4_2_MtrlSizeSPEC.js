@@ -14,17 +14,20 @@ const MtrlSizeSPEC = ({ sizeSPEC, mtrlId }) => {
   const SizeSPECLength = maxWdsLength;
 
   return (
-    <div className='test-1 p'>
-      <p>{sizeLable}</p>
+    <div style={{ height: '68px' }}>
       <input
         name={mtrlId}
         id={sizeSPEC.id}
         type='text'
-        placeholder='SPEC for Size'
+        placeholder='.'
         value={mSizeSPEC}
         onChange={addValueMtrlSizeSPEC}
         maxLength={SizeSPECLength}
+        className='MPH-input'
       />
+      <label htmlFor={sizeSPEC.id} className='MPH-input-label'>
+        SPEC for {sizeLable}
+      </label>
     </div>
   );
 };

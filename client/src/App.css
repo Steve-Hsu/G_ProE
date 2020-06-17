@@ -15,6 +15,7 @@
   --light-color: #fff5bd;
   --danger-color: #dc3545;
   --success-color: #28a745;
+  --fade-color: #ccc;
   /* Space */
   --gap: 0;
 }
@@ -72,41 +73,6 @@ img {
   margin-top: 5rem;
 }
 
-.large {
-  font-size: 3rem;
-  line-height: 1.2;
-  margin-bottom: 1rem;
-}
-
-.lead {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.text-primary {
-  color: var(--primary-text);
-}
-
-.text-dark {
-  color: var(--dark-color);
-}
-
-.text-center {
-  text-align: center;
-}
-
-.text-right {
-  text-align: right;
-}
-
-.text-left {
-  text-align: left;
-}
-
 .center {
   position: absolute;
   left: 50%;
@@ -115,10 +81,14 @@ img {
   width: 100px;
 }
 
+.transition {
+  transition: all 0.5s;
+}
+
 /* @Cards */
 .card {
   padding: 1rem;
-  border: #ccc 1px dotted;
+  border: var(--fade-color) 1px dotted;
   margin: 0.7rem 0;
 }
 
@@ -231,7 +201,7 @@ img {
 .grid-5 {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  grid-gap: var(--gap);
+  grid-gap: 0.3rem;
 }
 
 .grid-6 {
@@ -279,7 +249,7 @@ img {
 .grid-1-6-1 {
   display: grid;
   grid-template-columns: 1fr 6fr 1fr;
-  grid-gap: var(--gap);
+  grid-gap: 1rem;
 }
 
 /* grid gap */
@@ -303,24 +273,31 @@ img {
 .btn {
   display: inline-block;
   position: relative;
-  background: var(--light-color);
+  /* background: var(--light-color); */
   color: #333;
   padding: 0.4rem 1.3rem;
   font-size: 1rem;
   border: none;
   cursor: pointer;
-  margin-right: 0.5rem;
   transition: opacity 0.2s ease-in;
   outline: none;
 }
 
-.btn-rounded-square {
+.btn-square {
   height: 2rem;
   width: 2rem;
-  border-radius: 5px;
   margin: 0;
   padding: 0;
   text-align: center;
+}
+
+.btn-dropdown {
+  height: 2.3rem;
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid var(--fade-color);
+  background: none;
+  transition: all 0.5s;
 }
 
 .btn-link {
@@ -404,19 +381,41 @@ img {
 .alert-white {
   background: #fff;
   color: #333;
-  border: #ccc solid 1px;
+  border: var(--fade-color) solid 1px;
 }
 
-.btn:hover {
-  opacity: 0.8;
+.btn-fade,
+.bg-fade,
+.badge-fade,
+.alert-fade {
+  background: var(--primary-text);
+  color: var(--fade-color);
+  border-radius: 0;
+  transition: all 0.5s;
 }
 
 .bg-light,
 .badge-light {
-  border: #ccc solid 1px;
+  border: var(--fade-color) solid 1px;
 }
 
 .round-img {
+  border-radius: 50%;
+}
+
+.round-square-img {
+  border-radius: 5px;
+}
+
+.btn:hover {
+  opacity: 0.7;
+}
+
+.btn-fade:hover {
+  background: var(--danger-color);
+  color: white;
+  transition: all 0.5s;
+  opacity: 1;
   border-radius: 50%;
 }
 
@@ -477,7 +476,7 @@ textarea {
   padding: 0.4rem;
   font-size: 1.2rem;
   border: 0;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid var(--fade-color);
 }
 
 input[type='submit'],
@@ -485,11 +484,39 @@ button {
   font: inherit;
 }
 
+.select-primary {
+  color: var(--primary-color);
+  transition: all 0.5s;
+}
+
+.btn-dropdown:hover,
+.select-primary:focus,
+.select-primary:hover {
+  color: white;
+  background: var(--primary-color);
+  transition: all 0.5s;
+  border: 0;
+  border-bottom: 1px solid var(--primary-color);
+}
+
+.select-primary-sub {
+  transition: all 0.5s;
+}
+
+.select-primary-sub:focus,
+.select-primary-sub:hover {
+  color: white;
+  background: var(--primary-color);
+  transition: all 0.5s;
+  border: 0;
+  border-bottom: 1px solid var(--primary-color);
+}
+
 /* input - Moveing place holder input */
 /* Usage : an input with class MPH-input followed by label with class MPH-input-label. The input must be set placerholder */
 /* Depanding on what class wrap the input and label, and the font-size, you have to adjust the space between label and input  */
 .MPH-input-label {
-  font-size: 1em;
+  font-size: 1rem;
   display: block;
   opacity: 1;
   transform: translateY(-3rem);
@@ -507,10 +534,16 @@ button {
   color: rgba(255, 255, 255, 1);
 }
 
+.MPH-input:hover,
 .MPH-input:focus {
   box-shadow: none;
   outline: none;
-  border-bottom: 1px solid orange;
+  border-bottom: 1px solid var(--primary-color);
+  transition: all 1.2s;
+}
+
+.MPH-input:hover + .MPH-input-label {
+  color: var(--primary-color);
   transition: all 0.5s;
 }
 
@@ -521,7 +554,7 @@ button {
 .MPH-input:focus + .MPH-input-label,
 .MPH-input:not(:placeholder-shown) + .MPH-input-label {
   transform: translateY(-4rem) scale(0.7);
-  color: orange;
+  color: var(--primary-color);
 }
 /* Usage : Use a div with class .MPH-input-group to warp a input and babel, the input will transform it size when focused. */
 .MPH-input-group {
@@ -650,6 +683,53 @@ button {
   cursor: pointer;
 }
 
+/* @Font */
+/* Font-size */
+.large {
+  font-size: 2rem;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.lead {
+  font-size: 1.2rem;
+  /* margin-bottom: 1rem; */
+}
+
+.tiny {
+  font-size: 0.8rem;
+}
+
+/* Font-color */
+.text-primary-text {
+  color: var(--primary-text);
+}
+
+.text-dark {
+  color: var(--dark-color);
+}
+
+.text-primary {
+  color: var(--primary-color);
+}
+
+/* Font positoin */
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-left {
+  text-align: left;
+}
+/* Font weight */
+.text-light {
+  font-weight: 800;
+}
+
 /* @Mobile Styles  -------------------------------- */
 @media (max-width: 700px) {
   .hide-sm {
@@ -672,7 +752,7 @@ button {
   }
 
   .lead {
-    font-size: 1rem;
+    font-size: 1.2rem;
   }
 
   /* Navbar */

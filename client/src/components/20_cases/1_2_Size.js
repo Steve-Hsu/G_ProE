@@ -72,15 +72,15 @@ const Size = ({ size }) => {
   };
 
   return (
-    <div className='grid-3-1 grid-gap-sm test-1 p'>
+    <div className='grid-3-1 grid-gap-sm '>
       <select
         id={size.id}
         list='garmentSize'
         placeholder='Size'
         onChange={onChange}
         autoFocus
-        style={{ height: '3rem' }}
         default='XS'
+        className='select-primary'
       >
         {sizeList.map((s) => {
           return (
@@ -95,7 +95,7 @@ const Size = ({ size }) => {
         name='size'
         value={size.id}
         onClick={togglePopover}
-        className='btn btn-danger btn-rounded-square'
+        className='btn btn-fade btn-square'
         style={deleteBtnPosition}
       >
         x

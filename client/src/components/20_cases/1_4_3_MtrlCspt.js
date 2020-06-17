@@ -2,35 +2,43 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import CasesContext from '../../context/cases/casesContext';
 
-const MtrlCspt = ({ cWay, mtrl }) => {
+const MtrlCspt = ({ size, mtrl }) => {
   const casesContext = useContext(CasesContext);
-  const { addValueMtrlCspt, sizes, cWays } = casesContext;
+  const { addValueMtrlCspt, sizes } = casesContext;
   //@ Value for input
   //words length limit
   const maxWdsLength = '4';
   const csptLength = maxWdsLength;
+  // const SizesColumnSize = () => {
+  //   if (sizes.length < 6) {
+  //     return 5;
+  //   } else {
+  //     return sizes.length;
+  //   }
+  // };
+
+  const sizeId = size.id;
+  const csptId = mtrl.cspts.find(({ size }) => size === sizeId).id;
+  const consumption = mtrl.cspts.find(({ id }) => csptId).cspt;
 
   return (
-    <div className='grid-5'>
-      {mtrl.cspts.map((cspt) => {
-        if (cspt.cWay === cWay.id) {
-          const sizeLable = sizes.find(({ id }) => id === cspt.size).gSize;
-          const colorLable = cWays.find(({ id }) => id === cspt.cWay).gClr;
-          return (
-            <div key={cspt.id}>
-              <input
-                name={mtrl.id}
-                id={cspt.id}
-                type='text'
-                placeholder={`${sizeLable} in ${colorLable}`}
-                onChange={addValueMtrlCspt}
-                maxLength={csptLength}
-                value={cspt.cspt}
-              />
-            </div>
-          );
-        }
-      })}
+    <div style={{ height: '68px' }} key={`${sizeId}${mtrl.id}`}>
+      <input
+        name={mtrl.id}
+        id={`cspt${sizeId}`}
+        type='number'
+        placeholder='.'
+        onChange={addValueMtrlCspt}
+        maxLength={csptLength}
+        // value={''}
+        min='0'
+        max='999'
+        className='MPH-input'
+      />
+      <label
+        htmlFor={`cspt${sizeId}`}
+        className='MPH-input-label'
+      >{`${size.gSize}`}</label>
     </div>
   );
 };
@@ -38,6 +46,6 @@ const MtrlCspt = ({ cWay, mtrl }) => {
 export default MtrlCspt;
 
 MtrlCspt.propTypes = {
-  cWay: PropTypes.object.isRequired,
+  size: PropTypes.object.isRequired,
   mtrl: PropTypes.object.isRequired,
 };

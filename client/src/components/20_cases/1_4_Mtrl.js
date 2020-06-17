@@ -9,6 +9,7 @@ const Mtrl = ({ mtrl }) => {
   const casesContext = useContext(CasesContext);
   const {
     cWays,
+    sizes,
     togglePopover,
     expandMtrlColor,
     expandSizeSPEC,
@@ -19,8 +20,94 @@ const Mtrl = ({ mtrl }) => {
   //deleteBtn in mtrl.
   const deleteBtnPosition = {
     top: ' 70%',
-    left: '85%',
-    transform: 'translate(-1rem, -1rem)',
+    left: '100%',
+    transform: 'translate(-2rem, -1rem)',
+  };
+
+  const unitList = [
+    'Select a Unit',
+    'yds',
+    'm',
+    'cm',
+    'in',
+    'set',
+    'print size',
+    'pcs',
+    'gross',
+    'doz',
+    'g',
+  ];
+  // Ajust the color of dropdown btn when the attached table is expaneded.
+  const dropDownStyle = (subject) => {
+    switch (subject) {
+      case 'mtrlColor':
+        if (mtrl.expandColor) {
+          return {
+            color: 'white',
+            background: 'var(--primary-color)',
+            // transition: 'all 0.5s',
+            border: '0',
+            borderBottom: '1px solid var(--primary - color)',
+          };
+        } else {
+          return {};
+        }
+      case 'SizeSPEC':
+        if (mtrl.expandSizeSPEC) {
+          return {
+            color: 'white',
+            background: 'var(--primary-color)',
+            transition: 'all 0.5s',
+            border: '0',
+            borderBottom: '1px solid var(--primary - color)',
+          };
+        } else {
+          return {};
+        }
+      case 'cspt':
+        if (mtrl.expandCspt) {
+          return {
+            color: 'white',
+            background: 'var(--primary-color)',
+            transition: 'all 0.5s',
+            border: '0',
+            borderBottom: '1px solid var(--primary - color)',
+          };
+        } else {
+          return {};
+        }
+      default:
+        return {};
+    }
+  };
+
+  //@ Adjust the width of component of mColor and SizeSPEC
+  const attachedTable = (subject) => {
+    const columnSize = (subject) => {
+      switch (subject) {
+        case 'size':
+        case 'cspt':
+          if (sizes.length < 6) {
+            return 5;
+          } else {
+            return sizes.length;
+          }
+        case 'cWay':
+          if (cWays.length < 6) {
+            return 5;
+          } else {
+            return cWays.length;
+          }
+        default:
+          return 5;
+      }
+    };
+
+    return {
+      display: 'grid',
+      gridTemplateColumns: `repeat(${columnSize(subject)}, 1fr)`,
+      gridGap: '0',
+    };
   };
 
   const row_1_titles = [
@@ -56,45 +143,101 @@ const Mtrl = ({ mtrl }) => {
       <div className='grid-6 pb'>
         <div>Icon</div>
         <div>
-          <input
+          {mtrl.unit === '' ? (
+            <div
+              style={{ opacity: '0' }}
+              className='tiny text-primary transition'
+            >
+              .
+            </div>
+          ) : (
+            <div className='tiny text-primary transition'>Unit</div>
+          )}
+          <select
             id={`Unit${mtrl.id}`}
-            type='text'
             name={mtrl.id}
-            placeholder='.'
+            list='garmentSize'
+            placeholder='Unit'
             onChange={addMtrlValue}
-            className='MPH-input'
-          />
-          <label htmlFor={`Unit${mtrl.id}`} className='MPH-input-label'>
-            Unit
-          </label>
+            default='yd'
+            className='select-primary-sub'
+          >
+            {unitList.map((s) => {
+              return (
+                <option key={`${s}${mtrl.id}`} id={`${s}${mtrl.id}`} value={s}>
+                  {s}
+                </option>
+              );
+            })}
+          </select>
         </div>
-        <button
-          value={mtrl.id}
-          onClick={expandMtrlColor}
-          className='btn btn-primary'
-        >
-          Color set
-        </button>
-        <button
-          value={mtrl.id}
-          onClick={expandSizeSPEC}
-          className='btn btn-primary'
-        >
-          Size SPEC
-        </button>
-        <button
-          value={mtrl.id}
-          onClick={expandMtrlCspt}
-          className='btn btn-primary'
-        >
-          Consumption
-        </button>
+        <div>
+          {mtrl.unit === '' ? (
+            <div
+              style={{ opacity: '0' }}
+              className='tiny text-primary transition'
+            >
+              .
+            </div>
+          ) : (
+            <div className='tiny text-primary transition'>Material Color</div>
+          )}
+          <button
+            value={mtrl.id}
+            onClick={expandMtrlColor}
+            className='btn btn-dropdown lead'
+            style={dropDownStyle('mtrlColor')}
+          >
+            Color set
+          </button>
+        </div>
+        <div>
+          {mtrl.unit === '' ? (
+            <div
+              style={{ opacity: '0' }}
+              className='tiny text-primary transition'
+            >
+              .
+            </div>
+          ) : (
+            <div className='tiny text-primary transition'>SPEC</div>
+          )}
+          <button
+            value={mtrl.id}
+            onClick={expandSizeSPEC}
+            className='btn btn-dropdown lead'
+            style={dropDownStyle('SizeSPEC')}
+          >
+            Size SPEC
+          </button>
+        </div>
+        <div>
+          {mtrl.unit === '' ? (
+            <div
+              style={{ opacity: '0' }}
+              className='tiny text-primary transition'
+            >
+              .
+            </div>
+          ) : (
+            <div className='tiny text-primary transition'>Consumption</div>
+          )}
+          <button
+            value={mtrl.id}
+            onClick={expandMtrlCspt}
+            className='btn btn-dropdown lead'
+            style={dropDownStyle('cspt')}
+          >
+            Consumption
+          </button>
+        </div>
+
         <div>
           <button
             value={mtrl.id}
             name='mtrl'
             onClick={togglePopover}
-            className='btn btn-danger btn-rounded-square'
+            className='btn btn-fade btn-square'
             style={deleteBtnPosition}
           >
             x
@@ -103,9 +246,9 @@ const Mtrl = ({ mtrl }) => {
       </div>
       {/* Row_3  */}
       {mtrl.expandColor ? (
-        <div className='grid-1-5 test-3'>
+        <div className='grid-1-5'>
           <div></div>
-          <div className='grid-5 test-4'>
+          <div style={attachedTable('cWay')}>
             {mtrl.mtrlColors.map((mtrlColor) => (
               <MtrlClr
                 key={mtrlColor.id}
@@ -120,7 +263,7 @@ const Mtrl = ({ mtrl }) => {
       {mtrl.expandSizeSPEC ? (
         <div className='grid-1-5'>
           <div></div>
-          <div className='grid-5 test-3'>
+          <div style={attachedTable('size')}>
             {mtrl.sizeSPECs.map((sizeSPEC) => (
               <MtrlSizeSPEC
                 key={sizeSPEC.id}
@@ -132,21 +275,20 @@ const Mtrl = ({ mtrl }) => {
         </div>
       ) : null}
       {/* Row_5  */}
-      {mtrl.expandCspt
-        ? cWays.map((cWay) => (
-            <div className='grid-1-5' key={`ColorTitle${cWay.id}`}>
-              <div>
-                {`${cWay.gClr}`.charAt(0).toUpperCase() +
-                  `${cWay.gClr}`.slice(1)}
-              </div>
+      {mtrl.expandCspt ? (
+        <div className='grid-1-5'>
+          <div>Consumption</div>
+          <div style={attachedTable('cspt')}>
+            {sizes.map((size) => (
               <MtrlCspt
-                key={`Fragment${cWay.id}${mtrl.id}`}
-                cWay={cWay}
+                key={`Fragment${size.id}${mtrl.id}`}
+                size={size}
                 mtrl={mtrl}
               />
-            </div>
-          ))
-        : null}
+            ))}
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 };

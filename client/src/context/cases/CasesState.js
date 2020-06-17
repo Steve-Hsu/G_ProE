@@ -158,6 +158,7 @@ const CasesState = (props) => {
   // @mtrl.cspts.cspt item ----------------------------
   const addMtrlCsptBygQty = (gQty) => {
     let materials = mtrls;
+
     materials.map((mtrl) => {
       newCspt = {
         ...newCspt,
@@ -167,6 +168,12 @@ const CasesState = (props) => {
         gQty: gQty.id,
         mtrl: mtrl.id,
       };
+      mtrl.cspts.map((cspt) => {
+        if (cspt.size === newCspt.size) {
+          newCspt.cspt = cspt.cspt;
+          return newCspt;
+        }
+      });
       return mtrl.cspts.push(newCspt);
     });
     updateMaterials(materials);
@@ -525,18 +532,45 @@ const CasesState = (props) => {
 
   const addValueMtrlCspt = (e) => {
     e.preventDefault();
+    console.log('e.target.value', e.target.value);
+
     const mtrlId = e.target.name;
-    const mtrlCspt = e.target.id;
+    const sizeId = String(e.target.id).slice(4);
+    console.log('sizeId', sizeId);
     //??? This code works, however I still don't know why the sup variable will affect parent variable here.
     //There is something chainning the materials to the sub array material
     let materials = mtrls;
     let material = materials.find(({ id }) => id === mtrlId);
-    material.cspts.find(({ id }) => id === mtrlCspt).cspt = e.target.value;
-    let gQtyId = material.cspts.find(({ id }) => id === mtrlCspt).gQty;
-    updateCsptRequiredMQty(mtrlId, gQtyId);
+    console.log('This is mtrl', material);
+    material.cspts.map((cspt) => {
+      if (String(cspt.size) === sizeId) {
+        console.log('This is cspt', cspt);
+        cspt.cspt = e.target.value;
+        let gQtyId = material.cspts.find(({ id }) => id === cspt.id).gQty;
+        updateCsptRequiredMQty(mtrlId, gQtyId);
+        return material;
+      } else {
+        console.log('No CSPT match to this Size');
+      }
+    });
 
     updateMaterials(materials);
   };
+
+  // const addValueMtrlCspt = (e) => {
+  //   e.preventDefault();
+  //   const mtrlId = e.target.name;
+  //   const mtrlCspt = e.target.id;
+  //   //??? This code works, however I still don't know why the sup variable will affect parent variable here.
+  //   //There is something chainning the materials to the sub array material
+  //   let materials = mtrls;
+  //   let material = materials.find(({ id }) => id === mtrlId);
+  //   material.cspts.find(({ id }) => id === mtrlCspt).cspt = e.target.value;
+  //   let gQtyId = material.cspts.find(({ id }) => id === mtrlCspt).gQty;
+  //   updateCsptRequiredMQty(mtrlId, gQtyId);
+
+  //   updateMaterials(materials);
+  // };
 
   const addMtrlValue = (e) => {
     e.preventDefault();
@@ -544,25 +578,25 @@ const CasesState = (props) => {
     const mtrlId = e.target.name;
     let materials = mtrls;
     switch (e.target.id) {
-      case 'Item':
+      case 'Item' + String(mtrlId):
         materials.find(({ id }) => id === mtrlId).item = e.target.value;
         break;
-      case 'SPEC':
+      case 'SPEC' + String(mtrlId):
         materials.find(({ id }) => id === mtrlId).spec = e.target.value;
         break;
-      case 'Supplier':
+      case 'Supplier' + String(mtrlId):
         materials.find(({ id }) => id === mtrlId).supplier = e.target.value;
         break;
-      case 'Ref_no':
+      case 'Ref_no' + String(mtrlId):
         materials.find(({ id }) => id === mtrlId).ref_no = e.target.value;
         break;
-      case 'Position':
+      case 'Position' + String(mtrlId):
         materials.find(({ id }) => id === mtrlId).position = e.target.value;
         break;
-      case 'Description':
+      case 'Description' + String(mtrlId):
         materials.find(({ id }) => id === mtrlId).description = e.target.value;
         break;
-      case 'Unit':
+      case 'Unit' + String(mtrlId):
         materials.find(({ id }) => id === mtrlId).unit = e.target.value;
         break;
       default:

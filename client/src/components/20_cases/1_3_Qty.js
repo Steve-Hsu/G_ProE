@@ -25,13 +25,13 @@ const Qty = ({ size, gQty }) => {
             onChange={addCaseValue}
             maxLength={gQtyLength}
             min='0'
-            max='100'
+            max='9999999'
             className='MPH-input'
           />
           <label htmlFor={gQty.id} className='MPH-input-label'>
-            {size.gSize}
-            {'  '}
             {cWays.find(({ id }) => id === gQty.cWay).gClr}
+            {'  '}
+            {size.gSize}
           </label>
         </div>
       ) : null}

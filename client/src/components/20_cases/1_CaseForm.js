@@ -115,12 +115,12 @@ const CaseForm = () => {
             <div>Color-Size-Breakdown</div>
             <div className='grid-1-6-1'>
               <div></div>
-              <div style={breakDownTable} className='grid-5'>
+              <div style={breakDownTable}>
                 {sizes.map((size) => (
                   <Size key={size.id} size={size} />
                 ))}
               </div>
-              <div>SubTotal</div>
+              <div className='lead text-primary'>SubTotal</div>
             </div>
             <div className='grid-1-6-1'>
               <div>
@@ -150,12 +150,13 @@ const CaseForm = () => {
                       style={{ height: '68px' }}
                       key={`subtotalOf${cWay.id}`}
                     >
-                      {subtotal}
+                      <div className='tiny text-primary'>{cWay.gClr}</div>
+                      <div className='lead'>{subtotal}</div>
                     </div>
                   );
                 })}
-                <div>Total Qantity</div>
-                <div>
+                <div className='lead text-primary'>Total Qantity</div>
+                <div className='large'>
                   {gQtys.reduce(
                     (partial_sum, gQty) => partial_sum + Number(gQty.gQty),
                     0

@@ -14,17 +14,20 @@ const MtrlClr = ({ mtrlColor, mtrlId }) => {
   const mColorLength = maxWdsLength;
 
   return (
-    <div className='test-1 p'>
-      <p>{cWayLable}</p>
+    <div style={{ height: '68px' }}>
       <input
         name={mtrlId}
         id={mtrlColor.id}
         type='text'
-        placeholder='color'
+        placeholder='.'
         value={mColor}
         onChange={addValueMtrlColor}
         maxLength={mColorLength}
+        className='MPH-input'
       />
+      <label htmlFor={mtrlColor.id} className='MPH-input-label'>
+        Color on {cWayLable}
+      </label>
     </div>
   );
 };
