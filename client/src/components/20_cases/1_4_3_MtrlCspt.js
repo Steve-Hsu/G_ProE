@@ -4,22 +4,14 @@ import CasesContext from '../../context/cases/casesContext';
 
 const MtrlCspt = ({ size, mtrl }) => {
   const casesContext = useContext(CasesContext);
-  const { addValueMtrlCspt, sizes } = casesContext;
+  const { addValueMtrlCspt } = casesContext;
   //@ Value for input
   //words length limit
   const maxWdsLength = '4';
   const csptLength = maxWdsLength;
-  // const SizesColumnSize = () => {
-  //   if (sizes.length < 6) {
-  //     return 5;
-  //   } else {
-  //     return sizes.length;
-  //   }
-  // };
 
   const sizeId = size.id;
-  const csptId = mtrl.cspts.find(({ size }) => size === sizeId).id;
-  const consumption = mtrl.cspts.find(({ id }) => csptId).cspt;
+  const cspt = mtrl.cspts.find(({ size }) => size === sizeId);
 
   return (
     <div style={{ height: '68px' }} key={`${sizeId}${mtrl.id}`}>
@@ -30,7 +22,7 @@ const MtrlCspt = ({ size, mtrl }) => {
         placeholder='.'
         onChange={addValueMtrlCspt}
         maxLength={csptLength}
-        // value={''}
+        value={cspt.cspt}
         min='0'
         max='999'
         className='MPH-input'

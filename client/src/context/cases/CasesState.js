@@ -167,6 +167,7 @@ const CasesState = (props) => {
         size: gQty.size,
         gQty: gQty.id,
         mtrl: mtrl.id,
+        unit: mtrl.unit,
       };
       mtrl.cspts.map((cspt) => {
         if (cspt.size === newCspt.size) {
@@ -397,7 +398,6 @@ const CasesState = (props) => {
     let gSizes = sizes;
     //Toggle the value
     gSizes.find(({ id }) => id === targetID).gSize = e.target.value;
-    console.log(gSizes);
     dispatch({ type: SIZE_UPDATE, payload: gSizes });
     // update gSize in cspt
     mtrls.map((mtrl) => updateCsptgSize(mtrl.id, targetID));
@@ -464,7 +464,16 @@ const CasesState = (props) => {
     e.preventDefault();
     //The id is set in the value of the btn when which is created. so here we fetch id by e.target.value.
     const mtrlId = e.target.value;
-    const materials = mtrls;
+    let materials = mtrls;
+
+    const expandColor = materials.find(({ id }) => id === mtrlId).expandColor;
+    console.log(expandColor);
+
+    if (expandColor === false) {
+      materials.find(({ id }) => id === mtrlId).expandSizeSPEC = false;
+      materials.find(({ id }) => id === mtrlId).expandCspt = false;
+    }
+
     materials.find(({ id }) => id === mtrlId).expandColor = !materials.find(
       ({ id }) => id === mtrlId
     ).expandColor;
@@ -476,7 +485,16 @@ const CasesState = (props) => {
     e.preventDefault();
     //The id is set in the value of the btn when which is created. so here we fetch id by e.target.value.
     const mtrlId = e.target.value;
-    const materials = mtrls;
+    let materials = mtrls;
+
+    const expandSizeSPEC = materials.find(({ id }) => id === mtrlId)
+      .expandSizeSPEC;
+
+    if (expandSizeSPEC === false) {
+      materials.find(({ id }) => id === mtrlId).expandColor = false;
+      materials.find(({ id }) => id === mtrlId).expandCspt = false;
+    }
+
     materials.find(({ id }) => id === mtrlId).expandSizeSPEC = !materials.find(
       ({ id }) => id === mtrlId
     ).expandSizeSPEC;
@@ -488,7 +506,15 @@ const CasesState = (props) => {
     e.preventDefault();
     //The id is set in the value of the btn when which is created. so here we fetch id by e.target.value.
     const mtrlId = e.target.value;
-    const materials = mtrls;
+    let materials = mtrls;
+
+    const expandCspt = materials.find(({ id }) => id === mtrlId).expandCspt;
+
+    if (expandCspt === false) {
+      materials.find(({ id }) => id === mtrlId).expandSizeSPEC = false;
+      materials.find(({ id }) => id === mtrlId).expandColor = false;
+    }
+
     materials.find(({ id }) => id === mtrlId).expandCspt = !materials.find(
       ({ id }) => id === mtrlId
     ).expandCspt;
@@ -532,45 +558,25 @@ const CasesState = (props) => {
 
   const addValueMtrlCspt = (e) => {
     e.preventDefault();
-    console.log('e.target.value', e.target.value);
 
     const mtrlId = e.target.name;
     const sizeId = String(e.target.id).slice(4);
-    console.log('sizeId', sizeId);
     //??? This code works, however I still don't know why the sup variable will affect parent variable here.
     //There is something chainning the materials to the sub array material
     let materials = mtrls;
     let material = materials.find(({ id }) => id === mtrlId);
-    console.log('This is mtrl', material);
+
     material.cspts.map((cspt) => {
       if (String(cspt.size) === sizeId) {
-        console.log('This is cspt', cspt);
         cspt.cspt = e.target.value;
         let gQtyId = material.cspts.find(({ id }) => id === cspt.id).gQty;
         updateCsptRequiredMQty(mtrlId, gQtyId);
         return material;
-      } else {
-        console.log('No CSPT match to this Size');
       }
     });
 
     updateMaterials(materials);
   };
-
-  // const addValueMtrlCspt = (e) => {
-  //   e.preventDefault();
-  //   const mtrlId = e.target.name;
-  //   const mtrlCspt = e.target.id;
-  //   //??? This code works, however I still don't know why the sup variable will affect parent variable here.
-  //   //There is something chainning the materials to the sub array material
-  //   let materials = mtrls;
-  //   let material = materials.find(({ id }) => id === mtrlId);
-  //   material.cspts.find(({ id }) => id === mtrlCspt).cspt = e.target.value;
-  //   let gQtyId = material.cspts.find(({ id }) => id === mtrlCspt).gQty;
-  //   updateCsptRequiredMQty(mtrlId, gQtyId);
-
-  //   updateMaterials(materials);
-  // };
 
   const addMtrlValue = (e) => {
     e.preventDefault();
@@ -597,7 +603,13 @@ const CasesState = (props) => {
         materials.find(({ id }) => id === mtrlId).description = e.target.value;
         break;
       case 'Unit' + String(mtrlId):
-        materials.find(({ id }) => id === mtrlId).unit = e.target.value;
+        let material = materials.find(({ id }) => id === mtrlId);
+        material.unit = e.target.value;
+        material.cspts.map((cspt) => {
+          cspt.unit = e.target.value;
+          return material;
+        });
+
         break;
       default:
     }
