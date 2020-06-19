@@ -35,7 +35,9 @@ app.use('/api/auth/user', require('./routes/20_authUser'));
 // Cases
 app.use('/api/case', require('./routes/21_case'));
 // Bom, it treat bom in the case and materials
-app.use('/api/mtrl', require('./routes/22_mtrl'));
+app.use('/api/case/query', require('./routes/22_queryCase'));
+
+app.use('/api/mtrl', require('./routes/23_mtrl'));
 // cst, it treat consumption of the material in the case
 app.use('/api/cst', require('./routes/30_cst'));
 

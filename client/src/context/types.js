@@ -67,3 +67,7 @@ export const CURRENT_DELETE = 'CURRENT_DELETE';
 
 // may not need this one --------------------------------------------
 export const CLEAR_USERS_STATE = 'CLEAR_USERS_STATE';
+
+// Search Bar
+export const SEARCHBAR_SEARCH_INDEX = 'SEARCHBAR_SEARCH_INDEX';
+export const SEARCHBAR_TOGGLE_QUERY = 'SEARCHBAR_TOGGLE_QUERY';

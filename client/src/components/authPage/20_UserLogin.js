@@ -61,7 +61,7 @@ const UserLogin = (props) => {
             onChange={onChange}
             placeholder='.'
             className='MPH-input'
-            maxlength='100'
+            maxLength='100'
             required
           />
           <label htmlFor='userEmail' className='MPH-input-label'>
@@ -78,7 +78,7 @@ const UserLogin = (props) => {
             onChange={onChange}
             placeholder='.'
             className='MPH-input'
-            maxlength='50'
+            maxLength='50'
             required
           />
           <label htmlFor='userPassword' className='MPH-input-label'>

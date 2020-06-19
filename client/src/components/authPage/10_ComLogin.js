@@ -73,7 +73,7 @@ const ComLogin = (props) => {
                   name='email'
                   value={email}
                   onChange={onChange}
-                  maxlength='100'
+                  maxLength='100'
                   required
                   placeholder='.'
                   className='MPH-input'
@@ -90,7 +90,7 @@ const ComLogin = (props) => {
                   name='password'
                   value={password}
                   onChange={onChange}
-                  maxlength='50'
+                  maxLength='50'
                   required
                   placeholder='.'
                   className='MPH-input'
