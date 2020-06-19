@@ -15,12 +15,14 @@ const SearchBarState = (props) => {
   const [state, dispatch] = useReducer(SearchBarReducer, initialState);
 
   //@ Action
-  const searchCaseName = async (e) => {
-    e.preventDefault();
-    // Without body-parser, Here make a fake body object manually
-    const body = {
-      query: e.target.query.value,
-    };
+  const searchCaseName = async (body) => {
+    // e.preventDefault();
+    // // Without body-parser, Here make a fake body object manually
+    // console.log(e.target);
+    // const body = {
+    //   // companyId: e.target.queryForm.id,
+    //   query: e.target.query.value,
+    // };
     const config = {
       headers: {
         'Content-Type': 'application/json',

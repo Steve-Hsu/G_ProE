@@ -119,8 +119,8 @@ export default (state, action) => {
       };
     case CASE_DOWNLOAD:
       return {
+        // All the state update as action.payload
         ...state,
-        // user: action.payload.user,
       };
     default:
   }
