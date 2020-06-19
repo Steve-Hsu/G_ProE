@@ -684,6 +684,23 @@ const CasesState = (props) => {
     }
   };
 
+  //Download Existing Case
+  const downloadCase = async (id) => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    try {
+      const res = await axios.get(`/api/case/existingcase/${id}`, config);
+      console.log('Download succeed!');
+      dispatch({ type: CASE_DOWNLOAD, payload: res.data[0] });
+    } catch (err) {
+      console.log('Download new case faild, server problems');
+    }
+  };
+
   return (
     <CasesContext.Provider
       value={{
@@ -716,6 +733,7 @@ const CasesState = (props) => {
         addMtrlValue,
         togglePopover,
         uploadNewCase,
+        downloadCase,
       }}
     >
       {props.children}

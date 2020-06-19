@@ -37,6 +37,19 @@ router.get('/company', authUser, async (req, res) => {
   }
 });
 
+// @route   GET api/case/existingcase
+// @desc    Read specific case by _id of the case
+// @access  Private
+router.get('/existingcase/:id', authUser, async (req, res) => {
+  try {
+    const cases = await Case.find({ _id: req.params.id });
+    res.json(cases);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 // @route   POST api/case/user/newcase
 // @desc    Add a new case to database
 // @access  Private

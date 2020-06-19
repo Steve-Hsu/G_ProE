@@ -117,6 +117,11 @@ export default (state, action) => {
         ...state,
         current: null,
       };
+    case CASE_DOWNLOAD:
+      return {
+        ...state,
+        // user: action.payload.user,
+      };
     default:
   }
 };

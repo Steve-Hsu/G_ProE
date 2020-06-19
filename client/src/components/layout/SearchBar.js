@@ -1,5 +1,6 @@
 import React, { useContext, Fragment } from 'react';
 import SearchBarContext from '../../context/searchBar/searchBarContext';
+import SearchBarListItem from './SearchBarListItem';
 
 const SearchBar = () => {
   const searchBarContext = useContext(SearchBarContext);
@@ -24,15 +25,14 @@ const SearchBar = () => {
     <form id='QueryForm' onSubmit={onSubmit}>
       <input name='query' onChange={onChange} />
       <input type='submit' form='QueryForm' />
-      <div>
+      <div className='test-1' style={{ background: 'yellow', zIndex: '10' }}>
         {isQuery
           ? searchCaseNameList.map((item) => {
               return (
-                <Fragment>
-                  <div key={`SearchBar${item.id}`} className='badge'>
-                    {item.style}, {item.client}, {item.userName}
-                  </div>
-                </Fragment>
+                <SearchBarListItem
+                  key={`SearchBarListItem${item._id}`}
+                  item={item}
+                />
               );
             })
           : null}
