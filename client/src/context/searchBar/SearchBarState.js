@@ -16,13 +16,6 @@ const SearchBarState = (props) => {
 
   //@ Action
   const searchCaseName = async (body) => {
-    // e.preventDefault();
-    // // Without body-parser, Here make a fake body object manually
-    // console.log(e.target);
-    // const body = {
-    //   // companyId: e.target.queryForm.id,
-    //   query: e.target.query.value,
-    // };
     const config = {
       headers: {
         'Content-Type': 'application/json',

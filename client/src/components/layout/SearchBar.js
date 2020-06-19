@@ -21,8 +21,6 @@ const SearchBar = () => {
       companyId: company,
       query: e.target.query.value,
     };
-    console.log('company', company);
-    console.log(body);
     searchCaseName(body);
   };
 
