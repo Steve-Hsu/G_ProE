@@ -21,7 +21,7 @@ const UserForm = () => {
         password2: '',
         cases: false,
         mtrl: false,
-        cst: false,
+        cspt: false,
         mp: false,
         po: false,
       });
@@ -37,12 +37,12 @@ const UserForm = () => {
     password2: '',
     cases: false,
     mtrl: false,
-    cst: false,
+    cspt: false,
     mp: false,
     po: false,
   });
 
-  const { name, email, password, password2, cases, mtrl, cst, mp, po } = user;
+  const { name, email, password, password2, cases, mtrl, cspt, mp, po } = user;
 
   const onChange = (e) =>
     // Link each input to UserForm.state, input name matcked to state name
@@ -62,21 +62,22 @@ const UserForm = () => {
   //   setUser((prev) => ({ ...prev, [target.name]: !prev[target.name] }));
   // };
   const onChangeCB = (e) => {
-    const { name, checked } = e.target;
-    setUser({ ...user, [name]: checked ? true : false });
+    // const { name, checked } = e.target;
+    setUser({ ...user, [e.target.name]: e.target.checked ? true : false });
   };
 
   const onSubmit = (e) => {
     // Prevent renew all the variables on browser(client), the userState and UserForm.state
     e.preventDefault();
     if (password2 !== password) {
-      setAlert('Password and password confirmation not matched', 'danger');
+      setAlert('Password and Password-Confirmation not matched', 'danger');
     } else {
       if (current === null) {
         // Grab the "User" from UserForm.state.
         // Add the "User" to userState.userpanies
         addUser(user);
       } else {
+        console.log(user);
         updateUser(user);
       }
       // Default the current and UserForm.state
@@ -95,33 +96,35 @@ const UserForm = () => {
         type='text'
         placeholder='User Name'
         name='name'
-        value={name}
+        // React require add || '' to prevent warning the input changed from controlled to uncontrolled.
+        value={name || ''}
         onChange={onChange}
       />
       <input
         type='email'
         placeholder='User email'
         name='email'
-        value={email}
+        value={email || ''}
         onChange={onChange}
       />
       <input
         type='password'
         placeholder='Password - Setting password'
         name='password'
-        value={password}
+        value={password || ''}
         onChange={onChange}
       />
       <input
         type='password'
         placeholder='Password confirmation - Enter the password again.'
         name='password2'
-        value={password2}
+        value={password2 || ''}
         onChange={onChange}
       />
       <input
         type='checkbox'
         name='cases'
+        //Setting default when the box is checked, means the state.cases is true.
         checked={cases === true}
         onChange={onChangeCB}
       />{' '}
@@ -135,8 +138,8 @@ const UserForm = () => {
       Material{' '}
       <input
         type='checkbox'
-        name='cst'
-        checked={cst === true}
+        name='cspt'
+        checked={cspt === true}
         onChange={onChangeCB}
       />{' '}
       Cunsumption{' '}

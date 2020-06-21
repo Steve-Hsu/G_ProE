@@ -3,6 +3,9 @@ import AlertContext from '../../context/alert/alertContext';
 import AuthComContext from '../../context/authCom/authComContext';
 import Spinner from '../layout/Spinner';
 
+//Alert
+import Alerts from '../layout/Alerts';
+
 const ComLogin = (props) => {
   const alertContext = useContext(AlertContext);
   const authComContext = useContext(AuthComContext);
@@ -96,7 +99,7 @@ const ComLogin = (props) => {
                   className='MPH-input'
                 />
                 <label htmlFor='comPassword' className='MPH-input-label'>
-                  password
+                  Password
                 </label>
               </div>
               {/* Submit button */}
@@ -105,6 +108,7 @@ const ComLogin = (props) => {
                 value='Login'
                 className='btn btn-primary btn-block'
               />
+              <Alerts />
             </form>
           </div>
         )}

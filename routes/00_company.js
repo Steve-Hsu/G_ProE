@@ -32,7 +32,7 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { comName, email, password, code } = req.body;
+    const { comName, comSymbol, email, password, code } = req.body;
     // authenticate if it is me, Steve
     if (code !== process.env.STEVE_ID) {
       return res.status(400).json({ msg: 'Invalid User' });
@@ -47,6 +47,7 @@ router.post(
 
       company = new Company({
         comName,
+        comSymbol,
         email,
         password,
       });

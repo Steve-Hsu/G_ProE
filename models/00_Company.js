@@ -9,6 +9,12 @@ const ComSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  comSymbol: {
+    // This comSymbol is a shortened name of the company, It will be used when generate document numbers, for example for purchase order or quotations
+    type: String,
+    required: true,
+    unique: true,
+  },
   email: {
     type: String,
     required: true,

@@ -23,13 +23,14 @@ const ComRegister = (props) => {
 
   const [company, setCompany] = useState({
     comName: '',
+    comSymbol: '',
     email: '',
     password: '',
     password2: '',
     code: '',
   });
 
-  const { comName, email, password, password2, code } = company;
+  const { comName, comSymbol, email, password, password2, code } = company;
 
   const onChange = (e) =>
     setCompany({ ...company, [e.target.name]: e.target.value });
@@ -46,6 +47,7 @@ const ComRegister = (props) => {
       registerCom({
         //This is a formData
         comName,
+        comSymbol,
         email,
         password,
         // This code is essential in form, since I set an authenticat-code on backend
@@ -67,6 +69,16 @@ const ComRegister = (props) => {
             type='text'
             name='comName'
             value={comName}
+            onChange={onChange}
+          />
+        </div>
+        {/* {Company Symbol, the symbol will be used in document numbering} */}
+        <div className='form-group'>
+          <label htmlFor='comSymbol'>ComSymbol</label>
+          <input
+            type='text'
+            name='comSymbol'
+            value={comSymbol}
             onChange={onChange}
           />
         </div>

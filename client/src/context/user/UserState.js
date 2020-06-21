@@ -4,11 +4,9 @@ import { v4 as uuidv4 } from 'uuid';
 import UserContext from './userContext';
 import userReducer from './userReducer';
 import {
-  ADD_USER,
   DELETE_USER,
   SET_CURRENT,
   CLEAR_CURRENT,
-  UPDATE_USER,
   FILTER_USER,
   CLEAR_FILTER_USER,
   USER_ERROR,
@@ -49,8 +47,9 @@ const UserState = (props) => {
     };
 
     try {
-      const res = await axios.post('/api/users', user, config);
-      dispatch({ type: ADD_USER, payload: res.data });
+      await axios.post('/api/users', user, config);
+      getUsers();
+      // dispatch({ type: ADD_USER, payload: res.data });
     } catch (err) {
       dispatch({
         type: USER_ERROR,
@@ -108,20 +107,17 @@ const UserState = (props) => {
   };
 
   //Update USER
-  const updateUser = async (user) => {
-    console.log('right before put', user);
+  const updateUser = async (subject) => {
+    console.log('right before put', subject);
     const config = {
       header: {
         'Content-Type:': 'application/json',
       },
     };
     try {
-      const res = await axios.put(`/api/users/${user._id}`, user, config);
-      console.log('right before dispatch', user);
-      dispatch({
-        type: UPDATE_USER,
-        payload: res.data,
-      });
+      const res = await axios.put(`/api/users/${subject._id}`, subject, config);
+      console.log('right before dispatch', res);
+      getUsers();
     } catch (err) {
       dispatch({
         type: USER_ERROR,

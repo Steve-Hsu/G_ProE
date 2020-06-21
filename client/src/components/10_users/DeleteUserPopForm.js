@@ -20,7 +20,7 @@ const DeleteUserPopForm = (props) => {
   };
 
   const onChangeDelete = async () => {
-    if (state.confirmUserName === confirmDelete) {
+    if (state.confirmUserName.toLowerCase() === confirmDelete) {
       await deleteUser(props.id);
       clearCurrent();
       clearConfirmDelete();

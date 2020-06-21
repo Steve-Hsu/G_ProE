@@ -3,7 +3,6 @@ import {
   DELETE_USER,
   SET_CURRENT,
   CLEAR_CURRENT,
-  UPDATE_USER,
   FILTER_USER,
   CLEAR_FILTER_USER,
   USER_ERROR,
@@ -25,18 +24,19 @@ export default (state, action) => {
       return {
         ...state,
         // ...State.users are users existing alread, the action.payload is the new USER just set
-        users: [action.payload, ...state.users],
+        // users: [action.payload, ...state.users],
         loading: false,
       };
-    case UPDATE_USER:
-      return {
-        ...state,
-        users: state.users.map((user) =>
-          //If the id of the USER passed in match to any id in the UserState.users, then set the values of this USER passed in to the id matched USER in ComState.users
-          user._id === action.payload._id ? action.payload : user
-        ),
-        loading: false,
-      };
+    // case UPDATE_USER:
+    //   return {
+    //     ...state,
+    //     users: state.users.map((user) =>
+    //       //If the id of the USER passed in match to any id in the UserState.users, then set the values of this USER passed in to the id matched USER in ComState.users
+    //       // user._id === action.payload._id ? action.payload : user
+    //       user._id === action.payload._id ? user : action.payload
+    //     ),
+    //     loading: false,
+    //   };
     case CONFIRM_DELETE_USER:
       return {
         ...state,

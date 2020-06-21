@@ -11,7 +11,7 @@ const UserItem = ({ user }) => {
     clearCurrent,
     confirmDelete,
   } = userContext;
-  const { _id, name, email, cases, bom, cst, mp, po } = user;
+  const { _id, name, email, cases, mtrl, cspt, mp, po } = user;
 
   const onDelete = () => {
     confirmDeleteUser(name);
@@ -51,8 +51,10 @@ const UserItem = ({ user }) => {
           {/* Child element of grid - 2 */}
           <div className='flexBox'>
             {cases ? <span className='badge badge-success'>cases</span> : null}
-            {bom ? <span className='badge badge-success'>Material</span> : null}
-            {cst ? (
+            {mtrl ? (
+              <span className='badge badge-success'>Material</span>
+            ) : null}
+            {cspt ? (
               <span className='badge badge-success'>Consumption</span>
             ) : null}
             {mp ? (

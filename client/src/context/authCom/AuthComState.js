@@ -29,25 +29,6 @@ const AuthComState = (props) => {
   };
 
   const [state, dispatch] = useReducer(AuthComReducer, initialState);
-
-  // Load Users of Company
-  const loadUser = async () => {
-    //Set auth token to the latest token, if you don't set, it may take the previous token to login
-    // if (localStorage.token) {
-    //   setAuthToken(localStorage.token);
-    // }
-
-    try {
-      const res = await axios.get('/api/users');
-      dispatch({
-        type: COM_GET_USERS,
-        payloady: res.data,
-      });
-    } catch (err) {
-      dispatch({ type: COM_AUTH_ERROR });
-    }
-  };
-
   // Get the information of the Company
   const loadCom = async () => {
     //Set auth token to the latest token, if you don't set, it may take the previous token to login
@@ -88,7 +69,7 @@ const AuthComState = (props) => {
         setAuthToken(localStorage.token);
       }
 
-      loadUser();
+      // loadUser();
       loadCom();
     } catch (err) {
       dispatch({
@@ -117,11 +98,10 @@ const AuthComState = (props) => {
         setAuthToken(localStorage.token);
       }
       loadCom();
-      loadUser();
     } catch (err) {
       dispatch({
         type: COM_LOGIN_FAIL,
-        payload: 'company Login fail',
+        payload: 'Company Login fail. Invalid crendential.',
       });
       console.log(err);
     }
@@ -142,7 +122,6 @@ const AuthComState = (props) => {
         loading: state.loading,
         company: state.company,
         error: state.error,
-        loadUser,
         loadCom,
         registerCom,
         clearErrors,

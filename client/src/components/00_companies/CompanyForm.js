@@ -13,6 +13,7 @@ const CompanyForm = () => {
       // Default it
       setCompany({
         comName: '',
+        comSymbol: '',
         email: '',
         userNumLimit: '',
         userNum: 1,
@@ -25,13 +26,14 @@ const CompanyForm = () => {
   //Set state for this CompanyForm
   const [company, setCompany] = useState({
     comName: '',
+    comSymbol: '',
     email: '',
     userNumLimit: '',
     userNum: 1,
     type: 'unpaid',
   });
 
-  const { comName, email, type } = company;
+  const { comName, comSymbol, email, type } = company;
 
   const onChange = (e) =>
     // Link each input to CompanyForm.state, input name matcked to state name
@@ -66,6 +68,13 @@ const CompanyForm = () => {
         placeholder='Company Name'
         name='comName'
         value={comName}
+        onChange={onChange}
+      />
+      <input
+        type='text'
+        placeholder='Company Token'
+        name='comSymbol'
+        value={comSymbol}
         onChange={onChange}
       />
       <input

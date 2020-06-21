@@ -36,7 +36,7 @@ const UserSchema = mongoose.Schema({
     // required: true,
     // default: false,
   },
-  cst: {
+  cspt: {
     // consumption of materials, for sample room to fill in
     type: Boolean,
     // required: true,

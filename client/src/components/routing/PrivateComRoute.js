@@ -9,7 +9,7 @@ const PrivateComRoute = ({ component: Component, ...rest }) => {
     <Route
       {...rest}
       render={(props) =>
-        !isAuthenticated && !loading ? (
+        !isAuthenticated ? (
           <Redirect to='/api/auth/company' />
         ) : (
           <Component {...props} />

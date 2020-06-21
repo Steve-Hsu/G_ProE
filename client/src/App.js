@@ -13,8 +13,8 @@ import NewCase from './components/pages/22_NewCase';
 //ComRouter
 import ComLogin from './components/authPage/10_ComLogin';
 import UserLogin from './components/authPage/20_UserLogin';
-//Alert
-import Alerts from './components/layout/Alerts';
+
+//CSS Sheet
 import './App.css';
 //Private route
 import PrivateComRoute from './components/routing/PrivateComRoute';
@@ -50,7 +50,6 @@ const App = () => {
                       <Navbar />
 
                       <div>
-                        <Alerts />
                         <Switch>
                           <Route
                             exact
@@ -84,7 +83,7 @@ const App = () => {
                             path='/api/case/user'
                             component={CaseManager}
                           />
-                          <Route
+                          <PrivateUserRoute
                             exact
                             path='/api/case/user/newcase'
                             component={NewCase}

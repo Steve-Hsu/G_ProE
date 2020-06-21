@@ -15,9 +15,11 @@ const User = require('../models/10_User');
 // @access  Private
 router.get('/', authCom, async (req, res) => {
   try {
-    const users = await User.find({ company: req.company.id }).sort({
-      date: -1,
-    });
+    const users = await User.find({ company: req.company.id })
+      .select('-password')
+      .sort({
+        date: -1,
+      });
     res.json(users);
   } catch (err) {
     console.error(err.message);
@@ -74,7 +76,7 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { name, email, password, cases, mtrl, cst, mp, po } = req.body;
+    const { name, email, password, cases, mtrl, cspt, mp, po } = req.body;
 
     try {
       let user = await User.findOne({ email });
@@ -85,13 +87,13 @@ router.post(
       }
 
       user = new User({
-        name,
-        email,
-        password,
+        name: name.toLowerCase(),
+        email: email.toLowerCase(),
+        password: password.toLowerCase(),
         company: req.company.id,
         cases,
         mtrl,
-        cst,
+        cspt,
         mp,
         po,
       });
@@ -123,7 +125,8 @@ router.post(
           // This res.json is for test when in the frontend to get token
         }
       );
-      res.json(user);
+
+      res.json({ msg: 'New User is added' });
       // Update the userNum in Company -------------------------------------------
       // If the user added, add 1 for the userNum of the company to restrict the number of user.
       await Company.find({ _id: req.company.id }, function (err, obj) {
@@ -157,17 +160,7 @@ router.post(
 // @Steve   Don't allow the company to update the password of the user. It will prevent some dispution. Whereas the user miss his password, the account will not lock down any function, the company jsut need to create a new account to take care the cases of the order missing accout. Or use another account with same right to take care the cases.
 // @access  Private
 router.put('/:id', authCom, async (req, res) => {
-  const { cases, mtrl, cst, mp, po, name, email } = req.body;
-
-  // Build a user object
-  const userFields = {};
-  if (cases) userFields.cases = cases;
-  if (mtrl) userFields.mtrl = mtrl;
-  if (cst) userFields.cst = cst;
-  if (mp) userFields.mp = mp;
-  if (po) userFields.po = po;
-  if (name) userFields.name = name;
-  if (email) userFields.email = email;
+  const userFields = req.body;
 
   try {
     // Get the id from URL by params
@@ -186,8 +179,9 @@ router.put('/:id', authCom, async (req, res) => {
       { new: true }
       // The method .select('-password) is for not showing the password on result
     ).select('-password');
-    console.log(user);
-    res.json(user);
+    // console.log(user);
+    // res.json(user);
+    res.json({ msg: `User ${user.name}Update succssed!` });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

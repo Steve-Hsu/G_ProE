@@ -24,7 +24,6 @@ export const REMOVE_ALERT = 'REMOVE_ALERT';
 // Manage User -----------------------------------------------------------
 export const ADD_USER = 'ADD_USER';
 export const DELETE_USER = 'DELETE_USER';
-export const UPDATE_USER = 'UPDATE_USER';
 export const FILTER_USER = 'FILTER_USER';
 export const CLEAR_FILTER_USER = 'CLEAR_FILTER_COMPANY';
 export const CONFIRM_DELETE_USER = 'CONFIRM_DELETE_USER';
