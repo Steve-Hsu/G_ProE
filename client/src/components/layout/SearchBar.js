@@ -1,4 +1,4 @@
-import React, { useContext, Fragment } from 'react';
+import React, { useContext } from 'react';
 import AuthUserContext from '../../context/authUser/authUserContext';
 import SearchBarContext from '../../context/searchBar/searchBarContext';
 import SearchBarListItem from './SearchBarListItem';
@@ -17,22 +17,46 @@ const SearchBar = () => {
   const onSubmit = (e) => {
     e.preventDefault();
     // Without body-parser, Here make a fake body object manually
-    const body = {
-      companyId: company,
-      query: e.target.query.value,
-    };
-    searchCaseName(body);
+    toggleQueryList();
+    if (String(e.target.value).length > 1) {
+      const body = {
+        companyId: company,
+        // The two line follows here, L1 for input with form, triggered with submit, L2 triggered with onKeyUp event.
+        // query: e.target.query.value, // L1
+        query: e.target.value, // L2
+      };
+      searchCaseName(body);
+    }
   };
 
   const onChange = (e) => {
-    if (e.target.value === '') {
+    if (String(e.target.value).length <= 1) {
       toggleQueryList();
     }
   };
   return (
-    <form name='queryForm' id={company} onSubmit={onSubmit}>
-      <input name='query' onChange={onChange} />
-      <input type='submit' form={company} />
+    <form
+      // name='queryForm' // L1
+      // id={company} // L1
+      // onKeyUp={onSubmit} // L1
+      // onSubmit={onSubmit} // L1
+      style={{ background: 'red', width: '100%' }}
+    >
+      {/* L1 */}
+      {/* <input type='text' name='query' onChange={onChange} /> */}
+      {/* L2 */}
+      <div>Search</div>
+      <input
+        id={company}
+        type='text'
+        name='queryForm'
+        onChange={onChange}
+        onKeyUp={onSubmit}
+        className='queryInput'
+      />
+
+      {/* L1 */}
+      {/* <input type='submit' form={company} /> */}
       <div className='test-1' style={{ background: 'yellow', zIndex: '10' }}>
         {isQuery
           ? searchCaseNameList.map((item) => {

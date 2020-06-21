@@ -21,8 +21,8 @@ const LeftBar = () => {
   const onChange = () => {};
 
   return (
-    <div className='container container-with-navbar leftbar test-2'>
-      <div className='leftbar-component test-1'>
+    <div className='container-with-navbar leftbar p-1 test-2'>
+      <div className='leftbar-component test-4'>
         {' '}
         {'Import style from Excel'}
         <input type='text' name='import' id='imoprt' />
