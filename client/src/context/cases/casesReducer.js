@@ -30,6 +30,7 @@ export default (state, action) => {
         client: action.payload.client,
         cWays: action.payload.cWays,
         sizes: action.payload.sizes,
+        gQtys: action.payload.gQtys,
         mtrls: action.payload.mtrls,
       };
     case STYLE_UPDATE:
@@ -116,11 +117,6 @@ export default (state, action) => {
       return {
         ...state,
         current: null,
-      };
-    case CASE_DOWNLOAD:
-      return {
-        // All the state update as action.payload
-        ...state,
       };
     default:
   }

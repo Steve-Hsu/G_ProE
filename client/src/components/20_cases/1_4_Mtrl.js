@@ -1,4 +1,4 @@
-import React, { Fragment, useContext } from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import CasesContext from '../../context/cases/casesContext';
 import MtrlClr from './1_4_1_MtrlClr';

@@ -4,7 +4,7 @@ import CasesContext from '../../context/cases/casesContext';
 
 const Size = ({ size }) => {
   const casesContext = useContext(CasesContext);
-  const { sizes, cWays, togglePopover, updateSize } = casesContext;
+  const { sizes, togglePopover, updateSize } = casesContext;
 
   const event = new Event('change');
   //@ Array for generate <option> tags for s<elect> tag.

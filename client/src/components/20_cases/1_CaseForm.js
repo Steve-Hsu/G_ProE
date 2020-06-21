@@ -1,6 +1,5 @@
 import React, { useContext, Fragment } from 'react';
 import { Prompt } from 'react-router-dom';
-import { v4 as uuidv4 } from 'uuid';
 import CasesContext from '../../context/cases/casesContext';
 
 // @ Components
@@ -15,8 +14,6 @@ const CaseForm = () => {
   const casesContext = useContext(CasesContext);
   //@ Destructure, pull out the variables form userContext
   const {
-    user,
-    company,
     style,
     client,
     formIsHalfFilledOut,
@@ -25,14 +22,6 @@ const CaseForm = () => {
     gQtys,
     mtrls,
     addCaseValue,
-    addSize,
-    deleteSize,
-    addcWay,
-    updatecWay,
-    deletecWay,
-    addMtrl,
-    deleteMtrl,
-    expandMtrlColor,
     popover,
     current,
     uploadNewCase,
@@ -84,7 +73,6 @@ const CaseForm = () => {
             <div>
               <input
                 id='caseStyle'
-                name='caseStyle'
                 type='text'
                 name='style'
                 onChange={addCaseValue}
@@ -100,7 +88,7 @@ const CaseForm = () => {
               <input
                 id='caseClient'
                 type='text'
-                name='caseClient'
+                name='client'
                 onChange={addCaseValue}
                 maxLength={clientLength}
                 placeholder='.'
@@ -144,8 +132,9 @@ const CaseForm = () => {
                   let subtotal = 0;
                   gQtys.map((gQty) => {
                     if (gQty.cWay === cWay.id) {
-                      return (subtotal = subtotal + Number(gQty.gQty));
+                      subtotal = subtotal + Number(gQty.gQty);
                     }
+                    return subtotal;
                   });
                   return (
                     <div

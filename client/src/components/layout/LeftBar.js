@@ -1,24 +1,13 @@
-import React, { useContext, Fragment } from 'react';
+import React, { useContext } from 'react';
 import AuthContext from '../../context/authUser/authUserContext';
 import CasesContext from '../../context/cases/casesContext';
-import SearchBarContext from '../../context/searchBar/searchBarContext';
 import SearchBar from './SearchBar';
 
 const LeftBar = () => {
   const authContext = useContext(AuthContext);
   const casesContext = useContext(CasesContext);
-  const searchBarContext = useContext(SearchBarContext);
   const { cases, isAuthenticated } = authContext;
   const { addcWay, addSize, addMtrl } = casesContext;
-  const {
-    isQuery,
-    searchCaseNameList,
-    searchCaseName,
-    toggleQueryList,
-  } = searchBarContext;
-
-  const onSubmit = () => {};
-  const onChange = () => {};
 
   return (
     <div className='container-with-navbar leftbar p-1 test-2'>

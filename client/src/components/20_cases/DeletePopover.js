@@ -21,6 +21,8 @@ const DeletePopover = () => {
         break;
       case 'item':
         deleteMtrl(e);
+        break;
+      default:
     }
 
     togglePopover(e);
@@ -34,6 +36,7 @@ const DeletePopover = () => {
         return `Size :  ${current.gSize}`;
       case 'item':
         return `Material :  ${current.item}`;
+      default:
     }
   };
 

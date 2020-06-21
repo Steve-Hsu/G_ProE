@@ -172,8 +172,8 @@ const CasesState = (props) => {
       mtrl.cspts.map((cspt) => {
         if (cspt.size === newCspt.size) {
           newCspt.cspt = cspt.cspt;
-          return newCspt;
         }
+        return newCspt;
       });
       return mtrl.cspts.push(newCspt);
     });
@@ -241,8 +241,13 @@ const CasesState = (props) => {
   };
 
   const updateCsptRequiredMQty = (mtrlId, gQtyId) => {
+    console.log(gQtyId);
     let materials = mtrls;
     let material = materials.find(({ id }) => id === mtrlId);
+    console.log(
+      'this is gQty',
+      gQtys.find(({ id }) => id === gQtyId)
+    );
     let Qty = gQtys.find(({ id }) => id === gQtyId).gQty;
 
     material.cspts.map((cspt) => {
@@ -339,7 +344,7 @@ const CasesState = (props) => {
         // The .find() will confused by name "size" of attribute in the sizes and the attribute of sizeSPECs, so must const a new name ,in this case, the "sizeId", for the size.id
         const sizeId = size.id;
         let mSizeSPECId = mtrl.sizeSPECs.find(({ size }) => size === sizeId).id;
-        updateCsptmSizeSPEC(mtrl.id, mSizeSPECId);
+        return updateCsptmSizeSPEC(mtrl.id, mSizeSPECId);
       })
     );
   };
@@ -386,7 +391,7 @@ const CasesState = (props) => {
         // The .find() will confused by name "size" of attribute in the sizes and the attribute of sizeSPECs, so must const a new name ,in this case, the "sizeId", for the size.id
         const cWayId = cWay.id;
         let mColorId = mtrl.mtrlColors.find(({ cWay }) => cWay === cWayId).id;
-        updateCsptmColor(mtrl.id, mColorId);
+        return updateCsptmColor(mtrl.id, mColorId);
       })
     );
   };
@@ -560,19 +565,21 @@ const CasesState = (props) => {
     e.preventDefault();
 
     const mtrlId = e.target.name;
-    const sizeId = String(e.target.id).slice(4);
+    // const sizeId = String(e.target.id).slice(4);
     //??? This code works, however I still don't know why the sup variable will affect parent variable here.
     //There is something chainning the materials to the sub array material
     let materials = mtrls;
     let material = materials.find(({ id }) => id === mtrlId);
+    const sizeId = material.cspts.find(({ id }) => id === e.target.id).size;
 
     material.cspts.map((cspt) => {
       if (String(cspt.size) === sizeId) {
         cspt.cspt = e.target.value;
-        let gQtyId = material.cspts.find(({ id }) => id === cspt.id).gQty;
+        // let gQtyId = material.cspts.find(({ id }) => id === cspt.id).gQty;
+        let gQtyId = cspt.gQty;
         updateCsptRequiredMQty(mtrlId, gQtyId);
-        return material;
       }
+      return material;
     });
 
     updateMaterials(materials);

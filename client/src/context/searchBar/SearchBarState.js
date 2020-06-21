@@ -1,5 +1,4 @@
 import React, { useReducer } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 import SearchBarContext from './searchBarContext';
 import SearchBarReducer from './searchBarReducer';

@@ -115,7 +115,6 @@ const CompanyForm = () => {
         <input
           type='submit'
           value={current ? 'Add Company' : 'Update Company'}
-          value='Ad'
           className='btn btn-primary btn-block'
         />
       </div>

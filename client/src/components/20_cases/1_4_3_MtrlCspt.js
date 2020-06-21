@@ -17,7 +17,7 @@ const MtrlCspt = ({ size, mtrl }) => {
     <div style={{ height: '68px' }} key={`${sizeId}${mtrl.id}`}>
       <input
         name={mtrl.id}
-        id={`cspt${sizeId}`}
+        id={cspt.id}
         type='number'
         placeholder='.'
         onChange={addValueMtrlCspt}
@@ -28,7 +28,7 @@ const MtrlCspt = ({ size, mtrl }) => {
         className='MPH-input'
       />
       <label
-        htmlFor={`cspt${sizeId}`}
+        htmlFor={cspt.id}
         className='MPH-input-label'
       >{`${size.gSize}`}</label>
     </div>

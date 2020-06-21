@@ -2,7 +2,6 @@ import {
   COM_REGISTER_SUCCESS,
   COM_REGISTER_FAIL,
   COM_LOADED,
-  COM_GET_USERS,
   COM_AUTH_ERROR,
   COM_LOGIN_SUCCESS,
   COM_LOGIN_FAIL,
@@ -16,13 +15,6 @@ export default (state, action) => {
       return {
         ...state,
         company: action.payload,
-      };
-    case COM_GET_USERS:
-      return {
-        ...state,
-        isAuthenticated: true,
-        loading: false,
-        user: action.payload,
       };
     case COM_REGISTER_SUCCESS:
     case COM_LOGIN_SUCCESS:

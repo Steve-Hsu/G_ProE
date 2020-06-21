@@ -1,14 +1,6 @@
-import React, { useContext, useEffect, Fragment } from 'react';
-import AuthUserContext from '../../context/authUser/authUserContext';
+import React, { Fragment } from 'react';
 
 export const CaseManager = (props) => {
-  // Check if there are any update in data, then update the UI
-  const authUserContext = useContext(AuthUserContext);
-  const { loadCases } = authUserContext;
-  // useEffect(() => {
-  //   loadCases();
-  //   //eslint-disable-next-line
-  // }, []);
   const goNewCase = () => {
     //Jump to other page while keeping authenticated
     props.history.push('/api/case/user/newcase');
