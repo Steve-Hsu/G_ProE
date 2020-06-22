@@ -23,6 +23,7 @@ import {
   CURRENT_DELETE,
   STYLE_UPDATE,
   CLIENT_UPDATE,
+  CASE_CLEAR,
 } from '../types';
 
 const CasesState = (props) => {
@@ -708,6 +709,11 @@ const CasesState = (props) => {
     }
   };
 
+  //Clear all the data in state, when user logout
+  const defaultCase = () => {
+    dispatch({ type: CASE_CLEAR });
+  };
+
   return (
     <CasesContext.Provider
       value={{
@@ -741,6 +747,7 @@ const CasesState = (props) => {
         togglePopover,
         uploadNewCase,
         downloadCase,
+        defaultCase,
       }}
     >
       {props.children}

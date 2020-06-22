@@ -82,7 +82,7 @@ router.post(
     const cases = await Case.find({
       $and: [
         { company: req.user.company },
-        { cNo: { $regex: 'C' + comSymbol + twoDigitYear, $options: 'i' } }, // Query the same cases in same year by cNo, It promises return cases of same company in same year
+        { cNo: { $regex: comSymbol + twoDigitYear + 'C', $options: 'i' } }, // Query the same cases in same year by cNo, It promises return cases of same company in same year
       ],
     }).sort({
       date: -1,
@@ -103,7 +103,7 @@ router.post(
     caseNumber.push(caseQty);
 
     let newCaseNumber = caseNumber.toString().split(',').join('');
-    let newCNO = 'C' + comSymbol + twoDigitYear + '_' + newCaseNumber;
+    let newCNO = comSymbol + twoDigitYear + 'C' + '_' + newCaseNumber;
 
     try {
       const newCase = new Case({

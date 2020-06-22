@@ -23,7 +23,7 @@ router.post('/', authUser, async (req, res) => {
           { company: companyId },
         ],
       },
-      { style: 1, client: 1, userName: 1 }
+      { style: 1, client: 1, userName: 1, cNo: 1 }
     )
       .sort({ date: -1 })
       .limit(10);
@@ -39,7 +39,7 @@ router.post('/', authUser, async (req, res) => {
           { company: companyId },
         ],
       },
-      { style: 1, client: 1, userName: 1 }
+      { style: 1, client: 1, userName: 1, cNo: 1 }
     )
       .sort({ date: -1 })
       .limit(10);
@@ -55,13 +55,29 @@ router.post('/', authUser, async (req, res) => {
           { company: companyId },
         ],
       },
-      { style: 1, client: 1, userName: 1 }
+      { style: 1, client: 1, userName: 1, cNo: 1 }
     )
       .sort({ date: -1 })
       .limit(10);
 
     if (userNames.length > 0) {
       return res.json(userNames);
+    }
+
+    const caseNumber = await Case.find(
+      {
+        $and: [
+          { cNo: { $regex: searchKeyword, $options: 'i' } },
+          { company: companyId },
+        ],
+      },
+      { style: 1, client: 1, userName: 1, cNo: 1 }
+    )
+      .sort({ date: -1 })
+      .limit(10);
+
+    if (caseNumber.length > 0) {
+      return res.json(caseNumber);
     }
 
     return res.json([{ style: 'Noting found' }]);

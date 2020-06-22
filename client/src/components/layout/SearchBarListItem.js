@@ -16,6 +16,7 @@ const SearchBarListItem = ({ item }) => {
 
   return (
     <div className='btn' key={item._id} id={item._id} onClick={onClick}>
+      <span className='badge'>{item.cNo}</span>
       <span className='badge'>{item.style}</span>
       <span className='badge'>{item.client}</span>
       <span className='badge'>{item.userName}</span>

@@ -17,6 +17,7 @@ import {
   CASE_QTY_UPDATE,
   CURRENT_ADD,
   CURRENT_DELETE,
+  CASE_CLEAR,
 } from '../types';
 
 export default (state, action) => {
@@ -117,6 +118,20 @@ export default (state, action) => {
       return {
         ...state,
         current: null,
+      };
+    case CASE_CLEAR:
+      return {
+        user: null,
+        company: null,
+        style: null,
+        client: null,
+        cWays: [],
+        sizes: [],
+        gQtys: [],
+        mtrls: [],
+        popover: false,
+        current: null,
+        formIsHalfFilledOut: true,
       };
     default:
   }

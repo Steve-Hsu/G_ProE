@@ -2,7 +2,11 @@ import React, { useReducer } from 'react';
 import axios from 'axios';
 import SearchBarContext from './searchBarContext';
 import SearchBarReducer from './searchBarReducer';
-import { SEARCHBAR_SEARCH_INDEX, SEARCHBAR_TOGGLE_QUERY } from '../types';
+import {
+  SEARCHBAR_SEARCH_INDEX,
+  SEARCHBAR_TOGGLE_QUERY,
+  SEARCHBAR_CLEAR_LIST,
+} from '../types';
 
 const SearchBarState = (props) => {
   //@ State
@@ -32,6 +36,11 @@ const SearchBarState = (props) => {
   const toggleQueryList = () => {
     dispatch({ type: SEARCHBAR_TOGGLE_QUERY });
   };
+
+  const clearSearchList = () => {
+    dispatch({ type: SEARCHBAR_CLEAR_LIST });
+  };
+
   return (
     <SearchBarContext.Provider
       value={{
@@ -39,6 +48,7 @@ const SearchBarState = (props) => {
         searchCaseNameList: state.searchCaseNameList,
         searchCaseName,
         toggleQueryList,
+        clearSearchList,
       }}
     >
       {props.children}{' '}

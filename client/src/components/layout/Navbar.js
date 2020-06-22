@@ -4,32 +4,41 @@ import { Link } from 'react-router-dom';
 import AuthComContext from '../../context/authCom/authComContext';
 import AuthUserContext from '../../context/authUser/authUserContext';
 import UserContext from '../../context/user/userContext';
+import SearchBarContext from '../../context/searchBar/searchBarContext';
+import CasesContext from '../../context/cases/casesContext';
 
 const Navbar = ({ title, icon }) => {
   const authComContext = useContext(AuthComContext);
   const authUserContext = useContext(AuthUserContext);
   const userContext = useContext(UserContext);
+  const searchBarContext = useContext(SearchBarContext);
+  const casesContext = useContext(CasesContext);
 
   // Destructure
-  const com = authComContext;
-  const u = authUserContext;
-  const { clearUsers } = userContext;
+  const acom = authComContext;
+  const au = authUserContext;
+  const u = userContext;
+  const s = searchBarContext;
+  const c = casesContext;
 
   const onLogoutCom = () => {
-    u.logoutUser();
-    com.logoutCom();
-    clearUsers();
+    au.logoutUser();
+    acom.logoutCom();
+    u.clearUsers();
   };
 
   const onLogoutUser = () => {
-    com.logoutCom();
-    u.logoutUser();
-    clearUsers();
+    acom.logoutCom();
+    au.logoutUser();
+    s.toggleQueryList();
+    s.clearSearchList();
+    c.defaultCase();
+    u.clearUsers();
   };
 
   const authComLinks = (
     <Fragment>
-      <li>Hello ! {com.company && com.company.comName.toUpperCase()}</li>
+      <li>Hello ! {acom.company && acom.company.comName.toUpperCase()}</li>
       <li>
         <a onClick={onLogoutCom} href='#!'>
           <i className='fas fa-sign-out-alt'></i>{' '}
@@ -42,7 +51,7 @@ const Navbar = ({ title, icon }) => {
   const authUserLinks = (
     <Fragment>
       <li>
-        Hello ! {u.name && u.name.charAt(0).toUpperCase() + u.name.slice(1)}
+        Hello ! {au.name && au.name.charAt(0).toUpperCase() + au.name.slice(1)}
       </li>
       <li>
         <a onClick={onLogoutUser} href='#!'>
@@ -72,11 +81,11 @@ const Navbar = ({ title, icon }) => {
         </Link>
       </h1>
       <ul>
-        {com.isAuthenticated !== true && u.isAuthenticated !== true
+        {acom.isAuthenticated !== true && au.isAuthenticated !== true
           ? guestLinks
           : null}
-        {com.isAuthenticated ? authComLinks : null}
-        {u.isAuthenticated ? authUserLinks : null}
+        {acom.isAuthenticated ? authComLinks : null}
+        {au.isAuthenticated ? authUserLinks : null}
       </ul>
     </div>
   );
