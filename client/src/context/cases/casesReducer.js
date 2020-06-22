@@ -1,4 +1,5 @@
 import {
+  CASETYPE_UPDATE,
   STYLE_UPDATE,
   CLIENT_UPDATE,
   SIZE_ADD,
@@ -25,14 +26,12 @@ export default (state, action) => {
     case CASE_DOWNLOAD:
       return {
         ...state,
-        user: action.payload.user,
-        company: action.payload.company,
-        style: action.payload.style,
-        client: action.payload.client,
-        cWays: action.payload.cWays,
-        sizes: action.payload.sizes,
-        gQtys: action.payload.gQtys,
-        mtrls: action.payload.mtrls,
+        ...action.payload, // update all the state if the name of that is match what in payload.
+      };
+    case CASETYPE_UPDATE:
+      return {
+        ...state,
+        caseType: action.payload,
       };
     case STYLE_UPDATE:
       return {
@@ -123,6 +122,8 @@ export default (state, action) => {
       return {
         user: null,
         company: null,
+        cNo: null,
+        caseType: null,
         style: null,
         client: null,
         cWays: [],

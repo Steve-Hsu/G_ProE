@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import CasesContext from '../../context/cases/casesContext';
 
@@ -11,9 +11,11 @@ const MtrlCspt = ({ size, mtrl }) => {
   const csptLength = maxWdsLength;
 
   const sizeId = size.id;
-  const cspt = mtrl.cspts.find(({ size }) => size === sizeId);
+  const cspt = mtrl.cspts.find(({ size }) => size === sizeId); // This is JS array's find method, it returns 1 item, if some many are found, only still return first item
 
   return (
+    // <Fragment>
+    //   {cspt ? (
     <div style={{ height: '68px' }} key={`${sizeId}${mtrl.id}`}>
       <input
         name={mtrl.id}
@@ -32,6 +34,8 @@ const MtrlCspt = ({ size, mtrl }) => {
         className='MPH-input-label'
       >{`${size.gSize}`}</label>
     </div>
+    //   ) : null}
+    // </Fragment>
   );
 };
 

@@ -43,6 +43,7 @@ export const USER_CLEAR_ERRORS = 'USER_CLEAR_ERRORS';
 export const USER_ERROR = 'USER_ERROR';
 
 //Cases -----------------------------------------------------------
+export const CASETYPE_UPDATE = 'CASETYPE_UPDATE';
 export const STYLE_UPDATE = 'STYLE_UPDATE';
 export const CLIENT_UPDATE = 'CLIENT_UPDATE';
 export const CASE_TOGGLE_POPOVER = 'CASE_TOGGLE_POPOVER';

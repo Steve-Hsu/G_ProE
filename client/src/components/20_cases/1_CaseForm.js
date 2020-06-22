@@ -1,4 +1,4 @@
-import React, { useContext, Fragment } from 'react';
+import React, { useContext, Fragment, useEffect } from 'react';
 import { Prompt } from 'react-router-dom';
 import CasesContext from '../../context/cases/casesContext';
 
@@ -14,6 +14,9 @@ const CaseForm = () => {
   const casesContext = useContext(CasesContext);
   //@ Destructure, pull out the variables form userContext
   const {
+    _id, // this id will appear after download an valid case
+    cNo,
+    caseType,
     style,
     client,
     formIsHalfFilledOut,
@@ -25,10 +28,12 @@ const CaseForm = () => {
     popover,
     current,
     uploadNewCase,
+    updateCase,
   } = casesContext;
 
   //@ Make a body to submit
   const cases = {
+    caseType: caseType,
     style: style,
     client: client,
     cWays: cWays,
@@ -36,11 +41,24 @@ const CaseForm = () => {
     gQtys: gQtys,
     mtrls: mtrls,
   };
+
+  //@ Case Types, the type has nothing to do with code's "type"
+  const caseTypeList = ['', 'Test Sample', 'Salesman Sample', 'Bulk'];
+
   //@ Value for input
   //words length limit
   const maxWdsLength = '50';
   const styleLength = maxWdsLength;
   const clientLength = maxWdsLength;
+
+  useEffect(() => {
+    if (caseType === null) {
+    } else {
+      loadCaseSelectCaseTypeTagIndex(caseType);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [caseType]);
 
   //@ Style for breakdown Table --------
   const SizesColumnSize = () => {
@@ -59,7 +77,18 @@ const CaseForm = () => {
   //@ OnChange functions ----------
   const onSubmitCase = (e) => {
     e.preventDefault();
-    uploadNewCase(cases);
+    if (cNo === null) {
+      uploadNewCase(cases);
+    } else {
+      console.log(_id);
+      updateCase(cases, _id);
+    }
+  };
+
+  const loadCaseSelectCaseTypeTagIndex = (type) => {
+    document
+      .getElementById(`${type}-caseType`)
+      .setAttribute('selected', 'selected');
   };
 
   return (
@@ -71,6 +100,7 @@ const CaseForm = () => {
         <div>
           <form id='caseForm' onSubmit={onSubmitCase}>
             <div>
+              <div>Case No. : {cNo === null ? 'New Case' : cNo}</div>
               <input
                 id='caseStyle'
                 type='text'
@@ -98,6 +128,26 @@ const CaseForm = () => {
               <label htmlFor='caseClient' className='MPH-input-label'>
                 Client
               </label>
+              <select
+                id='caseType'
+                name='caseType'
+                list='caseTypeList'
+                onChange={addCaseValue}
+                className='select-primary-sub'
+                required
+              >
+                {caseTypeList.map((t) => {
+                  return (
+                    <option
+                      key={`${t}-caseType`}
+                      id={`${t}-caseType`}
+                      value={t}
+                    >
+                      {t}
+                    </option>
+                  );
+                })}
+              </select>
             </div>
 
             {/* CS-Breakdown table */}

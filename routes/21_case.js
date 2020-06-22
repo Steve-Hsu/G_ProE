@@ -69,7 +69,7 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { style, client, cWays, sizes, gQtys, mtrls } = req.body;
+    const { caseType, style, client, cWays, sizes, gQtys, mtrls } = req.body;
     const comSymbol = user.comSymbol;
 
     //Generator newCaseNumber
@@ -102,14 +102,37 @@ router.post(
 
     caseNumber.push(caseQty);
 
+    //Define caseType
+    let caseTypeSymbol = '';
+    switch (caseType) {
+      case 'Bulk':
+        caseTypeSymbol = 'B';
+        break;
+      case 'Salesman Sample':
+        caseTypeSymbol = 'S';
+        break;
+      case 'Test Sample':
+        caseTypeSymbol = 'T';
+        break;
+      default:
+    }
+
     let newCaseNumber = caseNumber.toString().split(',').join('');
-    let newCNO = comSymbol + twoDigitYear + 'C' + '_' + newCaseNumber;
+    let newCNO =
+      comSymbol +
+      twoDigitYear +
+      'C' +
+      '_' +
+      newCaseNumber +
+      '_' +
+      caseTypeSymbol;
 
     try {
       const newCase = new Case({
         user: req.user.id,
         company: req.user.company,
         cNo: newCNO,
+        caseType,
         style,
         client,
         cWays,
@@ -128,7 +151,7 @@ router.post(
   }
 );
 
-// @route   PUT api/case/:id
+// @route   PUT api/case/:cNo
 // @desc    Update case
 // @Steve   Don't allow to change the name of style. Prevent messing up the jobs of user.
 // @access  Private
@@ -152,16 +175,8 @@ router.put('/:id', authUser, async (req, res) => {
   }
 
   // Update case ---------------------------------------------------------------
-  // req.body, fetch the body of browser.
-  const { client, cWay, size, authorizedUser } = req.body;
+  const caseFields = req.body;
 
-  // Build case object
-  const caseFields = {};
-  if (client) caseFields.client = client;
-  // The 3 varaible below are arries, so if you update you must put new data with old datas all together, or you will only get new data in the database, and old data all deleted.
-  if (cWay) caseFields.cWay = cWay;
-  if (size) caseFields.size = size;
-  if (authorizedUser) caseFields.authorizedUser = authorizedUser;
   try {
     // Get the id of case from URL by params
     if (!cases)
@@ -169,14 +184,16 @@ router.put('/:id', authUser, async (req, res) => {
         msg: 'Case not found',
       });
 
-    cases = await Case.findByIdAndUpdate(
-      req.params.id,
+    cases = await Case.updateOne(
+      { _id: req.params.id },
       {
         $set: caseFields,
       },
       { new: true }
     );
-    res.json(cases);
+    // method .updateOne() will not return the case it self, so here make a one, named "updateCases" and return to the fronend client.
+    let updatedCases = await Case.findOne({ _id: req.params.id });
+    res.json(updatedCases);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

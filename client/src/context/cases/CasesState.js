@@ -21,6 +21,7 @@ import {
   CASE_QTY_UPDATE,
   CURRENT_ADD,
   CURRENT_DELETE,
+  CASETYPE_UPDATE,
   STYLE_UPDATE,
   CLIENT_UPDATE,
   CASE_CLEAR,
@@ -29,8 +30,11 @@ import {
 const CasesState = (props) => {
   // @State
   const initialStete = {
+    _id: null, //It will generated automatically by mongoDB
     user: null,
     company: null,
+    cNo: null,
+    caseType: null,
     style: null,
     client: null,
     cWays: [],
@@ -473,7 +477,6 @@ const CasesState = (props) => {
     let materials = mtrls;
 
     const expandColor = materials.find(({ id }) => id === mtrlId).expandColor;
-    console.log(expandColor);
 
     if (expandColor === false) {
       materials.find(({ id }) => id === mtrlId).expandSizeSPEC = false;
@@ -638,6 +641,8 @@ const CasesState = (props) => {
 
         dispatch({ type: CASE_QTY_UPDATE, payload: Qtys });
         mtrls.map((mtrl) => updateCsptRequiredMQty(mtrl.id, Qty.id));
+      } else if (e.target.name === 'caseType') {
+        dispatch({ type: CASETYPE_UPDATE, payload: e.target.value });
       }
     } catch (err) {
       console.log(err);
@@ -686,6 +691,27 @@ const CasesState = (props) => {
     try {
       const res = await axios.post('/api/case/user/newcase', cases, config);
       console.log('Upload succeed!');
+
+      //This dispatch is nothing related to the upload, just after upload we need to take back the cases to feed to the state for the UI is updated to inform the user, so here use CASE_DOWNLOAD
+      dispatch({ type: CASE_DOWNLOAD, payload: res.data });
+    } catch (err) {
+      console.log('Upload new case faild, server problems');
+    }
+  };
+
+  // Update existing case- Submit form
+  const updateCase = async (cases, caseId) => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    try {
+      const res = await axios.put(`/api/case/${caseId}`, cases, config);
+      console.log('Update succeed!');
+
+      //This dispatch is nothing related to the upload, just after upload we need to take back the cases to feed to the state for the UI is updated to inform the user, so here use CASE_DOWNLOAD
       dispatch({ type: CASE_DOWNLOAD, payload: res.data });
     } catch (err) {
       console.log('Upload new case faild, server problems');
@@ -717,8 +743,11 @@ const CasesState = (props) => {
   return (
     <CasesContext.Provider
       value={{
+        _id: state._id,
         user: state.user,
         company: state.company,
+        cNo: state.cNo,
+        caseType: state.caseType,
         style: state.style,
         client: state.client,
         cWays: state.cWays,
@@ -746,6 +775,7 @@ const CasesState = (props) => {
         addMtrlValue,
         togglePopover,
         uploadNewCase,
+        updateCase,
         downloadCase,
         defaultCase,
       }}

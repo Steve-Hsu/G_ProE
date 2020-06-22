@@ -7,7 +7,7 @@ const LeftBar = () => {
   const authContext = useContext(AuthContext);
   const casesContext = useContext(CasesContext);
   const { cases, isAuthenticated } = authContext;
-  const { addcWay, addSize, addMtrl } = casesContext;
+  const { cNo, addcWay, addSize, addMtrl } = casesContext;
 
   return (
     <div className='container-with-navbar leftbar p-1 test-2'>
@@ -20,7 +20,10 @@ const LeftBar = () => {
           type='submit'
           form='caseForm'
           className='btn btn-primary btn-block'
+          value={cNo === null ? 'Add New Case' : 'Update the Case'}
         />
+        {/* Submit
+        </input> */}
         <SearchBar />
         <div>
           {'Color Way'}

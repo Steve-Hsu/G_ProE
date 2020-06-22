@@ -18,6 +18,9 @@ const CaseSchema = mongoose.Schema({
     type: String,
     unique: true,
   },
+  caseType: {
+    type: String,
+  },
   style: {
     type: String,
     required: true,

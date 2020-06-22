@@ -4,7 +4,7 @@ import CasesContext from '../../context/cases/casesContext';
 
 const Size = ({ size }) => {
   const casesContext = useContext(CasesContext);
-  const { sizes, togglePopover, updateSize } = casesContext;
+  const { _id, sizes, togglePopover, updateSize } = casesContext;
 
   const event = new Event('change');
   //@ Array for generate <option> tags for s<elect> tag.
@@ -29,13 +29,18 @@ const Size = ({ size }) => {
     if (size.gSize === '') {
       //Select the next Size depaneds on last gSize
       if (sizes.length > 1) {
-        selectTagIndex(sizeList);
+        autoSelectTagIndex(sizeList);
       }
       update();
     }
     // This command prevent useless warning
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sizes]);
+
+  useEffect(() => {
+    loadCaseSelectTagIndex();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [_id]);
 
   //For spareting the postion of btn, here use an inline style.
   //deleteBtn in Size.
@@ -58,7 +63,9 @@ const Size = ({ size }) => {
 
   // @Select the next Size depaneds on last gSize
   const sizeLength = sizes.length;
-  const selectTagIndex = (sizeList) => {
+
+  //@ AutoSelect next size by the previous size
+  const autoSelectTagIndex = (sizeList) => {
     //Find the index of sizeList that value matched to value of previous gSize
     let previousSize = sizes[sizeLength - 2].gSize;
     if (previousSize) {
@@ -69,6 +76,13 @@ const Size = ({ size }) => {
         .getElementById(`${sizeList[x]}${size.id}`)
         .setAttribute('selected', 'selected');
     }
+  };
+
+  //@ select the right size when new case is download
+  const loadCaseSelectTagIndex = () => {
+    document
+      .getElementById(`${size.gSize}${size.id}`)
+      .setAttribute('selected', 'selected');
   };
 
   return (

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import CasesContext from '../../context/cases/casesContext';
 import MtrlClr from './1_4_1_MtrlClr';
@@ -6,6 +6,14 @@ import MtrlSizeSPEC from './1_4_2_MtrlSizeSPEC';
 import MtrlCspt from './1_4_3_MtrlCspt';
 
 const Mtrl = ({ mtrl }) => {
+  useEffect(() => {
+    if (mtrl.unit === '') {
+    } else {
+      loadCaseSelectUnitTagIndex();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mtrl.unit]);
+
   const casesContext = useContext(CasesContext);
   const {
     cWays,
@@ -37,6 +45,13 @@ const Mtrl = ({ mtrl }) => {
     'doz',
     'g',
   ];
+
+  const loadCaseSelectUnitTagIndex = () => {
+    document
+      .getElementById(`${mtrl.unit}${mtrl.id}`)
+      .setAttribute('selected', 'selected');
+  };
+
   // Ajust the color of dropdown btn when the attached table is expaneded.
   const dropDownStyle = (subject) => {
     switch (subject) {
@@ -161,6 +176,7 @@ const Mtrl = ({ mtrl }) => {
             onChange={addMtrlValue}
             default='yd'
             className='select-primary-sub'
+            required
           >
             {unitList.map((s) => {
               return (
@@ -244,8 +260,9 @@ const Mtrl = ({ mtrl }) => {
           </button>
         </div>
       </div>
-      {/* Row_3  */}
-      {mtrl.expandColor ? (
+      {/* {Row_3} */}
+      {/* Color expand panel  */}
+      {mtrl.expandColor && cWays.length > 0 ? (
         <div className='grid-1-5'>
           <div></div>
           <div style={attachedTable('cWay')}>
@@ -259,8 +276,8 @@ const Mtrl = ({ mtrl }) => {
           </div>
         </div>
       ) : null}
-      {/* Row_4  */}
-      {mtrl.expandSizeSPEC ? (
+      {/* SizeSPEC expand panel  */}
+      {mtrl.expandSizeSPEC && sizes.length > 0 ? (
         <div className='grid-1-5'>
           <div></div>
           <div style={attachedTable('size')}>
@@ -274,8 +291,8 @@ const Mtrl = ({ mtrl }) => {
           </div>
         </div>
       ) : null}
-      {/* Row_5  */}
-      {mtrl.expandCspt ? (
+      {/* cspt expand panel  */}
+      {mtrl.expandCspt && mtrl.cspts.length > 0 ? (
         <div className='grid-1-5'>
           <div>Consumption</div>
           <div style={attachedTable('cspt')}>
