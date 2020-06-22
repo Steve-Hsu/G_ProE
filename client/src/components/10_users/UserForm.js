@@ -77,7 +77,6 @@ const UserForm = () => {
         // Add the "User" to userState.userpanies
         addUser(user);
       } else {
-        console.log(user);
         updateUser(user);
       }
       // Default the current and UserForm.state

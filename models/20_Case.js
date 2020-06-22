@@ -16,11 +16,11 @@ const CaseSchema = mongoose.Schema({
   cNo: {
     // Case number C + company symbol + year + _ + 00000
     type: String,
+    unique: true,
   },
   style: {
     type: String,
     required: true,
-    unique: true,
   },
   client: {
     type: String,

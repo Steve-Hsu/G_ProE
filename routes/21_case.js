@@ -68,11 +68,48 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+
     const { style, client, cWays, sizes, gQtys, mtrls } = req.body;
+    const comSymbol = user.comSymbol;
+
+    //Generator newCaseNumber
+
+    //Get last 2 digits of year
+    let strDate = new Date(); // By default Date empty constructor give you Date.now
+    let shortYear = strDate.getFullYear();
+    let twoDigitYear = shortYear.toString().substr(-2); // Add this line
+
+    const cases = await Case.find({
+      $and: [
+        { company: req.user.company },
+        { cNo: { $regex: 'C' + comSymbol + twoDigitYear, $options: 'i' } }, // Query the same cases in same year by cNo, It promises return cases of same company in same year
+      ],
+    }).sort({
+      date: -1,
+    });
+    let caseQty = 1;
+    if (cases.length < 1) {
+    } else {
+      caseQty = Number(caseQty + cases.length);
+    }
+
+    const digits = 5 - caseQty.toString().length;
+
+    const caseNumber = [];
+    for (let i = 1; i <= digits; i++) {
+      caseNumber.push('0');
+    }
+
+    caseNumber.push(caseQty);
+
+    let newCaseNumber = caseNumber.toString().split(',').join('');
+    let newCNO = 'C' + comSymbol + twoDigitYear + '_' + newCaseNumber;
+
     try {
       const newCase = new Case({
         user: req.user.id,
         company: req.user.company,
+        cNo: newCNO,
         style,
         client,
         cWays,

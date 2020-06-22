@@ -86,11 +86,17 @@ router.post(
         return res.status(400).json({ msg: 'User already exists' });
       }
 
+      //Company Id get from token of the company
+      const comId = req.company.id;
+      //Insert comSymbol to new user
+      const com = await Company.find({ _id: comId });
+
       user = new User({
         name: name.toLowerCase(),
         email: email.toLowerCase(),
         password: password.toLowerCase(),
-        company: req.company.id,
+        company: comId,
+        comSymbol: com[0].comSymbol,
         cases,
         mtrl,
         cspt,
@@ -146,7 +152,7 @@ router.post(
       });
     } catch (err) {
       // console.log(err.message);
-      res.status(500).send('Server Error');
+      res.status(500).send('Server Error, Make new user failed');
       // dispatch({
       //   type: REGISTER_FAIL,
       //   payload: err.response.data.msg,

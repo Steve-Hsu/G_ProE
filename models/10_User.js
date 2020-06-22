@@ -10,6 +10,10 @@ const UserSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'companies',
   },
+  comSymbol: {
+    type: String,
+    required: true,
+  },
   name: {
     type: String,
     required: true,

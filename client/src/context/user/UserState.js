@@ -107,7 +107,6 @@ const UserState = (props) => {
 
   //Update USER
   const updateUser = async (subject) => {
-    console.log('right before put', subject);
     const config = {
       header: {
         'Content-Type:': 'application/json',
@@ -115,7 +114,6 @@ const UserState = (props) => {
     };
     try {
       const res = await axios.put(`/api/users/${subject._id}`, subject, config);
-      console.log('right before dispatch', res);
       getUsers();
     } catch (err) {
       dispatch({
