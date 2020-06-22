@@ -4,7 +4,7 @@ import React from 'react';
 import LeftBar from '../layout/LeftBar';
 import CaseForm from '../20_cases/1_CaseForm';
 
-export const NewCase = () => {
+export const CaseMerchandiser = () => {
   return (
     <div className='grid-1-4'>
       {/* Grid-1 */}
@@ -16,4 +16,4 @@ export const NewCase = () => {
   );
 };
 
-export default NewCase;
+export default CaseMerchandiser;

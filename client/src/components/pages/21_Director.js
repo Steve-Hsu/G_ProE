@@ -1,9 +1,9 @@
 import React, { Fragment } from 'react';
 
-export const CaseManager = (props) => {
+export const Director = (props) => {
   const goNewCase = () => {
     //Jump to other page while keeping authenticated
-    props.history.push('/api/case/user/newcase');
+    props.history.push('/api/case/merchandiser');
   };
   const goExCase = () => {
     //Jump to other page while keeping authenticated
@@ -29,7 +29,7 @@ export const CaseManager = (props) => {
         <div>
           <a onClick={goNewCase} className='cursor'>
             <i className='fas fa-sign-out-alt'></i>{' '}
-            <span className='hide-lg'>New Case</span>
+            <span className='hide-lg'>Manage Cases</span>
           </a>
         </div>
         <div>
@@ -61,4 +61,4 @@ export const CaseManager = (props) => {
   );
 };
 
-export default CaseManager;
+export default Director;

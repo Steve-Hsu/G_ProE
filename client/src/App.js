@@ -8,8 +8,8 @@ import ComRegister from './components/authPage/00_ComRegister';
 import NotFound from './components/pages/NotFound';
 import ComManager from './components/pages/01_ComManager';
 import UserManager from './components/pages/11_UserManager';
-import CaseManager from './components/pages/21_CaseManager';
-import NewCase from './components/pages/22_NewCase';
+import Director from './components/pages/21_Director';
+import CaseMerchandiser from './components/pages/22_CaseMerchandiser';
 //ComRouter
 import ComLogin from './components/authPage/10_ComLogin';
 import UserLogin from './components/authPage/20_UserLogin';
@@ -80,13 +80,13 @@ const App = () => {
                           />
                           <PrivateUserRoute
                             exact
-                            path='/api/case/user'
-                            component={CaseManager}
+                            path='/api/case/director'
+                            component={Director}
                           />
                           <PrivateUserRoute
                             exact
-                            path='/api/case/user/newcase'
-                            component={NewCase}
+                            path='/api/case/merchandiser'
+                            component={CaseMerchandiser}
                           />
                           <Route component={NotFound} />
                         </Switch>

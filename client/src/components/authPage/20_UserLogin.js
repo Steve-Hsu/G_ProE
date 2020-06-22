@@ -14,7 +14,7 @@ const UserLogin = (props) => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      props.history.push('/api/case/user');
+      props.history.push('/api/case/director');
     }
     if (error) {
       setAlert(error, 'danger');

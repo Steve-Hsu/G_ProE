@@ -13,6 +13,10 @@ const CaseSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'companies',
   },
+  cNo: {
+    // Case number C + company symbol + year + _ + 00000
+    type: String,
+  },
   style: {
     type: String,
     required: true,
