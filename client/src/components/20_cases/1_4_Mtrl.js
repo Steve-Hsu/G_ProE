@@ -19,9 +19,7 @@ const Mtrl = ({ mtrl }) => {
     cWays,
     sizes,
     togglePopover,
-    expandMtrlColor,
-    expandSizeSPEC,
-    expandMtrlCspt,
+    expandExtraPanels,
     addMtrlValue,
   } = casesContext;
   //For sparete the postion of btn, here use an inline style.
@@ -200,7 +198,8 @@ const Mtrl = ({ mtrl }) => {
           )}
           <button
             value={mtrl.id}
-            onClick={expandMtrlColor}
+            name='mtrlColor'
+            onClick={expandExtraPanels}
             className='btn btn-dropdown lead'
             style={dropDownStyle('mtrlColor')}
           >
@@ -220,7 +219,8 @@ const Mtrl = ({ mtrl }) => {
           )}
           <button
             value={mtrl.id}
-            onClick={expandSizeSPEC}
+            name='SizeSPEC'
+            onClick={expandExtraPanels}
             className='btn btn-dropdown lead'
             style={dropDownStyle('SizeSPEC')}
           >
@@ -240,7 +240,8 @@ const Mtrl = ({ mtrl }) => {
           )}
           <button
             value={mtrl.id}
-            onClick={expandMtrlCspt}
+            name='cspt'
+            onClick={expandExtraPanels}
             className='btn btn-dropdown lead'
             style={dropDownStyle('cspt')}
           >

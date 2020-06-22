@@ -470,64 +470,32 @@ const CasesState = (props) => {
   };
 
   // @Layer 2 functions ----------------------------------------------------------------------------------------------------------
-  const expandMtrlColor = (e) => {
+  const expandExtraPanels = (e) => {
     e.preventDefault();
     //The id is set in the value of the btn when which is created. so here we fetch id by e.target.value.
     const mtrlId = e.target.value;
+    const btnName = e.target.name;
     let materials = mtrls;
+    let material = materials.find(({ id }) => id === mtrlId);
 
-    const expandColor = materials.find(({ id }) => id === mtrlId).expandColor;
-
-    if (expandColor === false) {
-      materials.find(({ id }) => id === mtrlId).expandSizeSPEC = false;
-      materials.find(({ id }) => id === mtrlId).expandCspt = false;
+    switch (btnName) {
+      case 'mtrlColor':
+        material.expandColor = !material.expandColor;
+        material.expandSizeSPEC = false;
+        material.expandCspt = false;
+        break;
+      case 'SizeSPEC':
+        material.expandColor = false;
+        material.expandSizeSPEC = !material.expandSizeSPEC;
+        material.expandCspt = false;
+        break;
+      case 'cspt':
+        material.expandColor = false;
+        material.expandSizeSPEC = false;
+        material.expandCspt = !material.expandCspt;
+        break;
+      default:
     }
-
-    materials.find(({ id }) => id === mtrlId).expandColor = !materials.find(
-      ({ id }) => id === mtrlId
-    ).expandColor;
-
-    updateMaterials(materials);
-  };
-
-  const expandSizeSPEC = (e) => {
-    e.preventDefault();
-    //The id is set in the value of the btn when which is created. so here we fetch id by e.target.value.
-    const mtrlId = e.target.value;
-    let materials = mtrls;
-
-    const expandSizeSPEC = materials.find(({ id }) => id === mtrlId)
-      .expandSizeSPEC;
-
-    if (expandSizeSPEC === false) {
-      materials.find(({ id }) => id === mtrlId).expandColor = false;
-      materials.find(({ id }) => id === mtrlId).expandCspt = false;
-    }
-
-    materials.find(({ id }) => id === mtrlId).expandSizeSPEC = !materials.find(
-      ({ id }) => id === mtrlId
-    ).expandSizeSPEC;
-
-    updateMaterials(materials);
-  };
-
-  const expandMtrlCspt = (e) => {
-    e.preventDefault();
-    //The id is set in the value of the btn when which is created. so here we fetch id by e.target.value.
-    const mtrlId = e.target.value;
-    let materials = mtrls;
-
-    const expandCspt = materials.find(({ id }) => id === mtrlId).expandCspt;
-
-    if (expandCspt === false) {
-      materials.find(({ id }) => id === mtrlId).expandSizeSPEC = false;
-      materials.find(({ id }) => id === mtrlId).expandColor = false;
-    }
-
-    materials.find(({ id }) => id === mtrlId).expandCspt = !materials.find(
-      ({ id }) => id === mtrlId
-    ).expandCspt;
-
     updateMaterials(materials);
   };
 
@@ -766,9 +734,7 @@ const CasesState = (props) => {
         deleteSize,
         addMtrl,
         deleteMtrl,
-        expandMtrlColor,
-        expandSizeSPEC,
-        expandMtrlCspt,
+        expandExtraPanels,
         addValueMtrlColor,
         addValueMtrlSizeSPEC,
         addValueMtrlCspt,
