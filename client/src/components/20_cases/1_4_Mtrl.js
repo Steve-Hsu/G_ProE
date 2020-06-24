@@ -132,6 +132,24 @@ const Mtrl = ({ mtrl }) => {
     'Description',
   ];
 
+  const mtrlAttribute = (keyWord) => {
+    switch (keyWord) {
+      case 'Item':
+        return mtrl.item;
+      case 'SPEC':
+        return mtrl.spec;
+      case 'Supplier':
+        return mtrl.supplier;
+      case 'Ref_no':
+        return mtrl.ref_no;
+      case 'Position':
+        return mtrl.position;
+      case 'Description':
+        return mtrl.description;
+      default:
+    }
+  };
+
   return (
     <div className='mb-1 p-1 card'>
       {/* Row_1  */}
@@ -145,6 +163,7 @@ const Mtrl = ({ mtrl }) => {
               placeholder='.'
               onChange={addMtrlValue}
               className='MPH-input'
+              value={mtrlAttribute(a) || ''}
             />
             <label htmlFor={`${a}${mtrl.id}`} className='MPH-input-label'>
               {a}

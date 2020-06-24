@@ -32,6 +32,7 @@ const ColorWay = ({ cWay }) => {
           autoFocus
           className='MPH-input'
           style={{ color: 'orange' }}
+          value={cWay.gClr || ''}
         />
         <label htmlFor={cWay.id} className='MPH-input-label'>
           Color Way -{' '}
