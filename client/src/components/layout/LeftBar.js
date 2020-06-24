@@ -6,12 +6,11 @@ import SearchBar from './SearchBar';
 const LeftBar = () => {
   const authContext = useContext(AuthContext);
   const casesContext = useContext(CasesContext);
-  const { cases, isAuthenticated } = authContext;
-  const { cNo, addcWay, addSize, addMtrl, clearcNo } = casesContext;
+  const { mtrls, cNo, addcWay, addSize, addMtrl, clearcNo } = casesContext;
 
   const onClick = (e) => {
     e.preventDefault();
-    clearcNo();
+    clearcNo(mtrls);
   };
 
   return (

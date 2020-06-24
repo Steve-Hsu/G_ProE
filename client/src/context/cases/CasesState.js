@@ -710,8 +710,12 @@ const CasesState = (props) => {
   };
 
   //Clear case no of existing case for copying and  uploading it as new Case.
-  const clearcNo = () => {
-    dispatch({ type: CASENO_CLEAR });
+  const clearcNo = (mtrls) => {
+    mtrls.map((mtrl) => {
+      mtrl.id = uuidv4();
+      return mtrls;
+    });
+    dispatch({ type: CASENO_CLEAR, payload: mtrls });
   };
 
   return (

@@ -138,6 +138,7 @@ export default (state, action) => {
     case CASENO_CLEAR:
       return {
         ...state,
+        mtrls: action.payload,
         cNo: null,
       };
     default:
