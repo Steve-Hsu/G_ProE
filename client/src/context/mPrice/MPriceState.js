@@ -111,6 +111,19 @@ const MPriceState = (props) => {
     }
   };
 
+  const deleteSRMtrlByMtrl = async (mtrl, casesId) => {
+    let sr = mtrl.supplier + mtrl.ref_no;
+    sr = sr.toLowerCase();
+    let SRIC = sr.replace(/[^\da-z]/gi, ''); // Only read from "0" to "9" & "a" to "z"
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    await axios.delete(`/api/purchase/${casesId}/${mtrl.id}`, SRIC, config);
+  };
+
   // @Returns------------------------------------------------------
 
   return (

@@ -7,6 +7,7 @@ const { check, validationResult } = require('express-validator');
 const User = require('../models/10_User');
 const Case = require('../models/20_Case');
 const SRMtrl = require('../models/30_srMtrl');
+const { Mongoose } = require('mongoose');
 
 // @route   GET api/purchase
 // @desc    Read the user's cases from database
@@ -24,7 +25,7 @@ router.get('/mtrls', authUser, async (req, res) => {
   }
 });
 
-// @route   PUT api/purchas
+// @route   PUT api/purchase
 // @desc    Update materials in mPrice
 // @access  Private
 router.put('/:caseId', authUser, async (req, res) => {
@@ -198,6 +199,77 @@ router.put('/:caseId', authUser, async (req, res) => {
   } catch (err) {
     console.error(err.message);
     return res.status(500).send('Server Error');
+  }
+});
+
+// @route   PUT api/purchase/mtrlId
+// @desc    Delete the rsMtrl by Mtrl
+// @access  Private
+router.delete('/:caseId/:mtrlId', authUser, async (req, res) => {
+  // Check if the user has authority to update case ---------------------------
+  const mtrl = req.body;
+  const userId = req.user.id;
+  const comId = req.user.company;
+  const caseId = req.params.caseId;
+  const mtrlId = req.params.mtrlId;
+  const SRIC = mtrl.SRIC;
+  let user = await User.findById(userId);
+  if (!user.cases) {
+    return res.status(400).json({
+      msg: 'Out of authority',
+    });
+  }
+  console.log('this is mtrlId', mtrlId);
+  console.log('this is comID', comId);
+  console.log('this is the SRIC', SRIC);
+
+  // Check if the user have the authority to update the case -------------------
+  let cases = await Case.findById(caseId);
+  // If the user is case creator, pass !
+  if (cases.user.toString() === userId) {
+    // if the user's id is added to authorizedUser of this case, pass !
+  } else if (cases.authorizedUser.includes(userId)) {
+  } else {
+    return res.status(400).json({ msg: 'Not an authorized user.' });
+  }
+  try {
+    await SRMtrl.updateMany(
+      {
+        $and: [
+          { company: comId },
+          { SRIC: SRIC },
+          {
+            'mtrlColors.refs.mtrlId': mtrlId,
+          },
+        ],
+      },
+      {
+        $pull: {
+          'mtrlColors.$.refs': { mtrlId: mtrlId },
+        },
+      }
+    );
+    await SRMtrl.updateMany(
+      {
+        $and: [
+          { company: comId },
+          { SRIC: SRIC },
+          {
+            'sizeSPECs.refs.mtrlId': mtrlId,
+          },
+          {
+            'sizeSPECs.refs.caseId': caseId,
+          },
+        ],
+      },
+      {
+        $pull: { 'sizeSPECs.$.refs': { mtrlId: mtrlId } },
+      }
+    );
+    return res.json({ msg: 'The srMtrl is deleted' });
+  } catch (err) {
+    console.log('The delete srMtrl is failed');
+    return res.json(err);
   }
 });
 
