@@ -28,6 +28,7 @@ import AlertState from './context/alert/AlterState';
 import UserState from './context/user/UserState';
 import CasesState from './context/cases/CasesState';
 import SearchBarState from './context/searchBar/SearchBarState';
+import MPriceState from './context/mPrice/MPriceState';
 
 //Global Header for token
 import setAuthToken from './utils/setAuthToken';
@@ -45,54 +46,56 @@ const App = () => {
             <AlertState>
               <CasesState>
                 <SearchBarState>
-                  <Router>
-                    <Fragment>
-                      <Navbar />
+                  <MPriceState>
+                    <Router>
+                      <Fragment>
+                        <Navbar />
 
-                      <div>
-                        <Switch>
-                          <Route
-                            exact
-                            path='/registercom'
-                            component={ComRegister}
-                          />
-                          <Route
-                            exact
-                            path='/registercom/manager'
-                            component={ComManager}
-                          />
-                          {/* LoginPages */}
-                          <Route
-                            exact
-                            path='/api/auth/company'
-                            component={ComLogin}
-                          />
-                          <Route
-                            exact
-                            path='/api/auth/user'
-                            component={UserLogin}
-                          />
-                          {/* <PrivateRoute */}
-                          <PrivateComRoute
-                            exact
-                            path='/api/users'
-                            component={UserManager}
-                          />
-                          <PrivateUserRoute
-                            exact
-                            path='/api/case/director'
-                            component={Director}
-                          />
-                          <PrivateUserRoute
-                            exact
-                            path='/api/case/merchandiser'
-                            component={CaseMerchandiser}
-                          />
-                          <Route component={NotFound} />
-                        </Switch>
-                      </div>
-                    </Fragment>
-                  </Router>
+                        <div>
+                          <Switch>
+                            <Route
+                              exact
+                              path='/registercom'
+                              component={ComRegister}
+                            />
+                            <Route
+                              exact
+                              path='/registercom/manager'
+                              component={ComManager}
+                            />
+                            {/* LoginPages */}
+                            <Route
+                              exact
+                              path='/api/auth/company'
+                              component={ComLogin}
+                            />
+                            <Route
+                              exact
+                              path='/api/auth/user'
+                              component={UserLogin}
+                            />
+                            {/* <PrivateRoute */}
+                            <PrivateComRoute
+                              exact
+                              path='/api/users'
+                              component={UserManager}
+                            />
+                            <PrivateUserRoute
+                              exact
+                              path='/api/case/director'
+                              component={Director}
+                            />
+                            <PrivateUserRoute
+                              exact
+                              path='/api/case/merchandiser'
+                              component={CaseMerchandiser}
+                            />
+                            <Route component={NotFound} />
+                          </Switch>
+                        </div>
+                      </Fragment>
+                    </Router>
+                  </MPriceState>
                 </SearchBarState>
               </CasesState>
             </AlertState>

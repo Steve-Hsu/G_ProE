@@ -1,13 +1,13 @@
 import React, { Fragment } from 'react';
 
 export const Director = (props) => {
-  const goNewCase = () => {
+  const goCase = () => {
     //Jump to other page while keeping authenticated
     props.history.push('/api/case/merchandiser');
   };
-  const goExCase = () => {
+  const gomPrice = () => {
     //Jump to other page while keeping authenticated
-    props.history.push('/api/case/user/existingcase');
+    props.history.push('/api/case/materialPrice');
   };
   const goQuotation = () => {
     //Jump to other page while keeping authenticated
@@ -27,15 +27,15 @@ export const Director = (props) => {
       {/* content */}
       <div className='form-container'>
         <div>
-          <a onClick={goNewCase} className='cursor'>
+          <a onClick={goCase} className='cursor'>
             <i className='fas fa-sign-out-alt'></i>{' '}
             <span className='hide-lg'>Manage Cases</span>
           </a>
         </div>
         <div>
-          <a onClick={goExCase} className='cursor'>
+          <a onClick={gomPrice} className='cursor'>
             <i className='fas fa-sign-out-alt'></i>{' '}
-            <span className='hide-lg'>Existing Case</span>
+            <span className='hide-lg'>Material Price</span>
           </a>
         </div>
         <div>

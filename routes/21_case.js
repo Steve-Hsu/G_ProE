@@ -5,7 +5,6 @@ const { check, validationResult } = require('express-validator');
 
 const User = require('../models/10_User');
 const Case = require('../models/20_Case');
-const CaseMtrl = require('../models/21_CaseMrtl');
 
 // @route   GET api/case/user
 // @desc    Read the user's cases from database
@@ -153,7 +152,7 @@ router.post(
 
 // @route   PUT api/case/:cNo
 // @desc    Update case
-// @Steve   Don't allow to change the name of style. Prevent messing up the jobs of user.
+// @Steve   Don't allow to change the cNo. Prevent messing up the jobs of user.
 // @access  Private
 router.put('/:id', authUser, async (req, res) => {
   // Check if the user has authority to update case ---------------------------
@@ -220,7 +219,7 @@ router.delete('/:id', authUser, async (req, res) => {
 
     await Case.findByIdAndRemove(req.params.id);
     // Delete the caseMaterials belong to the case
-    await CaseMtrl.deleteMany({ caseId: req.params.id });
+    // await CaseMtrl.deleteMany({ caseId: req.params.id });
 
     res.json({
       msg: 'Case removed',

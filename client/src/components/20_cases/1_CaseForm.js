@@ -1,17 +1,19 @@
 import React, { useContext, Fragment, useEffect } from 'react';
 import { Prompt } from 'react-router-dom';
 import CasesContext from '../../context/cases/casesContext';
+import MPriceContext from '../../context/mPrice/mPriceContext';
 
 // @ Components
 import ColorWay from './1_1_ColorWay';
 import Size from './1_2_Size';
 import Qty from './1_3_Qty';
 import Mtrl from './1_4_Mtrl';
-import DeletePopover from '../20_cases/DeletePopover';
+import DeletePopover from '../layout/DeletePopover';
 
 const CaseForm = () => {
   //@ Init Context
   const casesContext = useContext(CasesContext);
+  const mPriceContext = useContext(MPriceContext);
   //@ Destructure, pull out the variables form userContext
   const {
     _id, // this id will appear after download an valid case
@@ -30,6 +32,8 @@ const CaseForm = () => {
     uploadNewCase,
     updateCase,
   } = casesContext;
+
+  const { mtrlLists, generateMtrlLists } = mPriceContext;
 
   //@ Make a body to submit
   const cases = {
@@ -75,12 +79,15 @@ const CaseForm = () => {
   };
 
   //@ OnChange functions ----------
-  const onSubmitCase = (e) => {
+  const onSubmitCase = async (e) => {
     e.preventDefault();
     if (cNo === null) {
-      uploadNewCase(cases);
+      // update the state of mPrice
+
+      let newCase = await uploadNewCase(cases);
+
+      generateMtrlLists(newCase);
     } else {
-      console.log(_id);
       updateCase(cases, _id);
     }
   };

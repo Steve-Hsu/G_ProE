@@ -7,7 +7,12 @@ const LeftBar = () => {
   const authContext = useContext(AuthContext);
   const casesContext = useContext(CasesContext);
   const { cases, isAuthenticated } = authContext;
-  const { cNo, addcWay, addSize, addMtrl } = casesContext;
+  const { cNo, addcWay, addSize, addMtrl, clearcNo } = casesContext;
+
+  const onClick = (e) => {
+    e.preventDefault();
+    clearcNo();
+  };
 
   return (
     <div className='container-with-navbar leftbar p-1 test-2'>
@@ -55,6 +60,18 @@ const LeftBar = () => {
           >
             +
           </button>
+        </div>
+        <div>
+          ye{' '}
+          {cNo === null ? null : (
+            <input
+              type='submit'
+              // form='caseForm'
+              className='btn btn-primary btn-block'
+              value='Copy this case as a new Case'
+              onClick={onClick}
+            />
+          )}
         </div>
       </div>
     </div>

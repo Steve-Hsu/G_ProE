@@ -25,6 +25,7 @@ import {
   STYLE_UPDATE,
   CLIENT_UPDATE,
   CASE_CLEAR,
+  CASENO_CLEAR,
 } from '../types';
 
 const CasesState = (props) => {
@@ -76,7 +77,6 @@ const CasesState = (props) => {
     mtrlColors: [],
     sizeSPECs: [],
     cspts: [],
-    MIC: '',
     expandColor: false,
     expandSizeSPEC: false,
     expandCspt: false,
@@ -662,6 +662,7 @@ const CasesState = (props) => {
 
       //This dispatch is nothing related to the upload, just after upload we need to take back the cases to feed to the state for the UI is updated to inform the user, so here use CASE_DOWNLOAD
       dispatch({ type: CASE_DOWNLOAD, payload: res.data });
+      return res.data;
     } catch (err) {
       console.log('Upload new case faild, server problems');
     }
@@ -708,6 +709,11 @@ const CasesState = (props) => {
     dispatch({ type: CASE_CLEAR });
   };
 
+  //Clear case no of existing case for copying and  uploading it as new Case.
+  const clearcNo = () => {
+    dispatch({ type: CASENO_CLEAR });
+  };
+
   return (
     <CasesContext.Provider
       value={{
@@ -744,6 +750,7 @@ const CasesState = (props) => {
         updateCase,
         downloadCase,
         defaultCase,
+        clearcNo,
       }}
     >
       {props.children}

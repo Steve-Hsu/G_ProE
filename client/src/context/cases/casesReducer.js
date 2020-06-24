@@ -19,6 +19,7 @@ import {
   CURRENT_ADD,
   CURRENT_DELETE,
   CASE_CLEAR,
+  CASENO_CLEAR,
 } from '../types';
 
 export default (state, action) => {
@@ -133,6 +134,11 @@ export default (state, action) => {
         popover: false,
         current: null,
         formIsHalfFilledOut: true,
+      };
+    case CASENO_CLEAR:
+      return {
+        ...state,
+        cNo: null,
       };
     default:
   }

@@ -65,6 +65,7 @@ export const MTRL_COLOR_EXPAND = 'MTRL_COLOR_EXPAND';
 export const CURRENT_ADD = 'CURRENT_ADD';
 export const CURRENT_DELETE = 'CURRENT_DELETE';
 export const CASE_CLEAR = 'CASE_CLEAR';
+export const CASENO_CLEAR = 'CASENO_CLEAR';
 
 // may not need this one --------------------------------------------
 export const CLEAR_USERS_STATE = 'CLEAR_USERS_STATE';
@@ -73,3 +74,6 @@ export const CLEAR_USERS_STATE = 'CLEAR_USERS_STATE';
 export const SEARCHBAR_SEARCH_INDEX = 'SEARCHBAR_SEARCH_INDEX';
 export const SEARCHBAR_TOGGLE_QUERY = 'SEARCHBAR_TOGGLE_QUERY';
 export const SEARCHBAR_CLEAR_LIST = 'SEARCHBAR_CLEAR_LIST';
+
+// mPrice
+export const LIST_MTRL = 'LIST_MTRL';
