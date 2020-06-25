@@ -1,17 +1,17 @@
 import React, { useReducer } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
-import MPriceContext from './mPriceContext';
-import MPriceReducer from './mPriceReducer';
+import SrMtrlContext from './srMtrlContext';
+import SrMtrlReducer from './srMtrlReducer';
 import { LIST_MTRL } from '../types';
 
-const MPriceState = (props) => {
+const SrMtrlState = (props) => {
   // @States------------------------------------------------------
   const initialState = {
     mtrlLists: [],
   };
 
-  const [state, dispatch] = useReducer(MPriceReducer, initialState);
+  const [state, dispatch] = useReducer(SrMtrlReducer, initialState);
 
   // const NewMtrlList = {
   //   id: uuidv4(),
@@ -30,18 +30,18 @@ const MPriceState = (props) => {
 
   // @Actions------------------------------------------------------
 
-  const generateMtrlLists = async (cases) => {
+  const generateMtrlLists = async (cases, comName, comSymbol) => {
     let mLists = [];
     let mtrls = cases.mtrls;
     mtrls.map((mtrl) => {
-      let sr = mtrl.supplier + mtrl.ref_no;
-      sr = sr.toLowerCase();
-      let SRIC = sr.replace(/[^\da-z]/gi, ''); // Only read from "0" to "9" & "a" to "z"
+      let csr = comName + comSymbol + mtrl.supplier + mtrl.ref_no;
+      csr = csr.toLowerCase();
+      let CSRIC = csr.replace(/[^\da-z]/gi, ''); // Only read from "0" to "9" & "a" to "z"
 
       let mtrlObj = {
         supplier: mtrl.supplier,
         ref_no: mtrl.ref_no,
-        SRIC: SRIC,
+        CSRIC: CSRIC,
         mtrlColors: [],
         sizeSPECs: [],
         currency: '',
@@ -114,25 +114,25 @@ const MPriceState = (props) => {
   const deleteSRMtrlByMtrl = async (mtrl, casesId) => {
     let sr = mtrl.supplier + mtrl.ref_no;
     sr = sr.toLowerCase();
-    let SRIC = sr.replace(/[^\da-z]/gi, ''); // Only read from "0" to "9" & "a" to "z"
+    let CSRIC = sr.replace(/[^\da-z]/gi, ''); // Only read from "0" to "9" & "a" to "z"
 
     const config = {
       headers: {
         'Content-Type': 'application/json',
       },
     };
-    await axios.delete(`/api/purchase/${casesId}/${mtrl.id}`, SRIC, config);
+    await axios.delete(`/api/purchase/${casesId}/${mtrl.id}`, CSRIC, config);
   };
 
   // @Returns------------------------------------------------------
 
   return (
-    <MPriceContext.Provider
+    <SrMtrlContext.Provider
       value={{ mtrlLists: state.mtrlLists, generateMtrlLists }}
     >
       {props.children}
-    </MPriceContext.Provider>
+    </SrMtrlContext.Provider>
   );
 };
 
-export default MPriceState;
+export default SrMtrlState;

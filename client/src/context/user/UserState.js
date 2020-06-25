@@ -25,7 +25,7 @@ const UserState = (props) => {
   };
 
   const [state, dispatch] = useReducer(userReducer, initialState);
-  // Get User
+  //@ Get User
   const getUsers = async () => {
     try {
       const res = await axios.get('/api/users');
@@ -37,7 +37,7 @@ const UserState = (props) => {
       });
     }
   };
-  // Add User
+  //@ Add User
   const addUser = async (user) => {
     const config = {
       headers: {
@@ -58,7 +58,7 @@ const UserState = (props) => {
     }
   };
 
-  // Confirm Delete User
+  //@ Confirm Delete User
   // Before delete User check again with the name of the user
   const confirmDeleteUser = (name) => {
     dispatch({
@@ -73,7 +73,7 @@ const UserState = (props) => {
     });
   };
 
-  //Delete USER
+  //@ Delete USER
   const deleteUser = async (id) => {
     try {
       await axios.delete(`/api/users/${id}`);
@@ -89,23 +89,23 @@ const UserState = (props) => {
     }
   };
 
-  //Clear Users in UserState
+  //@ Clear Users in UserState
   //When the company logout, we need clear the state in the client end for security
   const clearUsers = () => {
     dispatch({ type: CLEAR_USERS_STATE });
   };
 
-  //Set Current USER
+  //@ Set Current USER
   const setCurrent = (user) => {
     dispatch({ type: SET_CURRENT, payload: user });
   };
 
-  //Clear Current USER
+  //@ Clear Current USER
   const clearCurrent = () => {
     dispatch({ type: CLEAR_CURRENT });
   };
 
-  //Update USER
+  //@ Update USER
   const updateUser = async (subject) => {
     const config = {
       header: {
@@ -123,12 +123,12 @@ const UserState = (props) => {
     }
   };
 
-  //Filter USER
+  //@ Filter USER
   const filterUser = (text) => {
     dispatch({ type: FILTER_USER, payload: text });
   };
 
-  //Clear Filter
+  //@ Clear Filter
   const clearFilterUser = () => {
     dispatch({ type: CLEAR_FILTER_USER });
   };

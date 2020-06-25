@@ -89,14 +89,15 @@ router.post(
       //Company Id get from token of the company
       const comId = req.company.id;
       //Insert comSymbol to new user
-      const com = await Company.find({ _id: comId });
+      const com = await Company.findOne({ _id: comId });
 
       user = new User({
         name: name.toLowerCase(),
         email: email.toLowerCase(),
         password: password.toLowerCase(),
         company: comId,
-        comSymbol: com[0].comSymbol,
+        comName: com.comName,
+        comSymbol: com.comSymbol,
         cases,
         mtrl,
         cspt,

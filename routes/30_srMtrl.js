@@ -7,7 +7,6 @@ const { check, validationResult } = require('express-validator');
 const User = require('../models/10_User');
 const Case = require('../models/20_Case');
 const SRMtrl = require('../models/30_srMtrl');
-const { Mongoose } = require('mongoose');
 
 // @route   GET api/purchase
 // @desc    Read the user's cases from database
@@ -57,11 +56,11 @@ router.put('/:caseId', authUser, async (req, res) => {
 
   try {
     mLists.map(async (mList) => {
-      if (mList.SRIC === '' || mList.SRIC === null) {
+      if (mList.CSRIC === '' || mList.CSRIC === null) {
         //IF thie mList dosen't have SRIC, then do nothing.
       } else {
         let srMtrl = await SRMtrl.find({
-          $and: [{ company: comId }, { SRIC: mList.SRIC }],
+          $and: [{ company: comId }, { SRIC: mList.CSRIC }],
         });
         try {
           if (srMtrl.length !== 0) {
@@ -70,7 +69,7 @@ router.put('/:caseId', authUser, async (req, res) => {
                 {
                   $and: [
                     { company: comId },
-                    { SRIC: mList.SRIC },
+                    { SRIC: mList.CSRIC },
                     //Nest Query, the key word "$elemMatch"
                     {
                       mtrlColors: { $elemMatch: { mColor: mtrlColor.mColor } },
@@ -84,7 +83,7 @@ router.put('/:caseId', authUser, async (req, res) => {
                     // if no such mColor in the srMtrl.mtrlColors
                     await SRMtrl.updateOne(
                       {
-                        $and: [{ company: comId }, { SRIC: mList.SRIC }],
+                        $and: [{ company: comId }, { SRIC: mList.CSRIC }],
                       },
                       {
                         $push: {
@@ -100,7 +99,7 @@ router.put('/:caseId', authUser, async (req, res) => {
                         {
                           $and: [
                             { company: comId },
-                            { SRIC: mList.SRIC },
+                            { SRIC: mList.CSRIC },
                             //Nest Query, the key word "$elemMatch"
                             {
                               mtrlColors: {
@@ -127,7 +126,7 @@ router.put('/:caseId', authUser, async (req, res) => {
                 {
                   $and: [
                     { company: comId },
-                    { SRIC: mList.SRIC },
+                    { SRIC: mList.CSRIC },
                     //Nest Query, the key word "$elemMatch"
                     {
                       sizeSPECs: {
@@ -144,7 +143,7 @@ router.put('/:caseId', authUser, async (req, res) => {
                     // if no such mSizeSPEC in the srMtrl.sizeSPECs
                     await SRMtrl.updateOne(
                       {
-                        $and: [{ company: comId }, { SRIC: mList.SRIC }],
+                        $and: [{ company: comId }, { SRIC: mList.CSRIC }],
                       },
                       {
                         $push: {
@@ -160,7 +159,7 @@ router.put('/:caseId', authUser, async (req, res) => {
                         {
                           $and: [
                             { company: comId },
-                            { SRIC: mList.SRIC },
+                            { SRIC: mList.CSRIC },
                             //Nest Query, the key word "$elemMatch"
                             {
                               sizeSPECs: {
@@ -212,7 +211,7 @@ router.delete('/:caseId/:mtrlId', authUser, async (req, res) => {
   const comId = req.user.company;
   const caseId = req.params.caseId;
   const mtrlId = req.params.mtrlId;
-  const SRIC = mtrl.SRIC;
+  const SRIC = mtrl.CSRIC;
   let user = await User.findById(userId);
   if (!user.cases) {
     return res.status(400).json({
@@ -233,7 +232,10 @@ router.delete('/:caseId/:mtrlId', authUser, async (req, res) => {
     return res.status(400).json({ msg: 'Not an authorized user.' });
   }
   try {
-    await SRMtrl.updateMany(
+    await SRMtrl.findOne({
+      $and: [{ company: comId }, { SRIC: SRIC }],
+    });
+    await SRMtrl.updateOne(
       {
         $and: [
           { company: comId },
@@ -249,7 +251,7 @@ router.delete('/:caseId/:mtrlId', authUser, async (req, res) => {
         },
       }
     );
-    await SRMtrl.updateMany(
+    await SRMtrl.updateOne(
       {
         $and: [
           { company: comId },

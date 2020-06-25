@@ -28,7 +28,7 @@ import AlertState from './context/alert/AlterState';
 import UserState from './context/user/UserState';
 import CasesState from './context/cases/CasesState';
 import SearchBarState from './context/searchBar/SearchBarState';
-import MPriceState from './context/mPrice/MPriceState';
+import SrMtrlState from './context/srMtrl/SrMtrlState';
 
 //Global Header for token
 import setAuthToken from './utils/setAuthToken';
@@ -46,7 +46,7 @@ const App = () => {
             <AlertState>
               <CasesState>
                 <SearchBarState>
-                  <MPriceState>
+                  <SrMtrlState>
                     <Router>
                       <Fragment>
                         <Navbar />
@@ -95,7 +95,7 @@ const App = () => {
                         </div>
                       </Fragment>
                     </Router>
-                  </MPriceState>
+                  </SrMtrlState>
                 </SearchBarState>
               </CasesState>
             </AlertState>

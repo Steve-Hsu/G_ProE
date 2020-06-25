@@ -8,8 +8,8 @@ mongoose.set('useFindAndModify', false);
 // Steve    The material will be generated after case is created, each materal in the bom (case) will generate 1 material in this collection by this schema. Each materal will be inserted the ID of the case, after the case are moved to purchase order, the materal in this collection of the case should be all deleted. Because we will have another collection to hold all the data of the materals by it MIC, the spec, supplier, and ref_no. 2020/05/26
 const SRMtrlSchema = mongoose.Schema({
   // ColorWay, for which colorWay to use this material
-  //supplier & Ref_no
-  SRIC: {
+  //Company name, comSymbol , supplier & Ref_no
+  CSRIC: {
     type: String,
     required: true,
   },
