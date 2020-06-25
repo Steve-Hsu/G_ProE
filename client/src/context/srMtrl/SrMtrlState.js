@@ -112,9 +112,9 @@ const SrMtrlState = (props) => {
   };
 
   const deleteSRMtrlByMtrl = async (mtrl, casesId) => {
-    let sr = mtrl.supplier + mtrl.ref_no;
-    sr = sr.toLowerCase();
-    let CSRIC = sr.replace(/[^\da-z]/gi, ''); // Only read from "0" to "9" & "a" to "z"
+    let csr = mtrl.supplier + mtrl.ref_no;
+    csr = csr.toLowerCase();
+    let CSRIC = csr.replace(/[^\da-z]/gi, ''); // Only read from "0" to "9" & "a" to "z"
 
     const config = {
       headers: {

@@ -9,10 +9,10 @@ const Case = require('../models/20_Case');
 const SRMtrl = require('../models/30_srMtrl');
 
 // @route   GET api/purchase
-// @desc    Read the user's cases from database
+// @desc    Read the compnay's srMtrl from database
 // @access  Private
-router.get('/mtrls', authUser, async (req, res) => {
-  const cases = await Case.find({ user: req.user.id }).sort({
+router.get('/srmtrl', authUser, async (req, res) => {
+  const cases = await SRMtrl.find({ company: req.user.company }).sort({
     date: -1,
   });
 
@@ -58,6 +58,7 @@ router.put('/:caseId', authUser, async (req, res) => {
     mLists.map(async (mList) => {
       if (mList.CSRIC === '' || mList.CSRIC === null) {
         //IF thie mList dosen't have SRIC, then do nothing.
+        console.log('CSRIC passed is empty');
       } else {
         let srMtrl = await SRMtrl.find({
           $and: [{ company: comId }, { CSRIC: mList.CSRIC }],
@@ -70,13 +71,15 @@ router.put('/:caseId', authUser, async (req, res) => {
                   $and: [
                     { company: comId },
                     { CSRIC: mList.CSRIC },
-                    //Nest Query, the key word "$elemMatch"
                     {
-                      mtrlColors: { $elemMatch: { mColor: mtrlColor.mColor } },
+                      mtrlColors: {
+                        $elemMatch: { mColor: mtrlColor.mColor },
+                      },
                     },
                   ],
                 },
                 async function (err, obj) {
+                  console.log('This is the obj', obj);
                   if (err) {
                     console.log(err);
                   } else if (obj.length === 0) {
@@ -127,7 +130,6 @@ router.put('/:caseId', authUser, async (req, res) => {
                   $and: [
                     { company: comId },
                     { CSRIC: mList.CSRIC },
-                    //Nest Query, the key word "$elemMatch"
                     {
                       sizeSPECs: {
                         $elemMatch: { mSizeSPEC: sizeSPEC.mSizeSPEC },
@@ -206,12 +208,12 @@ router.put('/:caseId', authUser, async (req, res) => {
 // @access  Private
 router.delete('/:caseId/:mtrlId', authUser, async (req, res) => {
   // Check if the user has authority to update case ---------------------------
-  const mtrl = req.body;
+  const CSRIC = req.body.CSRIC;
   const userId = req.user.id;
   const comId = req.user.company;
   const caseId = req.params.caseId;
   const mtrlId = req.params.mtrlId;
-  const CSRIC = mtrl.CSRIC;
+  // const CSRIC = mtrl.CSRIC;
   let user = await User.findById(userId);
   if (!user.cases) {
     return res.status(400).json({
@@ -241,44 +243,57 @@ router.delete('/:caseId/:mtrlId', authUser, async (req, res) => {
     }
 
     //Don't know why the mathed "updateMany" seems not work on many seperated objects, so I use updateOne with .map(), going througth each objects
-    srMtrl.mtrlColors.map(async (mtrlColor) => {
-      await SRMtrl.updateOne(
-        {
-          $and: [
-            { CSRIC: CSRIC },
-            {
-              'mtrlColors.refs.mtrlId': mtrlId,
-            },
-          ],
-        },
-        {
-          $pull: {
-            'mtrlColors.$.refs': { mtrlId: mtrlId },
-          },
-        }
-      );
-      return mtrlColor;
-    });
 
-    srMtrl.sizeSPECs.map(async (sizeSPEC) => {
-      await SRMtrl.updateOne(
-        {
-          $and: [
-            { CSRIC: CSRIC },
-            {
-              'sizeSPECs.refs.mtrlId': mtrlId,
+    //@ 1_Delete the ref from srMtrl.mtrlColors.refs, if more than one matched to the condition of $pull, after my test, this method will delete them all.
+
+    if (srMtrl.mtrlColors.length > 0) {
+      srMtrl.mtrlColors.map(async (mtrlColor) => {
+        await SRMtrl.updateOne(
+          {
+            $and: [
+              { CSRIC: CSRIC },
+              {
+                'mtrlColors.refs.mtrlId': mtrlId,
+              },
+            ],
+          },
+          {
+            $pull: {
+              'mtrlColors.$.refs': { mtrlId: mtrlId },
             },
-            {
-              'sizeSPECs.refs.caseId': caseId,
-            },
-          ],
-        },
-        {
-          $pull: { 'sizeSPECs.$.refs': { mtrlId: mtrlId } },
-        }
-      );
-      return sizeSPEC;
-    });
+          }
+        );
+        return null;
+      });
+    } else {
+      console.log('The srMtrl.mtrlColors is empty!');
+    }
+
+    if (srMtrl.sizeSPECs.length > 0) {
+      //@ 1_Delete ref_This method do things as method above
+      srMtrl.sizeSPECs.map(async (sizeSPEC) => {
+        await SRMtrl.updateOne(
+          {
+            $and: [
+              { CSRIC: CSRIC },
+              {
+                'sizeSPECs.refs.mtrlId': mtrlId,
+              },
+              {
+                'sizeSPECs.refs.caseId': caseId,
+              },
+            ],
+          },
+          {
+            $pull: { 'sizeSPECs.$.refs': { mtrlId: mtrlId } },
+          }
+        );
+
+        return null;
+      });
+    } else {
+      console.log('This srMtrl.sizeSPECs is empty');
+    }
 
     return res.json({ msg: 'The srMtrl is deleted' });
   } catch (err) {
