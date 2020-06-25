@@ -1,8 +1,12 @@
 import React, { useContext } from 'react';
 import CasesContext from '../../context/cases/casesContext';
+import AuthUserContext from '../../context/authUser/authUserContext';
+import SrMtrlContext from '../../context/srMtrl/srMtrlContext';
 
 const DeletePopover = () => {
   const casesContext = useContext(CasesContext);
+  const authUserContext = useContext(AuthUserContext);
+  const srMtrlContext = useContext(SrMtrlContext);
   const {
     togglePopover,
     current,
@@ -10,6 +14,8 @@ const DeletePopover = () => {
     deleteSize,
     deleteMtrl,
   } = casesContext;
+  const { deleteSRMtrlByMtrl } = srMtrlContext;
+  const { comName, comSymbol } = authUserContext;
 
   const onChangeDelete = (e) => {
     switch (Object.keys(current)[1]) {
@@ -21,6 +27,7 @@ const DeletePopover = () => {
         break;
       case 'item':
         deleteMtrl(e);
+
         break;
       default:
     }

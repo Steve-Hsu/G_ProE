@@ -20,6 +20,7 @@ import {
   CURRENT_DELETE,
   CASE_CLEAR,
   CASENO_CLEAR,
+  CLEAR_DELETED_MTRLS,
 } from '../types';
 
 export default (state, action) => {
@@ -103,6 +104,10 @@ export default (state, action) => {
       return {
         ...state,
         mtrls: state.mtrls.filter((mtrl) => mtrl.id !== action.payload),
+        deletedMtrls: [
+          ...state.deletedMtrls,
+          state.mtrls.find(({ id }) => id === action.payload),
+        ],
       };
     case CASE_TOGGLE_POPOVER:
       return {
@@ -131,6 +136,7 @@ export default (state, action) => {
         sizes: [],
         gQtys: [],
         mtrls: [],
+        deletedMtrls: [],
         popover: false,
         current: null,
         formIsHalfFilledOut: true,
@@ -140,6 +146,11 @@ export default (state, action) => {
         ...state,
         mtrls: action.payload,
         cNo: null,
+      };
+    case CLEAR_DELETED_MTRLS:
+      return {
+        ...state,
+        deletedMtrls: [],
       };
     default:
   }

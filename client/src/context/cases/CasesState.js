@@ -26,6 +26,7 @@ import {
   CLIENT_UPDATE,
   CASE_CLEAR,
   CASENO_CLEAR,
+  CLEAR_DELETED_MTRLS,
 } from '../types';
 
 const CasesState = (props) => {
@@ -42,6 +43,7 @@ const CasesState = (props) => {
     sizes: [],
     gQtys: [],
     mtrls: [],
+    deletedMtrls: [],
     popover: false,
     current: null,
     formIsHalfFilledOut: true,
@@ -469,6 +471,10 @@ const CasesState = (props) => {
     dispatch({ type: MTRL_DELETE, payload: id });
   };
 
+  const clearDeletedMtrl = () => {
+    dispatch({ type: CLEAR_DELETED_MTRLS });
+  };
+
   // @Layer 2 functions ----------------------------------------------------------------------------------------------------------
   const expandExtraPanels = (e) => {
     e.preventDefault();
@@ -682,6 +688,7 @@ const CasesState = (props) => {
 
       //This dispatch is nothing related to the upload, just after upload we need to take back the cases to feed to the state for the UI is updated to inform the user, so here use CASE_DOWNLOAD
       dispatch({ type: CASE_DOWNLOAD, payload: res.data });
+      return res.data;
     } catch (err) {
       console.log('Upload new case faild, server problems');
     }
@@ -732,6 +739,7 @@ const CasesState = (props) => {
         sizes: state.sizes,
         gQtys: state.gQtys,
         mtrls: state.mtrls,
+        deletedMtrls: state.deletedMtrls,
         popover: state.popover,
         current: state.current,
         formIsHalfFilledOut: state.formIsHalfFilledOut,
@@ -744,6 +752,7 @@ const CasesState = (props) => {
         deleteSize,
         addMtrl,
         deleteMtrl,
+        clearDeletedMtrl,
         expandExtraPanels,
         addValueMtrlColor,
         addValueMtrlSizeSPEC,

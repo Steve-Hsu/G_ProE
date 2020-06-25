@@ -8,7 +8,7 @@ import { LIST_MTRL } from '../types';
 const SrMtrlState = (props) => {
   // @States------------------------------------------------------
   const initialState = {
-    mtrlLists: [],
+    srMtrls: [],
   };
 
   const [state, dispatch] = useReducer(SrMtrlReducer, initialState);
@@ -29,7 +29,7 @@ const SrMtrlState = (props) => {
   // };
 
   // @Actions------------------------------------------------------
-
+  // Add srMtrls by uploading of cases
   const generateMtrlLists = async (cases, comName, comSymbol) => {
     let mLists = [];
     let mtrls = cases.mtrls;
@@ -111,24 +111,31 @@ const SrMtrlState = (props) => {
     }
   };
 
-  const deleteSRMtrlByMtrl = async (mtrl, casesId) => {
-    let csr = mtrl.supplier + mtrl.ref_no;
-    csr = csr.toLowerCase();
-    let CSRIC = csr.replace(/[^\da-z]/gi, ''); // Only read from "0" to "9" & "a" to "z"
+  //@ Delete Mtrl
+  const deleteSRMtrlByMtrl = async (comName, comSymbol, mtrl, casesId) => {
+    const csr = comName + comSymbol + mtrl.supplier + mtrl.ref_no;
+    const lowerCasecsr = csr.toLowerCase();
+    const csric = lowerCasecsr.replace(/[^\da-z]/gi, '');
+    //Make a fake body for backend
+    const body = { CSRIC: csric }; // Only read from "0" to "9" & "a" to "z"}
 
     const config = {
       headers: {
         'Content-Type': 'application/json',
       },
     };
-    await axios.delete(`/api/purchase/${casesId}/${mtrl.id}`, CSRIC, config);
+    await axios.put(`/api/purchase/${casesId}/${mtrl.id}`, body, config);
   };
 
   // @Returns------------------------------------------------------
 
   return (
     <SrMtrlContext.Provider
-      value={{ mtrlLists: state.mtrlLists, generateMtrlLists }}
+      value={{
+        mtrlLists: state.mtrlLists,
+        generateMtrlLists,
+        deleteSRMtrlByMtrl,
+      }}
     >
       {props.children}
     </SrMtrlContext.Provider>

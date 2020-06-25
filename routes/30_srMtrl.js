@@ -203,12 +203,12 @@ router.put('/:caseId', authUser, async (req, res) => {
   }
 });
 
-// @route   PUT api/purchase/mtrlId
-// @desc    Delete the rsMtrl by Mtrl
+// @route   PUT api/purchase/caseId/mtrlId
+// @desc    Delete the refs of rsMtrl by Mtrl
 // @access  Private
-router.delete('/:caseId/:mtrlId', authUser, async (req, res) => {
+router.put('/:caseId/:mtrlId', authUser, async (req, res) => {
   // Check if the user has authority to update case ---------------------------
-  const CSRIC = req.body.CSRIC;
+  const { CSRIC } = req.body;
   const userId = req.user.id;
   const comId = req.user.company;
   const caseId = req.params.caseId;
@@ -299,6 +299,25 @@ router.delete('/:caseId/:mtrlId', authUser, async (req, res) => {
   } catch (err) {
     console.log('The delete srMtrl is failed');
     return res.json(err);
+  }
+});
+
+// @route   PUT api/purchase/deletesrmtl
+// @desc    Delete the srmtrl if the refs of the srmtrl is 0
+// @access  Private
+router.put('/:caseId/:mtrlId', authUser, async (req, res) => {
+  // Check if the user has authority to update case ---------------------------
+  const { CSRIC } = req.body;
+  const userId = req.user.id;
+  const comId = req.user.company;
+  const caseId = req.params.caseId;
+  const mtrlId = req.params.mtrlId;
+  // const CSRIC = mtrl.CSRIC;
+  let user = await User.findById(userId);
+  if (!user.cases) {
+    return res.status(400).json({
+      msg: 'Out of authority',
+    });
   }
 });
 

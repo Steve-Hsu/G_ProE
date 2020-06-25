@@ -33,9 +33,11 @@ const CaseForm = () => {
     current,
     uploadNewCase,
     updateCase,
+    deletedMtrls,
+    clearDeletedMtrl,
   } = casesContext;
   const { comName, comSymbol } = authUserContext;
-  const { generateMtrlLists } = srMtrlContext;
+  const { generateMtrlLists, deleteSRMtrlByMtrl } = srMtrlContext;
 
   //@ Make a body to submit
   const cases = {
@@ -83,16 +85,23 @@ const CaseForm = () => {
   //@ OnChange functions ----------
   const onSubmitCase = async (e) => {
     e.preventDefault();
+    let updatedCases = {};
     if (cNo === null) {
       // update the state of mPrice
-
-      let newCase = await uploadNewCase(cases);
-
-      generateMtrlLists(newCase, comName, comSymbol);
-      console.log(comName, comSymbol);
+      updatedCases = await uploadNewCase(cases);
     } else {
-      updateCase(cases, _id);
+      //Delete the refs of srMtrls from database, that deleted in UI by user
+      if (deletedMtrls.length > 0) {
+        deletedMtrls.map((mtrl) => {
+          console.log('the mtrl', mtrl);
+          deleteSRMtrlByMtrl(comName, comSymbol, mtrl, _id);
+        });
+        clearDeletedMtrl();
+      }
+      updatedCases = await updateCase(cases, _id);
     }
+    //Update refs in srMtrl or generater it
+    generateMtrlLists(updatedCases, comName, comSymbol);
   };
 
   const loadCaseSelectCaseTypeTagIndex = (type) => {

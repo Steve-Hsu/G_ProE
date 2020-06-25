@@ -4,7 +4,7 @@ export default (state, action) => {
   switch (action.type) {
     case LIST_MTRL:
       return {
-        mtrlLists: action.payload,
+        srMtrls: action.payload,
       };
     default:
   }
