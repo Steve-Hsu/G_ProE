@@ -1,7 +1,7 @@
 import React, { useContext, Fragment, useEffect } from 'react';
 import { Prompt } from 'react-router-dom';
 import CasesContext from '../../context/cases/casesContext';
-import MPriceContext from '../../context/mPrice/mPriceContext';
+import SrMtrlContext from '../../context/srMtrl/srMtrlContext';
 
 // @ Components
 import ColorWay from './1_1_ColorWay';
@@ -13,7 +13,7 @@ import DeletePopover from '../layout/DeletePopover';
 const CaseForm = () => {
   //@ Init Context
   const casesContext = useContext(CasesContext);
-  const mPriceContext = useContext(MPriceContext);
+  const srMtrlContext = useContext(SrMtrlContext);
   //@ Destructure, pull out the variables form userContext
   const {
     _id, // this id will appear after download an valid case
@@ -33,7 +33,7 @@ const CaseForm = () => {
     updateCase,
   } = casesContext;
 
-  const { mtrlLists, generateMtrlLists } = mPriceContext;
+  const { mtrlLists, generateMtrlLists } = srMtrlContext;
 
   //@ Make a body to submit
   const cases = {
