@@ -60,7 +60,7 @@ router.put('/:caseId', authUser, async (req, res) => {
         //IF thie mList dosen't have SRIC, then do nothing.
       } else {
         let srMtrl = await SRMtrl.find({
-          $and: [{ company: comId }, { SRIC: mList.CSRIC }],
+          $and: [{ company: comId }, { CSRIC: mList.CSRIC }],
         });
         try {
           if (srMtrl.length !== 0) {
@@ -69,7 +69,7 @@ router.put('/:caseId', authUser, async (req, res) => {
                 {
                   $and: [
                     { company: comId },
-                    { SRIC: mList.CSRIC },
+                    { CSRIC: mList.CSRIC },
                     //Nest Query, the key word "$elemMatch"
                     {
                       mtrlColors: { $elemMatch: { mColor: mtrlColor.mColor } },
@@ -83,7 +83,7 @@ router.put('/:caseId', authUser, async (req, res) => {
                     // if no such mColor in the srMtrl.mtrlColors
                     await SRMtrl.updateOne(
                       {
-                        $and: [{ company: comId }, { SRIC: mList.CSRIC }],
+                        $and: [{ company: comId }, { CSRIC: mList.CSRIC }],
                       },
                       {
                         $push: {
@@ -99,7 +99,7 @@ router.put('/:caseId', authUser, async (req, res) => {
                         {
                           $and: [
                             { company: comId },
-                            { SRIC: mList.CSRIC },
+                            { CSRIC: mList.CSRIC },
                             //Nest Query, the key word "$elemMatch"
                             {
                               mtrlColors: {
@@ -126,7 +126,7 @@ router.put('/:caseId', authUser, async (req, res) => {
                 {
                   $and: [
                     { company: comId },
-                    { SRIC: mList.CSRIC },
+                    { CSRIC: mList.CSRIC },
                     //Nest Query, the key word "$elemMatch"
                     {
                       sizeSPECs: {
@@ -143,7 +143,7 @@ router.put('/:caseId', authUser, async (req, res) => {
                     // if no such mSizeSPEC in the srMtrl.sizeSPECs
                     await SRMtrl.updateOne(
                       {
-                        $and: [{ company: comId }, { SRIC: mList.CSRIC }],
+                        $and: [{ company: comId }, { CSRIC: mList.CSRIC }],
                       },
                       {
                         $push: {
@@ -159,7 +159,7 @@ router.put('/:caseId', authUser, async (req, res) => {
                         {
                           $and: [
                             { company: comId },
-                            { SRIC: mList.CSRIC },
+                            { CSRIC: mList.CSRIC },
                             //Nest Query, the key word "$elemMatch"
                             {
                               sizeSPECs: {
@@ -211,7 +211,7 @@ router.delete('/:caseId/:mtrlId', authUser, async (req, res) => {
   const comId = req.user.company;
   const caseId = req.params.caseId;
   const mtrlId = req.params.mtrlId;
-  const SRIC = mtrl.CSRIC;
+  const CSRIC = mtrl.CSRIC;
   let user = await User.findById(userId);
   if (!user.cases) {
     return res.status(400).json({
@@ -220,7 +220,7 @@ router.delete('/:caseId/:mtrlId', authUser, async (req, res) => {
   }
   console.log('this is mtrlId', mtrlId);
   console.log('this is comID', comId);
-  console.log('this is the SRIC', SRIC);
+  console.log('this is the CSRIC', CSRIC);
 
   // Check if the user have the authority to update the case -------------------
   let cases = await Case.findById(caseId);
@@ -232,42 +232,54 @@ router.delete('/:caseId/:mtrlId', authUser, async (req, res) => {
     return res.status(400).json({ msg: 'Not an authorized user.' });
   }
   try {
-    await SRMtrl.findOne({
-      $and: [{ company: comId }, { SRIC: SRIC }],
+    let srMtrl = await SRMtrl.findOne({
+      $and: [{ company: comId }, { CSRIC: CSRIC }],
     });
-    await SRMtrl.updateOne(
-      {
-        $and: [
-          { company: comId },
-          { SRIC: SRIC },
-          {
-            'mtrlColors.refs.mtrlId': mtrlId,
-          },
-        ],
-      },
-      {
-        $pull: {
-          'mtrlColors.$.refs': { mtrlId: mtrlId },
+
+    if (!srMtrl) {
+      return res.json({ msg: 'The srMtrl dose not exist' });
+    }
+
+    //Don't know why the mathed "updateMany" seems not work on many seperated objects, so I use updateOne with .map(), going througth each objects
+    srMtrl.mtrlColors.map(async (mtrlColor) => {
+      await SRMtrl.updateOne(
+        {
+          $and: [
+            { CSRIC: CSRIC },
+            {
+              'mtrlColors.refs.mtrlId': mtrlId,
+            },
+          ],
         },
-      }
-    );
-    await SRMtrl.updateOne(
-      {
-        $and: [
-          { company: comId },
-          { SRIC: SRIC },
-          {
-            'sizeSPECs.refs.mtrlId': mtrlId,
+        {
+          $pull: {
+            'mtrlColors.$.refs': { mtrlId: mtrlId },
           },
-          {
-            'sizeSPECs.refs.caseId': caseId,
-          },
-        ],
-      },
-      {
-        $pull: { 'sizeSPECs.$.refs': { mtrlId: mtrlId } },
-      }
-    );
+        }
+      );
+      return mtrlColor;
+    });
+
+    srMtrl.sizeSPECs.map(async (sizeSPEC) => {
+      await SRMtrl.updateOne(
+        {
+          $and: [
+            { CSRIC: CSRIC },
+            {
+              'sizeSPECs.refs.mtrlId': mtrlId,
+            },
+            {
+              'sizeSPECs.refs.caseId': caseId,
+            },
+          ],
+        },
+        {
+          $pull: { 'sizeSPECs.$.refs': { mtrlId: mtrlId } },
+        }
+      );
+      return sizeSPEC;
+    });
+
     return res.json({ msg: 'The srMtrl is deleted' });
   } catch (err) {
     console.log('The delete srMtrl is failed');

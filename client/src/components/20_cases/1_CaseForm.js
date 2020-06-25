@@ -1,6 +1,7 @@
 import React, { useContext, Fragment, useEffect } from 'react';
 import { Prompt } from 'react-router-dom';
 import CasesContext from '../../context/cases/casesContext';
+import AuthUserContext from '../../context/authUser/authUserContext';
 import SrMtrlContext from '../../context/srMtrl/srMtrlContext';
 
 // @ Components
@@ -13,6 +14,7 @@ import DeletePopover from '../layout/DeletePopover';
 const CaseForm = () => {
   //@ Init Context
   const casesContext = useContext(CasesContext);
+  const authUserContext = useContext(AuthUserContext);
   const srMtrlContext = useContext(SrMtrlContext);
   //@ Destructure, pull out the variables form userContext
   const {
@@ -32,8 +34,8 @@ const CaseForm = () => {
     uploadNewCase,
     updateCase,
   } = casesContext;
-
-  const { mtrlLists, generateMtrlLists } = srMtrlContext;
+  const { comName, comSymbol } = authUserContext;
+  const { generateMtrlLists } = srMtrlContext;
 
   //@ Make a body to submit
   const cases = {
@@ -86,7 +88,8 @@ const CaseForm = () => {
 
       let newCase = await uploadNewCase(cases);
 
-      generateMtrlLists(newCase);
+      generateMtrlLists(newCase, comName, comSymbol);
+      console.log(comName, comSymbol);
     } else {
       updateCase(cases, _id);
     }
