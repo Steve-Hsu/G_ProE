@@ -231,7 +231,7 @@ router.put('/:caseId', authUser, async (req, res) => {
       }
     });
     console.log('srMtrl List updated');
-    const srMtrls = await find.SRMtrl({ company: comId }).sort({ date: -1 });
+    const srMtrls = await SRMtrl.find({ company: comId }).sort({ date: -1 });
     return res.json(srMtrls);
   } catch (err) {
     console.error(err.message);
