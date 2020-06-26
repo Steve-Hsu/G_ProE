@@ -34,20 +34,31 @@ const SrMtrlState = (props) => {
     let mLists = [];
     let mtrls = cases.mtrls;
     mtrls.map((mtrl) => {
-      let csr = comName + comSymbol + mtrl.supplier + mtrl.ref_no;
+      let csr = '';
+      let newCSRIC = '';
+      let existingMtrlObj = {};
+      let mtrlObj = {};
+      csr = comName + comSymbol + mtrl.supplier + mtrl.ref_no;
       csr = csr.toLowerCase();
-      let CSRIC = csr.replace(/[^\da-z]/gi, ''); // Only read from "0" to "9" & "a" to "z"
+      newCSRIC = csr.replace(/[^\da-z]/gi, ''); // Only read from "0" to "9" & "a" to "z"
 
-      let mtrlObj = {
-        supplier: mtrl.supplier,
-        ref_no: mtrl.ref_no,
-        CSRIC: CSRIC,
-        mtrlColors: [],
-        sizeSPECs: [],
-        currency: '',
-        mPrices: '',
-        company: cases.company,
-      };
+      existingMtrlObj = mLists.find(({ CSRIC }) => CSRIC === newCSRIC);
+
+      if (!existingMtrlObj) {
+        mtrlObj = {
+          supplier: mtrl.supplier,
+          ref_no: mtrl.ref_no,
+          CSRIC: newCSRIC,
+          mtrlColors: [],
+          sizeSPECs: [],
+          currency: '',
+          mPrices: '',
+          company: cases.company,
+        };
+      } else {
+        mtrlObj = existingMtrlObj;
+      }
+
       mtrl.mtrlColors.map((mtrlColor) => {
         let existingColor = mtrlObj.mtrlColors.find(
           ({ mColor }) => mColor === mtrlColor.mColor
@@ -96,7 +107,11 @@ const SrMtrlState = (props) => {
           });
         }
       });
-      return mLists.push(mtrlObj);
+      if (!existingMtrlObj) {
+        return mLists.push(mtrlObj);
+      } else {
+        return mLists;
+      }
     });
     const config = {
       headers: {

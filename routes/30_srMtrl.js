@@ -25,7 +25,7 @@ router.get('/srmtrl', authUser, async (req, res) => {
 });
 
 // @route   PUT api/purchase
-// @desc    Update materials in mPrice
+// @desc    Update refs in srMtrls
 // @access  Private
 router.put('/:caseId', authUser, async (req, res) => {
   // Check if the user has authority to update case ---------------------------
@@ -49,7 +49,7 @@ router.put('/:caseId', authUser, async (req, res) => {
     return res.status(400).json({ msg: 'Not an authorized user.' });
   }
 
-  // Update case ---------------------------------------------------------------
+  // Update srMtrl ---------------------------------------------------------------
   const mLists = req.body;
   // Compare with the existing List
   console.log('Thi is the mLists', mLists);
@@ -60,6 +60,7 @@ router.put('/:caseId', authUser, async (req, res) => {
         //IF thie mList dosen't have SRIC, then do nothing.
         console.log('CSRIC passed is empty');
       } else {
+        //Check if any item in mtrl is matched to refs in the srMtrl database
         let srMtrl = await SRMtrl.find({
           $and: [{ company: comId }, { CSRIC: mList.CSRIC }],
         });
@@ -79,10 +80,10 @@ router.put('/:caseId', authUser, async (req, res) => {
                   ],
                 },
                 async function (err, obj) {
-                  console.log('This is the obj', obj);
+                  // console.log('This is the obj', obj);
                   if (err) {
                     console.log(err);
-                  } else if (obj.length === 0) {
+                  } else if (obj === null) {
                     // if no such mColor in the srMtrl.mtrlColors
                     await SRMtrl.updateOne(
                       {
@@ -98,26 +99,46 @@ router.put('/:caseId', authUser, async (req, res) => {
                   } else {
                     // if dose have such mColor in the srMtrl.mtrlColors, insert the ref to the existing mtrlColor
                     mtrlColor.refs.map(async (ref) => {
-                      await SRMtrl.updateOne(
-                        {
-                          $and: [
-                            { company: comId },
-                            { CSRIC: mList.CSRIC },
-                            //Nest Query, the key word "$elemMatch"
-                            {
-                              mtrlColors: {
-                                $elemMatch: { mColor: mtrlColor.mColor },
-                              },
+                      let existingRef = await SRMtrl.find({
+                        $and: [
+                          { company: comId },
+                          { CSRIC: mList.CSRIC },
+                          {
+                            'mtrlColors.refs': {
+                              $elemMatch: { caseId: ref.caseId },
                             },
-                          ],
-                        },
-                        {
-                          $push: {
-                            'mtrlColors.$.refs': ref,
                           },
-                        },
-                        { new: true }
-                      );
+                          {
+                            'mtrlColors.refs': {
+                              $elemMatch: { mtrlId: ref.mtrlId },
+                            },
+                          },
+                        ],
+                      });
+                      // console.log('this is existingRef', existingRef);
+                      if (existingRef.length > 0) {
+                      } else {
+                        await SRMtrl.updateOne(
+                          {
+                            $and: [
+                              { company: comId },
+                              { CSRIC: mList.CSRIC },
+                              //Nest Query, the key word "$elemMatch"
+                              {
+                                mtrlColors: {
+                                  $elemMatch: { mColor: mtrlColor.mColor },
+                                },
+                              },
+                            ],
+                          },
+                          {
+                            $push: {
+                              'mtrlColors.$.refs': ref,
+                            },
+                          },
+                          { new: true }
+                        );
+                      }
                     });
                   }
                 }
@@ -138,10 +159,10 @@ router.put('/:caseId', authUser, async (req, res) => {
                   ],
                 },
                 async function (err, obj) {
-                  // console.log('this is the obj of ', mtrlColor.mColor, obj);
+                  // console.log('this is the obj of sizeSPEC', obj);
                   if (err) {
                     console.log(err);
-                  } else if (obj.length === 0) {
+                  } else if (obj === null) {
                     // if no such mSizeSPEC in the srMtrl.sizeSPECs
                     await SRMtrl.updateOne(
                       {
@@ -157,26 +178,47 @@ router.put('/:caseId', authUser, async (req, res) => {
                   } else {
                     // if dose have such mSizeSPEC in the srMtrl.sizeSPECs, insert the ref to the existing sizeSPEC
                     sizeSPEC.refs.map(async (ref) => {
-                      await SRMtrl.updateOne(
-                        {
-                          $and: [
-                            { company: comId },
-                            { CSRIC: mList.CSRIC },
-                            //Nest Query, the key word "$elemMatch"
-                            {
-                              sizeSPECs: {
-                                $elemMatch: { mSizeSPEC: sizeSPEC.mSizeSPEC },
-                              },
+                      let existingRef = await SRMtrl.find({
+                        $and: [
+                          { company: comId },
+                          { CSRIC: mList.CSRIC },
+                          {
+                            'sizeSPECs.refs': {
+                              $elemMatch: { caseId: ref.caseId },
                             },
-                          ],
-                        },
-                        {
-                          $push: {
-                            'sizeSPECs.$.refs': ref,
                           },
-                        },
-                        { new: true }
-                      );
+                          {
+                            'sizeSPECs.refs': {
+                              $elemMatch: { mtrlId: ref.mtrlId },
+                            },
+                          },
+                        ],
+                      });
+                      // console.log('this is existingRef', existingRef);
+                      if (existingRef.length > 0) {
+                        // Prevent same refs updated duplicatly
+                      } else {
+                        await SRMtrl.updateOne(
+                          {
+                            $and: [
+                              { company: comId },
+                              { CSRIC: mList.CSRIC },
+                              //Nest Query, the key word "$elemMatch"
+                              {
+                                sizeSPECs: {
+                                  $elemMatch: { mSizeSPEC: sizeSPEC.mSizeSPEC },
+                                },
+                              },
+                            ],
+                          },
+                          {
+                            $push: {
+                              'sizeSPECs.$.refs': ref,
+                            },
+                          },
+                          { new: true }
+                        );
+                      }
                     });
                   }
                 }
