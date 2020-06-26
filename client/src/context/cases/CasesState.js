@@ -49,18 +49,26 @@ const CasesState = (props) => {
     formIsHalfFilledOut: true,
   };
 
+  const generateId = () => {
+    return (
+      //generate 22 digits string with number or character.
+      Math.random().toString(36).substring(2, 15) +
+      Math.random().toString(36).substring(2, 15)
+    );
+  };
+
   // @object Model
   // For setting state more convenient
   const newCWay = {
-    id: uuidv4(),
+    id: uuidv4() + generateId(),
     gClr: '',
   };
   const newSize = {
-    id: uuidv4(),
+    id: uuidv4() + generateId(),
     gSize: '',
   };
   let newgQty = {
-    id: uuidv4(),
+    id: uuidv4() + generateId(),
     cWay: '',
     size: '',
     gQty: '',
@@ -68,7 +76,7 @@ const CasesState = (props) => {
 
   // According to React : default input should not be an 'null'
   const newMtrl = {
-    id: uuidv4(),
+    id: uuidv4() + generateId(),
     item: '',
     spec: '',
     supplier: '',
@@ -85,21 +93,21 @@ const CasesState = (props) => {
   };
 
   let newMtrlColor = {
-    id: uuidv4(),
+    id: uuidv4() + generateId(),
     mtrl: '',
     cWay: '',
     mColor: '',
   };
 
   let newSizeSPEC = {
-    id: uuidv4(),
+    id: uuidv4() + generateId(),
     mtrl: '',
     size: '',
     mSizeSPEC: '',
   };
 
   let newCspt = {
-    id: uuidv4(),
+    id: uuidv4() + generateId(),
     cWay: '',
     size: '',
     gQty: '',
@@ -128,7 +136,7 @@ const CasesState = (props) => {
     sizes.map((size) => {
       newgQty = {
         ...newgQty,
-        id: uuidv4(),
+        id: uuidv4() + generateId(),
         cWay: cWayId,
         size: size.id,
       };
@@ -142,7 +150,7 @@ const CasesState = (props) => {
     cWays.map((cWay) => {
       newgQty = {
         ...newgQty,
-        id: uuidv4(),
+        id: uuidv4() + generateId(),
         cWay: cWay.id,
         size: sizeId,
       };
@@ -169,7 +177,7 @@ const CasesState = (props) => {
     materials.map((mtrl) => {
       newCspt = {
         ...newCspt,
-        id: uuidv4(),
+        id: uuidv4() + generateId(),
         cWay: gQty.cWay,
         size: gQty.size,
         gQty: gQty.id,
@@ -430,7 +438,7 @@ const CasesState = (props) => {
     //Update the mtrlColors to the new mtrl, before adding it to mtrls
     cWays.map((cWay) => {
       return newMtrl.mtrlColors.push({
-        id: uuidv4(),
+        id: uuidv4() + generateId(),
         mtrl: newMtrl.id,
         cWay: cWay.id,
         mColor: '',
@@ -439,7 +447,7 @@ const CasesState = (props) => {
     //Update the mtrlSizeSPEC to the new mtrl, before adding it to mtrls
     sizes.map((size) => {
       return newMtrl.sizeSPECs.push({
-        id: uuidv4(),
+        id: uuidv4() + generateId(),
         mtrl: newMtrl.id,
         size: size.id,
         mSizeSPEC: '',
@@ -449,7 +457,7 @@ const CasesState = (props) => {
     gQtys.map((gQty) => {
       newCspt = {
         ...newCspt,
-        id: uuidv4(),
+        id: uuidv4() + generateId(),
         cWay: gQty.cWay,
         size: gQty.size,
         gQty: gQty.id,
@@ -719,7 +727,7 @@ const CasesState = (props) => {
   //Clear case no of existing case for copying and  uploading it as new Case.
   const clearcNo = (mtrls) => {
     mtrls.map((mtrl) => {
-      mtrl.id = uuidv4();
+      mtrl.id = uuidv4() + generateId();
       return mtrls;
     });
     dispatch({ type: CASENO_CLEAR, payload: mtrls });

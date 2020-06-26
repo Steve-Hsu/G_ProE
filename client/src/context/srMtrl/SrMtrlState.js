@@ -27,6 +27,13 @@ const SrMtrlState = (props) => {
   //     caseNo: null,
   //   },
   // };
+  const generateId = () => {
+    return (
+      //generate 22 digits string with number or character.
+      Math.random().toString(36).substring(2, 15) +
+      Math.random().toString(36).substring(2, 15)
+    );
+  };
 
   // @Actions------------------------------------------------------
   // Add srMtrls by uploading of cases
@@ -65,11 +72,11 @@ const SrMtrlState = (props) => {
         );
         if (!existingColor) {
           mtrlObj.mtrlColors.push({
-            id: uuidv4(),
+            id: uuidv4() + generateId(),
             mColor: mtrlColor.mColor,
             refs: [
               {
-                id: uuidv4(),
+                id: uuidv4() + generateId(),
                 caseId: cases._id,
                 mtrlId: mtrl.id,
               },
@@ -77,7 +84,7 @@ const SrMtrlState = (props) => {
           });
         } else {
           existingColor.refs.push({
-            id: uuidv4(),
+            id: uuidv4() + generateId(),
             caseId: cases._id,
             mtrlId: mtrl.id,
           });
@@ -89,11 +96,11 @@ const SrMtrlState = (props) => {
         );
         if (!existingsSPEC) {
           mtrlObj.sizeSPECs.push({
-            id: uuidv4(),
+            id: uuidv4() + generateId(),
             mSizeSPEC: sizeSPEC.mSizeSPEC,
             refs: [
               {
-                id: uuidv4(),
+                id: uuidv4() + generateId(),
                 caseId: cases._id,
                 mtrlId: mtrl.id,
               },
@@ -101,7 +108,7 @@ const SrMtrlState = (props) => {
           });
         } else {
           existingsSPEC.refs.push({
-            id: uuidv4(),
+            id: uuidv4() + generateId(),
             caseId: cases._id,
             mtrlId: mtrl.id,
           });
