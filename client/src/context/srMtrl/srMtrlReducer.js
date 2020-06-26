@@ -1,9 +1,10 @@
-import { LIST_MTRL } from '../types';
+import { SRMTRL_DOWNLOAD } from '../types';
 
 export default (state, action) => {
   switch (action.type) {
-    case LIST_MTRL:
+    case SRMTRL_DOWNLOAD:
       return {
+        ...state,
         srMtrls: action.payload,
       };
     default:

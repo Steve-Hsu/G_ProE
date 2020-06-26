@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 import SrMtrlContext from './srMtrlContext';
 import SrMtrlReducer from './srMtrlReducer';
-import { LIST_MTRL } from '../types';
+import { SRMTRL_DOWNLOAD } from '../types';
 
 const SrMtrlState = (props) => {
   // @States------------------------------------------------------
@@ -119,14 +119,24 @@ const SrMtrlState = (props) => {
       },
     };
     try {
-      await axios.put(`/api/purchase/${cases._id}`, mLists, config);
-      dispatch({ type: LIST_MTRL, payload: mLists });
+      const srMtrls = await axios.put(
+        `/api/purchase/${cases._id}`,
+        mLists,
+        config
+      );
+      dispatch({ type: SRMTRL_DOWNLOAD, payload: srMtrls });
     } catch (err) {
       console.log('Upload mPrice faild, server problems');
     }
   };
 
-  //@ Delete Mtrl
+  //@ Get srMtrl
+  const getSrMtrls = async () => {
+    const srMtrls = await axios.get('/api/purchase/srmtrls');
+    dispatch({ type: SRMTRL_DOWNLOAD, payload: srMtrls });
+  };
+
+  //@ Delete refs in srMtrl by delete Mtrl
   const deleteSRMtrlByMtrl = async (comName, comSymbol, mtrl, casesId) => {
     const csr = comName + comSymbol + mtrl.supplier + mtrl.ref_no;
     const lowerCasecsr = csr.toLowerCase();
@@ -147,9 +157,10 @@ const SrMtrlState = (props) => {
   return (
     <SrMtrlContext.Provider
       value={{
-        mtrlLists: state.mtrlLists,
+        srMtrls: state.srMtrls,
         generateMtrlLists,
         deleteSRMtrlByMtrl,
+        getSrMtrls,
       }}
     >
       {props.children}
