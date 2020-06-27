@@ -50,7 +50,7 @@ const SrMtrlState = (props) => {
       newCSRIC = csr.replace(/[^\da-z]/gi, ''); // Only read from "0" to "9" & "a" to "z"
 
       existingMtrlObj = mLists.find(({ CSRIC }) => CSRIC === newCSRIC);
-
+      //If the srMtrl is not existing in the mLists then generete a new one
       if (!existingMtrlObj) {
         mtrlObj = {
           supplier: mtrl.supplier,
@@ -71,6 +71,7 @@ const SrMtrlState = (props) => {
           ({ mColor }) => mColor === mtrlColor.mColor
         );
         if (!existingColor) {
+          //If not such mtrlColor, then create a new one
           mtrlObj.mtrlColors.push({
             id: uuidv4() + generateId(),
             mColor: mtrlColor.mColor,
@@ -83,11 +84,18 @@ const SrMtrlState = (props) => {
             ],
           });
         } else {
-          existingColor.refs.push({
-            id: uuidv4() + generateId(),
-            caseId: cases._id,
-            mtrlId: mtrl.id,
-          });
+          let sameMtrlInSameColor = existingColor.refs.find(
+            ({ caseId, mtrlId }) => caseId === cases._id && mtrlId === mtrl.id
+          );
+          if (sameMtrlInSameColor) {
+            // same mtrl if in same mColor then don't need to generate a new refs. Just need a set mtrlId and caseId in thie mColor
+          } else {
+            existingColor.refs.push({
+              id: uuidv4() + generateId(),
+              caseId: cases._id,
+              mtrlId: mtrl.id,
+            });
+          }
         }
       });
       mtrl.sizeSPECs.map((sizeSPEC) => {
@@ -95,6 +103,7 @@ const SrMtrlState = (props) => {
           ({ mSizeSPEC }) => mSizeSPEC === sizeSPEC.mSizeSPEC
         );
         if (!existingsSPEC) {
+          //IF no such sizeSPEC then create a new one
           mtrlObj.sizeSPECs.push({
             id: uuidv4() + generateId(),
             mSizeSPEC: sizeSPEC.mSizeSPEC,
@@ -107,11 +116,18 @@ const SrMtrlState = (props) => {
             ],
           });
         } else {
-          existingsSPEC.refs.push({
-            id: uuidv4() + generateId(),
-            caseId: cases._id,
-            mtrlId: mtrl.id,
-          });
+          let sameSizeSPECInSameSPEC = existingsSPEC.refs.find(
+            ({ caseId, mtrlId }) => caseId === cases._id && mtrlId === mtrl.id
+          );
+          if (sameSizeSPECInSameSPEC) {
+            // same mSizeSPEC if in same sizeSPEC then don't need to generate a new refs.
+          } else {
+            existingsSPEC.refs.push({
+              id: uuidv4() + generateId(),
+              caseId: cases._id,
+              mtrlId: mtrl.id,
+            });
+          }
         }
       });
       if (!existingMtrlObj) {
@@ -131,7 +147,10 @@ const SrMtrlState = (props) => {
         mLists,
         config
       );
-      dispatch({ type: SRMTRL_DOWNLOAD, payload: srMtrls });
+
+      // Now matter what you return in the router, the axios will return a object in format that have head and data, you need to put foo.data to the payload, or you will get exatra datas like head.
+      dispatch({ type: SRMTRL_DOWNLOAD, payload: srMtrls.data });
+      // dispatch({ type: SRMTRL_DOWNLOAD, payload: srMtrls }); // for test check the mLists
     } catch (err) {
       console.log('Upload mPrice faild, server problems');
     }
@@ -140,7 +159,7 @@ const SrMtrlState = (props) => {
   //@ Get srMtrl
   const getSrMtrls = async () => {
     const srMtrls = await axios.get('/api/purchase/srmtrls');
-    dispatch({ type: SRMTRL_DOWNLOAD, payload: srMtrls });
+    dispatch({ type: SRMTRL_DOWNLOAD, payload: srMtrls.data });
   };
 
   //@ Delete refs in srMtrl by delete Mtrl

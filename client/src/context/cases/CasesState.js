@@ -297,6 +297,7 @@ const CasesState = (props) => {
     materials.map((mtrl) => {
       newMtrlColor = {
         ...newMtrlColor,
+        id: uuidv4() + generateId(),
         mtrl: mtrl.id,
         cWay: cWayId,
       };
@@ -321,6 +322,7 @@ const CasesState = (props) => {
     materials.map((mtrl) => {
       newSizeSPEC = {
         ...newSizeSPEC,
+        id: uuidv4() + generateId(),
         mtrl: mtrl.id,
         size: sizeId,
       };

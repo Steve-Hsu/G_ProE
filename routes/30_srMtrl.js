@@ -174,45 +174,63 @@ router.put('/:caseId', authUser, async (req, res) => {
                 sizeSPEC.refs.map(async (ref) => {
                   let existingRef = [];
                   existingRef = await SRMtrl.find({
-                    $and: [
-                      { company: comId },
-                      { CSRIC: mList.CSRIC },
-                      {
-                        'sizeSPECs.refs': {
-                          $elemMatch: { caseId: ref.caseId },
-                        },
-                      },
-                      {
-                        'sizeSPECs.refs': {
-                          $elemMatch: { mtrlId: ref.mtrlId },
-                        },
-                      },
-                    ],
+                    company: comId,
+                    CSRIC: mList.CSRIC,
+                    'sizeSPECs.mSizeSPEC': sizeSPEC.mSizeSPEC,
+                    'sizeSPECs.refs.mtrlId': ref.mtrlId,
+                    'sizeSPECs.refs.caseId': ref.caseId,
+
+                    // $and: [
+                    //   { company: comId },
+                    //   { CSRIC: mList.CSRIC },
+                    //   {
+                    //     sizeSPECs: {
+                    //       $elemMatch: { mSizeSPEC: sizeSPEC.mSizeSPEC },
+                    //     },
+                    //   },
+                    //   {
+                    //     'sizeSPECs.refs': {
+                    //       $elemMatch: {
+                    //         caseId: ref.caseId,
+                    //         mtrlId: ref.mtrlId,
+                    //       },
+                    //     },
+                    //   },
+                    // {
+                    //   'sizeSPECs.refs': {
+                    //     $elemMatch: {
+                    //       mtrlId: ref.mtrlId,
+                    //     },
+                    //   },
+                    // },
+                    // ],
                   });
-                  // console.log('this is existingRef', existingRef);
+                  console.log('this is mtrlId', ref.mtrlId);
+                  console.log('this is caseId', ref.caseId);
+                  console.log('This is mSizeSPEC', sizeSPEC.mSizeSPEC);
+                  console.log('this is existingRef', existingRef);
                   if (existingRef.length > 0) {
                     // Prevent same refs updated duplicatly
                   } else {
-                    await SRMtrl.updateOne(
-                      {
-                        $and: [
-                          { company: comId },
-                          { CSRIC: mList.CSRIC },
-                          //Nest Query, the key word "$elemMatch"
-                          {
-                            sizeSPECs: {
-                              $elemMatch: { mSizeSPEC: sizeSPEC.mSizeSPEC },
-                            },
-                          },
-                        ],
-                      },
-                      {
-                        $push: {
-                          'sizeSPECs.$.refs': ref,
-                        },
-                      },
-                      { new: true }
-                    );
+                    //   await SRMtrl.updateOne(
+                    //     {
+                    //       $and: [
+                    //         { company: comId },
+                    //         { CSRIC: mList.CSRIC },
+                    //         //Nest Query, the key word "$elemMatch"
+                    //         {
+                    //           sizeSPECs: {
+                    //             $elemMatch: { mSizeSPEC: sizeSPEC.mSizeSPEC },
+                    //           },
+                    //         },
+                    //       ],
+                    //     },
+                    //     {
+                    //       $push: {
+                    //         'sizeSPECs.$.refs': ref,
+                    //       },
+                    //     }
+                    //   );
                   }
                 });
               }
@@ -232,7 +250,8 @@ router.put('/:caseId', authUser, async (req, res) => {
     });
     console.log('srMtrl List updated');
     const srMtrls = await SRMtrl.find({ company: comId }).sort({ date: -1 });
-    return res.json(srMtrls);
+    // return res.json(srMtrls);
+    return res.json(mLists); // for test
   } catch (err) {
     console.error(err.message);
     return res.status(500).send('Server Error');
