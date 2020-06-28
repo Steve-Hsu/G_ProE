@@ -70,21 +70,16 @@ router.put('/:caseId', authUser, async (req, res) => {
             await mList.mtrlColors.map(async (mtrlColor) => {
               let existingMtrlColor = [];
               existingMtrlColor = await SRMtrl.find({
-                $and: [
-                  { company: comId },
-                  { CSRIC: mList.CSRIC },
-                  {
-                    mtrlColors: {
-                      $elemMatch: { mColor: mtrlColor.mColor },
-                    },
-                  },
-                ],
+                company: comId,
+                CSRIC: mList.CSRIC,
+                'mtrlColors.mColor': mtrlColor.mColor,
               });
               if (existingMtrlColor.length === 0) {
                 // if no such mColor in the srMtrl.mtrlColors
                 await SRMtrl.updateOne(
                   {
-                    $and: [{ company: comId }, { CSRIC: mList.CSRIC }],
+                    company: comId,
+                    CSRIC: mList.CSRIC,
                   },
                   {
                     $push: {
@@ -118,16 +113,9 @@ router.put('/:caseId', authUser, async (req, res) => {
                   } else {
                     await SRMtrl.updateOne(
                       {
-                        $and: [
-                          { company: comId },
-                          { CSRIC: mList.CSRIC },
-                          //Nest Query, the key word "$elemMatch"
-                          {
-                            mtrlColors: {
-                              $elemMatch: { mColor: mtrlColor.mColor },
-                            },
-                          },
-                        ],
+                        company: comId,
+                        CSRIC: mList.CSRIC,
+                        'mtrlColors.mColor': mtrlColor.mColor,
                       },
                       {
                         $push: {
@@ -144,22 +132,17 @@ router.put('/:caseId', authUser, async (req, res) => {
             await mList.sizeSPECs.map(async (sizeSPEC) => {
               let existingSizeSPEC = [];
               existingSizeSPEC = await SRMtrl.find({
-                $and: [
-                  { company: comId },
-                  { CSRIC: mList.CSRIC },
-                  {
-                    sizeSPECs: {
-                      $elemMatch: { mSizeSPEC: sizeSPEC.mSizeSPEC },
-                    },
-                  },
-                ],
+                company: comId,
+                CSRIC: mList.CSRIC,
+                'sizeSPECs.mSizeSPEC': sizeSPEC.mSizeSPEC,
               });
 
               if (existingSizeSPEC.length === 0) {
                 // if no such mSizeSPEC in the srMtrl.sizeSPECs
                 await SRMtrl.updateOne(
                   {
-                    $and: [{ company: comId }, { CSRIC: mList.CSRIC }],
+                    company: comId,
+                    CSRIC: mList.CSRIC,
                   },
                   {
                     $push: {
@@ -196,16 +179,9 @@ router.put('/:caseId', authUser, async (req, res) => {
                   } else {
                     await SRMtrl.updateOne(
                       {
-                        $and: [
-                          { company: comId },
-                          { CSRIC: mList.CSRIC },
-                          //Nest Query, the key word "$elemMatch"
-                          {
-                            sizeSPECs: {
-                              $elemMatch: { mSizeSPEC: sizeSPEC.mSizeSPEC },
-                            },
-                          },
-                        ],
+                        company: comId,
+                        CSRIC: mList.CSRIC,
+                        'sizeSPECs.mSizeSPEC': sizeSPEC.mSizeSPEC,
                       },
                       {
                         $push: {
