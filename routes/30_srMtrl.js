@@ -172,65 +172,48 @@ router.put('/:caseId', authUser, async (req, res) => {
               } else {
                 // if dose have such mSizeSPEC in the srMtrl.sizeSPECs, insert the ref to the existing sizeSPEC
                 sizeSPEC.refs.map(async (ref) => {
-                  let existingRef = [];
+                  let existingRef = '';
                   existingRef = await SRMtrl.find({
                     company: comId,
                     CSRIC: mList.CSRIC,
-                    'sizeSPECs.mSizeSPEC': sizeSPEC.mSizeSPEC,
-                    'sizeSPECs.refs.mtrlId': ref.mtrlId,
-                    'sizeSPECs.refs.caseId': ref.caseId,
-
-                    // $and: [
-                    //   { company: comId },
-                    //   { CSRIC: mList.CSRIC },
-                    //   {
-                    //     sizeSPECs: {
-                    //       $elemMatch: { mSizeSPEC: sizeSPEC.mSizeSPEC },
-                    //     },
-                    //   },
-                    //   {
-                    //     'sizeSPECs.refs': {
-                    //       $elemMatch: {
-                    //         caseId: ref.caseId,
-                    //         mtrlId: ref.mtrlId,
-                    //       },
-                    //     },
-                    //   },
-                    // {
-                    //   'sizeSPECs.refs': {
-                    //     $elemMatch: {
-                    //       mtrlId: ref.mtrlId,
-                    //     },
-                    //   },
-                    // },
-                    // ],
-                  });
+                    sizeSPECs: {
+                      $elemMatch: {
+                        mSizeSPEC: sizeSPEC.mSizeSPEC,
+                        refs: {
+                          $elemMatch: {
+                            caseId: caseId,
+                            mtrlId: ref.mtrlId,
+                          },
+                        },
+                      },
+                    },
+                  }).countDocuments();
                   console.log('this is mtrlId', ref.mtrlId);
                   console.log('this is caseId', ref.caseId);
                   console.log('This is mSizeSPEC', sizeSPEC.mSizeSPEC);
                   console.log('this is existingRef', existingRef);
-                  if (existingRef.length > 0) {
+                  if (existingRef > 0) {
                     // Prevent same refs updated duplicatly
                   } else {
-                    //   await SRMtrl.updateOne(
-                    //     {
-                    //       $and: [
-                    //         { company: comId },
-                    //         { CSRIC: mList.CSRIC },
-                    //         //Nest Query, the key word "$elemMatch"
-                    //         {
-                    //           sizeSPECs: {
-                    //             $elemMatch: { mSizeSPEC: sizeSPEC.mSizeSPEC },
-                    //           },
-                    //         },
-                    //       ],
-                    //     },
-                    //     {
-                    //       $push: {
-                    //         'sizeSPECs.$.refs': ref,
-                    //       },
-                    //     }
-                    //   );
+                    await SRMtrl.updateOne(
+                      {
+                        $and: [
+                          { company: comId },
+                          { CSRIC: mList.CSRIC },
+                          //Nest Query, the key word "$elemMatch"
+                          {
+                            sizeSPECs: {
+                              $elemMatch: { mSizeSPEC: sizeSPEC.mSizeSPEC },
+                            },
+                          },
+                        ],
+                      },
+                      {
+                        $push: {
+                          'sizeSPECs.$.refs': ref,
+                        },
+                      }
+                    );
                   }
                 });
               }
