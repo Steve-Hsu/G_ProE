@@ -96,25 +96,24 @@ router.put('/:caseId', authUser, async (req, res) => {
               } else {
                 // if dose have such mColor in the srMtrl.mtrlColors, insert the ref to the existing mtrlColor
                 mtrlColor.refs.map(async (ref) => {
-                  let existingRef = [];
+                  let existingRef = '';
                   existingRef = await SRMtrl.find({
-                    $and: [
-                      { company: comId },
-                      { CSRIC: mList.CSRIC },
-                      {
-                        'mtrlColors.refs': {
-                          $elemMatch: { caseId: ref.caseId },
+                    company: comId,
+                    CSRIC: mList.CSRIC,
+                    mtrlColors: {
+                      $elemMatch: {
+                        mColor: mtrlColor.mColor,
+                        refs: {
+                          $elemMatch: {
+                            caseId: caseId,
+                            mtrlId: ref.mtrlId,
+                          },
                         },
                       },
-                      {
-                        'mtrlColors.refs': {
-                          $elemMatch: { mtrlId: ref.mtrlId },
-                        },
-                      },
-                    ],
-                  });
+                    },
+                  }).countDocuments();
                   // console.log('this is existingRef', existingRef);
-                  if (existingRef.length > 0) {
+                  if (existingRef > 0) {
                     // If the ref is existing, don't push it duplicately
                   } else {
                     await SRMtrl.updateOne(
