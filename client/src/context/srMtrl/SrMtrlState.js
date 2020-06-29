@@ -77,7 +77,6 @@ const SrMtrlState = (props) => {
             mColor: mtrlColor.mColor,
             refs: [
               {
-                id: uuidv4() + generateId(),
                 caseId: cases._id,
                 mtrlId: mtrl.id,
               },
@@ -91,7 +90,6 @@ const SrMtrlState = (props) => {
             // same mtrl if in same mColor then don't need to generate a new refs. Just need a set mtrlId and caseId in thie mColor
           } else {
             existingColor.refs.push({
-              id: uuidv4() + generateId(),
               caseId: cases._id,
               mtrlId: mtrl.id,
             });
@@ -109,7 +107,6 @@ const SrMtrlState = (props) => {
             mSizeSPEC: sizeSPEC.mSizeSPEC,
             refs: [
               {
-                id: uuidv4() + generateId(),
                 caseId: cases._id,
                 mtrlId: mtrl.id,
               },
@@ -123,7 +120,6 @@ const SrMtrlState = (props) => {
             // same mSizeSPEC if in same sizeSPEC then don't need to generate a new refs.
           } else {
             existingsSPEC.refs.push({
-              id: uuidv4() + generateId(),
               caseId: cases._id,
               mtrlId: mtrl.id,
             });

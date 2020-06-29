@@ -91,40 +91,19 @@ router.put('/:caseId', authUser, async (req, res) => {
               } else {
                 // if dose have such mColor in the srMtrl.mtrlColors, insert the ref to the existing mtrlColor
                 mtrlColor.refs.map(async (ref) => {
-                  let existingRef = '';
-                  existingRef = await SRMtrl.find({
-                    company: comId,
-                    CSRIC: mList.CSRIC,
-                    mtrlColors: {
-                      $elemMatch: {
-                        mColor: mtrlColor.mColor,
-                        refs: {
-                          $elemMatch: {
-                            caseId: caseId,
-                            mtrlId: ref.mtrlId,
-                          },
-                        },
-                      },
+                  // $addToSet the operatoer only push a unique item to the array. It prevent duplicated value be pushed to the refs
+                  await SRMtrl.updateOne(
+                    {
+                      company: comId,
+                      CSRIC: mList.CSRIC,
+                      'mtrlColors.mColor': mtrlColor.mColor,
                     },
-                  }).countDocuments();
-                  // console.log('this is existingRef', existingRef);
-                  if (existingRef > 0) {
-                    // If the ref is existing, don't push it duplicately
-                  } else {
-                    await SRMtrl.updateOne(
-                      {
-                        company: comId,
-                        CSRIC: mList.CSRIC,
-                        'mtrlColors.mColor': mtrlColor.mColor,
+                    {
+                      $addToSet: {
+                        'mtrlColors.$.refs': ref,
                       },
-                      {
-                        $push: {
-                          'mtrlColors.$.refs': ref,
-                        },
-                      },
-                      { new: true }
-                    );
-                  }
+                    }
+                  );
                 });
               }
             });
@@ -148,48 +127,23 @@ router.put('/:caseId', authUser, async (req, res) => {
                     $push: {
                       sizeSPECs: sizeSPEC,
                     },
-                  },
-                  { new: true }
+                  }
                 );
               } else {
-                // if dose have such mSizeSPEC in the srMtrl.sizeSPECs, insert the ref to the existing sizeSPEC
                 sizeSPEC.refs.map(async (ref) => {
-                  let existingRef = '';
-                  existingRef = await SRMtrl.find({
-                    company: comId,
-                    CSRIC: mList.CSRIC,
-                    sizeSPECs: {
-                      $elemMatch: {
-                        mSizeSPEC: sizeSPEC.mSizeSPEC,
-                        refs: {
-                          $elemMatch: {
-                            caseId: caseId,
-                            mtrlId: ref.mtrlId,
-                          },
-                        },
-                      },
+                  // $addToSet the operatoer only push a unique item to the array. It prevent duplicated value be pushed to the refs
+                  await SRMtrl.updateOne(
+                    {
+                      company: comId,
+                      CSRIC: mList.CSRIC,
+                      'sizeSPECs.mSizeSPEC': sizeSPEC.mSizeSPEC,
                     },
-                  }).countDocuments();
-                  console.log('this is mtrlId', ref.mtrlId);
-                  console.log('this is caseId', ref.caseId);
-                  console.log('This is mSizeSPEC', sizeSPEC.mSizeSPEC);
-                  console.log('this is existingRef', existingRef);
-                  if (existingRef > 0) {
-                    // Prevent same refs updated duplicatly
-                  } else {
-                    await SRMtrl.updateOne(
-                      {
-                        company: comId,
-                        CSRIC: mList.CSRIC,
-                        'sizeSPECs.mSizeSPEC': sizeSPEC.mSizeSPEC,
+                    {
+                      $addToSet: {
+                        'sizeSPECs.$.refs': ref,
                       },
-                      {
-                        $push: {
-                          'sizeSPECs.$.refs': ref,
-                        },
-                      }
-                    );
-                  }
+                    }
+                  );
                 });
               }
             });
