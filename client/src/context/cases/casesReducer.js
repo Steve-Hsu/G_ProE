@@ -17,6 +17,7 @@ import {
   CASE_DOWNLOAD,
   CASE_QTY_UPDATE,
   CASE_USER_NOT_AUTHORIZED,
+  TOGGLE_ISUPDATE,
   CURRENT_ADD,
   CURRENT_DELETE,
   CASE_CLEAR,
@@ -174,6 +175,11 @@ export default (state, action) => {
         current: null,
         formIsHalfFilledOut: true,
         error: action.payload,
+      };
+    case TOGGLE_ISUPDATE:
+      return {
+        ...state,
+        isUpdated: action.payload,
       };
     default:
   }

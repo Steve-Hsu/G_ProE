@@ -3,30 +3,17 @@ import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 import SrMtrlContext from './srMtrlContext';
 import SrMtrlReducer from './srMtrlReducer';
-import { SRMTRL_DOWNLOAD } from '../types';
+import { SRMTRL_DOWNLOAD, TOGGLE_ISUPDATE } from '../types';
 
 const SrMtrlState = (props) => {
   // @States------------------------------------------------------
   const initialState = {
     srMtrls: [],
+    isUpdated: false,
   };
-
   const [state, dispatch] = useReducer(SrMtrlReducer, initialState);
 
-  // const NewMtrlList = {
-  //   id: uuidv4(),
-  //   supplier: null,
-  //   ref_no: null,
-  //   MIC: null,
-  //   mColors: [],
-  //   mSPECs: [],
-  //   currency: null,
-  //   mPrices: [],
-  //   appliedCase: {
-  //     caseId: null,
-  //     caseNo: null,
-  //   },
-  // };
+  // @Id for prevent uuid duplicated
   const generateId = () => {
     return (
       //generate 22 digits string with number or character.
@@ -138,17 +125,10 @@ const SrMtrlState = (props) => {
       },
     };
     try {
-      const srMtrls = await axios.put(
-        `/api/purchase/${cases._id}`,
-        mLists,
-        config
-      );
-
-      // Now matter what you return in the router, the axios will return a object in format that have head and data, you need to put foo.data to the payload, or you will get exatra datas like head.
-      dispatch({ type: SRMTRL_DOWNLOAD, payload: srMtrls.data });
-      // dispatch({ type: SRMTRL_DOWNLOAD, payload: srMtrls }); // for test check the mLists
+      await axios.put(`/api/purchase/${cases._id}`, mLists, config);
+      dispatch({ type: TOGGLE_ISUPDATE, payload: true });
     } catch (err) {
-      console.log('Upload mPrice faild, server problems');
+      console.log('Upload srMtrl faild, server problems');
     }
   };
 
@@ -175,15 +155,22 @@ const SrMtrlState = (props) => {
     await axios.put(`/api/purchase/${casesId}/${mtrl.id}`, body, config);
   };
 
+  //@ turn isUpdated false
+  const turnSrMtrlIsUpdatedFalse = () => {
+    dispatch({ type: TOGGLE_ISUPDATE, payload: false });
+  };
+
   // @Returns------------------------------------------------------
 
   return (
     <SrMtrlContext.Provider
       value={{
         srMtrls: state.srMtrls,
+        isUpdated: state.isUpdated,
         generateMtrlLists,
         deleteSRMtrlByMtrl,
         getSrMtrls,
+        turnSrMtrlIsUpdatedFalse,
       }}
     >
       {props.children}

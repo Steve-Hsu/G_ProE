@@ -13,6 +13,7 @@ const SRMtrl = require('../models/30_srMtrl');
 // @access  Private
 router.get('/srmtrls', authUser, async (req, res) => {
   const srMtrl = await SRMtrl.find({ company: req.user.company }).sort({
+    supplier: 1,
     date: -1,
   });
 
@@ -161,9 +162,13 @@ router.put('/:caseId', authUser, async (req, res) => {
         }
       }
     });
-    console.log('srMtrl List updated');
-    const srMtrls = await SRMtrl.find({ company: comId }).sort({ date: -1 });
-    return res.json(srMtrls);
+
+    // console.log('srMtrl List updated');
+    // const srMtrls = await SRMtrl.find({ company: comId }).sort({
+    //   supplier: 1,
+    //   date: -1,
+    // });
+    return res.json({ msg: 'srMtrl is updated' });
     // return res.json(mLists); // for test
   } catch (err) {
     console.error(err.message);

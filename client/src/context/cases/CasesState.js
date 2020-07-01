@@ -28,6 +28,7 @@ import {
   CASE_CLEAR,
   CASENO_CLEAR,
   CLEAR_DELETED_MTRLS,
+  TOGGLE_ISUPDATE,
 } from '../types';
 
 const CasesState = (props) => {
@@ -49,6 +50,7 @@ const CasesState = (props) => {
     current: null,
     formIsHalfFilledOut: true,
     error: null,
+    isUpdated: null,
   };
 
   const generateId = () => {
@@ -680,6 +682,7 @@ const CasesState = (props) => {
 
       //This dispatch is nothing related to the upload, just after upload we need to take back the cases to feed to the state for the UI is updated to inform the user, so here use CASE_DOWNLOAD
       dispatch({ type: CASE_DOWNLOAD, payload: res.data });
+      dispatch({ type: TOGGLE_ISUPDATE, payload: true });
       return res.data;
     } catch (err) {
       dispatch({
@@ -706,6 +709,7 @@ const CasesState = (props) => {
 
       //This dispatch is nothing related to the upload, just after upload we need to take back the cases to feed to the state for the UI is updated to inform the user, so here use CASE_DOWNLOAD
       dispatch({ type: CASE_DOWNLOAD, payload: res.data });
+      dispatch({ type: TOGGLE_ISUPDATE, payload: true });
       return res.data;
     } catch (err) {
       dispatch({
@@ -749,6 +753,11 @@ const CasesState = (props) => {
     dispatch({ type: CASENO_CLEAR, payload: mtrls });
   };
 
+  //@ turn isUpdated false
+  const turnCaseIsUpdatedFalse = () => {
+    dispatch({ type: TOGGLE_ISUPDATE, payload: false });
+  };
+
   return (
     <CasesContext.Provider
       value={{
@@ -767,6 +776,7 @@ const CasesState = (props) => {
         popover: state.popover,
         current: state.current,
         formIsHalfFilledOut: state.formIsHalfFilledOut,
+        isUpdated: state.isUpdated,
         addCaseValue,
         addcWay,
         updatecWay,
@@ -788,6 +798,7 @@ const CasesState = (props) => {
         downloadCase,
         defaultCase,
         clearcNo,
+        turnCaseIsUpdatedFalse,
       }}
     >
       {props.children}

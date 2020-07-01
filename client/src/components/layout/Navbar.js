@@ -1,4 +1,4 @@
-import React, { Fragment, useContext } from 'react';
+import React, { Fragment, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import AuthComContext from '../../context/authCom/authComContext';
@@ -6,6 +6,7 @@ import AuthUserContext from '../../context/authUser/authUserContext';
 import UserContext from '../../context/user/userContext';
 import SearchBarContext from '../../context/searchBar/searchBarContext';
 import CasesContext from '../../context/cases/casesContext';
+import SrMtrlContext from '../../context/srMtrl/srMtrlContext';
 
 const Navbar = ({ title, icon }) => {
   const authComContext = useContext(AuthComContext);
@@ -13,6 +14,7 @@ const Navbar = ({ title, icon }) => {
   const userContext = useContext(UserContext);
   const searchBarContext = useContext(SearchBarContext);
   const casesContext = useContext(CasesContext);
+  const srMtrlContext = useContext(SrMtrlContext);
 
   // Destructure
   const acom = authComContext;
@@ -20,6 +22,18 @@ const Navbar = ({ title, icon }) => {
   const u = userContext;
   const s = searchBarContext;
   const c = casesContext;
+  const sm = srMtrlContext;
+
+  useEffect(() => {
+    if (c.isUpdated && sm.isUpdated) {
+      // Turn the isUpdated in cases and srMtrl false 3 seconds later
+      setTimeout(function () {
+        c.turnCaseIsUpdatedFalse();
+        sm.turnSrMtrlIsUpdatedFalse();
+      }, 3000);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sm.isUpdated]);
 
   const onLogoutCom = () => {
     au.logoutUser();
@@ -73,6 +87,12 @@ const Navbar = ({ title, icon }) => {
     </Fragment>
   );
 
+  const updateNotice = (
+    <Fragment>
+      <div>Upload Succeed !</div>
+    </Fragment>
+  );
+
   return (
     <div className='navbar bg-primary'>
       <h1>
@@ -80,6 +100,7 @@ const Navbar = ({ title, icon }) => {
           <i className={icon} /> {title}
         </Link>
       </h1>
+      {sm.isUpdated && c.isUpdated ? updateNotice : null}
       <ul>
         {acom.isAuthenticated !== true && au.isAuthenticated !== true
           ? guestLinks
