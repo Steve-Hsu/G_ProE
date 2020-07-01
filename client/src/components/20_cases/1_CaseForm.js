@@ -35,6 +35,7 @@ const CaseForm = () => {
     updateCase,
     deletedMtrls,
     clearDeletedMtrl,
+    error,
   } = casesContext;
   const { comName, comSymbol } = authUserContext;
   const { generateMtrlLists, deleteSRMtrlByMtrl } = srMtrlContext;
@@ -100,8 +101,14 @@ const CaseForm = () => {
       }
       updatedCases = await updateCase(cases, _id);
     }
-    //Update refs in srMtrl or generater it
-    generateMtrlLists(updatedCases, comName, comSymbol);
+
+    // If error is null it will be false, else it will be true. null equals false
+    if (error) {
+      // If error contains some message, do not generate srMtrl.
+    } else {
+      // If no error then generate srMtrl
+      generateMtrlLists(updatedCases, comName, comSymbol);
+    }
   };
 
   const loadCaseSelectCaseTypeTagIndex = (type) => {

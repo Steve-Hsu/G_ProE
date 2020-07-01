@@ -16,6 +16,7 @@ import {
   CASE_TOGGLE_POPOVER,
   CASE_DOWNLOAD,
   CASE_QTY_UPDATE,
+  CASE_USER_NOT_AUTHORIZED,
   CURRENT_ADD,
   CURRENT_DELETE,
   CASE_CLEAR,
@@ -28,6 +29,7 @@ export default (state, action) => {
     case CASE_DOWNLOAD:
       return {
         ...state,
+        error: null,
         ...action.payload, // update all the state if the name of that is match what in payload.
       };
     case CASETYPE_UPDATE:
@@ -126,6 +128,7 @@ export default (state, action) => {
       };
     case CASE_CLEAR:
       return {
+        _id: null,
         user: null,
         company: null,
         cNo: null,
@@ -140,6 +143,7 @@ export default (state, action) => {
         popover: false,
         current: null,
         formIsHalfFilledOut: true,
+        error: null,
       };
     case CASENO_CLEAR:
       return {
@@ -151,6 +155,25 @@ export default (state, action) => {
       return {
         ...state,
         deletedMtrls: [],
+      };
+    case CASE_USER_NOT_AUTHORIZED:
+      return {
+        _id: null,
+        user: null,
+        company: null,
+        cNo: null,
+        caseType: null,
+        style: null,
+        client: null,
+        cWays: [],
+        sizes: [],
+        gQtys: [],
+        mtrls: [],
+        deletedMtrls: [],
+        popover: false,
+        current: null,
+        formIsHalfFilledOut: true,
+        error: action.payload,
       };
     default:
   }

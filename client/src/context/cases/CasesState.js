@@ -19,6 +19,7 @@ import {
   CASE_TOGGLE_POPOVER,
   CASE_DOWNLOAD,
   CASE_QTY_UPDATE,
+  CASE_USER_NOT_AUTHORIZED,
   CURRENT_ADD,
   CURRENT_DELETE,
   CASETYPE_UPDATE,
@@ -47,6 +48,7 @@ const CasesState = (props) => {
     popover: false,
     current: null,
     formIsHalfFilledOut: true,
+    error: null,
   };
 
   const generateId = () => {
@@ -680,7 +682,13 @@ const CasesState = (props) => {
       dispatch({ type: CASE_DOWNLOAD, payload: res.data });
       return res.data;
     } catch (err) {
-      console.log('Upload new case faild, server problems');
+      dispatch({
+        type: CASE_USER_NOT_AUTHORIZED,
+        payload: 'You are not authorized to generate a new case',
+      });
+      console.log(
+        'Upload new case faild, The user not authorized to update this case'
+      );
     }
   };
 
@@ -700,7 +708,13 @@ const CasesState = (props) => {
       dispatch({ type: CASE_DOWNLOAD, payload: res.data });
       return res.data;
     } catch (err) {
-      console.log('Upload new case faild, server problems');
+      dispatch({
+        type: CASE_USER_NOT_AUTHORIZED,
+        payload: 'You are not authorized to Update the case',
+      });
+      console.log(
+        'Update case faild, The user not authorized to update this case'
+      );
     }
   };
 
