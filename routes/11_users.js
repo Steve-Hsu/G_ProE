@@ -167,7 +167,19 @@ router.post(
 // @Steve   Don't allow the company to update the password of the user. It will prevent some dispution. Whereas the user miss his password, the account will not lock down any function, the company jsut need to create a new account to take care the cases of the order missing accout. Or use another account with same right to take care the cases.
 // @access  Private
 router.put('/:id', authCom, async (req, res) => {
-  const userFields = req.body;
+  let userForm = req.body;
+  if (userForm.password === '' && userForm.password2 === '') {
+    //No password update
+    delete userForm.password;
+    delete userForm.password2;
+    console.log('No password update');
+  } else {
+    //Update the password
+    delete userForm.password2;
+    userForm.password = userForm.password.toLowerCase();
+    const salt = await bcrypt.genSalt(10);
+    userForm.password = await bcrypt.hash(userForm.password, salt);
+  }
 
   try {
     // Get the id from URL by params
@@ -181,7 +193,7 @@ router.put('/:id', authCom, async (req, res) => {
     }
     user = await User.findByIdAndUpdate(
       req.params.id,
-      { $set: userFields },
+      { $set: userForm },
       // if there are no this user, just create a new user.
       { new: true }
       // The method .select('-password) is for not showing the password on result

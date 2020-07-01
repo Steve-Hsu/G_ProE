@@ -1,10 +1,10 @@
 import React, { useContext, Fragment, Prompt } from 'react';
 // @ Components
-import ColorWay from './1_1_ColorWay';
-import Size from './1_2_Size';
-import Qty from './1_3_Qty';
-import Mtrl from './1_4_Mtrl';
 import DeletePopover from '../layout/DeletePopover';
+import SrMtrl from '../../context/srMtrl/srMtrlContext';
+
+const srMtrl = useContext(SrMtrl);
+const { srMtrls } = srMtrl;
 
 const casesList = {};
 

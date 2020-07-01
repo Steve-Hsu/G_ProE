@@ -12,12 +12,12 @@ const SRMtrl = require('../models/30_srMtrl');
 // @desc    Read the compnay's srMtrl from database
 // @access  Private
 router.get('/srmtrls', authUser, async (req, res) => {
-  const cases = await SRMtrl.find({ company: req.user.company }).sort({
+  const srMtrl = await SRMtrl.find({ company: req.user.company }).sort({
     date: -1,
   });
 
   try {
-    res.json(cases);
+    res.json(srMtrl);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -91,7 +91,7 @@ router.put('/:caseId', authUser, async (req, res) => {
               } else {
                 // if dose have such mColor in the srMtrl.mtrlColors, insert the ref to the existing mtrlColor
                 mtrlColor.refs.map(async (ref) => {
-                  // $addToSet the operatoer only push a unique item to the array. It prevent duplicated value be pushed to the refs
+                  // $addToSet, the operatoer only push a unique item to the array. It prevent duplicated value be pushed to the refs
                   await SRMtrl.updateOne(
                     {
                       company: comId,
@@ -130,8 +130,9 @@ router.put('/:caseId', authUser, async (req, res) => {
                   }
                 );
               } else {
+                // if dose have such sizeSPEC in the srMtrl.sizeSPECs, insert the ref to the existing sizeSPEC
                 sizeSPEC.refs.map(async (ref) => {
-                  // $addToSet the operatoer only push a unique item to the array. It prevent duplicated value be pushed to the refs
+                  // $addToSet, the operatoer only push a unique item to the array. It prevent duplicated value be pushed to the refs
                   await SRMtrl.updateOne(
                     {
                       company: comId,
@@ -162,8 +163,8 @@ router.put('/:caseId', authUser, async (req, res) => {
     });
     console.log('srMtrl List updated');
     const srMtrls = await SRMtrl.find({ company: comId }).sort({ date: -1 });
-    // return res.json(srMtrls);
-    return res.json(mLists); // for test
+    return res.json(srMtrls);
+    // return res.json(mLists); // for test
   } catch (err) {
     console.error(err.message);
     return res.status(500).send('Server Error');

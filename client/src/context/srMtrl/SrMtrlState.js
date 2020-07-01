@@ -155,6 +155,7 @@ const SrMtrlState = (props) => {
   //@ Get srMtrl
   const getSrMtrls = async () => {
     const srMtrls = await axios.get('/api/purchase/srmtrls');
+    // Now matter what you return in the router, the axios will return a object in format that have head and data, you need to put foo.data to the payload, or you will get exatra datas like head.
     dispatch({ type: SRMTRL_DOWNLOAD, payload: srMtrls.data });
   };
 

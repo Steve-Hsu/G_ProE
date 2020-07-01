@@ -57,7 +57,7 @@ export default (state, action) => {
     case SET_CURRENT:
       return {
         ...state,
-        current: action.payload,
+        current: { ...action.payload, password: '', password2: '' },
       };
     case CLEAR_USERS_STATE:
       return {
