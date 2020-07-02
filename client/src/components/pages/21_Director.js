@@ -7,7 +7,7 @@ export const Director = (props) => {
   };
   const gomPrice = () => {
     //Jump to other page while keeping authenticated
-    props.history.push('/api/case/materialPrice');
+    props.history.push('/api/case/mprice');
   };
   const goQuotation = () => {
     //Jump to other page while keeping authenticated

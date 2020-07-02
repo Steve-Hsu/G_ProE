@@ -1,7 +1,8 @@
 import {
-  SEARCHBAR_SEARCH_INDEX,
   SEARCHBAR_TOGGLE_QUERY,
   SEARCHBAR_CLEAR_LIST,
+  SEARCHBAR_SEARCH_INDEX,
+  SEARCHBAR_SEARCH_SRMTRL,
 } from '../types';
 
 export default (state, action) => {

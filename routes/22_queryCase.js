@@ -7,7 +7,7 @@ const { check, validationResult } = require('express-validator');
 const Case = require('../models/20_Case');
 
 // @route   GET api/case/query
-// @desc    Sent back 10 record possible results.
+// @desc    Sent back 10 record possible results, and return the style, client, userName, and cNo.
 // @access  Private
 router.post('/', authUser, async (req, res) => {
   // Extract the value of the variable "query" in the form body

@@ -3,10 +3,22 @@ import AuthContext from '../../context/authUser/authUserContext';
 import CasesContext from '../../context/cases/casesContext';
 import SearchBar from './SearchBar';
 
-const LeftBar = () => {
+const LeftBar = ({ currentPath }) => {
   const authContext = useContext(AuthContext);
   const casesContext = useContext(CasesContext);
   const { mtrls, cNo, addcWay, addSize, addMtrl, clearcNo } = casesContext;
+
+  //@ Define the current page for passing to searchBar
+  let currentPage = '';
+  switch (currentPath) {
+    case '/api/case/merchandiser':
+      currentPage = 'case';
+      break;
+    case '/api/case/mprice':
+      currentPage = 'mprice';
+      break;
+    default:
+  }
 
   const onClick = (e) => {
     e.preventDefault();
@@ -28,7 +40,7 @@ const LeftBar = () => {
         />
         {/* Submit
         </input> */}
-        <SearchBar />
+        <SearchBar currentPage={currentPage} />
         <div>
           {'Color Way'}
           <button

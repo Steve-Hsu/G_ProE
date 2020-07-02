@@ -28,6 +28,10 @@ const SRMtrlSchema = mongoose.Schema({
   currency: {
     type: String,
   },
+  unit: {
+    // Unit for purchase
+    type: String,
+  },
   mPrices: {
     type: Array,
   },

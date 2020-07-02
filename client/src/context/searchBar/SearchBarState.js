@@ -3,9 +3,10 @@ import axios from 'axios';
 import SearchBarContext from './searchBarContext';
 import SearchBarReducer from './searchBarReducer';
 import {
-  SEARCHBAR_SEARCH_INDEX,
   SEARCHBAR_TOGGLE_QUERY,
   SEARCHBAR_CLEAR_LIST,
+  SEARCHBAR_SEARCH_INDEX,
+  SEARCHBAR_SEARCH_SRMTRL,
 } from '../types';
 
 const SearchBarState = (props) => {
@@ -33,6 +34,21 @@ const SearchBarState = (props) => {
     }
   };
 
+  const searchSrMtrl = async (body) => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    try {
+      const res = await axios.post('/api/mprice/query', body, config);
+      console.log('Seach result returned');
+      dispatch({ type: SEARCHBAR_SEARCH_SRMTRL, payload: res.data });
+    } catch (err) {
+      console.log(err.msg, 'Query failed');
+    }
+  };
+
   const toggleQueryList = () => {
     dispatch({ type: SEARCHBAR_TOGGLE_QUERY });
   };
@@ -47,6 +63,7 @@ const SearchBarState = (props) => {
         isQuery: state.isQuery,
         searchCaseNameList: state.searchCaseNameList,
         searchCaseName,
+        searchSrMtrl,
         toggleQueryList,
         clearSearchList,
       }}

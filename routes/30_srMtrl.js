@@ -8,10 +8,10 @@ const User = require('../models/10_User');
 const Case = require('../models/20_Case');
 const SRMtrl = require('../models/30_srMtrl');
 
-// @route   GET api/purchase/srmtrl
+// @route   GET api/srmtrl
 // @desc    Read the compnay's srMtrl from database
 // @access  Private
-router.get('/srmtrls', authUser, async (req, res) => {
+router.get('/', authUser, async (req, res) => {
   const srMtrl = await SRMtrl.find({ company: req.user.company }).sort({
     supplier: 1,
     date: -1,
@@ -25,7 +25,7 @@ router.get('/srmtrls', authUser, async (req, res) => {
   }
 });
 
-// @route   PUT api/purchase/:caseId
+// @route   PUT api/srmtrl/:caseId
 // @desc    Update refs in srMtrls
 // @access  Private
 router.put('/:caseId', authUser, async (req, res) => {
@@ -176,7 +176,7 @@ router.put('/:caseId', authUser, async (req, res) => {
   }
 });
 
-// @route   PUT api/purchase/caseId/mtrlId
+// @route   PUT api/srmtrl/caseId/mtrlId
 // @desc    Delete the refs of rsMtrl by Mtrl
 // @access  Private
 router.put('/:caseId/:mtrlId', authUser, async (req, res) => {
@@ -276,7 +276,7 @@ router.put('/:caseId/:mtrlId', authUser, async (req, res) => {
 });
 
 //Not done yet
-// @route   PUT api/purchase/deletesrmtl
+// @route   PUT api/srmtrl/deletesrmtl
 // @desc    Delete the srmtrl if the refs of the srmtrl is 0
 // @access  Private
 router.put('/:caseId/:mtrlId', authUser, async (req, res) => {

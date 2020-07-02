@@ -6,14 +6,14 @@ import SrMtrlReducer from './srMtrlReducer';
 import { SRMTRL_DOWNLOAD, TOGGLE_ISUPDATE } from '../types';
 
 const SrMtrlState = (props) => {
-  // @States------------------------------------------------------
+  //@ States------------------------------------------------------
   const initialState = {
     srMtrls: [],
     isUpdated: false,
   };
   const [state, dispatch] = useReducer(SrMtrlReducer, initialState);
 
-  // @Id for prevent uuid duplicated
+  //@ Id for prevent uuid duplicated
   const generateId = () => {
     return (
       //generate 22 digits string with number or character.
@@ -22,8 +22,16 @@ const SrMtrlState = (props) => {
     );
   };
 
-  // @Actions------------------------------------------------------
-  // Add srMtrls by uploading of cases
+  //@ Actions------------------------------------------------------
+
+  //@1 Get srMtrl
+  const getSrMtrls = async () => {
+    const srMtrls = await axios.get('/api/srmtrl');
+    // Now matter what you return in the router, the axios will return a object in format that have head and data, you need to put foo.data to the payload, or you will get exatra datas like head.
+    dispatch({ type: SRMTRL_DOWNLOAD, payload: srMtrls.data });
+  };
+
+  //@1 Add srMtrls by uploading of cases
   const generateMtrlLists = async (cases, comName, comSymbol) => {
     let mLists = [];
     let mtrls = cases.mtrls;
@@ -46,6 +54,7 @@ const SrMtrlState = (props) => {
           mtrlColors: [],
           sizeSPECs: [],
           currency: '',
+          unit: '',
           mPrices: '',
           company: cases.company,
         };
@@ -125,21 +134,14 @@ const SrMtrlState = (props) => {
       },
     };
     try {
-      await axios.put(`/api/purchase/${cases._id}`, mLists, config);
+      await axios.put(`/api/srmtrl/${cases._id}`, mLists, config);
       dispatch({ type: TOGGLE_ISUPDATE, payload: true });
     } catch (err) {
       console.log('Upload srMtrl faild, server problems');
     }
   };
 
-  //@ Get srMtrl
-  const getSrMtrls = async () => {
-    const srMtrls = await axios.get('/api/purchase/srmtrls');
-    // Now matter what you return in the router, the axios will return a object in format that have head and data, you need to put foo.data to the payload, or you will get exatra datas like head.
-    dispatch({ type: SRMTRL_DOWNLOAD, payload: srMtrls.data });
-  };
-
-  //@ Delete refs in srMtrl by delete Mtrl
+  //@1 Delete refs in srMtrl by delete Mtrl
   const deleteSRMtrlByMtrl = async (comName, comSymbol, mtrl, casesId) => {
     const csr = comName + comSymbol + mtrl.supplier + mtrl.ref_no;
     const lowerCasecsr = csr.toLowerCase();
@@ -152,24 +154,24 @@ const SrMtrlState = (props) => {
         'Content-Type': 'application/json',
       },
     };
-    await axios.put(`/api/purchase/${casesId}/${mtrl.id}`, body, config);
+    await axios.put(`/api/srmtrl/${casesId}/${mtrl.id}`, body, config);
   };
 
-  //@ turn isUpdated false
+  //@1 turn isUpdated false
   const turnSrMtrlIsUpdatedFalse = () => {
     dispatch({ type: TOGGLE_ISUPDATE, payload: false });
   };
 
-  // @Returns------------------------------------------------------
+  //@ Returns------------------------------------------------------
 
   return (
     <SrMtrlContext.Provider
       value={{
         srMtrls: state.srMtrls,
         isUpdated: state.isUpdated,
+        getSrMtrls,
         generateMtrlLists,
         deleteSRMtrlByMtrl,
-        getSrMtrls,
         turnSrMtrlIsUpdatedFalse,
       }}
     >

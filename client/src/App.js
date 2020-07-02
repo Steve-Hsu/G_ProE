@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 
@@ -10,6 +10,7 @@ import ComManager from './components/pages/01_ComManager';
 import UserManager from './components/pages/11_UserManager';
 import Director from './components/pages/21_Director';
 import CaseMerchandiser from './components/pages/22_CaseMerchandiser';
+import MPrice from './components/pages/31_MPrice';
 //ComRouter
 import ComLogin from './components/authPage/10_ComLogin';
 import UserLogin from './components/authPage/20_UserLogin';
@@ -90,6 +91,8 @@ const App = () => {
                               path='/api/case/merchandiser'
                               component={CaseMerchandiser}
                             />
+                            <Route path='/api/case/mprice' component={MPrice} />
+                            {/* This NotFound return a page when the previous page is not found. */}
                             <Route component={NotFound} />
                           </Switch>
                         </div>

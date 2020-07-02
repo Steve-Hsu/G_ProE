@@ -101,6 +101,12 @@ img {
   padding-bottom: 0.3rem;
 }
 
+/* @Label */
+.label {
+  font-size: 0.7rem;
+  color: var(--primary-color);
+}
+
 /* @Padding */
 .p {
   padding: var(--gap);

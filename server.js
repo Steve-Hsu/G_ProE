@@ -37,7 +37,9 @@ app.use('/api/case', require('./routes/21_case'));
 // Bom, it treat bom in the case and materials
 app.use('/api/case/query', require('./routes/22_queryCase'));
 // mPrice, extract materials & MIC from mtrl
-app.use('/api/purchase', require('./routes/30_srMtrl'));
+app.use('/api/srmtrl', require('./routes/30_srMtrl'));
+// mPrice Query
+app.use('/api/srmtrl/query', require('./routes/31_querySrMtrl'));
 
 const PORT = process.env.PORT || 5000;
 

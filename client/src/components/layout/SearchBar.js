@@ -3,7 +3,7 @@ import AuthUserContext from '../../context/authUser/authUserContext';
 import SearchBarContext from '../../context/searchBar/searchBarContext';
 import SearchBarListItem from './SearchBarListItem';
 
-const SearchBar = () => {
+const SearchBar = ({ currentPage }) => {
   const authUserContext = useContext(AuthUserContext);
   const searchBarContext = useContext(SearchBarContext);
   const { company } = authUserContext;
@@ -11,21 +11,30 @@ const SearchBar = () => {
     isQuery,
     searchCaseNameList,
     searchCaseName,
+    seachSrMtrl,
     toggleQueryList,
   } = searchBarContext;
 
   const onSubmit = (e) => {
     e.preventDefault();
-    // Without body-parser, Here make a fake body object manually
+
     toggleQueryList();
     if (String(e.target.value).length > 1) {
+      // Without body-parser, Here make a fake body object manually
       const body = {
         companyId: company,
         // The two line follows here, L1 for input with form, triggered with submit, L2 triggered with onKeyUp event.
         // query: e.target.query.value, // L1
         query: e.target.value, // L2
       };
-      searchCaseName(body);
+      switch (currentPage) {
+        case 'case':
+          searchCaseName(body);
+          break;
+        case 'mprice':
+          seachSrMtrl(body);
+        default:
+      }
     }
   };
 
