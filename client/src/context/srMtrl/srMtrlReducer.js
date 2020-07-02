@@ -1,4 +1,4 @@
-import { SRMTRL_DOWNLOAD, TOGGLE_ISUPDATE } from '../types';
+import { SRMTRL_DOWNLOAD, TOGGLE_ISUPDATE, SRMTRL_UPDATE } from '../types';
 
 export default (state, action) => {
   switch (action.type) {
@@ -11,6 +11,11 @@ export default (state, action) => {
       return {
         ...state,
         isUpdated: action.payload,
+      };
+    case SRMTRL_UPDATE:
+      return {
+        ...state,
+        srMtrls: action.payload,
       };
     default:
   }

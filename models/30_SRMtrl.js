@@ -39,5 +39,8 @@ const SRMtrlSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'company',
   },
+  expandPrice: {
+    type: Boolean,
+  },
 });
 module.exports = mongoose.model('srMtrl', SRMtrlSchema);

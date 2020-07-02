@@ -91,7 +91,10 @@ const App = () => {
                               path='/api/case/merchandiser'
                               component={CaseMerchandiser}
                             />
-                            <Route path='/api/case/mprice' component={MPrice} />
+                            <PrivateUserRoute
+                              path='/api/case/mprice'
+                              component={MPrice}
+                            />
                             {/* This NotFound return a page when the previous page is not found. */}
                             <Route component={NotFound} />
                           </Switch>

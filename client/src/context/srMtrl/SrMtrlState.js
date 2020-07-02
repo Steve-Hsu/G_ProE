@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 import SrMtrlContext from './srMtrlContext';
 import SrMtrlReducer from './srMtrlReducer';
-import { SRMTRL_DOWNLOAD, TOGGLE_ISUPDATE } from '../types';
+import { SRMTRL_DOWNLOAD, TOGGLE_ISUPDATE, SRMTRL_UPDATE } from '../types';
 
 const SrMtrlState = (props) => {
   //@ States------------------------------------------------------
@@ -11,8 +11,9 @@ const SrMtrlState = (props) => {
     srMtrls: [],
     isUpdated: false,
   };
-  const [state, dispatch] = useReducer(SrMtrlReducer, initialState);
 
+  const [state, dispatch] = useReducer(SrMtrlReducer, initialState);
+  const { srMtrls } = state;
   //@ Id for prevent uuid duplicated
   const generateId = () => {
     return (
@@ -20,6 +21,18 @@ const SrMtrlState = (props) => {
       Math.random().toString(36).substring(2, 15) +
       Math.random().toString(36).substring(2, 15)
     );
+  };
+
+  //@ new Items
+  const newMPrice = {
+    id: uuidv4() + generateId(),
+    mColor: '',
+    sizeSPEC: '',
+    unit: '',
+    currency: '',
+    mPrices: [],
+    moq: '',
+    moqPrice: '',
   };
 
   //@ Actions------------------------------------------------------
@@ -53,10 +66,9 @@ const SrMtrlState = (props) => {
           CSRIC: newCSRIC,
           mtrlColors: [],
           sizeSPECs: [],
-          currency: '',
-          unit: '',
-          mPrices: '',
+          mPrices: [],
           company: cases.company,
+          expandPrice: false,
         };
       } else {
         mtrlObj = existingMtrlObj;
@@ -162,6 +174,14 @@ const SrMtrlState = (props) => {
     dispatch({ type: TOGGLE_ISUPDATE, payload: false });
   };
 
+  //@1 add new mPrice
+  const addMPrice = (srMtrlId) => {
+    let srMaterials = srMtrls;
+    let srMaterial = srMaterials.find(({ _id }) => _id === srMtrlId);
+    srMaterial.mPrices.push(newMPrice);
+    dispatch({ type: SRMTRL_UPDATE, payload: srMaterials });
+  };
+
   //@ Returns------------------------------------------------------
 
   return (
@@ -173,6 +193,7 @@ const SrMtrlState = (props) => {
         generateMtrlLists,
         deleteSRMtrlByMtrl,
         turnSrMtrlIsUpdatedFalse,
+        addMPrice,
       }}
     >
       {props.children}

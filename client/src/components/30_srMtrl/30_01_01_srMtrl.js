@@ -1,9 +1,18 @@
 import React, { useContext } from 'react';
 
 import CasesContext from '../../context/cases/casesContext';
+import SrMtrlContext from '../../context/srMtrl/srMtrlContext';
+import MPrice from './30_01_01_01_mPrice';
 
 const SrMtrl = ({ srMtrl }) => {
   const casesContext = useContext(CasesContext);
+  const srMtrlContext = useContext(SrMtrlContext);
+  const { expandPrice, addMPrice } = srMtrlContext;
+  const onClick = (e) => {
+    e.preventDefault();
+    addMPrice(srMtrl._id);
+  };
+
   return (
     <div className='mb-1 p-1 card'>
       <div className='grid-6'>
@@ -20,47 +29,21 @@ const SrMtrl = ({ srMtrl }) => {
           <div id={`ref_no${srMtrl._id}`}>{srMtrl.ref_no}</div>
         </div>
         <div>
-          <input
-            type='text'
-            id={`currency${srMtrl._id}`}
-            // name={srMtrl.id}
-            placeholder='.'
-            // onChange={addMtrlValue}
-            className='MPH-input'
-            // value={mtrlAttribute(a) || ''}
-          />
-          <label htmlFor={`currency${srMtrl._id}`} className='MPH-input-label'>
-            Currency
-          </label>
+          {'Add Price'}
+          <button
+            name='mPriceBtn'
+            className='btn btn-sm btn-primary btn-rounded-square'
+            onClick={onClick}
+          >
+            +
+          </button>
         </div>
-        <div>
-          <input
-            type='text'
-            id={`unit${srMtrl._id}`}
-            // name={srMtrl.id}
-            placeholder='.'
-            // onChange={addMtrlValue}
-            className='MPH-input'
-            // value={mtrlAttribute(a) || ''}
-          />
-          <label htmlFor={`unit${srMtrl._id}`} className='MPH-input-label'>
-            Unit
-          </label>
-        </div>
-        <div>
-          <input
-            type='text'
-            id={`price${srMtrl._id}`}
-            // name={srMtrl.id}
-            placeholder='.'
-            // onChange={addMtrlValue}
-            className='MPH-input'
-            // value={mtrlAttribute(a) || ''}
-          />
-          <label htmlFor={`price${srMtrl._id}`} className='MPH-input-label'>
-            Unit Price
-          </label>
-        </div>
+      </div>
+      {/* mPrice container */}
+      <div>
+        {srMtrl.mPrices.map((mPrice) => (
+          <MPrice key={mPrice.id} mPrice={mPrice} />
+        ))}
       </div>
     </div>
   );
