@@ -30,7 +30,7 @@ const SrMtrlState = (props) => {
     sizeSPEC: '',
     unit: '',
     currency: '',
-    mPrices: [],
+    mPrice: '',
     moq: '',
     moqPrice: '',
   };
@@ -182,6 +182,39 @@ const SrMtrlState = (props) => {
     dispatch({ type: SRMTRL_UPDATE, payload: srMaterials });
   };
 
+  //@1 Delete srMtrl
+  const deleteSrMtrlPrice = (e) => {
+    const srMtrlId = e.target.value;
+    const mPriceId = e.target.name;
+    let srMaterials = srMtrls;
+    srMaterials.map((srMtrl) => {
+      return (srMtrl.mPrices = srMtrl.mPrices.filter(
+        (mPrice) => mPrice.id !== mPriceId
+      ));
+    });
+
+    dispatch({ type: SRMTRL_UPDATE, payload: srMaterials });
+  };
+
+  //@1 Add Value to mPrice
+  const addSrMtrlValue = (e, srMtrlId, mPriceList) => {
+    // For label tag need to target the Id, so here we save the id in the e.target.name
+    const mPriceId = e.target.name;
+    let srMaterials = srMtrls;
+    let srMaterial = srMaterials.find(({ _id }) => _id === srMtrlId);
+
+    mPriceList.map((m) => {
+      let matchPatter = `${m}${mPriceId}`;
+      if (e.target.id === matchPatter) {
+        srMaterial.mPrices.map((mPrice) => {
+          if (mPrice.id === mPriceId) {
+            mPrice[m] = e.target.value;
+          }
+        });
+      }
+    });
+    dispatch({ type: SRMTRL_UPDATE, payload: srMaterials });
+  };
   //@ Returns------------------------------------------------------
 
   return (
@@ -194,6 +227,8 @@ const SrMtrlState = (props) => {
         deleteSRMtrlByMtrl,
         turnSrMtrlIsUpdatedFalse,
         addMPrice,
+        deleteSrMtrlPrice,
+        addSrMtrlValue,
       }}
     >
       {props.children}

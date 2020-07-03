@@ -10,6 +10,7 @@ const SrMtrl = ({ srMtrl }) => {
   const { expandPrice, addMPrice } = srMtrlContext;
   const onClick = (e) => {
     e.preventDefault();
+
     addMPrice(srMtrl._id);
   };
 
@@ -42,7 +43,7 @@ const SrMtrl = ({ srMtrl }) => {
       {/* mPrice container */}
       <div>
         {srMtrl.mPrices.map((mPrice) => (
-          <MPrice key={mPrice.id} mPrice={mPrice} />
+          <MPrice key={mPrice.id} mPrice={mPrice} srMtrlId={srMtrl._id} />
         ))}
       </div>
     </div>
