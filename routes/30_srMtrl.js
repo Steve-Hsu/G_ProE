@@ -195,14 +195,31 @@ router.put('/update/mpricevalues', authUser, async (req, res) => {
   }
   try {
     srMtrlList.map(async (srMtrl) => {
-      await SRMtrl.updateOne(
-        { _id: srMtrl.id },
-        { $set: { mPrices: srMtrl.mPrices } }
-      );
-    });
-    await SRMtrl.find({ company: comId }).sort({
-      supplier: 1,
-      date: -1,
+      srMtrl.mPrices.map(async (mPrice) => {
+        let duplicatedMPrice = await SRMtrl.find(
+          {
+            _id: srMtrl.id,
+            mPrices: {
+              $elemMatch: {
+                mColor: mPrice.mColor,
+                sizeSPEC: mPrice.sizeSPEC,
+              },
+            },
+          },
+          { _id: 0, mPrices: 1 }
+        );
+
+        if (duplicatedMPrice.length > 0) {
+          // IF the mPrice (mColor and sizeSPEC duplicated) exisitng, then do nothing
+        } else {
+          await SRMtrl.updateOne(
+            {
+              _id: srMtrl.id,
+            },
+            { $push: { mPrices: mPrice } }
+          );
+        }
+      });
     });
 
     console.log('Bend: Upload mPrice succeed');
