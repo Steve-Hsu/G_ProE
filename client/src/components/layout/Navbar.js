@@ -30,7 +30,11 @@ const Navbar = ({ title, icon }) => {
       setTimeout(function () {
         c.turnCaseIsUpdatedFalse();
         sm.turnSrMtrlIsUpdatedFalse();
-      }, 3000);
+      }, 3500);
+    } else if (sm.isUpdated) {
+      setTimeout(function () {
+        sm.turnSrMtrlIsUpdatedFalse();
+      }, 3500);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sm.isUpdated]);
@@ -87,11 +91,13 @@ const Navbar = ({ title, icon }) => {
     </Fragment>
   );
 
-  const updateNotice = (
-    <Fragment>
-      <div>Upload Succeed !</div>
-    </Fragment>
-  );
+  const updateNotice = (notice) => {
+    return (
+      <Fragment>
+        <h1>{notice}</h1>
+      </Fragment>
+    );
+  };
 
   return (
     <div className='navbar bg-primary'>
@@ -100,7 +106,11 @@ const Navbar = ({ title, icon }) => {
           <i className={icon} /> {title}
         </Link>
       </h1>
-      {sm.isUpdated && c.isUpdated ? updateNotice : null}
+      {sm.isUpdated && c.isUpdated
+        ? updateNotice('The Case upload succeed !!')
+        : sm.isUpdated
+        ? updateNotice('The Prices upload succeed !!')
+        : null}
       <ul>
         {acom.isAuthenticated !== true && au.isAuthenticated !== true
           ? guestLinks

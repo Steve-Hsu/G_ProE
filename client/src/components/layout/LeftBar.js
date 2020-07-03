@@ -25,6 +25,36 @@ const LeftBar = ({ currentPath }) => {
     clearcNo(mtrls);
   };
 
+  const updateBtnlabel = () => {
+    let obj = {};
+    switch (currentPath) {
+      case '/api/case/merchandiser':
+        if (cNo === null) {
+          obj = {
+            label: 'Add new Case',
+            form: 'caseForm',
+          };
+          // return 'Add New Case';
+        } else {
+          obj = {
+            label: 'Update the Case',
+            form: 'caseForm',
+          };
+        }
+        break;
+      case '/api/case/mprice':
+        obj = {
+          label: 'Update the Price List',
+          form: 'srMtrlForm',
+        };
+        break;
+      default:
+    }
+    return obj;
+  };
+
+  let btnSwitcher = updateBtnlabel();
+
   return (
     <div className='container-with-navbar leftbar p-1 test-2'>
       <div className='leftbar-component test-4'>
@@ -34,9 +64,9 @@ const LeftBar = ({ currentPath }) => {
         {'Submit'}
         <input
           type='submit'
-          form='caseForm'
+          form={btnSwitcher.form}
           className='btn btn-primary btn-block'
-          value={cNo === null ? 'Add New Case' : 'Update the Case'}
+          value={btnSwitcher.label}
         />
         {/* Submit
         </input> */}

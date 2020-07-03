@@ -3,7 +3,12 @@ import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 import SrMtrlContext from './srMtrlContext';
 import SrMtrlReducer from './srMtrlReducer';
-import { SRMTRL_DOWNLOAD, TOGGLE_ISUPDATE, SRMTRL_UPDATE } from '../types';
+import {
+  SRMTRL_DOWNLOAD,
+  TOGGLE_ISUPDATE,
+  SRMTRL_UPDATE,
+  SRMTRL_UPLOAD,
+} from '../types';
 
 const SrMtrlState = (props) => {
   //@ States------------------------------------------------------
@@ -215,6 +220,24 @@ const SrMtrlState = (props) => {
     });
     dispatch({ type: SRMTRL_UPDATE, payload: srMaterials });
   };
+
+  //@1 update mPrices
+  const updateMPrices = async (body) => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    try {
+      await axios.put('/api/srmtrl/update/mpricevalues', body, config);
+
+      console.log('mPrice color updated');
+      dispatch({ type: TOGGLE_ISUPDATE, payload: true });
+    } catch (err) {
+      console.log('Upload srMtrl faild, server problems');
+    }
+  };
   //@ Returns------------------------------------------------------
 
   return (
@@ -229,6 +252,7 @@ const SrMtrlState = (props) => {
         addMPrice,
         deleteSrMtrlPrice,
         addSrMtrlValue,
+        updateMPrices,
       }}
     >
       {props.children}
