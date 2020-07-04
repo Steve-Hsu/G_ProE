@@ -43,7 +43,7 @@ const SrMtrl = ({ srMtrl }) => {
       {/* mPrice container */}
       <div>
         {srMtrl.mPrices.map((mPrice) => (
-          <MPrice key={mPrice.id} mPrice={mPrice} srMtrlId={srMtrl._id} />
+          <MPrice key={mPrice.id} mPrice={mPrice} srMtrl={srMtrl} />
         ))}
       </div>
     </div>
