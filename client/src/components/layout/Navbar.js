@@ -48,8 +48,7 @@ const Navbar = ({ title, icon }) => {
   const onLogoutUser = () => {
     acom.logoutCom();
     au.logoutUser();
-    s.toggleQueryList();
-    s.clearSearchList();
+    s.toggleIndexList();
     c.defaultCase();
     u.clearUsers();
   };

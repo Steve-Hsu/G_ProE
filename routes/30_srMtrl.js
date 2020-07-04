@@ -25,6 +25,30 @@ router.get('/', authUser, async (req, res) => {
   }
 });
 
+// @route   GET api/srmtrl/queryresult
+// @desc    Response to the queried obj
+// @access  Private
+router.put('/queryresult', authUser, async (req, res) => {
+  let body = req.body;
+  delete body._id;
+  const filed = Object.keys(body);
+  const value = Object.values(body);
+  const srMtrls = await SRMtrl.find({
+    company: req.user.company,
+    [filed[0]]: [value[0]],
+  }).sort({
+    supplier: 1,
+    date: -1,
+  });
+
+  try {
+    res.json(srMtrls);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 // @route   PUT api/srmtrl/:caseId
 // @desc    Update refs in srMtrls
 // @access  Private
@@ -53,7 +77,6 @@ router.put('/:caseId', authUser, async (req, res) => {
   // Update srMtrl ---------------------------------------------------------------
   const mLists = req.body;
   // Compare with the existing List
-  console.log('Thi is the mLists', mLists);
 
   try {
     mLists.map(async (mList) => {
@@ -163,11 +186,6 @@ router.put('/:caseId', authUser, async (req, res) => {
       }
     });
 
-    // console.log('srMtrl List updated');
-    // const srMtrls = await SRMtrl.find({ company: comId }).sort({
-    //   supplier: 1,
-    //   date: -1,
-    // });
     return res.json({ msg: 'srMtrl is updated' });
     // return res.json(mLists); // for test
   } catch (err) {
@@ -177,13 +195,14 @@ router.put('/:caseId', authUser, async (req, res) => {
 });
 
 // @route   PUT api/srmtrl/update/mpricevalues
-// @desc    Update refs in srMtrls
+// @desc    Update the value in mPrice
 // @access  Private
 router.put('/update/mpricevalues', authUser, async (req, res) => {
   const srMtrlList = req.body;
   const comId = req.user.company;
   const userId = req.user.id;
   let user = await User.findById(userId);
+  // Check the authority of the user
   if (!user) {
     return res.status(400).json({
       msg: 'Invalid user',
@@ -193,14 +212,18 @@ router.put('/update/mpricevalues', authUser, async (req, res) => {
       msg: 'Out of authority',
     });
   }
+
+  // Start update
   try {
     srMtrlList.map(async (srMtrl) => {
       srMtrl.mPrices.map(async (mPrice) => {
-        let duplicatedMPrice = await SRMtrl.find(
+        // Check I.C.S
+        let checkICS = await SRMtrl.find(
           {
             _id: srMtrl.id,
             mPrices: {
               $elemMatch: {
+                id: mPrice.id,
                 mColor: mPrice.mColor,
                 sizeSPEC: mPrice.sizeSPEC,
               },
@@ -208,16 +231,73 @@ router.put('/update/mpricevalues', authUser, async (req, res) => {
           },
           { _id: 0, mPrices: 1 }
         );
-
-        if (duplicatedMPrice.length > 0) {
-          // IF the mPrice (mColor and sizeSPEC duplicated) exisitng, then do nothing
-        } else {
+        if (checkICS.length > 0) {
+          // IF the mPrice (id, mColor and sizeSPEC duplicated) exisitng, update by replacing with new mPrice
           await SRMtrl.updateOne(
             {
               _id: srMtrl.id,
+              mPrices: {
+                $elemMatch: {
+                  id: mPrice.id,
+                  mColor: mPrice.mColor,
+                  sizeSPEC: mPrice.sizeSPEC,
+                },
+              },
             },
-            { $push: { mPrices: mPrice } }
+            { $set: { 'mPrices.$': mPrice } }
           );
+        } else {
+          // If the mPrice (id, mColor ,sizeSPEC  duplicated) not exisitng, Check C.S
+          let checkCS = await SRMtrl.find(
+            {
+              _id: srMtrl.id,
+              mPrices: {
+                $elemMatch: {
+                  mColor: mPrice.mColor,
+                  sizeSPEC: mPrice.sizeSPEC,
+                },
+              },
+            },
+            { _id: 0, mPrices: 1 }
+          );
+          if (checkCS.length > 0) {
+            // If mColor and sizeSPEC is repeated then discard the mPrice by doing nothing.
+          } else {
+            // If the mPrice (mColor and sizeSPEC duplicated) not exisitng, Check ID
+            let checkI = await SRMtrl.find(
+              {
+                _id: srMtrl.id,
+                mPrices: {
+                  $elemMatch: {
+                    id: mPrice.id,
+                  },
+                },
+              },
+              { _id: 0, mPrices: 1 }
+            );
+            if (checkI.length > 0) {
+              // If the mPrice is existing item, then update by replacing with new one.
+              await SRMtrl.updateOne(
+                {
+                  _id: srMtrl.id,
+                  mPrices: {
+                    $elemMatch: {
+                      id: mPrice.id,
+                    },
+                  },
+                },
+                { $set: { 'mPrices.$': mPrice } }
+              );
+            } else {
+              // If the mPrice is not existing item, then push mPrice to be new one
+              await SRMtrl.updateOne(
+                {
+                  _id: srMtrl.id,
+                },
+                { $push: { mPrices: mPrice } }
+              );
+            }
+          }
         }
       });
     });

@@ -21,13 +21,23 @@ router.post('/', authUser, async (req, res) => {
       supplier: { $regex: searchKeyword, $options: 'i' },
       company: companyId,
     },
-    { _id: 0, supplier: 1 }
+    { supplier: 1 }
   )
     .sort({ date: -1 })
     .limit(10);
 
+  // If the have result
   if (suppliers.length > 0) {
-    return res.json(suppliers);
+    // return distinct item, don't duplicately return same supplier.
+    const distinctedSupplier = suppliers.filter(function (item, currentIndex) {
+      let i = suppliers
+        .map((s) => {
+          return s.supplier;
+        })
+        .indexOf(item.supplier);
+      return i == currentIndex;
+    });
+    return res.json(distinctedSupplier);
   }
 
   //@1 Search ref_no
@@ -36,7 +46,7 @@ router.post('/', authUser, async (req, res) => {
       ref_no: { $regex: searchKeyword, $options: 'i' },
       company: companyId,
     },
-    { _id: 0, ref_no: 1 }
+    { ref_no: 1 }
   )
     .sort({ date: -1 })
     .limit(10);

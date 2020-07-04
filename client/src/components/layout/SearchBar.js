@@ -9,16 +9,16 @@ const SearchBar = ({ currentPage }) => {
   const { company } = authUserContext;
   const {
     isQuery,
-    searchCaseNameList,
-    searchCaseName,
-    seachSrMtrl,
-    toggleQueryList,
+    indexList,
+    searchCaseIndex,
+    searchSrMtrlIndex,
+    toggleIndexList,
   } = searchBarContext;
 
   const onSubmit = (e) => {
     e.preventDefault();
 
-    toggleQueryList();
+    toggleIndexList();
     if (String(e.target.value).length > 1) {
       // Without body-parser, Here make a fake body object manually
       const body = {
@@ -29,10 +29,10 @@ const SearchBar = ({ currentPage }) => {
       };
       switch (currentPage) {
         case 'case':
-          searchCaseName(body);
+          searchCaseIndex(body);
           break;
         case 'mprice':
-          seachSrMtrl(body);
+          searchSrMtrlIndex(body);
         default:
       }
     }
@@ -40,7 +40,7 @@ const SearchBar = ({ currentPage }) => {
 
   const onChange = (e) => {
     if (String(e.target.value).length <= 1) {
-      toggleQueryList();
+      toggleIndexList();
     }
   };
   return (
@@ -68,11 +68,12 @@ const SearchBar = ({ currentPage }) => {
       {/* <input type='submit' form={company} /> */}
       <div className='test-1' style={{ background: 'yellow', zIndex: '10' }}>
         {isQuery
-          ? searchCaseNameList.map((item) => {
+          ? indexList.map((item) => {
               return (
                 <SearchBarListItem
                   key={`SearchBarListItem${item._id}`}
                   item={item}
+                  currentPage={currentPage}
                 />
               );
             })

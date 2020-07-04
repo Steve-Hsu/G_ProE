@@ -2,10 +2,9 @@ import React from 'react';
 
 // Components
 import LeftBar from '../layout/LeftBar';
-// srMtrl
-import MPriceForm from '../../components/30_srMtrl/30_01_srMtrlForm';
+// quoForm
 
-export const MPrice = (props) => {
+export const Quotation = (props) => {
   const currentPath = props.location.pathname;
 
   return (
@@ -14,9 +13,9 @@ export const MPrice = (props) => {
       <LeftBar currentPath={currentPath} />
 
       {/* Grid-2 */}
-      <MPriceForm />
+      {/* <MPriceForm /> */}
     </div>
   );
 };
 
-export default MPrice;
+export default Quotation;

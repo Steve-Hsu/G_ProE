@@ -3,12 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 import SrMtrlContext from './srMtrlContext';
 import SrMtrlReducer from './srMtrlReducer';
-import {
-  SRMTRL_DOWNLOAD,
-  TOGGLE_ISUPDATE,
-  SRMTRL_UPDATE,
-  SRMTRL_UPLOAD,
-} from '../types';
+import { SRMTRL_DOWNLOAD, TOGGLE_ISUPDATE, SRMTRL_UPDATE } from '../types';
 
 const SrMtrlState = (props) => {
   //@ States------------------------------------------------------
@@ -46,6 +41,16 @@ const SrMtrlState = (props) => {
   const getSrMtrls = async () => {
     const srMtrls = await axios.get('/api/srmtrl');
     // Now matter what you return in the router, the axios will return a object in format that have head and data, you need to put foo.data to the payload, or you will get exatra datas like head.
+    dispatch({ type: SRMTRL_DOWNLOAD, payload: srMtrls.data });
+  };
+
+  const getSpecificSrMtrl = async (obj) => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const srMtrls = await axios.put('/api/srmtrl/queryresult', obj, config);
     dispatch({ type: SRMTRL_DOWNLOAD, payload: srMtrls.data });
   };
 
@@ -238,6 +243,7 @@ const SrMtrlState = (props) => {
       console.log('Upload srMtrl faild, server problems');
     }
   };
+
   //@ Returns------------------------------------------------------
 
   return (
@@ -253,6 +259,7 @@ const SrMtrlState = (props) => {
         deleteSrMtrlPrice,
         addSrMtrlValue,
         updateMPrices,
+        getSpecificSrMtrl,
       }}
     >
       {props.children}

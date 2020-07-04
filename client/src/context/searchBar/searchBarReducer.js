@@ -1,9 +1,4 @@
-import {
-  SEARCHBAR_TOGGLE_QUERY,
-  SEARCHBAR_CLEAR_LIST,
-  SEARCHBAR_SEARCH_INDEX,
-  SEARCHBAR_SEARCH_SRMTRL,
-} from '../types';
+import { SEARCHBAR_TOGGLE_LIST, SEARCHBAR_SEARCH_INDEX } from '../types';
 
 export default (state, action) => {
   switch (action.type) {
@@ -11,17 +6,13 @@ export default (state, action) => {
       return {
         ...state,
         isQuery: true,
-        searchCaseNameList: action.payload,
+        indexList: action.payload,
       };
-    case SEARCHBAR_TOGGLE_QUERY:
+    case SEARCHBAR_TOGGLE_LIST:
       return {
         ...state,
         isQuery: false,
-      };
-    case SEARCHBAR_CLEAR_LIST:
-      return {
-        ...state,
-        searchCaseNameList: [],
+        indexList: [],
       };
     default:
   }

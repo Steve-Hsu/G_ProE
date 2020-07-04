@@ -1,9 +1,14 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import SrMtrlContext from '../../context/srMtrl/srMtrlContext';
 
 const MPrice = ({ mPrice, srMtrl }) => {
   const srMtrlContext = useContext(SrMtrlContext);
-  const { deleteSrMtrlPrice, addSrMtrlValue } = srMtrlContext;
+  const { deleteSrMtrlPrice, addSrMtrlValue, srMtrls } = srMtrlContext;
+
+  useEffect(() => {
+    loadSelectUnitTagIndex();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mPrice]);
 
   //@
   const srMtrlId = srMtrl._id;
@@ -54,15 +59,28 @@ const MPrice = ({ mPrice, srMtrl }) => {
     switch (x) {
       case 'mColor':
         srMtrl.mtrlColors.map((mtrlColor) => arr.push(mtrlColor.mColor));
-        console.log('this is mColor', arr);
         break;
       case 'sizeSPEC':
         srMtrl.sizeSPECs.map((sizeSPEC) => arr.push(sizeSPEC.mSizeSPEC));
-        console.log('this is sizeSPEC', arr);
         break;
       default:
     }
     return arr;
+  };
+
+  // update the select when donwload
+  const loadSelectUnitTagIndex = () => {
+    console.log(mPrice.mColor);
+    console.log(mPrice.sizeSPEC);
+    // document
+    //   .getElementById(`${mPrice.mColor}${mPrice.id}`)
+    //   .setAttribute('selected', 'selected');
+    document
+      .getElementById(`${mPrice.mColor}${mPrice.id}`)
+      .setAttribute('selected', 'selected');
+    document
+      .getElementById(`${mPrice.sizeSPEC}${mPrice.id}`)
+      .setAttribute('selected', 'selected');
   };
 
   //@ Style
@@ -91,10 +109,11 @@ const MPrice = ({ mPrice, srMtrl }) => {
                     className='select-primary-sub'
                   >
                     {selectList(m).map((o) => {
+                      console.log('this is o', o);
                       return (
                         <option
-                          key={`${o}${mPrice}`}
-                          id={`${o}${mPrice}`}
+                          key={`${o}${mPrice.id}`}
+                          id={`${o}${mPrice.id}`}
                           value={o}
                         >
                           {o}
