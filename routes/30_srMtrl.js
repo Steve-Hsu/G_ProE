@@ -214,11 +214,26 @@ router.put('/update/mpricevalues', authUser, async (req, res) => {
   }
 
   // Start update
-  try {
-    srMtrlList.map(async (srMtrl) => {
-      srMtrl.mPrices.map(async (mPrice) => {
-        // Check I.C.S
-        let checkICS = await SRMtrl.find(
+
+  await srMtrlList.map(async (srMtrl) => {
+    srMtrl.mPrices.map(async (mPrice) => {
+      // Check I.C.S
+      let checkICS = await SRMtrl.find(
+        {
+          _id: srMtrl.id,
+          mPrices: {
+            $elemMatch: {
+              id: mPrice.id,
+              mColor: mPrice.mColor,
+              sizeSPEC: mPrice.sizeSPEC,
+            },
+          },
+        },
+        { _id: 0, mPrices: 1 }
+      );
+      if (checkICS.length > 0) {
+        // IF the mPrice (id, mColor and sizeSPEC duplicated) exisitng, update by replacing with new mPrice
+        await SRMtrl.updateOne(
           {
             _id: srMtrl.id,
             mPrices: {
@@ -229,42 +244,40 @@ router.put('/update/mpricevalues', authUser, async (req, res) => {
               },
             },
           },
+          { $set: { 'mPrices.$': mPrice } }
+        );
+      } else {
+        // If the mPrice (id, mColor ,sizeSPEC  duplicated) not exisitng, Check C.S
+        let checkCS = await SRMtrl.find(
+          {
+            _id: srMtrl.id,
+            mPrices: {
+              $elemMatch: {
+                mColor: mPrice.mColor,
+                sizeSPEC: mPrice.sizeSPEC,
+              },
+            },
+          },
           { _id: 0, mPrices: 1 }
         );
-        if (checkICS.length > 0) {
-          // IF the mPrice (id, mColor and sizeSPEC duplicated) exisitng, update by replacing with new mPrice
-          await SRMtrl.updateOne(
+        if (checkCS.length > 0) {
+          // If mColor and sizeSPEC is repeated then discard the mPrice by doing nothing.
+        } else {
+          // If the mPrice (mColor and sizeSPEC duplicated) not exisitng, Check ID
+          let checkI = await SRMtrl.find(
             {
               _id: srMtrl.id,
               mPrices: {
                 $elemMatch: {
                   id: mPrice.id,
-                  mColor: mPrice.mColor,
-                  sizeSPEC: mPrice.sizeSPEC,
-                },
-              },
-            },
-            { $set: { 'mPrices.$': mPrice } }
-          );
-        } else {
-          // If the mPrice (id, mColor ,sizeSPEC  duplicated) not exisitng, Check C.S
-          let checkCS = await SRMtrl.find(
-            {
-              _id: srMtrl.id,
-              mPrices: {
-                $elemMatch: {
-                  mColor: mPrice.mColor,
-                  sizeSPEC: mPrice.sizeSPEC,
                 },
               },
             },
             { _id: 0, mPrices: 1 }
           );
-          if (checkCS.length > 0) {
-            // If mColor and sizeSPEC is repeated then discard the mPrice by doing nothing.
-          } else {
-            // If the mPrice (mColor and sizeSPEC duplicated) not exisitng, Check ID
-            let checkI = await SRMtrl.find(
+          if (checkI.length > 0) {
+            // If the mPrice is existing item, then update by replacing with new one.
+            await SRMtrl.updateOne(
               {
                 _id: srMtrl.id,
                 mPrices: {
@@ -273,37 +286,26 @@ router.put('/update/mpricevalues', authUser, async (req, res) => {
                   },
                 },
               },
-              { _id: 0, mPrices: 1 }
+              { $set: { 'mPrices.$': mPrice } }
             );
-            if (checkI.length > 0) {
-              // If the mPrice is existing item, then update by replacing with new one.
-              await SRMtrl.updateOne(
-                {
-                  _id: srMtrl.id,
-                  mPrices: {
-                    $elemMatch: {
-                      id: mPrice.id,
-                    },
-                  },
-                },
-                { $set: { 'mPrices.$': mPrice } }
-              );
-            } else {
-              // If the mPrice is not existing item, then push mPrice to be new one
-              await SRMtrl.updateOne(
-                {
-                  _id: srMtrl.id,
-                },
-                { $push: { mPrices: mPrice } }
-              );
-            }
+          } else {
+            // If the mPrice is not existing item, then push mPrice to be new one
+            await SRMtrl.updateOne(
+              {
+                _id: srMtrl.id,
+              },
+              { $push: { mPrices: mPrice } }
+            );
           }
         }
-      });
+      }
     });
+  });
 
+  try {
+    // The the internet time log, here don't send back the result, as it always return the previous version.
     console.log('Bend: Upload mPrice succeed');
-    return res.json({ msg: 'mPrice is updated' });
+    return res.json({ msg: 'Upload mPrice succeed' });
   } catch (err) {
     console.error(err.message);
     return res.status(500).send('Server Error');

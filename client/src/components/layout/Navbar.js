@@ -51,6 +51,7 @@ const Navbar = ({ title, icon }) => {
     s.toggleIndexList();
     c.defaultCase();
     u.clearUsers();
+    sm.clearSrMtrl();
   };
 
   const authComLinks = (

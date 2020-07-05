@@ -3,6 +3,7 @@ import {
   TOGGLE_ISUPDATE,
   SRMTRL_UPDATE,
   SRMTRL_UPLOAD,
+  SRMTRL_CLEAR,
 } from '../types';
 
 export default (state, action) => {
@@ -24,7 +25,14 @@ export default (state, action) => {
       };
     case SRMTRL_UPLOAD:
       return {
+        ...state,
+        srMtrls: action.payload,
         isUpdated: true,
+      };
+    case SRMTRL_CLEAR:
+      return {
+        srMtrls: [],
+        isUpdated: false,
       };
     default:
   }

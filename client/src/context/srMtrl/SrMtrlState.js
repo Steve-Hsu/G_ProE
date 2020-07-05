@@ -3,7 +3,12 @@ import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 import SrMtrlContext from './srMtrlContext';
 import SrMtrlReducer from './srMtrlReducer';
-import { SRMTRL_DOWNLOAD, TOGGLE_ISUPDATE, SRMTRL_UPDATE } from '../types';
+import {
+  SRMTRL_DOWNLOAD,
+  TOGGLE_ISUPDATE,
+  SRMTRL_UPDATE,
+  SRMTRL_CLEAR,
+} from '../types';
 
 const SrMtrlState = (props) => {
   //@ States------------------------------------------------------
@@ -188,8 +193,79 @@ const SrMtrlState = (props) => {
   const addMPrice = (srMtrlId) => {
     let srMaterials = srMtrls;
     let srMaterial = srMaterials.find(({ _id }) => _id === srMtrlId);
-    srMaterial.mPrices.push(newMPrice);
-    dispatch({ type: SRMTRL_UPDATE, payload: srMaterials });
+
+    const mtrlColorNum = srMaterial.mtrlColors.length;
+    const sizeSPECNum = srMaterial.sizeSPECs.length;
+    const mPriceNum = srMaterial.mPrices.length;
+    const mPriceMaxNum = mtrlColorNum * sizeSPECNum;
+    console.log('this is mtrlColorNum', mtrlColorNum);
+    console.log('this is sizeSPECNum', sizeSPECNum);
+    console.log('this is mPriceNum', mPriceNum);
+    console.log('this is mPriceMaxNum', mPriceMaxNum);
+    // Prevent duplicated mPrice (repeated in set of color and spec)
+    if (mPriceNum < mPriceMaxNum) {
+      let cArr = [];
+      let sArr = [];
+      // srMaterial.mPrices.push(newMPrice);
+
+      if (mPriceNum === 0) {
+        cArr.push(srMaterial.mtrlColors[0].mColor);
+        sArr.push(srMaterial.sizeSPECs[0].mSizeSPEC);
+      } else {
+        for (let i = 0; i < mtrlColorNum; i++) {
+          let num = 0;
+          srMaterial.mPrices.map((mPrice) => {
+            if (mPrice.mColor === srMaterial.mtrlColors[i].mColor) {
+              return (num = num + 1);
+            }
+          });
+          if (num < sizeSPECNum) {
+            cArr.push(srMaterial.mtrlColors[i].mColor);
+            break;
+          }
+        }
+        sArr = srMaterial.sizeSPECs.map((size) => {
+          return size.mSizeSPEC;
+        });
+        srMaterial.mPrices.map((mPrice) => {
+          if (mPrice.mColor === cArr[0]) {
+            let idx = sArr.indexOf(mPrice.sizeSPEC);
+            return sArr.splice(idx, 1);
+          }
+        });
+      }
+      // let colorArr = [];
+      // srMaterial.mtrlColors.map((mtrlColor) => colorArr.push(mtrlColor.mColor));
+      // srMaterial.mPrices.map((mP) => {
+      //   if (mP.sizeSPEC) {
+      //     let idx = colorArr.indexOf(mP.mColor);
+      //     colorArr.splice(idx, 1);
+      //   }
+      // });
+      // // colorArr.push(mPrice.mColor);
+      // let specArr = [];
+      // srMaterial.sizeSPECs.map((spec) => specArr.push(spec.mSizeSPEC));
+      // srMaterial.sizeSPECs.map((spec) => {
+      //   if (mPrice.sizeSPEC === mP.sizeSPEC) {
+      //     let idx = colorArr.indexOf(mP.mColor);
+      //     colorArr.splice(idx, 1);
+      //   }
+      // });
+
+      console.log(cArr[0]);
+      srMaterial.mPrices.push({
+        id: uuidv4() + generateId(),
+        mColor: cArr[0],
+        // mColor: '',
+        sizeSPEC: sArr[0],
+        unit: '',
+        currency: '',
+        mPrice: '',
+        moq: '',
+        moqPrice: '',
+      });
+      dispatch({ type: SRMTRL_UPDATE, payload: srMaterials });
+    }
   };
 
   //@1 Delete srMtrl
@@ -237,11 +313,16 @@ const SrMtrlState = (props) => {
     try {
       await axios.put('/api/srmtrl/update/mpricevalues', body, config);
 
-      console.log('mPrice color updated');
       dispatch({ type: TOGGLE_ISUPDATE, payload: true });
+      return console.log('mPrice color updated');
     } catch (err) {
-      console.log('Upload srMtrl faild, server problems');
+      return console.log('Upload srMtrl faild, server problems');
     }
+  };
+
+  //@1 Default the srMtrl states
+  const clearSrMtrl = () => {
+    dispatch({ type: SRMTRL_CLEAR });
   };
 
   //@ Returns------------------------------------------------------
@@ -260,6 +341,7 @@ const SrMtrlState = (props) => {
         addSrMtrlValue,
         updateMPrices,
         getSpecificSrMtrl,
+        clearSrMtrl,
       }}
     >
       {props.children}

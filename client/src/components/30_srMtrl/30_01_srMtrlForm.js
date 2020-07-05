@@ -13,16 +13,15 @@ const MPriceForm = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   //@ funcs
-  const onSubmitSrMtrl = (e) => {
+  const onSubmitSrMtrl = async (e) => {
     e.preventDefault();
     const body = [];
-    srMtrls.map((srMtrl) => {
+    await srMtrls.map((srMtrl) => {
       body.push({
         id: srMtrl._id,
         mPrices: srMtrl.mPrices,
       });
     });
-
     updateMPrices(body);
   };
 

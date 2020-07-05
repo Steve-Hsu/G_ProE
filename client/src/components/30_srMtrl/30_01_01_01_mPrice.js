@@ -8,7 +8,7 @@ const MPrice = ({ mPrice, srMtrl }) => {
   useEffect(() => {
     loadSelectUnitTagIndex();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mPrice]);
+  }, [srMtrls]);
 
   //@
   const srMtrlId = srMtrl._id;
@@ -59,9 +59,23 @@ const MPrice = ({ mPrice, srMtrl }) => {
     switch (x) {
       case 'mColor':
         srMtrl.mtrlColors.map((mtrlColor) => arr.push(mtrlColor.mColor));
+        srMtrl.mPrices.map((mP) => {
+          if (mPrice.sizeSPEC === mP.sizeSPEC) {
+            let idx = arr.indexOf(mP.mColor);
+            arr.splice(idx, 1);
+          }
+        });
+        arr.push(mPrice.mColor);
         break;
       case 'sizeSPEC':
         srMtrl.sizeSPECs.map((sizeSPEC) => arr.push(sizeSPEC.mSizeSPEC));
+        srMtrl.mPrices.map((mP) => {
+          if (mPrice.mColor === mP.mColor) {
+            let idx = arr.indexOf(mP.sizeSPEC);
+            arr.splice(idx, 1);
+          }
+        });
+        arr.push(mPrice.sizeSPEC);
         break;
       default:
     }
@@ -70,16 +84,18 @@ const MPrice = ({ mPrice, srMtrl }) => {
 
   // update the select when donwload
   const loadSelectUnitTagIndex = () => {
-    console.log(mPrice.mColor);
-    console.log(mPrice.sizeSPEC);
-    // document
-    //   .getElementById(`${mPrice.mColor}${mPrice.id}`)
-    //   .setAttribute('selected', 'selected');
     document
-      .getElementById(`${mPrice.mColor}${mPrice.id}`)
+      .getElementById(`option${mPrice.mColor}mColor${mPrice.id}`)
+      .removeAttribute('selected');
+    document
+      .getElementById(`option${mPrice.mColor}mColor${mPrice.id}`)
       .setAttribute('selected', 'selected');
+
     document
-      .getElementById(`${mPrice.sizeSPEC}${mPrice.id}`)
+      .getElementById(`option${mPrice.sizeSPEC}sizeSPEC${mPrice.id}`)
+      .removeAttribute('selected');
+    document
+      .getElementById(`option${mPrice.sizeSPEC}sizeSPEC${mPrice.id}`)
       .setAttribute('selected', 'selected');
   };
 
@@ -109,11 +125,13 @@ const MPrice = ({ mPrice, srMtrl }) => {
                     className='select-primary-sub'
                   >
                     {selectList(m).map((o) => {
-                      console.log('this is o', o);
+                      // if (o === '') {
+                      //   o === 'NoValue';
+                      // }
                       return (
                         <option
-                          key={`${o}${mPrice.id}`}
-                          id={`${o}${mPrice.id}`}
+                          key={`option${o}${m}${mPrice.id}`}
+                          id={`option${o}${m}${mPrice.id}`}
                           value={o}
                         >
                           {o}
