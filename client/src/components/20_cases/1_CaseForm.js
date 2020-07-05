@@ -38,7 +38,7 @@ const CaseForm = () => {
     error,
   } = casesContext;
   const { comName, comSymbol } = authUserContext;
-  const { generateMtrlLists, deleteSRMtrlByMtrl } = srMtrlContext;
+  const { updateSrMtrlByMtrl, deleteSRMtrlByMtrl } = srMtrlContext;
 
   //@ Make a body to submit
   const cases = {
@@ -107,7 +107,12 @@ const CaseForm = () => {
       // If error contains some message, do not generate srMtrl.
     } else {
       // If no error then generate srMtrl
-      generateMtrlLists(updatedCases, comName, comSymbol);
+      const body = {
+        cases: updatedCases,
+        comName: comName,
+        conSymbol: comSymbol,
+      };
+      updateSrMtrlByMtrl(body);
     }
   };
 

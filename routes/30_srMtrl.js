@@ -3,6 +3,8 @@ const router = express.Router();
 const authUser = require('../middleware/authUser');
 // Not set up yet, for check the value entered by user at the some specific column
 const { check, validationResult } = require('express-validator');
+const { v4: uuidv4 } = require('uuid');
+const myModule = require('../myModule/myModule');
 
 const User = require('../models/10_User');
 const Case = require('../models/20_Case');
@@ -65,17 +67,112 @@ router.put('/:caseId', authUser, async (req, res) => {
   }
 
   // Check if the user have the authority to update the case -------------------
-  let cases = await Case.findById(caseId);
+  let existingCases = await Case.findById(caseId);
   // If the user is case creator, pass !
-  if (cases.user.toString() === userId) {
+  if (existingCases.user.toString() === userId) {
     // if the user's id is added to authorizedUser of this case, pass !
-  } else if (cases.authorizedUser.includes(userId)) {
+  } else if (existingCases.authorizedUser.includes(userId)) {
   } else {
     return res.status(400).json({ msg: 'Not an authorized user.' });
   }
 
   // Update srMtrl ---------------------------------------------------------------
-  const mLists = req.body;
+  const { cases, comName, comSymbol } = req.body;
+  let mLists = [];
+  let mtrls = cases.mtrls;
+  mtrls.map((mtrl) => {
+    let csr = '';
+    let newCSRIC = '';
+    let existingMtrlObj = {};
+    let mtrlObj = {};
+    csr = comName + comSymbol + mtrl.supplier + mtrl.ref_no;
+    csr = csr.toLowerCase();
+    newCSRIC = csr.replace(/[^\da-z]/gi, ''); // Only read from "0" to "9" & "a" to "z"
+
+    existingMtrlObj = mLists.find(({ CSRIC }) => CSRIC === newCSRIC);
+    //If the srMtrl is not existing in the mLists then generete a new one
+    if (!existingMtrlObj) {
+      mtrlObj = {
+        supplier: mtrl.supplier,
+        ref_no: mtrl.ref_no,
+        CSRIC: newCSRIC,
+        mtrlColors: [],
+        sizeSPECs: [],
+        mPrices: [],
+        company: cases.company,
+        expandPrice: false,
+      };
+    } else {
+      mtrlObj = existingMtrlObj;
+    }
+
+    mtrl.mtrlColors.map((mtrlColor) => {
+      let existingColor = mtrlObj.mtrlColors.find(
+        ({ id }) => id === mtrlColor.id
+      );
+      if (!existingColor) {
+        //If not such mtrlColor, then create a new one
+        mtrlObj.mtrlColors.push({
+          id: uuidv4() + myModule.generateId(),
+          mColor: mtrlColor.mColor,
+          refs: [
+            {
+              caseId: cases._id,
+              mtrlId: mtrl.id,
+            },
+          ],
+        });
+      } else {
+        let sameMtrlInSameColor = existingColor.refs.find(
+          ({ caseId, mtrlId }) => caseId === cases._id && mtrlId === mtrl.id
+        );
+        if (sameMtrlInSameColor) {
+          // same mtrl if in same mColor then don't need to generate a new refs. Just need a set mtrlId and caseId in thie mColor
+        } else {
+          existingColor.refs.push({
+            caseId: cases._id,
+            mtrlId: mtrl.id,
+          });
+        }
+      }
+    });
+    mtrl.sizeSPECs.map((sizeSPEC) => {
+      let existingsSPEC = mtrlObj.sizeSPECs.find(
+        ({ mSizeSPEC }) => mSizeSPEC === sizeSPEC.mSizeSPEC
+      );
+      if (!existingsSPEC) {
+        //IF no such sizeSPEC then create a new one
+        mtrlObj.sizeSPECs.push({
+          id: uuidv4() + myModule.generateId(),
+          mSizeSPEC: sizeSPEC.mSizeSPEC,
+          refs: [
+            {
+              caseId: cases._id,
+              mtrlId: mtrl.id,
+            },
+          ],
+        });
+      } else {
+        let sameSizeSPECInSameSPEC = existingsSPEC.refs.find(
+          ({ caseId, mtrlId }) => caseId === cases._id && mtrlId === mtrl.id
+        );
+        if (sameSizeSPECInSameSPEC) {
+          // same mSizeSPEC if in same sizeSPEC then don't need to generate a new refs.
+        } else {
+          existingsSPEC.refs.push({
+            caseId: cases._id,
+            mtrlId: mtrl.id,
+          });
+        }
+      }
+    });
+    if (!existingMtrlObj) {
+      return mLists.push(mtrlObj);
+    } else {
+      return mLists;
+    }
+  });
+
   // Compare with the existing List
 
   try {

@@ -60,108 +60,14 @@ const SrMtrlState = (props) => {
   };
 
   //@1 Add srMtrls by uploading of cases
-  const generateMtrlLists = async (cases, comName, comSymbol) => {
-    let mLists = [];
-    let mtrls = cases.mtrls;
-    mtrls.map((mtrl) => {
-      let csr = '';
-      let newCSRIC = '';
-      let existingMtrlObj = {};
-      let mtrlObj = {};
-      csr = comName + comSymbol + mtrl.supplier + mtrl.ref_no;
-      csr = csr.toLowerCase();
-      newCSRIC = csr.replace(/[^\da-z]/gi, ''); // Only read from "0" to "9" & "a" to "z"
-
-      existingMtrlObj = mLists.find(({ CSRIC }) => CSRIC === newCSRIC);
-      //If the srMtrl is not existing in the mLists then generete a new one
-      if (!existingMtrlObj) {
-        mtrlObj = {
-          supplier: mtrl.supplier,
-          ref_no: mtrl.ref_no,
-          CSRIC: newCSRIC,
-          mtrlColors: [],
-          sizeSPECs: [],
-          mPrices: [],
-          company: cases.company,
-          expandPrice: false,
-        };
-      } else {
-        mtrlObj = existingMtrlObj;
-      }
-
-      mtrl.mtrlColors.map((mtrlColor) => {
-        let existingColor = mtrlObj.mtrlColors.find(
-          ({ mColor }) => mColor === mtrlColor.mColor
-        );
-        if (!existingColor) {
-          //If not such mtrlColor, then create a new one
-          mtrlObj.mtrlColors.push({
-            id: uuidv4() + generateId(),
-            mColor: mtrlColor.mColor,
-            refs: [
-              {
-                caseId: cases._id,
-                mtrlId: mtrl.id,
-              },
-            ],
-          });
-        } else {
-          let sameMtrlInSameColor = existingColor.refs.find(
-            ({ caseId, mtrlId }) => caseId === cases._id && mtrlId === mtrl.id
-          );
-          if (sameMtrlInSameColor) {
-            // same mtrl if in same mColor then don't need to generate a new refs. Just need a set mtrlId and caseId in thie mColor
-          } else {
-            existingColor.refs.push({
-              caseId: cases._id,
-              mtrlId: mtrl.id,
-            });
-          }
-        }
-      });
-      mtrl.sizeSPECs.map((sizeSPEC) => {
-        let existingsSPEC = mtrlObj.sizeSPECs.find(
-          ({ mSizeSPEC }) => mSizeSPEC === sizeSPEC.mSizeSPEC
-        );
-        if (!existingsSPEC) {
-          //IF no such sizeSPEC then create a new one
-          mtrlObj.sizeSPECs.push({
-            id: uuidv4() + generateId(),
-            mSizeSPEC: sizeSPEC.mSizeSPEC,
-            refs: [
-              {
-                caseId: cases._id,
-                mtrlId: mtrl.id,
-              },
-            ],
-          });
-        } else {
-          let sameSizeSPECInSameSPEC = existingsSPEC.refs.find(
-            ({ caseId, mtrlId }) => caseId === cases._id && mtrlId === mtrl.id
-          );
-          if (sameSizeSPECInSameSPEC) {
-            // same mSizeSPEC if in same sizeSPEC then don't need to generate a new refs.
-          } else {
-            existingsSPEC.refs.push({
-              caseId: cases._id,
-              mtrlId: mtrl.id,
-            });
-          }
-        }
-      });
-      if (!existingMtrlObj) {
-        return mLists.push(mtrlObj);
-      } else {
-        return mLists;
-      }
-    });
+  const updateSrMtrlByMtrl = async (body) => {
     const config = {
       headers: {
         'Content-Type': 'application/json',
       },
     };
     try {
-      await axios.put(`/api/srmtrl/${cases._id}`, mLists, config);
+      await axios.put(`/api/srmtrl/${body.cases._id}`, body, config);
       dispatch({ type: TOGGLE_ISUPDATE, payload: true });
     } catch (err) {
       console.log('Upload srMtrl faild, server problems');
@@ -234,23 +140,6 @@ const SrMtrlState = (props) => {
           }
         });
       }
-      // let colorArr = [];
-      // srMaterial.mtrlColors.map((mtrlColor) => colorArr.push(mtrlColor.mColor));
-      // srMaterial.mPrices.map((mP) => {
-      //   if (mP.sizeSPEC) {
-      //     let idx = colorArr.indexOf(mP.mColor);
-      //     colorArr.splice(idx, 1);
-      //   }
-      // });
-      // // colorArr.push(mPrice.mColor);
-      // let specArr = [];
-      // srMaterial.sizeSPECs.map((spec) => specArr.push(spec.mSizeSPEC));
-      // srMaterial.sizeSPECs.map((spec) => {
-      //   if (mPrice.sizeSPEC === mP.sizeSPEC) {
-      //     let idx = colorArr.indexOf(mP.mColor);
-      //     colorArr.splice(idx, 1);
-      //   }
-      // });
 
       console.log(cArr[0]);
       srMaterial.mPrices.push({
@@ -333,7 +222,7 @@ const SrMtrlState = (props) => {
         srMtrls: state.srMtrls,
         isUpdated: state.isUpdated,
         getSrMtrls,
-        generateMtrlLists,
+        updateSrMtrlByMtrl,
         deleteSRMtrlByMtrl,
         turnSrMtrlIsUpdatedFalse,
         addMPrice,
