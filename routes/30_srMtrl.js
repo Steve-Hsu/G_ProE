@@ -80,18 +80,21 @@ router.put('/:caseId', authUser, async (req, res) => {
   const { cases, comName, comSymbol } = req.body;
   let mLists = [];
   let mtrls = cases.mtrls;
+
   mtrls.map((mtrl) => {
     let csr = '';
     let newCSRIC = '';
-    let existingMtrlObj = {};
-    let mtrlObj = {};
+    // let existingSrMtrlObj = {};
+    // let mtrlObj = {};
     csr = comName + comSymbol + mtrl.supplier + mtrl.ref_no;
     csr = csr.toLowerCase();
     newCSRIC = csr.replace(/[^\da-z]/gi, ''); // Only read from "0" to "9" & "a" to "z"
 
-    existingMtrlObj = mLists.find(({ CSRIC }) => CSRIC === newCSRIC);
+    let existingSrMtrlObj = mLists.find(({ CSRIC }) => CSRIC === newCSRIC);
     //If the srMtrl is not existing in the mLists then generete a new one
-    if (!existingMtrlObj) {
+    //This line makes sure the mList never contain duplicated srMtrl with same CSRIC
+    let mtrlObj;
+    if (!existingSrMtrlObj) {
       mtrlObj = {
         supplier: mtrl.supplier,
         ref_no: mtrl.ref_no,
@@ -103,12 +106,13 @@ router.put('/:caseId', authUser, async (req, res) => {
         expandPrice: false,
       };
     } else {
-      mtrlObj = existingMtrlObj;
+      mtrlObj = existingSrMtrlObj;
     }
 
+    //@ inser color
     mtrl.mtrlColors.map((mtrlColor) => {
       let existingColor = mtrlObj.mtrlColors.find(
-        ({ id }) => id === mtrlColor.id
+        ({ mColor }) => mColor === mtrlColor.mColor
       );
       if (!existingColor) {
         //If not such mtrlColor, then create a new one
@@ -127,7 +131,7 @@ router.put('/:caseId', authUser, async (req, res) => {
           ({ caseId, mtrlId }) => caseId === cases._id && mtrlId === mtrl.id
         );
         if (sameMtrlInSameColor) {
-          // same mtrl if in same mColor then don't need to generate a new refs. Just need a set mtrlId and caseId in thie mColor
+          // same mtrl if in same mColor then don't need to generate a new refs. Just need a insert the refs, which is the mtrlId and caseId in thie mColor
         } else {
           existingColor.refs.push({
             caseId: cases._id,
@@ -136,6 +140,8 @@ router.put('/:caseId', authUser, async (req, res) => {
         }
       }
     });
+
+    //@ inser SPEC
     mtrl.sizeSPECs.map((sizeSPEC) => {
       let existingsSPEC = mtrlObj.sizeSPECs.find(
         ({ mSizeSPEC }) => mSizeSPEC === sizeSPEC.mSizeSPEC
@@ -166,11 +172,7 @@ router.put('/:caseId', authUser, async (req, res) => {
         }
       }
     });
-    if (!existingMtrlObj) {
-      return mLists.push(mtrlObj);
-    } else {
-      return mLists;
-    }
+    return mLists.push(mtrlObj);
   });
 
   // Compare with the existing List
@@ -228,6 +230,49 @@ router.put('/:caseId', authUser, async (req, res) => {
                 });
               }
             });
+            // Clear the extra refs in mColor
+            let dataBaseSrColor = await SRMtrl.findOne(
+              { company: comId, CSRIC: mList.CSRIC },
+              { _id: 0, mtrlColors: 1 }
+            );
+            console.log(dataBaseSrColor);
+
+            dataBaseSrColor.mtrlColors.map(async (mtrlColor) => {
+              let matchedColor = mList.mtrlColors.find(
+                ({ mColor }) => mColor === mtrlColor.mColor
+              );
+              console.log(mtrlColor.mColor);
+              console.log(matchedColor);
+
+              if (!matchedColor) {
+                const caseId = cases._id;
+                const mtrlId = mList.mtrlColors[0].refs[0].mtrlId;
+                console.log('caseID', caseId);
+                console.log('mtrlID', mtrlId);
+
+                await SRMtrl.updateOne(
+                  {
+                    company: comId,
+                    CSRIC: mList.CSRIC,
+                    mtrlColors: {
+                      $elemMatch: {
+                        mColor: mtrlColor.mColor,
+                        refs: {
+                          caseId: caseId,
+                          mtrlId: mtrlId,
+                        },
+                      },
+                    },
+                  },
+                  {
+                    $pull: {
+                      'mtrlColors.$.refs': { caseId: caseId, mtrlId: mtrlId },
+                    },
+                  }
+                );
+              }
+            });
+
             //@ Inser SizeSPECS
             await mList.sizeSPECs.map(async (sizeSPEC) => {
               let existingSizeSPEC = [];
