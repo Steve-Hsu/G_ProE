@@ -95,7 +95,7 @@ const CaseForm = () => {
       if (deletedMtrls.length > 0) {
         // let deleteSrMtrl = deletedMtrls.map(async (mtrl) => {
         //   console.log('the mtrl', mtrl);
-        await deleteSRMtrlByMtrl(comName, comSymbol, deletedMtrls, _id);
+        // await deleteSRMtrlByMtrl(comName, comSymbol, deletedMtrls, _id);
         // });
         clearDeletedMtrl();
       }

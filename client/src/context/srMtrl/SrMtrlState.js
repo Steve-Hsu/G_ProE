@@ -75,20 +75,14 @@ const SrMtrlState = (props) => {
   };
 
   //@1 Delete refs in srMtrl by delete Mtrl
-  const deleteSRMtrlByMtrl = async (
-    comName,
-    comSymbol,
-    deletedMtrls,
-    casesId
-  ) => {
+  const deleteSRMtrlByMtrl = async (comName, comSymbol, mtrl, casesId) => {
     //Make a fake body for backend
 
     const body = {
       comName: comName,
       comSymbol: comSymbol,
-      deletedMtrls: deletedMtrls,
+      mtrl: mtrl,
     };
-    console.log('in the state', deletedMtrls);
 
     const config = {
       headers: {
@@ -96,7 +90,7 @@ const SrMtrlState = (props) => {
       },
     };
     try {
-      await axios.put(`/api/srmtrl/${casesId}/deletesrmtrls`, body, config);
+      await axios.put(`/api/srmtrl/${casesId}/deletesrmtrl`, body, config);
     } catch (err) {
       console.log(err);
     }

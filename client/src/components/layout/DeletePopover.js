@@ -8,6 +8,8 @@ const DeletePopover = () => {
   const authUserContext = useContext(AuthUserContext);
   const srMtrlContext = useContext(SrMtrlContext);
   const {
+    _id,
+    mtrls,
     togglePopover,
     current,
     deletecWay,
@@ -27,6 +29,9 @@ const DeletePopover = () => {
         break;
       case 'item':
         deleteMtrl(e);
+        const mtrlId = e.target.value;
+        const mtrl = mtrls.find(({ id }) => id === mtrlId);
+        deleteSRMtrlByMtrl(comName, comSymbol, mtrl, _id);
 
         break;
       default:
