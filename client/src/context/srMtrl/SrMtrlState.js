@@ -75,19 +75,31 @@ const SrMtrlState = (props) => {
   };
 
   //@1 Delete refs in srMtrl by delete Mtrl
-  const deleteSRMtrlByMtrl = async (comName, comSymbol, mtrl, casesId) => {
-    const csr = comName + comSymbol + mtrl.supplier + mtrl.ref_no;
-    const lowerCasecsr = csr.toLowerCase();
-    const csric = lowerCasecsr.replace(/[^\da-z]/gi, '');
+  const deleteSRMtrlByMtrl = async (
+    comName,
+    comSymbol,
+    deletedMtrls,
+    casesId
+  ) => {
     //Make a fake body for backend
-    const body = { CSRIC: csric }; // Only read from "0" to "9" & "a" to "z"}
+
+    const body = {
+      comName: comName,
+      comSymbol: comSymbol,
+      deletedMtrls: deletedMtrls,
+    };
+    console.log('in the state', deletedMtrls);
 
     const config = {
       headers: {
         'Content-Type': 'application/json',
       },
     };
-    await axios.put(`/api/srmtrl/${casesId}/${mtrl.id}`, body, config);
+    try {
+      await axios.put(`/api/srmtrl/${casesId}/deletesrmtrls`, body, config);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   //@1 turn isUpdated false

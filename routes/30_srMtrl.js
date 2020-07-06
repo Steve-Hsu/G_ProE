@@ -87,9 +87,11 @@ router.put('/:caseId', authUser, async (req, res) => {
     // let existingSrMtrlObj = {};
     // let mtrlObj = {};
     csr = comName + comSymbol + mtrl.supplier + mtrl.ref_no;
+    console.log('comsymbo', comSymbol);
     csr = csr.toLowerCase();
     newCSRIC = csr.replace(/[^\da-z]/gi, ''); // Only read from "0" to "9" & "a" to "z"
-
+    console.log('csr', csr);
+    console.log('newCSRIC', newCSRIC);
     let existingSrMtrlObj = mLists.find(({ CSRIC }) => CSRIC === newCSRIC);
     //If the srMtrl is not existing in the mLists then generete a new one
     //This line makes sure the mList never contain duplicated srMtrl with same CSRIC
@@ -178,10 +180,9 @@ router.put('/:caseId', authUser, async (req, res) => {
   // Compare with the existing List
 
   try {
-    mLists.map(async (mList) => {
+    await mLists.map(async (mList) => {
       if (mList.CSRIC === '' || mList.CSRIC === null) {
         //IF thie mList dosen't have SRIC, then do nothing.
-        console.log('CSRIC passed is empty');
       } else {
         //Check if any item in mtrl is matched to refs in the srMtrl database
         let srMtrl = await SRMtrl.find({
@@ -189,7 +190,7 @@ router.put('/:caseId', authUser, async (req, res) => {
         });
         try {
           if (srMtrl.length !== 0) {
-            //@ Insert mtrlColor
+            //@_step_1 Insert mtrlColor
             await mList.mtrlColors.map(async (mtrlColor) => {
               let existingMtrlColor = [];
               existingMtrlColor = await SRMtrl.find({
@@ -213,7 +214,7 @@ router.put('/:caseId', authUser, async (req, res) => {
                 );
               } else {
                 // if dose have such mColor in the srMtrl.mtrlColors, insert the ref to the existing mtrlColor
-                mtrlColor.refs.map(async (ref) => {
+                await mtrlColor.refs.map(async (ref) => {
                   // $addToSet, the operatoer only push a unique item to the array. It prevent duplicated value be pushed to the refs
                   await SRMtrl.updateOne(
                     {
@@ -230,50 +231,82 @@ router.put('/:caseId', authUser, async (req, res) => {
                 });
               }
             });
-            // Clear the extra refs in mColor
+
+            //@_step_2 Clear the extra refs in mColor
             let dataBaseSrColor = await SRMtrl.findOne(
               { company: comId, CSRIC: mList.CSRIC },
               { _id: 0, mtrlColors: 1 }
             );
-            console.log(dataBaseSrColor);
 
-            dataBaseSrColor.mtrlColors.map(async (mtrlColor) => {
-              let matchedColor = mList.mtrlColors.find(
-                ({ mColor }) => mColor === mtrlColor.mColor
-              );
-              console.log(mtrlColor.mColor);
-              console.log(matchedColor);
+            let clearColorRef = await dataBaseSrColor.mtrlColors.map(
+              async (mtrlColor) => {
+                let matchedColor = mList.mtrlColors.find(
+                  ({ mColor }) => mColor === mtrlColor.mColor
+                );
 
-              if (!matchedColor) {
-                const caseId = cases._id;
-                const mtrlId = mList.mtrlColors[0].refs[0].mtrlId;
-                console.log('caseID', caseId);
-                console.log('mtrlID', mtrlId);
+                if (!matchedColor) {
+                  const caseId = cases._id;
+                  const mtrlId = mList.mtrlColors[0].refs[0].mtrlId;
 
-                await SRMtrl.updateOne(
-                  {
-                    company: comId,
-                    CSRIC: mList.CSRIC,
-                    mtrlColors: {
-                      $elemMatch: {
-                        mColor: mtrlColor.mColor,
-                        refs: {
+                  await SRMtrl.updateOne(
+                    {
+                      company: comId,
+                      CSRIC: mList.CSRIC,
+                      mtrlColors: {
+                        $elemMatch: {
+                          mColor: mtrlColor.mColor,
+                          refs: {
+                            caseId: caseId,
+                            mtrlId: mtrlId,
+                          },
+                        },
+                      },
+                    },
+                    {
+                      $pull: {
+                        'mtrlColors.$.refs': {
                           caseId: caseId,
                           mtrlId: mtrlId,
                         },
                       },
-                    },
-                  },
-                  {
-                    $pull: {
-                      'mtrlColors.$.refs': { caseId: caseId, mtrlId: mtrlId },
-                    },
-                  }
-                );
+                    }
+                  );
+                }
               }
+            );
+
+            //@_step_3 Delete the mtrlColor in mtrlColors, if the refs of which is 0, means no case ref to it.
+            // This Promise.all will wait for the async method, in this case (clearRef), finished all job, then start to do things.
+            Promise.all(clearColorRef).then(async () => {
+              let dbSrColor = await SRMtrl.findOne(
+                {
+                  company: comId,
+                  CSRIC: mList.CSRIC,
+                },
+                { _id: 0, mtrlColors: 1 }
+              );
+              dbSrColor.mtrlColors.map(async (mtrlColor) => {
+                let checkPoint = mtrlColor.refs.length;
+
+                if (checkPoint < 1) {
+                  await SRMtrl.updateOne(
+                    {
+                      company: comId,
+                      CSRIC: mList.CSRIC,
+                    },
+                    {
+                      $pull: {
+                        mtrlColors: {
+                          id: mtrlColor.id,
+                        },
+                      },
+                    }
+                  );
+                }
+              });
             });
 
-            //@ Inser SizeSPECS
+            //@_step_1 Inser SizeSPECS
             await mList.sizeSPECs.map(async (sizeSPEC) => {
               let existingSizeSPEC = [];
               existingSizeSPEC = await SRMtrl.find({
@@ -297,7 +330,7 @@ router.put('/:caseId', authUser, async (req, res) => {
                 );
               } else {
                 // if dose have such sizeSPEC in the srMtrl.sizeSPECs, insert the ref to the existing sizeSPEC
-                sizeSPEC.refs.map(async (ref) => {
+                await sizeSPEC.refs.map(async (ref) => {
                   // $addToSet, the operatoer only push a unique item to the array. It prevent duplicated value be pushed to the refs
                   await SRMtrl.updateOne(
                     {
@@ -315,7 +348,85 @@ router.put('/:caseId', authUser, async (req, res) => {
               }
             });
 
-            // return res.json(mPrice);
+            //@_step_2 Clear the extra refs in sizeSPEC
+            let dataBaseSrSPEC = await SRMtrl.findOne(
+              {
+                company: comId,
+                CSRIC: mList.CSRIC,
+              },
+              {
+                _id: 0,
+                sizeSPECs: 1,
+              }
+            );
+
+            let clearSPECRef = await dataBaseSrSPEC.sizeSPECs.map(
+              async (dbSizeSPEC) => {
+                let matchedSPEC = mList.sizeSPECs.find(
+                  ({ mSizeSPEC }) => mSizeSPEC === dbSizeSPEC.mSizeSPEC
+                );
+
+                if (!matchedSPEC) {
+                  const caseId = cases._id;
+                  const mtrlId = mList.sizeSPECs[0].refs[0].mtrlId;
+
+                  await SRMtrl.updateOne(
+                    {
+                      company: comId,
+                      CSRIC: mList.CSRIC,
+                      sizeSPECs: {
+                        $elemMatch: {
+                          mSizeSPEC: dbSizeSPEC.mSizeSPEC,
+                          refs: {
+                            caseId: caseId,
+                            mtrlId: mtrlId,
+                          },
+                        },
+                      },
+                    },
+                    {
+                      $pull: {
+                        'sizeSPECs.$.refs': {
+                          caseId: caseId,
+                          mtrlId: mtrlId,
+                        },
+                      },
+                    }
+                  );
+                }
+              }
+            );
+
+            //@_step_3 Delete the mtrlColor in mtrlColors, if the refs of which is 0, means no case ref to it.
+            // This Promise.all will wait for the async method, in this case (clearRef), finished all job, then start to do things.
+            Promise.all(clearSPECRef).then(async () => {
+              let dbSrSPEC = await SRMtrl.findOne(
+                {
+                  company: comId,
+                  CSRIC: mList.CSRIC,
+                },
+                { _id: 0, sizeSPECs: 1 }
+              );
+              dbSrSPEC.sizeSPECs.map(async (sizeSPEC) => {
+                let checkPoint = sizeSPEC.refs.length;
+
+                if (checkPoint < 1) {
+                  await SRMtrl.updateOne(
+                    {
+                      company: comId,
+                      CSRIC: mList.CSRIC,
+                    },
+                    {
+                      $pull: {
+                        sizeSPECs: {
+                          id: sizeSPEC.id,
+                        },
+                      },
+                    }
+                  );
+                }
+              });
+            });
           } else {
             // If have SRIC then generater a new srMtrl
             const newSRMtrl = new SRMtrl(mList);
@@ -457,14 +568,13 @@ router.put('/update/mpricevalues', authUser, async (req, res) => {
 // @route   PUT api/srmtrl/caseId/mtrlId
 // @desc    Delete the refs of rsMtrl by Mtrl
 // @access  Private
-router.put('/:caseId/:mtrlId', authUser, async (req, res) => {
-  // Check if the user has authority to update case ---------------------------
-  const { CSRIC } = req.body;
+router.put('/:caseId/deletesrmtrls', authUser, async (req, res) => {
+  const { comName, comSymbol, deletedMtrls } = req.body;
   const userId = req.user.id;
   const comId = req.user.company;
   const caseId = req.params.caseId;
-  const mtrlId = req.params.mtrlId;
-  // const CSRIC = mtrl.CSRIC;
+  // Check if the user has authority to update case ---------------------------
+  console.log('The delete srMtrl by mtrl is triggered');
   let user = await User.findById(userId);
   if (!user.cases) {
     return res.status(400).json({
@@ -481,92 +591,162 @@ router.put('/:caseId/:mtrlId', authUser, async (req, res) => {
   } else {
     return res.status(400).json({ msg: 'Not an authorized user.' });
   }
+
   try {
-    let srMtrl = await SRMtrl.findOne({
-      $and: [{ company: comId }, { CSRIC: CSRIC }],
-    });
+    //@ Start treat deletedMtrls array
+    //@ deleteRefs from srMtrl
+    let deleteRefLoop = await deletedMtrls.map(async (mtrl) => {
+      const mtrlId = mtrl.id;
+      const csr = comName + comSymbol + mtrl.supplier + mtrl.ref_no;
+      const lowerCasecsr = csr.toLowerCase();
+      const CSRIC = lowerCasecsr.replace(/[^\da-z]/gi, ''); // Only read from "0" to "9" & "a" to "z"
+      console.log('CSRIC', CSRIC);
+      // const CSRIC = mtrl.CSRIC;
 
-    if (!srMtrl) {
-      return res.json({ msg: 'The srMtrl dose not exist' });
-    }
+      let srMtrl = await SRMtrl.findOne({
+        CSRIC: CSRIC,
+        company: comId,
+      });
 
-    //Don't know why the mathed "updateMany" seems not work on many seperated objects, so I use updateOne with .map(), going througth each objects
+      if (!srMtrl) {
+        return res.json({ msg: 'The srMtrl dose not exist' });
+      }
 
-    //@ 1_Delete the ref from srMtrl.mtrlColors.refs, if more than one matched to the condition of $pull, after my test, this method will delete them all.
+      //@_step_1 Delete the ref from srMtrl.mtrlColors.refs, if more than one matched to the condition of $pull, after my test, this method will delete them all.
 
-    if (srMtrl.mtrlColors.length > 0) {
-      srMtrl.mtrlColors.map(async (mtrlColor) => {
+      let clearColorRef = await srMtrl.mtrlColors.map(async (mtrlColor) => {
         await SRMtrl.updateOne(
           {
-            $and: [
-              { CSRIC: CSRIC },
-              {
-                'mtrlColors.refs.mtrlId': mtrlId,
-              },
-            ],
+            CSRIC: CSRIC,
+            'mtrlColors.refs.': {
+              caseId: caseId,
+              mtrlId: mtrlId,
+            },
           },
           {
             $pull: {
-              'mtrlColors.$.refs': { mtrlId: mtrlId },
+              'mtrlColors.$.refs': {
+                caseId: caseId,
+                mtrlId: mtrlId,
+              },
             },
           }
         );
         return null;
       });
-    } else {
-      console.log('The srMtrl.mtrlColors is empty!');
-    }
 
-    if (srMtrl.sizeSPECs.length > 0) {
-      //@ 1_Delete ref_This method do things as method above
-      srMtrl.sizeSPECs.map(async (sizeSPEC) => {
+      //@_step_2 Delete the mtrlColor in mtrlColors, if the refs of which is 0, means no case ref to it.
+      // This Promise.all will wait for the async method, in this case (clearRef), finished all job, then start to do things.
+      let deleteSrMColor = Promise.all(clearColorRef).then(async () => {
+        let dbSrColor = await SRMtrl.findOne(
+          {
+            company: comId,
+            CSRIC: CSRIC,
+          },
+          { _id: 0, mtrlColors: 1 }
+        );
+        dbSrColor.mtrlColors.map(async (mtrlColor) => {
+          let checkPoint = mtrlColor.refs.length;
+          console.log('this is mtrlColor ref chekcpoint', checkPoint);
+          if (checkPoint < 1) {
+            await SRMtrl.updateOne(
+              {
+                company: comId,
+                CSRIC: CSRIC,
+              },
+              {
+                $pull: {
+                  mtrlColors: {
+                    id: mtrlColor.id,
+                  },
+                },
+              }
+            );
+          }
+        });
+      });
+
+      //@_Step_1 Delete ref_This method do things as method above
+      let clearSPECRef = await srMtrl.sizeSPECs.map(async (sizeSPEC) => {
         await SRMtrl.updateOne(
           {
-            $and: [
-              { CSRIC: CSRIC },
-              {
-                'sizeSPECs.refs.mtrlId': mtrlId,
-              },
-              {
-                'sizeSPECs.refs.caseId': caseId,
-              },
-            ],
+            CSRIC: CSRIC,
+            'sizeSPECs.refs': {
+              caseId: caseId,
+              mtrlId: mtrlId,
+            },
           },
           {
-            $pull: { 'sizeSPECs.$.refs': { mtrlId: mtrlId } },
+            $pull: {
+              'sizeSPECs.$.refs': {
+                caseId: caseId,
+                mtrlId: mtrlId,
+              },
+            },
           }
         );
-
         return null;
       });
-    } else {
-      console.log('This srMtrl.sizeSPECs is empty');
-    }
+      //@_Step_2 Delete the sizeSPEC in sizeSPECs, if the refs of which is 0, means no case ref to it.
+      // This Promise.all will wait for the async method, in this case (clearRef), finished all job, then start to do things.
+      let deleteSrSPEC = Promise.all(clearSPECRef).then(async () => {
+        let dbSrSPEC = await SRMtrl.findOne(
+          {
+            company: comId,
+            CSRIC: CSRIC,
+          },
+          { _id: 0, sizeSPECs: 1 }
+        );
+        dbSrSPEC.sizeSPECs.map(async (sizeSPEC) => {
+          let checkPoint = sizeSPEC.refs.length;
+          console.log('this is sizeSPEC ref chekcpoint', checkPoint);
+          if (checkPoint < 1) {
+            await SRMtrl.updateOne(
+              {
+                company: comId,
+                CSRIC: CSRIC,
+              },
+              {
+                $pull: {
+                  sizeSPECs: {
+                    id: sizeSPEC.id,
+                  },
+                },
+              }
+            );
+          }
+        });
+      });
 
-    return res.json({ msg: 'The srMtrl is deleted' });
+      Promise.all([deleteSrMColor, deleteSrSPEC]).then(async () => {
+        let srMtrl = await SRMtrl.findOne({
+          company: comId,
+          CSRIC: CSRIC,
+        });
+        // console.log('srMtrl', srMtrl);
+        // console.log('srMtrl.mtrlColors', srMtrl.mtrlColors);
+        const colorNum = srMtrl.mtrlColors.length;
+        const specNum = srMtrl.sizeSPECs.length;
+        const checkPoint = colorNum + specNum;
+        console.log('checkpoint of deleSrMtrl', checkPoint);
+
+        if (checkPoint === 0) {
+          await SRMtrl.deleteOne({
+            company: comId,
+            CSRIC: CSRIC,
+          });
+          console.log(`The srMtrl ${srMtrl} is deleted`);
+        }
+      });
+      return console.log('Job finished refs', CSRIC);
+    });
+
+    return res.json({
+      msg: 'The srMtrl is deleted',
+    });
   } catch (err) {
     console.log('The delete srMtrl is failed');
     return res.json(err);
-  }
-});
-
-//Not done yet
-// @route   PUT api/srmtrl/deletesrmtl
-// @desc    Delete the srmtrl if the refs of the srmtrl is 0
-// @access  Private
-router.put('/:caseId/:mtrlId', authUser, async (req, res) => {
-  // Check if the user has authority to update case ---------------------------
-  const { CSRIC } = req.body;
-  const userId = req.user.id;
-  const comId = req.user.company;
-  const caseId = req.params.caseId;
-  const mtrlId = req.params.mtrlId;
-  // const CSRIC = mtrl.CSRIC;
-  let user = await User.findById(userId);
-  if (!user.cases) {
-    return res.status(400).json({
-      msg: 'Out of authority',
-    });
   }
 });
 

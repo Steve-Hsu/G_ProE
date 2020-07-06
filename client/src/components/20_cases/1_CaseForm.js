@@ -93,10 +93,10 @@ const CaseForm = () => {
     } else {
       //Delete the refs of srMtrls from database, that deleted in UI by user
       if (deletedMtrls.length > 0) {
-        deletedMtrls.map((mtrl) => {
-          console.log('the mtrl', mtrl);
-          deleteSRMtrlByMtrl(comName, comSymbol, mtrl, _id);
-        });
+        // let deleteSrMtrl = deletedMtrls.map(async (mtrl) => {
+        //   console.log('the mtrl', mtrl);
+        await deleteSRMtrlByMtrl(comName, comSymbol, deletedMtrls, _id);
+        // });
         clearDeletedMtrl();
       }
       updatedCases = await updateCase(cases, _id);
@@ -110,7 +110,7 @@ const CaseForm = () => {
       const body = {
         cases: updatedCases,
         comName: comName,
-        conSymbol: comSymbol,
+        comSymbol: comSymbol,
       };
       updateSrMtrlByMtrl(body);
     }
