@@ -9,30 +9,48 @@ const DeletePopover = () => {
   const srMtrlContext = useContext(SrMtrlContext);
   const {
     _id,
+    caseType,
+    style,
+    client,
+    cWays,
+    sizes,
+    gQtys,
     mtrls,
     togglePopover,
     current,
     deletecWay,
     deleteSize,
     deleteMtrl,
+    uploadCase,
   } = casesContext;
   const { deleteSRMtrlByMtrl } = srMtrlContext;
   const { comName, comSymbol } = authUserContext;
 
-  const onChangeDelete = (e) => {
+  const onChangeDelete = async (e) => {
+    e.preventDefault();
     switch (Object.keys(current)[1]) {
       case 'gClr':
-        deletecWay(e);
+        deletecWay(current.Id);
         break;
       case 'gSize':
-        deleteSize(e);
+        deleteSize(current.Id);
         break;
       case 'item':
-        deleteMtrl(e);
-        const mtrlId = e.target.value;
-        const mtrl = mtrls.find(({ id }) => id === mtrlId);
-        deleteSRMtrlByMtrl(comName, comSymbol, mtrl, _id);
-
+        const mtrlId = current.id;
+        deleteSRMtrlByMtrl(comName, comSymbol, current, _id);
+        deleteMtrl(mtrlId);
+        const cases = {
+          caseType: caseType,
+          style: style,
+          client: client,
+          cWays: cWays,
+          sizes: sizes,
+          gQtys: gQtys,
+          mtrls: mtrls.filter((mtrl) => {
+            return mtrl.id !== current.id;
+          }),
+        };
+        uploadCase(cases, _id, false);
         break;
       default:
     }
@@ -62,7 +80,6 @@ const DeletePopover = () => {
         <div className='popup-btn-holder'>
           <div>
             <button
-              value={current.id}
               className='btn btn-danger btn-block center'
               onClick={onChangeDelete}
             >

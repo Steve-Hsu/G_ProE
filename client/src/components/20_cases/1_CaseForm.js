@@ -32,9 +32,7 @@ const CaseForm = () => {
     popover,
     current,
     uploadNewCase,
-    updateCase,
-    deletedMtrls,
-    clearDeletedMtrl,
+    uploadCase,
     error,
   } = casesContext;
   const { comName, comSymbol } = authUserContext;
@@ -92,26 +90,19 @@ const CaseForm = () => {
       updatedCases = await uploadNewCase(cases);
     } else {
       //Delete the refs of srMtrls from database, that deleted in UI by user
-      if (deletedMtrls.length > 0) {
-        // let deleteSrMtrl = deletedMtrls.map(async (mtrl) => {
-        //   console.log('the mtrl', mtrl);
-        // await deleteSRMtrlByMtrl(comName, comSymbol, deletedMtrls, _id);
-        // });
-        clearDeletedMtrl();
-      }
-      updatedCases = await updateCase(cases, _id);
+      updatedCases = await uploadCase(cases, _id);
     }
 
     // If error is null it will be false, else it will be true. null equals false
     if (error) {
       // If error contains some message, do not generate srMtrl.
     } else {
-      // If no error then generate srMtrl
       const body = {
         cases: updatedCases,
         comName: comName,
         comSymbol: comSymbol,
       };
+      // If no error then generate srMtrl
       updateSrMtrlByMtrl(body);
     }
   };

@@ -67,7 +67,6 @@ export const CURRENT_ADD = 'CURRENT_ADD';
 export const CURRENT_DELETE = 'CURRENT_DELETE';
 export const CASE_CLEAR = 'CASE_CLEAR';
 export const CASENO_CLEAR = 'CASENO_CLEAR';
-export const CLEAR_DELETED_MTRLS = 'CLEAR_DELETED_MTRLS';
 
 //@ may not need this one --------------------------------------------
 export const CLEAR_USERS_STATE = 'CLEAR_USERS_STATE';

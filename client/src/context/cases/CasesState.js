@@ -27,7 +27,6 @@ import {
   CLIENT_UPDATE,
   CASE_CLEAR,
   CASENO_CLEAR,
-  CLEAR_DELETED_MTRLS,
   TOGGLE_ISUPDATE,
 } from '../types';
 
@@ -383,9 +382,7 @@ const CasesState = (props) => {
     mtrls.map((mtrl) => updateCsptgClr(mtrl.id, targetID));
   };
 
-  const deletecWay = (e) => {
-    e.preventDefault();
-    const cWayId = e.target.value;
+  const deletecWay = (cWayId) => {
     //Delete the cWay in eatch mtrl
     deletegQtyBycWay(cWayId);
     deleteMtrlColor(cWayId);
@@ -429,9 +426,7 @@ const CasesState = (props) => {
     mtrls.map((mtrl) => updateCsptgSize(mtrl.id, targetID));
   };
 
-  const deleteSize = (e) => {
-    e.preventDefault();
-    const sizeId = e.target.value;
+  const deleteSize = (sizeId) => {
     //Delete the size SPEC in eatch mtrl
     deletegQtyBySize(sizeId);
     deleteMtrlSizeSPEC(sizeId);
@@ -479,14 +474,8 @@ const CasesState = (props) => {
     }
   };
 
-  const deleteMtrl = (e) => {
-    const id = e.target.value;
-    e.preventDefault();
-    dispatch({ type: MTRL_DELETE, payload: id });
-  };
-
-  const clearDeletedMtrl = () => {
-    dispatch({ type: CLEAR_DELETED_MTRLS });
+  const deleteMtrl = (mtrlId) => {
+    dispatch({ type: MTRL_DELETE, payload: mtrlId });
   };
 
   // @Layer 2 functions ----------------------------------------------------------------------------------------------------------
@@ -695,8 +684,8 @@ const CasesState = (props) => {
     }
   };
 
-  // Update existing case- Submit form
-  const updateCase = async (cases, caseId) => {
+  // Upload existing case- Submit form
+  const uploadCase = async (cases, caseId, isDownLoadCase = true) => {
     const config = {
       headers: {
         'Content-Type': 'application/json',
@@ -706,10 +695,11 @@ const CasesState = (props) => {
     try {
       const res = await axios.put(`/api/case/${caseId}`, cases, config);
       console.log('Update succeed!');
-
-      //This dispatch is nothing related to the upload, just after upload we need to take back the cases to feed to the state for the UI is updated to inform the user, so here use CASE_DOWNLOAD
-      dispatch({ type: CASE_DOWNLOAD, payload: res.data });
-      dispatch({ type: TOGGLE_ISUPDATE, payload: true });
+      if (isDownLoadCase) {
+        //This dispatch is nothing related to the upload, just after upload we need to take back the cases to feed to the state for the UI is updated to inform the user, so here use CASE_DOWNLOAD
+        dispatch({ type: CASE_DOWNLOAD, payload: res.data });
+        dispatch({ type: TOGGLE_ISUPDATE, payload: true });
+      }
       return res.data;
     } catch (err) {
       dispatch({
@@ -786,7 +776,6 @@ const CasesState = (props) => {
         deleteSize,
         addMtrl,
         deleteMtrl,
-        clearDeletedMtrl,
         expandExtraPanels,
         addValueMtrlColor,
         addValueMtrlSizeSPEC,
@@ -794,7 +783,7 @@ const CasesState = (props) => {
         addMtrlValue,
         togglePopover,
         uploadNewCase,
-        updateCase,
+        uploadCase,
         downloadCase,
         defaultCase,
         clearcNo,
