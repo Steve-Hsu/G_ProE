@@ -11,6 +11,7 @@ import UserManager from './components/pages/11_UserManager';
 import Director from './components/pages/21_Director';
 import CaseMerchandiser from './components/pages/22_CaseMerchandiser';
 import MPrice from './components/pages/31_MPrice';
+import Quotation from './components/pages/41_Quotation';
 //ComRouter
 import ComLogin from './components/authPage/10_ComLogin';
 import UserLogin from './components/authPage/20_UserLogin';
@@ -94,6 +95,10 @@ const App = () => {
                             <PrivateUserRoute
                               path='/api/case/mprice'
                               component={MPrice}
+                            />
+                            <Route
+                              path='/api/case/quogarment'
+                              component={Quotation}
                             />
                             {/* This NotFound return a page when the previous page is not found. */}
                             <Route component={NotFound} />

@@ -13,7 +13,7 @@ export const Quotation = (props) => {
       <LeftBar currentPath={currentPath} />
 
       {/* Grid-2 */}
-      {/* <MPriceForm /> */}
+      <div></div>
     </div>
   );
 };
