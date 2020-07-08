@@ -81,17 +81,21 @@ router.get('/', authUser, async (req, res) => {
       await User.findOne(
         { company: req.user.company, _id: c.user },
         { _id: 0, name: 1 }
-      ).then(async (result) => {
-        if (result) {
-          c.userName = await result.name;
-          c.style = 'go FXXX yourself';
-          console.log(`${c} and ${c.name}`);
-        }
-        n = n + 1;
-        if (n === caseList.length) {
-          resolve();
-        }
-      });
+      )
+        .then(async (result) => {
+          if (result) {
+            c.userName = await result.name;
+            c.style = 'go FXXX yourself';
+            console.log(`${c} and ${c.name}`);
+          }
+          n = n + 1;
+          return n;
+        })
+        .then((n) => {
+          if (n === caseList.length) {
+            resolve();
+          }
+        });
     });
   });
 
