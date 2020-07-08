@@ -32,7 +32,7 @@ import {
 
 const CasesState = (props) => {
   // @State
-  const initialStete = {
+  const initialState = {
     _id: null, //It will generated automatically by mongoDB
     user: null,
     company: null,
@@ -125,7 +125,7 @@ const CasesState = (props) => {
     requiredMQty: 0,
   };
 
-  const [state, dispatch] = useReducer(CasesReducer, initialStete);
+  const [state, dispatch] = useReducer(CasesReducer, initialState);
   const { sizes, cWays, gQtys, mtrls } = state;
 
   // @Actions ----------------------------------------------------------------------------------------------------------
