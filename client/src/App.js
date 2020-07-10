@@ -96,7 +96,7 @@ const App = () => {
                                 path='/api/case/mprice'
                                 component={MPrice}
                               />
-                              <Route
+                              <PrivateUserRoute
                                 path='/api/case/quogarment'
                                 component={Quotation}
                               />

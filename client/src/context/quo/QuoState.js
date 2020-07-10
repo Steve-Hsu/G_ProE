@@ -1,38 +1,68 @@
 import React, { useReducer } from 'react';
 import axios from 'axios';
-import quoContext from './quoContext';
-import quoReducer from './quoReducer';
+import QuoContext from './quoContext';
+import QuoReducer from './quoReducer';
 
-import { TEST_TYPE } from '../types';
+import { CASE_LIST_DOWNLOAD, QUOFORM_SWITCH, QUOFORM_DOWNLOAD } from '../types';
 
-const quoState = (props) => {
+const QuoState = (props) => {
   const initialState = {
-    casesList: [],
-    isQuotating: false,
+    caseList: [],
+    isQuotating: null,
     quoForm: null,
   };
-
-  const [state, dispatch] = useReducer(quoReducer, initialState);
-  const { casesList } = state;
-
+  const [state, dispatch] = useReducer(QuoReducer, initialState);
+  const { casesList, isQuotating } = state;
   //@_action
-  const getCaseList = () => {};
-  const action = () => {
-    dispatch({ type: TEST_TYPE, payload: 'What ever' });
+  const getCaseList = async () => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const res = await axios.get('/api/quo', config);
+    console.log('Upload succeed!');
+    dispatch({ type: CASE_LIST_DOWNLOAD, payload: res.data });
+  };
+
+  const switchQuoForm = (cNo) => {
+    if (isQuotating === null) {
+      dispatch({ type: QUOFORM_SWITCH, payload: cNo });
+      return cNo;
+    } else {
+      dispatch({ type: QUOFORM_SWITCH, payload: null });
+      return null;
+    }
+  };
+
+  const downLoadQuoForm = async (check) => {
+    if (check !== null) {
+      // const config = {
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      // };
+      const res = await axios.get(`/api/quo/quoform/${check}`);
+      dispatch({ type: QUOFORM_DOWNLOAD, payload: res.data });
+    } else {
+      dispatch({ type: QUOFORM_DOWNLOAD, payload: null });
+    }
   };
 
   return (
-    <quoContext.Provider
+    <QuoContext.Provider
       value={{
-        casesList: state.casesList,
+        caseList: state.caseList,
         isQuotating: state.isQuotating,
         quoForm: state.quoForm,
-        action,
+        getCaseList,
+        switchQuoForm,
+        downLoadQuoForm,
       }}
     >
       {props.children}
-    </quoContext.Provider>
+    </QuoContext.Provider>
   );
 };
 
-export default quoState;
+export default QuoState;

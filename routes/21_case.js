@@ -150,7 +150,7 @@ router.post(
   }
 );
 
-// @route   PUT api/case/:cNo
+// @route   PUT api/case/:_id
 // @desc    Update case
 // @Steve   Don't allow to change the cNo. Prevent messing up the jobs of user.
 // @access  Private

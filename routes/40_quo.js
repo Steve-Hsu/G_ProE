@@ -8,56 +8,12 @@ const { check, validationResult } = require('express-validator');
 const User = require('../models/10_User');
 const Case = require('../models/20_Case');
 const SRMtrl = require('../models/30_srMtrl');
+const QUO = require('../models/40_Quotation');
 
 // @route   GET api/quo
 // @desc    Read the compnay's srMtrl from database
 // @access  Private
 router.get('/', authUser, async (req, res) => {
-  // let dataIsDone_1 = true;
-  // let dataIsDone_2 = true;
-  // let arr = ["I'm", 'a', 'super', 'smart', 'man'];
-
-  // let promise_1 = new Promise((resolve, reject) => {
-  //   if (dataIsDone_1) {
-  //     let n = 0;
-  //     let string = '';
-  //     arr.map((s) => {
-  //       new Promise((resolve, reject) => {
-  //         setTimeout(() => {
-  //           string = string + ' ' + s;
-  //           resolve();
-  //         }, 3000);
-  //       }).then(() => {
-  //         n = n + 1;
-  //         if (n === arr.length) {
-  //           resolve(string);
-  //           console.log('what hheppand');
-  //         }
-  //       });
-  //     });
-  //   } else {
-  //     reject('The reject of promise_1 is triggered');
-  //   }
-  // });
-
-  // let promise_2 = new Promise((resolve, reject) => {
-  //   if (dataIsDone_2) {
-  //     resolve('Yes promise_2 is fulfilled');
-  //   } else {
-  //     reject('The reject of promise_2 is triggered');
-  //   }
-  // });
-
-  // Promise.all([promise_1, promise_2])
-  //   .then((value) => {
-  //     console.log(value);
-  //   })
-  //   .catch((value) => {
-  //     console.log(value);
-  //   });
-
-  // res.json({ msg: 'this is test' });
-  // let test = '1';
   let caseList = await Case.aggregate([
     {
       $match: { company: mongoose.Types.ObjectId(req.user.company) },
@@ -70,11 +26,12 @@ router.get('/', authUser, async (req, res) => {
         style: 1,
         client: 1,
         merchandiser: '',
+        quoNo: '',
       },
     },
   ]).sort({ date: -1 });
 
-  let insertList = new Promise((resolve, reject) => {
+  let insertList = await new Promise((resolve, reject) => {
     let n = 0;
 
     caseList.map(async (c) => {
@@ -84,9 +41,7 @@ router.get('/', authUser, async (req, res) => {
       )
         .then(async (result) => {
           if (result) {
-            c.userName = await result.name;
-            c.style = 'go FXXX yourself';
-            console.log(`${c} and ${c.name}`);
+            c.merchandiser = await result.name;
           }
           n = n + 1;
           return n;
@@ -101,15 +56,82 @@ router.get('/', authUser, async (req, res) => {
 
   try {
     Promise.all([caseList, insertList]).then(async () => {
-      console.log('this is list', caseList);
+      console.log('caseList is sent out');
       return res.json(caseList);
     });
-
-    console.log('here in try');
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
   }
+});
+
+// get(`/api/quo/quoForm/${isQuotating}`);
+// @route   GET api/quo/quoform/cNo
+// @desc    Read the compnay's srMtrl from database
+// @access  Private
+router.get('/quoform/:cNo', authUser, async (req, res) => {
+  const comId = req.user.company;
+  const cNo = req.params.cNo;
+  const quoForm = await QUO.findOne({ cNo: cNo, company: comId })
+    .then((result) => {
+      if (!result) {
+        const newQuoForm = new QUO({
+          company: comId,
+          cNo: cNo,
+          currency: '',
+          cmpts: [],
+          mtrlQuos: [],
+          otherExpense: [],
+          fob: 0,
+        });
+        newQuoForm.save();
+        return newQuoForm;
+      } else {
+        return result;
+      }
+    })
+    .catch((err) => {
+      console.log("MongoDB or internet problem, can't find quoForm", err);
+    });
+
+  const caseInfo = await Case.findOne(
+    {
+      cNo: cNo,
+      company: comId,
+    },
+    { cNo: 1, caseType: 1, style: 1, client: 1, mtrls: 1 }
+  ).catch((err) => {
+    console.log("MongoDB or internet problem, can't find caseInfo", err);
+  });
+
+  Promise.all([quoForm, caseInfo])
+    .then(() => {
+      let finalForm = {};
+      if (quoForm.cNo === caseInfo.cNo) {
+        finalForm = {
+          company: quoForm.company,
+          cNo: quoForm.cNo,
+          client: caseInfo.client,
+          style: caseInfo.style,
+          caseType: caseInfo.caseType,
+          currency: quoForm.currency,
+          cmpts: quoForm.cmpts,
+          mtrlQuos: quoForm.MtrlQuos,
+          otherExpense: quoForm.otherExpense,
+          fob: quoForm.fob,
+          mtrls: caseInfo.mtrls,
+        };
+        // mtrls array, only for showing to the user, not need to be part of quoForm in Database.
+      }
+      return finalForm;
+    })
+    .then((result) => {
+      console.log(`this is final quoForm ${result.cNo} is sent out`);
+      return res.json(result);
+    })
+    .catch((err) => {
+      console.log('Insert caseInfo to quoForm problem', err);
+    });
 });
 
 module.exports = router;

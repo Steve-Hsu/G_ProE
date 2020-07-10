@@ -1,9 +1,13 @@
-import { TEST_TYPE } from '../types';
+import { CASE_LIST_DOWNLOAD, QUOFORM_SWITCH, QUOFORM_DOWNLOAD } from '../types';
 
 export default (state, action) => {
   switch (action.type) {
-    case TEST_TYPE:
-      return {};
+    case CASE_LIST_DOWNLOAD:
+      return { ...state, caseList: action.payload };
+    case QUOFORM_SWITCH:
+      return { ...state, isQuotating: action.payload };
+    case QUOFORM_DOWNLOAD:
+      return { ...state, quoForm: action.payload };
     default:
   }
 };

@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import QuoContext from '../../context/quo/quoContext';
 
 // Components
 import LeftBar from '../layout/LeftBar';
+import QuoCaseSelector from '../../components/40_quo/40_01_quoCaseSelector';
+import QuoForm from '../../components/40_quo/40_02_quoForm';
 // quoForm
 
-export const Quotation = (props) => {
+const Quotation = (props) => {
+  // Context
+  const quoContext = useContext(QuoContext);
+  const { caseList, isQuotating, switchQuoForm, getCaseList } = quoContext;
   const currentPath = props.location.pathname;
 
   return (
@@ -13,7 +19,8 @@ export const Quotation = (props) => {
       <LeftBar currentPath={currentPath} />
 
       {/* Grid-2 */}
-      <div></div>
+
+      {isQuotating === null ? <QuoCaseSelector /> : <QuoForm />}
     </div>
   );
 };
