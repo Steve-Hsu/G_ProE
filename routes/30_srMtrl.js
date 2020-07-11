@@ -90,9 +90,10 @@ router.put('/:caseId', authUser, async (req, res) => {
     let existingSrMtrlObj = mLists.find(({ CSRIC }) => CSRIC === newCSRIC);
     //If the srMtrl is not existing in the mLists then generete a new one
     //This line makes sure the mList never contain duplicated srMtrl with same CSRIC
-    console.log('this is existingSrMtrlObj', existingSrMtrlObj);
+    // console.log('this is existingSrMtrlObj', existingSrMtrlObj);
 
     let mtrlObj = {};
+    // console.log('Check the if', !existingSrMtrlObj);
     if (!existingSrMtrlObj) {
       mtrlObj = {
         supplier: mtrl.supplier,
@@ -107,99 +108,130 @@ router.put('/:caseId', authUser, async (req, res) => {
     } else {
       mtrlObj = existingSrMtrlObj;
     }
-    console.log(`This is mtrlObj`, mtrlObj);
 
-    //@ insert color
-    // let value = arr.reduce(
-    //   function (accumulator, item, index, array) {
-    //     // ...
-    //   },
-    //   [initial]
-    // );
-
-    let checkColorArry = [];
-    mtrl.mtrlColors.map((mtrlColor) => {
-      // let existingColor = mtrlObj.mtrlColors.find(
-      //   ({ mColor }) => mColor === mtrlColor.mColor
-      // );
-      let existingColor = mtrlObj.mtrlColors.some(
-        (el) => el.mColor === mtrlColor.mColor
-      );
-
-      console.log(`The mtrl Color`, mtrlColor.mColor);
-      console.log(`The existingColor`, existingColor);
-      console.log(
-        `The duplicated color`,
-        checkColorArry.some((x) => x == mtrlColor.mColor)
-      );
-      checkColorArry.push(mtrlColor.mColor);
-      console.log('the checkColorarr', checkColorArry);
-      if (!existingColor) {
-        //If not such mtrlColor, then create a new one
-        mtrlObj.mtrlColors.push({
-          id: uuidv4() + myModule.generateId(),
-          mColor: mtrlColor.mColor,
-          refs: [
-            {
-              caseId: cases._id,
-              mtrlId: mtrl.id,
-            },
-          ],
-        });
+    // Insert mtrlColors to newSrMtrlObj
+    mtrl.mtrlColors.map((mtrlColor, index) => {
+      const idx = mtrl.mtrlColors
+        .map((item) => {
+          return item.mColor;
+        })
+        .indexOf(mtrlColor.mColor);
+      if (idx !== index) {
+        // Here means the mColor is duplicated. It appears more than once.
       } else {
-        //If have same mtrlColor in same mtrl, then insert the refs only
-        let sameMtrlInSameColor = existingColor.refs.find(
-          ({ caseId, mtrlId }) => caseId === cases._id && mtrlId === mtrl.id
-        );
-        if (sameMtrlInSameColor) {
-          // same mtrl if in same mColor then don't need to generate a new refs. Just need a insert the refs, which is the mtrlId and caseId in thie mColor
-        } else {
-          existingColor.refs.push({
-            caseId: cases._id,
-            mtrlId: mtrl.id,
+        //@ New CSRIC mtrl
+        if (!existingSrMtrlObj) {
+          mtrlObj.mtrlColors.push({
+            id: uuidv4() + myModule.generateId(),
+            mColor: mtrlColor.mColor,
+            refs: [
+              {
+                caseId: cases._id,
+                mtrlId: mtrl.id,
+              },
+            ],
           });
+        } else {
+          //@ Old CSRIC
+          let mtrlObjHaveTheColor = mtrlObj.mtrlColors.find(
+            ({ mColor }) => mColor == mtrlColor.mColor
+          );
+
+          if (!mtrlObjHaveTheColor) {
+            //Old CSRIC don't have the mColor
+            mtrlObj.mtrlColors.push({
+              id: uuidv4() + myModule.generateId(),
+              mColor: mtrlColor.mColor,
+              refs: [
+                {
+                  caseId: cases._id,
+                  mtrlId: mtrl.id,
+                },
+              ],
+            });
+          } else {
+            //Old CSRIC have the mColor
+            let sameMtrlInSameColor = mtrlObjHaveTheColor.refs.find(
+              ({ caseId, mtrlId }) => caseId === cases._id && mtrlId === mtrl.id
+            );
+            if (sameMtrlInSameColor) {
+              //Same case same mtrl with same mColor don't need to insert refs.
+            } else {
+              //Insert refs for new Case
+              mtrlObjHaveTheColor.refs.push({
+                caseId: cases._id,
+                mtrlId: mtrl.id,
+              });
+            }
+          }
         }
       }
     });
 
-    //@ insert SPEC
-    mtrl.sizeSPECs.map((sizeSPEC) => {
-      let existingsSPEC = mtrlObj.sizeSPECs.find(
-        ({ mSizeSPEC }) => mSizeSPEC === sizeSPEC.mSizeSPEC
-      );
-      if (!existingsSPEC) {
-        //IF no such sizeSPEC then create a new one
-        mtrlObj.sizeSPECs.push({
-          id: uuidv4() + myModule.generateId(),
-          mSizeSPEC: sizeSPEC.mSizeSPEC,
-          refs: [
-            {
-              caseId: cases._id,
-              mtrlId: mtrl.id,
-            },
-          ],
-        });
+    //Insert sizeSPEC to newSrMtrlObj
+    mtrl.sizeSPECs.map((sizeSPEC, index) => {
+      const idx = mtrl.sizeSPECs
+        .map((item) => {
+          return item.mSizeSPEC;
+        })
+        .indexOf(sizeSPEC.mSizeSPEC);
+      if (idx !== index) {
+        // Here means the mSizeSPEC is duplicated in the mtrl. It appears more than once.
       } else {
-        let sameSizeSPECInSameSPEC = existingsSPEC.refs.find(
-          ({ caseId, mtrlId }) => caseId === cases._id && mtrlId === mtrl.id
-        );
-        if (sameSizeSPECInSameSPEC) {
-          // same mSizeSPEC if in same sizeSPEC then don't need to generate a new refs.
-        } else {
-          existingsSPEC.refs.push({
-            caseId: cases._id,
-            mtrlId: mtrl.id,
+        //@ New CSRIC mtrl
+        if (!existingSrMtrlObj) {
+          mtrlObj.sizeSPECs.push({
+            id: uuidv4() + myModule.generateId(),
+            mSizeSPEC: sizeSPEC.mSizeSPEC,
+            refs: [
+              {
+                caseId: cases._id,
+                mtrlId: mtrl.id,
+              },
+            ],
           });
+        } else {
+          //@ Old CSRIC
+          let existingsSPEC = mtrlObj.sizeSPECs.find(
+            ({ mSizeSPEC }) => mSizeSPEC === sizeSPEC.mSizeSPEC
+          );
+
+          if (!existingsSPEC) {
+            //Old CSRIC don't have this mSizeSPEC
+            mtrlObj.sizeSPECs.push({
+              id: uuidv4() + myModule.generateId(),
+              mSizeSPEC: sizeSPEC.mSizeSPEC,
+              refs: [
+                {
+                  caseId: cases._id,
+                  mtrlId: mtrl.id,
+                },
+              ],
+            });
+          } else {
+            //Old CSRIC have the mSizeSPEC
+            let sameSizeSPECInSameSPEC = existingsSPEC.refs.find(
+              ({ caseId, mtrlId }) => caseId === cases._id && mtrlId === mtrl.id
+            );
+            if (sameSizeSPECInSameSPEC) {
+              //Same case same mtrl with same mSizeSPEC don't need to insert refs.
+            } else {
+              //Insert refs for new Case
+              existingsSPEC.refs.push({
+                caseId: cases._id,
+                mtrlId: mtrl.id,
+              });
+            }
+          }
         }
       }
     });
-    return mLists.push(mtrlObj);
-  });
-
-  mLists.map((mtrl) => {
-    mtrl.mtrlColors.map((mtrlColor) => {
-      console.log(`${mtrl.CSRIC} 's Color ${mtrlColor.mColor}`);
-    });
+    if (!existingSrMtrlObj) {
+      //Only push when the mtrlObj is a new CSRIC mtrl,
+      return mLists.push(mtrlObj);
+    } else {
+      return null;
+    }
   });
 
   // console.log(mLists);
@@ -236,10 +268,10 @@ router.put('/:caseId', authUser, async (req, res) => {
                   { mtrlColors: 1, CSRIC: 1 }
                 )
                   .then(async (srMtrl) => {
-                    console.log(
-                      `this is the color : ${mtrlColor.mColor}'s srMtrl`,
-                      srMtrl
-                    );
+                    // console.log(
+                    //   `this is the color : ${mtrlColor.mColor}'s srMtrl`,
+                    //   srMtrl
+                    // );
                     if (srMtrl === null) {
                       // if no such mColor in the srMtrl.mtrlColors
                       await SRMtrl.updateOne(
