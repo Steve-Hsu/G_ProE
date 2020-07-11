@@ -194,8 +194,8 @@ router.post(
       '_' +
       caseTypeSymbol;
 
-    try {
-      Promise.all([trimedcWays, trimedSizes, trimedMtrls]).then(async () => {
+    Promise.all([trimedcWays, trimedSizes, trimedMtrls])
+      .then(async () => {
         const newCase = new Case({
           user: req.user.id,
           company: req.user.company,
@@ -212,11 +212,11 @@ router.post(
         const nCase = await newCase.save();
 
         res.json(nCase);
+      })
+      .catch((err) => {
+        console.error(err.message);
+        res.status(500).send('Server Errors');
       });
-    } catch (err) {
-      console.error(err.message);
-      res.status(500).send('Server Errors');
-    }
   }
 );
 
@@ -245,28 +245,103 @@ router.put('/:id', authUser, async (req, res) => {
 
   // Update case ---------------------------------------------------------------
   const caseFields = req.body;
+  const { caseType, style, client, cWays, sizes, gQtys, mtrls } = caseFields;
+  //@ Delete the white space from strings of array items in the body, the cWays, sizes, and mtrls
+  const trimedcWays = new Promise((resolve) => {
+    let cWayCounter = 0;
+    cWays.map((cWay) => {
+      cWay.gClr = cWay.gClr.trim();
+      cWayCounter = cWayCounter + 1;
+      if (cWayCounter === cWays.length) return resolve();
+    });
+  });
 
-  try {
-    // Get the id of case from URL by params
-    if (!cases)
-      return res.status(404).json({
-        msg: 'Case not found',
+  const trimedSizes = new Promise((resolve) => {
+    let sizeCounter = 0;
+    sizes.map((size) => {
+      size.gSize = size.gSize.trim();
+      sizeCounter = sizeCounter + 1;
+      if (sizeCounter === sizes.length) return resolve();
+    });
+  });
+
+  const trimedMtrls = new Promise((resolve, reject) => {
+    let trimCounter = 0;
+    mtrls.map((mtrl) => {
+      mtrl.item = mtrl.item.trim();
+      mtrl.spec = mtrl.spec.trim();
+      mtrl.supplier = mtrl.supplier.trim();
+      mtrl.ref_no = mtrl.ref_no.trim();
+      mtrl.position = mtrl.position.trim();
+      mtrl.description = mtrl.description.trim();
+      const mtrlColorPromise = new Promise((resolve) => {
+        let num = 0;
+        mtrl.mtrlColors.map((mtrlColor) => {
+          mtrlColor.mColor = mtrlColor.mColor.trim();
+          num = num + 1;
+          if (num === mtrl.mtrlColors.length) return resolve();
+        });
       });
 
-    cases = await Case.updateOne(
-      { _id: req.params.id },
-      {
-        $set: caseFields,
-      },
-      { new: true }
-    );
-    // method .updateOne() will not return the case it self, so here make a one, named "updateCases" and return to the fronend client.
-    let updatedCases = await Case.findOne({ _id: req.params.id });
-    res.json(updatedCases);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
-  }
+      const mtrlSPECPromise = new Promise((resolve) => {
+        let num = 0;
+        mtrl.sizeSPECs.map((sizeSPEC) => {
+          sizeSPEC.mSizeSPEC = sizeSPEC.mSizeSPEC.trim();
+          num = num + 1;
+          if (num === mtrl.sizeSPECs.length) return resolve();
+        });
+      });
+
+      const mtrlCsptPromise = new Promise((resolve) => {
+        let num = 0;
+        mtrl.cspts.map((cspt) => {
+          cspt.gClr = cspt.gClr.trim();
+          cspt.gSize = cspt.gSize.trim();
+          cspt.mColor = cspt.mColor.trim();
+          cspt.mSizeSPEC = cspt.mSizeSPEC.trim();
+          cspt.unit = cspt.unit.trim();
+          num = num + 1;
+          if (num === mtrl.cspts.length) return resolve();
+        });
+      });
+      //@ Delete the white space from strings of style and client
+      // style = style.trim();
+      // client = client.trim();
+      caseFields.style = caseFields.style.trim();
+      caseFields.client = caseFields.client.trim();
+
+      Promise.all([mtrlColorPromise, mtrlSPECPromise, mtrlCsptPromise]).then(
+        () => {
+          trimCounter = trimCounter + 1;
+          if (trimCounter === mtrls.length) return resolve();
+        }
+      );
+    });
+  });
+
+  // Get the id of case from URL by params
+  Promise.all([trimedcWays, trimedSizes, trimedMtrls])
+    .then(async () => {
+      if (!cases)
+        return res.status(404).json({
+          msg: 'Case not found',
+        });
+
+      cases = await Case.updateOne(
+        { _id: req.params.id },
+        {
+          $set: caseFields,
+        },
+        { new: true }
+      );
+      // method .updateOne() will not return the case it self, so here make a one, named "updateCases" and return to the fronend client.
+      let updatedCases = await Case.findOne({ _id: req.params.id });
+      res.json(updatedCases);
+    })
+    .catch((err) => {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    });
 });
 
 // @route   DELETE api/case/:id
