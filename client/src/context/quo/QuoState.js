@@ -3,16 +3,22 @@ import axios from 'axios';
 import QuoContext from './quoContext';
 import QuoReducer from './quoReducer';
 
-import { CASE_LIST_DOWNLOAD, QUOFORM_SWITCH, QUOFORM_DOWNLOAD } from '../types';
+import {
+  CASE_LIST_DOWNLOAD,
+  QUOFORM_SWITCH,
+  QUOFORM_DOWNLOAD,
+  QUOPAGE_SWITCH,
+} from '../types';
 
 const QuoState = (props) => {
   const initialState = {
     caseList: [],
+    quotateFor: null,
     isQuotating: null,
     quoForm: null,
   };
   const [state, dispatch] = useReducer(QuoReducer, initialState);
-  const { casesList, isQuotating } = state;
+  const { quotateFor, isQuotating } = state;
   //@_action
   const getCaseList = async () => {
     const config = {
@@ -23,6 +29,14 @@ const QuoState = (props) => {
     const res = await axios.get('/api/quo', config);
     console.log('Upload succeed!');
     dispatch({ type: CASE_LIST_DOWNLOAD, payload: res.data });
+  };
+
+  const switchPage = (value) => {
+    if (quotateFor === null) {
+      dispatch({ type: QUOPAGE_SWITCH, payload: value });
+    } else {
+      dispatch({ type: QUOPAGE_SWITCH, payload: null });
+    }
   };
 
   const switchQuoForm = (cNo) => {
@@ -53,9 +67,11 @@ const QuoState = (props) => {
     <QuoContext.Provider
       value={{
         caseList: state.caseList,
+        quotateFor: state.quotateFor,
         isQuotating: state.isQuotating,
         quoForm: state.quoForm,
         getCaseList,
+        switchPage,
         switchQuoForm,
         downLoadQuoForm,
       }}

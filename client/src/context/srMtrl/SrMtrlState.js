@@ -38,6 +38,7 @@ const SrMtrlState = (props) => {
     mPrice: '',
     moq: '',
     moqPrice: '',
+    quotation: '',
   };
 
   //@ Actions------------------------------------------------------
@@ -158,6 +159,7 @@ const SrMtrlState = (props) => {
         mPrice: '',
         moq: '',
         moqPrice: '',
+        quotation: '',
       });
       dispatch({ type: SRMTRL_UPDATE, payload: srMaterials });
     }

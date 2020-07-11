@@ -4,7 +4,7 @@ import CasesContext from '../../context/cases/casesContext';
 import SrMtrlContext from '../../context/srMtrl/srMtrlContext';
 import MPrice from './30_01_01_01_mPrice';
 
-const SrMtrl = ({ srMtrl }) => {
+const SrMtrl = ({ srMtrl, currentPath }) => {
   const casesContext = useContext(CasesContext);
   const srMtrlContext = useContext(SrMtrlContext);
   const { expandPrice, addMPrice } = srMtrlContext;
@@ -29,21 +29,28 @@ const SrMtrl = ({ srMtrl }) => {
           </label>
           <div id={`ref_no${srMtrl._id}`}>{srMtrl.ref_no}</div>
         </div>
-        <div>
-          {'Add Price'}
-          <button
-            name='mPriceBtn'
-            className='btn btn-sm btn-primary btn-rounded-square'
-            onClick={onClick}
-          >
-            +
-          </button>
-        </div>
+        {currentPath === '/api/case/mprice' ? (
+          <div>
+            {'Add Price'}
+            <button
+              name='mPriceBtn'
+              className='btn btn-sm btn-primary btn-rounded-square'
+              onClick={onClick}
+            >
+              +
+            </button>
+          </div>
+        ) : null}
       </div>
       {/* mPrice container */}
       <div>
         {srMtrl.mPrices.map((mPrice) => (
-          <MPrice key={mPrice.id} mPrice={mPrice} srMtrl={srMtrl} />
+          <MPrice
+            key={mPrice.id}
+            mPrice={mPrice}
+            srMtrl={srMtrl}
+            currentPath={currentPath}
+          />
         ))}
       </div>
     </div>

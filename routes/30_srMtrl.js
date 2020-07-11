@@ -81,21 +81,18 @@ router.put('/:caseId', authUser, async (req, res) => {
   let mLists = [];
   let mtrls = cases.mtrls;
 
-  mtrls.map((mtrl) => {
-    let csr = '';
-    let newCSRIC = '';
-    // let existingSrMtrlObj = {};
-    // let mtrlObj = {};
-    csr = comName + comSymbol + mtrl.supplier + mtrl.ref_no;
+  mtrls.map(async (mtrl) => {
+    const newCSRIC = (comName + comSymbol + mtrl.supplier + mtrl.ref_no)
+      .toLowerCase()
+      .replace(/[^\da-z]/gi, '');
     console.log('comsymbo', comSymbol);
-    csr = csr.toLowerCase();
-    newCSRIC = csr.replace(/[^\da-z]/gi, ''); // Only read from "0" to "9" & "a" to "z"
-    console.log('csr', csr);
     console.log('newCSRIC', newCSRIC);
     let existingSrMtrlObj = mLists.find(({ CSRIC }) => CSRIC === newCSRIC);
     //If the srMtrl is not existing in the mLists then generete a new one
     //This line makes sure the mList never contain duplicated srMtrl with same CSRIC
-    let mtrlObj;
+    console.log('this is existingSrMtrlObj', existingSrMtrlObj);
+
+    let mtrlObj = {};
     if (!existingSrMtrlObj) {
       mtrlObj = {
         supplier: mtrl.supplier,
@@ -110,12 +107,33 @@ router.put('/:caseId', authUser, async (req, res) => {
     } else {
       mtrlObj = existingSrMtrlObj;
     }
+    console.log(`This is mtrlObj`, mtrlObj);
 
-    //@ inser color
+    //@ insert color
+    // let value = arr.reduce(
+    //   function (accumulator, item, index, array) {
+    //     // ...
+    //   },
+    //   [initial]
+    // );
+
+    let checkColorArry = [];
     mtrl.mtrlColors.map((mtrlColor) => {
-      let existingColor = mtrlObj.mtrlColors.find(
-        ({ mColor }) => mColor === mtrlColor.mColor
+      // let existingColor = mtrlObj.mtrlColors.find(
+      //   ({ mColor }) => mColor === mtrlColor.mColor
+      // );
+      let existingColor = mtrlObj.mtrlColors.some(
+        (el) => el.mColor === mtrlColor.mColor
       );
+
+      console.log(`The mtrl Color`, mtrlColor.mColor);
+      console.log(`The existingColor`, existingColor);
+      console.log(
+        `The duplicated color`,
+        checkColorArry.some((x) => x == mtrlColor.mColor)
+      );
+      checkColorArry.push(mtrlColor.mColor);
+      console.log('the checkColorarr', checkColorArry);
       if (!existingColor) {
         //If not such mtrlColor, then create a new one
         mtrlObj.mtrlColors.push({
@@ -129,6 +147,7 @@ router.put('/:caseId', authUser, async (req, res) => {
           ],
         });
       } else {
+        //If have same mtrlColor in same mtrl, then insert the refs only
         let sameMtrlInSameColor = existingColor.refs.find(
           ({ caseId, mtrlId }) => caseId === cases._id && mtrlId === mtrl.id
         );
@@ -143,7 +162,7 @@ router.put('/:caseId', authUser, async (req, res) => {
       }
     });
 
-    //@ inser SPEC
+    //@ insert SPEC
     mtrl.sizeSPECs.map((sizeSPEC) => {
       let existingsSPEC = mtrlObj.sizeSPECs.find(
         ({ mSizeSPEC }) => mSizeSPEC === sizeSPEC.mSizeSPEC
@@ -177,264 +196,339 @@ router.put('/:caseId', authUser, async (req, res) => {
     return mLists.push(mtrlObj);
   });
 
+  mLists.map((mtrl) => {
+    mtrl.mtrlColors.map((mtrlColor) => {
+      console.log(`${mtrl.CSRIC} 's Color ${mtrlColor.mColor}`);
+    });
+  });
+
+  // console.log(mLists);
+
   // Compare with the existing List
   try {
     mLists.map(async (mList) => {
       if (mList.CSRIC === '' || mList.CSRIC === null) {
-        //IF thie mList dosen't have SRIC, then do nothing.
+        console.log('do nothing');
+        //IF thie mList dosen't have CSRIC, then do nothing.
       } else {
         //Check if any item in mtrl is matched to refs in the srMtrl database
-        let srMtrl = await SRMtrl.find({
-          $and: [{ company: comId }, { CSRIC: mList.CSRIC }],
-        });
-        try {
-          if (srMtrl.length !== 0) {
+        await SRMtrl.findOne({
+          company: comId,
+          CSRIC: mList.CSRIC,
+        }).then(async (srMtrl) => {
+          if (srMtrl === null) {
+            // If dont have the srMtrl then generate a new srMtrl
+            const newSRMtrl = new SRMtrl(mList);
+            await newSRMtrl.save();
+          } else {
+            // If the srMtrl exists
             //@_step_1 Insert mtrlColor
-            await mList.mtrlColors.map(async (mtrlColor) => {
-              let existingMtrlColor = [];
-              existingMtrlColor = await SRMtrl.find({
-                company: comId,
-                CSRIC: mList.CSRIC,
-                'mtrlColors.mColor': mtrlColor.mColor,
-              });
-              if (existingMtrlColor.length === 0) {
-                // if no such mColor in the srMtrl.mtrlColors
-                await SRMtrl.updateOne(
+            let insertMtrlColor = new Promise(async (resolve, reject) => {
+              console.log('This should be 1 start', mList.CSRIC);
+              let counterOfLoopOfInsertMtrlColor = 0;
+              await mList.mtrlColors.map(async (mtrlColor) => {
+                await SRMtrl.findOne(
                   {
                     company: comId,
                     CSRIC: mList.CSRIC,
+                    'mtrlColors.mColor': mtrlColor.mColor,
                   },
-                  {
-                    $push: {
-                      mtrlColors: mtrlColor,
-                    },
-                  },
-                  { new: true }
-                );
-              } else {
-                // if dose have such mColor in the srMtrl.mtrlColors, insert the ref to the existing mtrlColor
-                await mtrlColor.refs.map(async (ref) => {
-                  // $addToSet, the operatoer only push a unique item to the array. It prevent duplicated value be pushed to the refs
-                  await SRMtrl.updateOne(
-                    {
-                      company: comId,
-                      CSRIC: mList.CSRIC,
-                      'mtrlColors.mColor': mtrlColor.mColor,
-                    },
-                    {
-                      $addToSet: {
-                        'mtrlColors.$.refs': ref,
-                      },
+                  { mtrlColors: 1, CSRIC: 1 }
+                )
+                  .then(async (srMtrl) => {
+                    console.log(
+                      `this is the color : ${mtrlColor.mColor}'s srMtrl`,
+                      srMtrl
+                    );
+                    if (srMtrl === null) {
+                      // if no such mColor in the srMtrl.mtrlColors
+                      await SRMtrl.updateOne(
+                        {
+                          company: comId,
+                          CSRIC: mList.CSRIC,
+                        },
+                        {
+                          $addToSet: {
+                            mtrlColors: mtrlColor,
+                          },
+                        }
+                      );
+                      console.log(
+                        `${mList.CSRIC} in color ${mtrlColor.mColor} is generated`
+                      );
+                    } else {
+                      // if dose have such mColor in the srMtrl.mtrlColors, insert the ref to the existing mtrlColor
+                      await mtrlColor.refs.map(async (ref) => {
+                        // $addToSet, the operatoer only push a unique item to the array. It prevent duplicated value be pushed to the refs
+                        await SRMtrl.updateOne(
+                          {
+                            company: comId,
+                            CSRIC: mList.CSRIC,
+                            'mtrlColors.mColor': mtrlColor.mColor,
+                          },
+                          {
+                            $addToSet: {
+                              'mtrlColors.$.refs': ref,
+                            },
+                          }
+                        );
+                      });
                     }
-                  );
-                });
-              }
+                  })
+                  .then(() => {
+                    counterOfLoopOfInsertMtrlColor =
+                      counterOfLoopOfInsertMtrlColor + 1;
+                    const num_1 = counterOfLoopOfInsertMtrlColor;
+                    if (num_1 === mList.mtrlColors.length) {
+                      console.log('This should be 1 end', mList.CSRIC);
+                      return resolve();
+                    }
+                  });
+              });
             });
 
             //@_step_2 Clear the extra refs in mColor
-            let dataBaseSrColor = await SRMtrl.findOne(
-              { company: comId, CSRIC: mList.CSRIC },
-              { _id: 0, mtrlColors: 1 }
-            );
+            let clearColorRef = new Promise((resolve, reject) => {
+              Promise.all([insertMtrlColor]).then(async () => {
+                console.log('This should be 2 start', mList.CSRIC);
+                await SRMtrl.findOne(
+                  { company: comId, CSRIC: mList.CSRIC },
+                  { _id: 0, mtrlColors: 1 }
+                ).then(async (srMtrl) => {
+                  let mtrlColorLoop = 0;
+                  await srMtrl.mtrlColors.map(async (mtrlColor) => {
+                    let matchedColor = mList.mtrlColors.find(
+                      ({ mColor }) => mColor === mtrlColor.mColor
+                    );
 
-            let clearColorRef = await dataBaseSrColor.mtrlColors.map(
-              async (mtrlColor) => {
-                let matchedColor = mList.mtrlColors.find(
-                  ({ mColor }) => mColor === mtrlColor.mColor
-                );
+                    if (!matchedColor) {
+                      const caseId = cases._id;
+                      const mtrlId = mList.mtrlColors[0].refs[0].mtrlId;
 
-                if (!matchedColor) {
-                  const caseId = cases._id;
-                  const mtrlId = mList.mtrlColors[0].refs[0].mtrlId;
-
-                  await SRMtrl.updateOne(
-                    {
-                      company: comId,
-                      CSRIC: mList.CSRIC,
-                      mtrlColors: {
-                        $elemMatch: {
-                          mColor: mtrlColor.mColor,
-                          refs: {
-                            caseId: caseId,
-                            mtrlId: mtrlId,
+                      await SRMtrl.updateOne(
+                        {
+                          company: comId,
+                          CSRIC: mList.CSRIC,
+                          mtrlColors: {
+                            $elemMatch: {
+                              mColor: mtrlColor.mColor,
+                              refs: {
+                                caseId: caseId,
+                                mtrlId: mtrlId,
+                              },
+                            },
                           },
                         },
-                      },
-                    },
-                    {
-                      $pull: {
-                        'mtrlColors.$.refs': {
-                          caseId: caseId,
-                          mtrlId: mtrlId,
-                        },
-                      },
+                        {
+                          $pull: {
+                            'mtrlColors.$.refs': {
+                              caseId: caseId,
+                              mtrlId: mtrlId,
+                            },
+                          },
+                        }
+                      );
                     }
-                  );
-                }
-              }
-            );
+                    mtrlColorLoop = mtrlColorLoop + 1;
+                    if (mtrlColorLoop === srMtrl.mtrlColors.length) {
+                      console.log('This should be 2 end', mList.CSRIC);
+                      resolve();
+                    }
+                  });
+                });
+              });
+            });
 
             //@_step_3 Delete the mtrlColor in mtrlColors, if the refs of which is 0, means no case ref to it.
             // This Promise.all will wait for the async method, in this case (clearRef), finished all job, then start to do things.
-            Promise.all(clearColorRef).then(async () => {
-              let dbSrColor = await SRMtrl.findOne(
+            Promise.all([clearColorRef]).then(() => {
+              console.log('This should be 3 start', mList.CSRIC);
+              SRMtrl.findOne(
                 {
                   company: comId,
                   CSRIC: mList.CSRIC,
                 },
                 { _id: 0, mtrlColors: 1 }
-              );
-              dbSrColor.mtrlColors.map(async (mtrlColor) => {
-                let checkPoint = mtrlColor.refs.length;
+              ).then((srMtrl) => {
+                let mtrlColorLoop = 0;
+                srMtrl.mtrlColors.map(async (mtrlColor) => {
+                  let checkPoint = mtrlColor.refs.length;
 
-                if (checkPoint < 1) {
-                  await SRMtrl.updateOne(
-                    {
-                      company: comId,
-                      CSRIC: mList.CSRIC,
-                    },
-                    {
-                      $pull: {
-                        mtrlColors: {
-                          id: mtrlColor.id,
-                        },
+                  if (checkPoint < 1) {
+                    await SRMtrl.updateOne(
+                      {
+                        company: comId,
+                        CSRIC: mList.CSRIC,
                       },
-                    }
-                  );
-                }
+                      {
+                        $pull: {
+                          mtrlColors: {
+                            id: mtrlColor.id,
+                          },
+                        },
+                      }
+                    );
+                  }
+                  mtrlColorLoop = mtrlColorLoop + 1;
+                  if (mtrlColorLoop === srMtrl.mtrlColors.length) {
+                    console.log('This should be 3 end', mList.CSRIC);
+                  }
+                });
               });
             });
 
             //@_step_1 Inser SizeSPECS
-            await mList.sizeSPECs.map(async (sizeSPEC) => {
-              let existingSizeSPEC = [];
-              existingSizeSPEC = await SRMtrl.find({
-                company: comId,
-                CSRIC: mList.CSRIC,
-                'sizeSPECs.mSizeSPEC': sizeSPEC.mSizeSPEC,
+            let insertMtrlSPEC = new Promise((resolve, reject) => {
+              console.log('SPEC 1 start', mList.CSRIC);
+              let counterOfLoopInsertMtrlSPEC = 0;
+              mList.sizeSPECs.map(async (sizeSPEC) => {
+                await SRMtrl.findOne({
+                  company: comId,
+                  CSRIC: mList.CSRIC,
+                  'sizeSPECs.mSizeSPEC': sizeSPEC.mSizeSPEC,
+                })
+                  .then(async (srMtrl) => {
+                    if (srMtrl === 0) {
+                      // if no such mSizeSPEC in the srMtrl.sizeSPECs
+                      await SRMtrl.updateOne(
+                        {
+                          company: comId,
+                          CSRIC: mList.CSRIC,
+                        },
+                        {
+                          $addToSet: {
+                            sizeSPECs: sizeSPEC,
+                          },
+                        }
+                      );
+                    } else {
+                      // if dose have such sizeSPEC in the srMtrl.sizeSPECs, insert the ref to the existing sizeSPEC
+                      await sizeSPEC.refs.map(async (ref) => {
+                        // $addToSet, the operatoer only push a unique item to the array. It prevent duplicated value be pushed to the refs
+                        await SRMtrl.updateOne(
+                          {
+                            company: comId,
+                            CSRIC: mList.CSRIC,
+                            'sizeSPECs.mSizeSPEC': sizeSPEC.mSizeSPEC,
+                          },
+                          {
+                            $addToSet: {
+                              'sizeSPECs.$.refs': ref,
+                            },
+                          }
+                        );
+                      });
+                    }
+                  })
+                  .then(() => {
+                    counterOfLoopInsertMtrlSPEC =
+                      counterOfLoopInsertMtrlSPEC + 1;
+                    const num_2 = counterOfLoopInsertMtrlSPEC;
+                    if (num_2 === mList.mtrlColors.length) {
+                      console.log('SPEC 1 end', mList.CSRIC);
+                      return resolve();
+                    }
+                  });
               });
+            });
 
-              if (existingSizeSPEC.length === 0) {
-                // if no such mSizeSPEC in the srMtrl.sizeSPECs
-                await SRMtrl.updateOne(
+            //@_step_2 Clear the extra refs in sizeSPEC
+            let clearSPECRef = new Promise((resolve, reject) => {
+              Promise.all([insertMtrlSPEC]).then(async () => {
+                console.log('SPEC 2 start', mList.CSRIC);
+                await SRMtrl.findOne(
                   {
                     company: comId,
                     CSRIC: mList.CSRIC,
                   },
                   {
-                    $push: {
-                      sizeSPECs: sizeSPEC,
-                    },
+                    _id: 0,
+                    sizeSPECs: 1,
                   }
-                );
-              } else {
-                // if dose have such sizeSPEC in the srMtrl.sizeSPECs, insert the ref to the existing sizeSPEC
-                await sizeSPEC.refs.map(async (ref) => {
-                  // $addToSet, the operatoer only push a unique item to the array. It prevent duplicated value be pushed to the refs
-                  await SRMtrl.updateOne(
-                    {
-                      company: comId,
-                      CSRIC: mList.CSRIC,
-                      'sizeSPECs.mSizeSPEC': sizeSPEC.mSizeSPEC,
-                    },
-                    {
-                      $addToSet: {
-                        'sizeSPECs.$.refs': ref,
-                      },
-                    }
-                  );
-                });
-              }
-            });
+                ).then((srMtrl) => {
+                  let mtrlSPECLoop = 0;
+                  srMtrl.sizeSPECs.map(async (dbSizeSPEC) => {
+                    let matchedSPEC = mList.sizeSPECs.find(
+                      ({ mSizeSPEC }) => mSizeSPEC === dbSizeSPEC.mSizeSPEC
+                    );
 
-            //@_step_2 Clear the extra refs in sizeSPEC
-            let dataBaseSrSPEC = await SRMtrl.findOne(
-              {
-                company: comId,
-                CSRIC: mList.CSRIC,
-              },
-              {
-                _id: 0,
-                sizeSPECs: 1,
-              }
-            );
+                    if (!matchedSPEC) {
+                      const caseId = cases._id;
+                      const mtrlId = mList.sizeSPECs[0].refs[0].mtrlId;
 
-            let clearSPECRef = await dataBaseSrSPEC.sizeSPECs.map(
-              async (dbSizeSPEC) => {
-                let matchedSPEC = mList.sizeSPECs.find(
-                  ({ mSizeSPEC }) => mSizeSPEC === dbSizeSPEC.mSizeSPEC
-                );
-
-                if (!matchedSPEC) {
-                  const caseId = cases._id;
-                  const mtrlId = mList.sizeSPECs[0].refs[0].mtrlId;
-
-                  await SRMtrl.updateOne(
-                    {
-                      company: comId,
-                      CSRIC: mList.CSRIC,
-                      sizeSPECs: {
-                        $elemMatch: {
-                          mSizeSPEC: dbSizeSPEC.mSizeSPEC,
-                          refs: {
-                            caseId: caseId,
-                            mtrlId: mtrlId,
+                      await SRMtrl.updateOne(
+                        {
+                          company: comId,
+                          CSRIC: mList.CSRIC,
+                          sizeSPECs: {
+                            $elemMatch: {
+                              mSizeSPEC: dbSizeSPEC.mSizeSPEC,
+                              refs: {
+                                caseId: caseId,
+                                mtrlId: mtrlId,
+                              },
+                            },
                           },
                         },
-                      },
-                    },
-                    {
-                      $pull: {
-                        'sizeSPECs.$.refs': {
-                          caseId: caseId,
-                          mtrlId: mtrlId,
-                        },
-                      },
+                        {
+                          $pull: {
+                            'sizeSPECs.$.refs': {
+                              caseId: caseId,
+                              mtrlId: mtrlId,
+                            },
+                          },
+                        }
+                      );
                     }
-                  );
-                }
-              }
-            );
+                    mtrlSPECLoop = mtrlSPECLoop + 1;
+                    if (mtrlSPECLoop === srMtrl.sizeSPECs.length) {
+                      console.log('SPEC 2 end', mList.CSRIC);
+                      resolve();
+                    }
+                  });
+                });
+              });
+            });
 
             //@_step_3 Delete the mtrlColor in mtrlColors, if the refs of which is 0, means no case ref to it.
             // This Promise.all will wait for the async method, in this case (clearRef), finished all job, then start to do things.
-            Promise.all(clearSPECRef).then(async () => {
-              let dbSrSPEC = await SRMtrl.findOne(
+            Promise.all([clearSPECRef]).then(() => {
+              console.log('SPEC 3 start', mList.CSRIC);
+              SRMtrl.findOne(
                 {
                   company: comId,
                   CSRIC: mList.CSRIC,
                 },
                 { _id: 0, sizeSPECs: 1 }
-              );
-              dbSrSPEC.sizeSPECs.map(async (sizeSPEC) => {
-                let checkPoint = sizeSPEC.refs.length;
+              ).then((srMtrl) => {
+                let mtrlSPECLoop = 0;
+                srMtrl.sizeSPECs.map(async (sizeSPEC) => {
+                  let checkPoint = sizeSPEC.refs.length;
 
-                if (checkPoint < 1) {
-                  await SRMtrl.updateOne(
-                    {
-                      company: comId,
-                      CSRIC: mList.CSRIC,
-                    },
-                    {
-                      $pull: {
-                        sizeSPECs: {
-                          id: sizeSPEC.id,
-                        },
+                  if (checkPoint < 1) {
+                    await SRMtrl.updateOne(
+                      {
+                        company: comId,
+                        CSRIC: mList.CSRIC,
                       },
-                    }
-                  );
-                }
+                      {
+                        $pull: {
+                          sizeSPECs: {
+                            id: sizeSPEC.id,
+                          },
+                        },
+                      }
+                    );
+                  }
+                  mtrlSPECLoop = mtrlSPECLoop + 1;
+                  if (mtrlSPECLoop === srMtrl.sizeSPECs.length) {
+                    console.log('SPEC 3 end');
+                  }
+                });
               });
             });
-          } else {
-            // If have SRIC then generater a new srMtrl
-            const newSRMtrl = new SRMtrl(mList);
-            // name variable "case" will cause problem, so here name it "nCase"
-            await newSRMtrl.save();
           }
-        } catch (err) {
-          console.error(err.message);
-        }
+        });
       }
     });
 

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import SrMtrlContext from '../../context/srMtrl/srMtrlContext';
 
-const MPrice = ({ mPrice, srMtrl }) => {
+const MPrice = ({ mPrice, srMtrl, currentPath }) => {
   const srMtrlContext = useContext(SrMtrlContext);
   const { deleteSrMtrlPrice, addSrMtrlValue, srMtrls } = srMtrlContext;
 
@@ -18,9 +18,9 @@ const MPrice = ({ mPrice, srMtrl }) => {
     'sizeSPEC',
     'unit',
     'currency',
-    'mPrice',
     'moq',
     'moqPrice',
+    'mPrice',
   ];
 
   //@ Funcs
@@ -34,12 +34,12 @@ const MPrice = ({ mPrice, srMtrl }) => {
         return 'Unit';
       case 'currency':
         return 'Currency';
-      case 'mPrice':
-        return 'Price';
       case 'moq':
         return 'MOQ';
       case 'moqPrice':
         return 'MOQ_Price';
+      case 'mPrice':
+        return 'Unit Price';
     }
   };
 
@@ -163,17 +163,19 @@ const MPrice = ({ mPrice, srMtrl }) => {
               );
           }
         })}
-        <div>
-          <button
-            value={srMtrlId}
-            name={mPrice.id}
-            onClick={onClick}
-            className='btn btn-fade btn-square'
-            style={deleteBtnPosition}
-          >
-            x
-          </button>
-        </div>
+        {currentPath === '/api/case/mprice' ? (
+          <div>
+            <button
+              value={srMtrlId}
+              name={mPrice.id}
+              onClick={onClick}
+              className='btn btn-fade btn-square'
+              style={deleteBtnPosition}
+            >
+              x
+            </button>
+          </div>
+        ) : null}
       </div>
     </div>
   );

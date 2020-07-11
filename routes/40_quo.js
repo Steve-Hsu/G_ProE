@@ -103,7 +103,7 @@ router.get('/quoform/:cNo', authUser, async (req, res) => {
   ).catch((err) => {
     console.log("MongoDB or internet problem, can't find caseInfo", err);
   });
-
+  // Get the information from two forms, the quoForm and caseInfo to make a form sent back to client.
   Promise.all([quoForm, caseInfo])
     .then(() => {
       let finalForm = {};

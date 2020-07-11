@@ -3,7 +3,7 @@ import SrMtrlContext from '../../context/srMtrl/srMtrlContext';
 //@ Child component
 import SrMtrl from './30_01_01_srMtrl';
 
-const MPriceForm = () => {
+const MPriceForm = ({ currentPath }) => {
   const srMtrlContext = useContext(SrMtrlContext);
   const { srMtrls, getSrMtrls, updateMPrices } = srMtrlContext;
   useEffect(() => {
@@ -33,7 +33,7 @@ const MPriceForm = () => {
     {popover ? <DeletePopover key={current.id} current={current} /> : null} */}
       <form id='srMtrlForm' onSubmit={onSubmitSrMtrl}>
         {srMtrls.map((srMtrl) => (
-          <SrMtrl key={srMtrl._id} srMtrl={srMtrl} />
+          <SrMtrl key={srMtrl._id} srMtrl={srMtrl} currentPath={currentPath} />
         ))}
       </form>
     </div>
