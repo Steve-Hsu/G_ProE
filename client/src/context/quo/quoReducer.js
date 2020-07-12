@@ -12,7 +12,7 @@ export default (state, action) => {
     case QUOFORM_SWITCH:
       return { ...state, isQuotating: action.payload };
     case QUOFORM_DOWNLOAD:
-      return { ...state, quoForm: action.payload };
+      return { ...state, quotation: action.payload };
     case QUOPAGE_SWITCH:
       return { ...state, quotateFor: action.payload };
     default:

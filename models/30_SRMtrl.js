@@ -42,5 +42,9 @@ const SRMtrlSchema = mongoose.Schema({
   expandPrice: {
     type: Boolean,
   },
+  date: {
+    type: Date,
+    default: Date.now,
+  },
 });
 module.exports = mongoose.model('srMtrl', SRMtrlSchema);

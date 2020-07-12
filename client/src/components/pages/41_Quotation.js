@@ -4,7 +4,7 @@ import QuoContext from '../../context/quo/quoContext';
 // Components
 import LeftBar from '../layout/LeftBar';
 import QuoCaseSelector from '../../components/40_quo/40_01_quoCaseSelector';
-import QuoForm from '../../components/40_quo/40_02_quoForm';
+import QuoFormSelector from '../../components/40_quo/40_02_quoFormSelector';
 import SrMtrlForm from '../../components/30_srMtrl/30_01_srMtrlForm';
 // quoForm
 
@@ -51,7 +51,7 @@ const Quotation = (props) => {
               <QuoCaseSelector />
             </div>
           ) : (
-            <QuoForm />
+            <QuoFormSelector />
           )}
         </div>
       ) : null}

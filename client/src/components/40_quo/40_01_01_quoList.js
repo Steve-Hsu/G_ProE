@@ -1,9 +1,12 @@
 import React, { useContext } from 'react';
 import QuoContext from '../../context/quo/quoContext';
+import CaseContext from '../../context/cases/casesContext';
 
 const QuoList = ({ listItem }) => {
   const quoContext = useContext(QuoContext);
-  const { isQuotating, switchQuoForm, downLoadQuoForm } = quoContext;
+  const caseContext = useContext(CaseContext);
+  const { isQuotating, switchQuoFormSelector, downLoadQuoForm } = quoContext;
+  const { downloadCase } = caseContext;
   const labelList = [
     'cNo',
     'caseType',
@@ -29,10 +32,11 @@ const QuoList = ({ listItem }) => {
   const onClick = (e) => {
     e.preventDefault();
 
-    let check = switchQuoForm(listItem.cNo);
+    let check = switchQuoFormSelector(listItem.cNo);
     // setTimeout(() => {
     console.log('yes I should download', check);
     downLoadQuoForm(check);
+    // downloadCase(listItem._id);
     // }, 300);
 
     console.log('Yes You hit me');

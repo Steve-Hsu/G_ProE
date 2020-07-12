@@ -15,7 +15,10 @@ const QuoState = (props) => {
     caseList: [],
     quotateFor: null,
     isQuotating: null,
-    quoForm: null,
+    quotateVersion: null,
+    quotation: { quoForms: [] },
+    popover: false,
+    current: null,
   };
   const [state, dispatch] = useReducer(QuoReducer, initialState);
   const { quotateFor, isQuotating } = state;
@@ -39,6 +42,16 @@ const QuoState = (props) => {
     }
   };
 
+  const switchQuoFormSelector = (cNo) => {
+    if (isQuotating === null) {
+      dispatch({ type: QUOFORM_SWITCH, payload: cNo });
+      return cNo;
+    } else {
+      dispatch({ type: QUOFORM_SWITCH, payload: null });
+      return null;
+    }
+  };
+
   const switchQuoForm = (cNo) => {
     if (isQuotating === null) {
       dispatch({ type: QUOFORM_SWITCH, payload: cNo });
@@ -47,6 +60,28 @@ const QuoState = (props) => {
       dispatch({ type: QUOFORM_SWITCH, payload: null });
       return null;
     }
+  };
+
+  const uploadQuoForm = async (check, input, form) => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    let body = { isNewQuoForm: true };
+    if (input === false) {
+      body = {
+        isNewQuoForm: false,
+        form: form,
+      };
+    }
+
+    const res = await axios.put(
+      `/api/quo/quoform/${check}/updateuoForm`,
+      body,
+      config
+    );
+    dispatch({ type: QUOFORM_DOWNLOAD, payload: res.data });
   };
 
   const downLoadQuoForm = async (check) => {
@@ -59,7 +94,7 @@ const QuoState = (props) => {
       const res = await axios.get(`/api/quo/quoform/${check}`);
       dispatch({ type: QUOFORM_DOWNLOAD, payload: res.data });
     } else {
-      dispatch({ type: QUOFORM_DOWNLOAD, payload: null });
+      dispatch({ type: QUOFORM_DOWNLOAD, payload: { quoForms: [] } });
     }
   };
 
@@ -69,10 +104,14 @@ const QuoState = (props) => {
         caseList: state.caseList,
         quotateFor: state.quotateFor,
         isQuotating: state.isQuotating,
-        quoForm: state.quoForm,
+        quotation: state.quotation,
+        popover: state.popover,
+        current: state.current,
         getCaseList,
         switchPage,
+        switchQuoFormSelector,
         switchQuoForm,
+        uploadQuoForm,
         downLoadQuoForm,
       }}
     >

@@ -9,7 +9,7 @@ const LeftBar = ({ currentPath }) => {
   const casesContext = useContext(CasesContext);
   const quoContext = useContext(QuoContext);
   const { mtrls, cNo, addcWay, addSize, addMtrl, clearcNo } = casesContext;
-  const { isQuotating } = quoContext;
+  const { isQuotating, quotateFor } = quoContext;
 
   //@ Define the current page for passing to searchBar
   let currentPage = '';
@@ -54,15 +54,15 @@ const LeftBar = ({ currentPath }) => {
         };
         break;
       case '/api/case/quogarment':
-        if (isQuotating === null) {
+        if (quotateFor === 'material') {
           obj = {
             label: 'Update material quotation',
             form: 'srMtrlForm',
           };
-        } else {
+        } else if (quotateFor === 'garment' && isQuotating !== null) {
           obj = {
-            label: 'Update garment quotation',
-            // form: '',
+            label: 'Add new quotation',
+            form: 'addNewQuoForm',
           };
         }
         break;
@@ -84,7 +84,7 @@ const LeftBar = ({ currentPath }) => {
           type='submit'
           form={btnSwitcher.form}
           className='btn btn-primary btn-block'
-          value={btnSwitcher.label}
+          value={btnSwitcher.label || ''}
         />
         {/* Submit
         </input> */}

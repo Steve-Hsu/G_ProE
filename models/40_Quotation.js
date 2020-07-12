@@ -14,14 +14,12 @@ const QuoSchema = mongoose.Schema({
   cNo: {
     type: String,
   },
-  currency: {
-    type: String,
+  quoForms: {
+    type: Array,
   },
-  cmpts: [],
-  mtrlQuos: [],
-  otherExpense: [],
-  fob: {
-    type: Number,
+  date: {
+    type: Date,
+    default: Date.now,
   },
 });
 module.exports = mongoose.model('quo', QuoSchema);
