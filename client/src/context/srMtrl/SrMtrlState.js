@@ -47,7 +47,10 @@ const SrMtrlState = (props) => {
   const getSrMtrls = async () => {
     const srMtrls = await axios.get('/api/srmtrl');
     // Now matter what you return in the router, the axios will return a object in format that have head and data, you need to put foo.data to the payload, or you will get exatra datas like head.
-    dispatch({ type: SRMTRL_DOWNLOAD, payload: srMtrls.data });
+    dispatch({
+      type: SRMTRL_DOWNLOAD,
+      payload: srMtrls.data,
+    });
   };
 
   const getSpecificSrMtrl = async (obj) => {
@@ -57,7 +60,10 @@ const SrMtrlState = (props) => {
       },
     };
     const srMtrls = await axios.put('/api/srmtrl/queryresult', obj, config);
-    dispatch({ type: SRMTRL_DOWNLOAD, payload: srMtrls.data });
+    dispatch({
+      type: SRMTRL_DOWNLOAD,
+      payload: srMtrls.data,
+    });
   };
 
   //@1 Add srMtrls by uploading of cases
@@ -69,7 +75,10 @@ const SrMtrlState = (props) => {
     };
     try {
       await axios.put(`/api/srmtrl/${body.cases._id}`, body, config);
-      dispatch({ type: TOGGLE_ISUPDATE, payload: true });
+      dispatch({
+        type: TOGGLE_ISUPDATE,
+        payload: true,
+      });
     } catch (err) {
       console.log('Upload srMtrl faild, server problems');
     }
@@ -99,7 +108,10 @@ const SrMtrlState = (props) => {
 
   //@1 turn isUpdated false
   const turnSrMtrlIsUpdatedFalse = () => {
-    dispatch({ type: TOGGLE_ISUPDATE, payload: false });
+    dispatch({
+      type: TOGGLE_ISUPDATE,
+      payload: false,
+    });
   };
 
   //@1 add new mPrice
@@ -161,7 +173,10 @@ const SrMtrlState = (props) => {
         moqPrice: '',
         quotation: '',
       });
-      dispatch({ type: SRMTRL_UPDATE, payload: srMaterials });
+      dispatch({
+        type: SRMTRL_UPDATE,
+        payload: srMaterials,
+      });
     }
   };
 
@@ -176,7 +191,10 @@ const SrMtrlState = (props) => {
       ));
     });
 
-    dispatch({ type: SRMTRL_UPDATE, payload: srMaterials });
+    dispatch({
+      type: SRMTRL_UPDATE,
+      payload: srMaterials,
+    });
   };
 
   //@1 Add Value to mPrice
@@ -196,7 +214,10 @@ const SrMtrlState = (props) => {
         });
       }
     });
-    dispatch({ type: SRMTRL_UPDATE, payload: srMaterials });
+    dispatch({
+      type: SRMTRL_UPDATE,
+      payload: srMaterials,
+    });
   };
 
   //@1 update mPrices
@@ -210,7 +231,38 @@ const SrMtrlState = (props) => {
     try {
       await axios.put('/api/srmtrl/update/mpricevalues', body, config);
 
-      dispatch({ type: TOGGLE_ISUPDATE, payload: true });
+      dispatch({
+        type: TOGGLE_ISUPDATE,
+        payload: true,
+      });
+
+      return console.log('mPrice color updated');
+    } catch (err) {
+      return console.log('Upload srMtrl faild, server problems');
+    }
+  };
+
+  //@1 update quotation of material in mPrices
+  const updateMPricesQuotation = async (body) => {
+    console.log('Yes triggered');
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    try {
+      await axios.put(
+        '/api/srmtrl/update/mpricevalues/quotation',
+        body,
+        config
+      );
+
+      dispatch({
+        type: TOGGLE_ISUPDATE,
+        payload: true,
+      });
+
       return console.log('mPrice color updated');
     } catch (err) {
       return console.log('Upload srMtrl faild, server problems');
@@ -237,6 +289,7 @@ const SrMtrlState = (props) => {
         deleteSrMtrlPrice,
         addSrMtrlValue,
         updateMPrices,
+        updateMPricesQuotation,
         getSpecificSrMtrl,
         clearSrMtrl,
       }}

@@ -1,12 +1,15 @@
 import React, { useContext } from 'react';
 import AuthContext from '../../context/authUser/authUserContext';
 import CasesContext from '../../context/cases/casesContext';
+import QuoContext from '../../context/quo/quoContext';
 import SearchBar from './SearchBar';
 
 const LeftBar = ({ currentPath }) => {
   const authContext = useContext(AuthContext);
   const casesContext = useContext(CasesContext);
+  const quoContext = useContext(QuoContext);
   const { mtrls, cNo, addcWay, addSize, addMtrl, clearcNo } = casesContext;
+  const { isQuotating } = quoContext;
 
   //@ Define the current page for passing to searchBar
   let currentPage = '';
@@ -17,6 +20,8 @@ const LeftBar = ({ currentPath }) => {
     case '/api/case/mprice':
       currentPage = 'mprice';
       break;
+    case '/api/case/quogarment':
+      currentPage = 'quotation';
     default:
   }
 
@@ -47,6 +52,19 @@ const LeftBar = ({ currentPath }) => {
           label: 'Update the Price List',
           form: 'srMtrlForm',
         };
+        break;
+      case '/api/case/quogarment':
+        if (isQuotating === null) {
+          obj = {
+            label: 'Update material quotation',
+            form: 'srMtrlForm',
+          };
+        } else {
+          obj = {
+            label: 'Update garment quotation',
+            // form: '',
+          };
+        }
         break;
       default:
     }

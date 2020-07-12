@@ -5,7 +5,12 @@ import SrMtrl from './30_01_01_srMtrl';
 
 const MPriceForm = ({ currentPath }) => {
   const srMtrlContext = useContext(SrMtrlContext);
-  const { srMtrls, getSrMtrls, updateMPrices } = srMtrlContext;
+  const {
+    srMtrls,
+    getSrMtrls,
+    updateMPrices,
+    updateMPricesQuotation,
+  } = srMtrlContext;
   useEffect(() => {
     if (srMtrls.length === 0) {
       getSrMtrls();
@@ -22,7 +27,8 @@ const MPriceForm = ({ currentPath }) => {
         mPrices: srMtrl.mPrices,
       });
     });
-    updateMPrices(body);
+    if (currentPath === '/api/case/quogarment') updateMPricesQuotation(body);
+    if (currentPath === '/api/case/mprice') updateMPrices(body);
   };
 
   //@ return

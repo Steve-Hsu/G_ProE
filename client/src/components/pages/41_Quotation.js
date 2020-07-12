@@ -38,7 +38,7 @@ const Quotation = (props) => {
           <button value={null} onClick={onClick}>
             go back
           </button>
-          <SrMtrlForm />
+          <SrMtrlForm currentPath={currentPath} />
         </div>
       ) : quotateFor === 'garment' ? (
         <div>
