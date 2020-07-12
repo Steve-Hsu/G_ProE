@@ -56,6 +56,10 @@ const UserSchema = mongoose.Schema({
     // required: true,
     // default: false,
   },
+  quo: {
+    // Quotation for garment and mtrls
+    type: Boolean,
+  },
   po: {
     // purchase order
     type: Boolean,

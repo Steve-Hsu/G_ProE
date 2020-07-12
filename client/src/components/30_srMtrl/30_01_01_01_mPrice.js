@@ -21,6 +21,7 @@ const MPrice = ({ mPrice, srMtrl, currentPath }) => {
     'moq',
     'moqPrice',
     'mPrice',
+    'quotation',
   ];
 
   //@ Funcs
@@ -40,6 +41,8 @@ const MPrice = ({ mPrice, srMtrl, currentPath }) => {
         return 'MOQ_Price';
       case 'mPrice':
         return 'Unit Price';
+      case 'quotation':
+        return 'Selling Price';
     }
   };
 

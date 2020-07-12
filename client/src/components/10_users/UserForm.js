@@ -23,6 +23,7 @@ const UserForm = () => {
         mtrl: false,
         cspt: false,
         mp: false,
+        quo: false,
         po: false,
       });
     }
@@ -39,10 +40,22 @@ const UserForm = () => {
     mtrl: false,
     cspt: false,
     mp: false,
+    quo: false,
     po: false,
   });
 
-  const { name, email, password, password2, cases, mtrl, cspt, mp, po } = user;
+  const {
+    name,
+    email,
+    password,
+    password2,
+    cases,
+    mtrl,
+    cspt,
+    mp,
+    quo,
+    po,
+  } = user;
 
   const onChange = (e) =>
     // Link each input to UserForm.state, input name matcked to state name
@@ -149,6 +162,13 @@ const UserForm = () => {
         onChange={onChangeCB}
       />{' '}
       Material Price{' '}
+      <input
+        type='checkbox'
+        name='quo'
+        checked={quo === true}
+        onChange={onChangeCB}
+      />{' '}
+      Quotation{' '}
       <input
         type='checkbox'
         name='po'

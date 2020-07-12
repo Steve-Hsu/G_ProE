@@ -11,7 +11,7 @@ const UserItem = ({ user }) => {
     clearCurrent,
     confirmDelete,
   } = userContext;
-  const { _id, name, email, cases, mtrl, cspt, mp, po } = user;
+  const { _id, name, email, cases, mtrl, cspt, mp, quo, po } = user;
 
   const onDelete = () => {
     confirmDeleteUser(name);
@@ -59,6 +59,9 @@ const UserItem = ({ user }) => {
             ) : null}
             {mp ? (
               <span className='badge badge-success'>Material price</span>
+            ) : null}
+            {quo ? (
+              <span className='badge badge-success'>Quotation</span>
             ) : null}
             {po ? (
               <span className='badge badge-success'>Purchase Order</span>

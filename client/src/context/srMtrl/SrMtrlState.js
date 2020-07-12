@@ -187,8 +187,8 @@ const SrMtrlState = (props) => {
     let srMaterial = srMaterials.find(({ _id }) => _id === srMtrlId);
 
     mPriceList.map((m) => {
-      let matchPatter = `${m}${mPriceId}`;
-      if (e.target.id === matchPatter) {
+      let matchPattern = `${m}${mPriceId}`;
+      if (e.target.id === matchPattern) {
         srMaterial.mPrices.map((mPrice) => {
           if (mPrice.id === mPriceId) {
             mPrice[m] = e.target.value;

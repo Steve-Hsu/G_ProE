@@ -622,7 +622,15 @@ router.put('/update/mpricevalues', authUser, async (req, res) => {
               },
             },
           },
-          { $set: { 'mPrices.$': mPrice } }
+          {
+            $set: {
+              'mPrices.$.unit': mPrice.unit,
+              'mPrices.$.currency': mPrice.currency,
+              'mPrices.$.mPrice': mPrice.mPrice,
+              'mPrices.$.moq': mPrice.moq,
+              'mPrices.$.moqPrice': mPrice.moqPrice,
+            },
+          }
         );
       } else {
         // If the mPrice (id, mColor ,sizeSPEC  duplicated) not exisitng, Check C.S
@@ -664,7 +672,15 @@ router.put('/update/mpricevalues', authUser, async (req, res) => {
                   },
                 },
               },
-              { $set: { 'mPrices.$': mPrice } }
+              {
+                $set: {
+                  'mPrices.$.unit': mPrice.unit,
+                  'mPrices.$.currency': mPrice.currency,
+                  'mPrices.$.mPrice': mPrice.mPrice,
+                  'mPrices.$.moq': mPrice.moq,
+                  'mPrices.$.moqPrice': mPrice.moqPrice,
+                },
+              }
             );
           } else {
             // If the mPrice is not existing item, then push mPrice to be new one
@@ -701,7 +717,7 @@ router.put('/:caseId/deletesrmtrl', authUser, async (req, res) => {
   // Check if the user has authority to update case ---------------------------
   console.log('The delete srMtrl by mtrl is triggered');
   let user = await User.findById(userId);
-  if (!user.cases) {
+  if (!user.mp) {
     return res.status(400).json({
       msg: 'Out of authority',
     });
@@ -878,6 +894,131 @@ router.put('/:caseId/deletesrmtrl', authUser, async (req, res) => {
     console.log('The delete srMtrl is failed');
     console.log(err);
     return res.json(err);
+  }
+});
+
+// @route   PUT api/srmtrl/update/mpricevalues/quotation
+// @desc    Update the value in mPrice
+// @access  Private
+router.put('/update/mpricevalues/quotation', authUser, async (req, res) => {
+  const srMtrlList = req.body;
+  const userId = req.user.id;
+  let user = await User.findById(userId);
+  // Check the authority of the user
+  if (!user) {
+    return res.status(400).json({
+      msg: 'Invalid user',
+    });
+  } else if (!user.quo) {
+    return res.status(400).json({
+      msg: 'Out of authority',
+    });
+  }
+
+  // Start update
+
+  await srMtrlList.map(async (srMtrl) => {
+    srMtrl.mPrices.map(async (mPrice) => {
+      // Check I.C.S
+      let checkICS = await SRMtrl.find(
+        {
+          _id: srMtrl.id,
+          mPrices: {
+            $elemMatch: {
+              id: mPrice.id,
+              mColor: mPrice.mColor,
+              sizeSPEC: mPrice.sizeSPEC,
+            },
+          },
+        },
+        { _id: 0, mPrices: 1 }
+      );
+      if (checkICS.length > 0) {
+        // IF the mPrice (id, mColor and sizeSPEC duplicated) exisitng, update by replacing with new mPrice
+        await SRMtrl.updateOne(
+          {
+            _id: srMtrl.id,
+            mPrices: {
+              $elemMatch: {
+                id: mPrice.id,
+                mColor: mPrice.mColor,
+                sizeSPEC: mPrice.sizeSPEC,
+              },
+            },
+          },
+          {
+            $set: {
+              'mPrices.$.quotation': mPrice.quotation,
+            },
+          }
+        );
+      } else {
+        // If the mPrice (id, mColor ,sizeSPEC  duplicated) not exisitng, Check C.S
+        let checkCS = await SRMtrl.find(
+          {
+            _id: srMtrl.id,
+            mPrices: {
+              $elemMatch: {
+                mColor: mPrice.mColor,
+                sizeSPEC: mPrice.sizeSPEC,
+              },
+            },
+          },
+          { _id: 0, mPrices: 1 }
+        );
+        if (checkCS.length > 0) {
+          // If mColor and sizeSPEC is repeated then discard the mPrice by doing nothing.
+        } else {
+          // If the mPrice (mColor and sizeSPEC duplicated) not exisitng, Check ID
+          let checkI = await SRMtrl.find(
+            {
+              _id: srMtrl.id,
+              mPrices: {
+                $elemMatch: {
+                  id: mPrice.id,
+                },
+              },
+            },
+            { _id: 0, mPrices: 1 }
+          );
+          if (checkI.length > 0) {
+            // If the mPrice is existing item, then update by replacing with new one.
+            await SRMtrl.updateOne(
+              {
+                _id: srMtrl.id,
+                mPrices: {
+                  $elemMatch: {
+                    id: mPrice.id,
+                  },
+                },
+              },
+              {
+                $set: {
+                  'mPrices.$.quotation': mPrice.quotation,
+                },
+              }
+            );
+          } else {
+            // If the mPrice is not existing item, then push mPrice to be new one
+            await SRMtrl.updateOne(
+              {
+                _id: srMtrl.id,
+              },
+              { $push: { mPrices: mPrice } }
+            );
+          }
+        }
+      }
+    });
+  });
+
+  try {
+    // The the internet time log, here don't send back the result, as it always return the previous version.
+    console.log('Bend: Upload quotation of material of mPrice succeed');
+    return res.json({ msg: 'Upload quotation of material of mPrice succeed' });
+  } catch (err) {
+    console.error(err.message);
+    return res.status(500).send('Server Error');
   }
 });
 
