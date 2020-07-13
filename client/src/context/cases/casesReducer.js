@@ -13,13 +13,10 @@ import {
   MTRL_ADD,
   MTRL_UPDATE,
   MTRL_DELETE,
-  CASE_TOGGLE_POPOVER,
   CASE_DOWNLOAD,
   CASE_QTY_UPDATE,
   CASE_USER_NOT_AUTHORIZED,
   TOGGLE_ISUPDATE,
-  CURRENT_ADD,
-  CURRENT_DELETE,
   CASE_CLEAR,
   CASENO_CLEAR,
 } from '../types';
@@ -107,21 +104,6 @@ export default (state, action) => {
         ...state,
         mtrls: state.mtrls.filter((mtrl) => mtrl.id !== action.payload),
       };
-    case CASE_TOGGLE_POPOVER:
-      return {
-        ...state,
-        popover: action.payload,
-      };
-    case CURRENT_ADD:
-      return {
-        ...state,
-        current: action.payload,
-      };
-    case CURRENT_DELETE:
-      return {
-        ...state,
-        current: null,
-      };
     case CASE_CLEAR:
       return {
         _id: null,
@@ -135,8 +117,6 @@ export default (state, action) => {
         sizes: [],
         gQtys: [],
         mtrls: [],
-        popover: false,
-        current: null,
         formIsHalfFilledOut: true,
         error: null,
       };
@@ -159,8 +139,6 @@ export default (state, action) => {
         sizes: [],
         gQtys: [],
         mtrls: [],
-        popover: false,
-        current: null,
         formIsHalfFilledOut: true,
         error: action.payload,
       };

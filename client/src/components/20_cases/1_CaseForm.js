@@ -3,6 +3,7 @@ import { Prompt } from 'react-router-dom';
 import CasesContext from '../../context/cases/casesContext';
 import AuthUserContext from '../../context/authUser/authUserContext';
 import SrMtrlContext from '../../context/srMtrl/srMtrlContext';
+import PopoverContext from '../../context/popover/popoverContext';
 
 // @ Components
 import ColorWay from './1_1_ColorWay';
@@ -16,6 +17,8 @@ const CaseForm = () => {
   const casesContext = useContext(CasesContext);
   const authUserContext = useContext(AuthUserContext);
   const srMtrlContext = useContext(SrMtrlContext);
+  const popoverContext = useContext(PopoverContext);
+
   //@ Destructure, pull out the variables form userContext
   const {
     _id, // this id will appear after download an valid case
@@ -29,14 +32,13 @@ const CaseForm = () => {
     gQtys,
     mtrls,
     addCaseValue,
-    popover,
-    current,
     uploadNewCase,
     uploadCase,
     error,
   } = casesContext;
   const { comName, comSymbol } = authUserContext;
-  const { updateSrMtrlByMtrl, deleteSRMtrlByMtrl } = srMtrlContext;
+  const { updateSrMtrlByMtrl } = srMtrlContext;
+  const { popover, current } = popoverContext;
 
   //@ Make a body to submit
   const cases = {

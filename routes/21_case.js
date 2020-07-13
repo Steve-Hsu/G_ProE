@@ -226,6 +226,7 @@ router.post(
 // @access  Private
 router.put('/:id', authUser, async (req, res) => {
   // Check if the user has authority to update case ---------------------------
+  console.log('update case is triggered in backend');
   let user = await User.findById(req.user.id);
   if (!user.cases) {
     return res.status(400).json({
@@ -246,82 +247,103 @@ router.put('/:id', authUser, async (req, res) => {
   // Update case ---------------------------------------------------------------
   const caseFields = req.body;
   const { caseType, style, client, cWays, sizes, gQtys, mtrls } = caseFields;
-  //@ Delete the white space from strings of array items in the body, the cWays, sizes, and mtrls
+  //@ Delete the white space from strings of array items in the body, the cWays, and mtrls
   const trimedcWays = new Promise((resolve) => {
-    let cWayCounter = 0;
-    cWays.map((cWay) => {
-      cWay.gClr = cWay.gClr.trim();
-      cWayCounter = cWayCounter + 1;
-      if (cWayCounter === cWays.length) return resolve();
-    });
-  });
-
-  const trimedSizes = new Promise((resolve) => {
-    let sizeCounter = 0;
-    sizes.map((size) => {
-      size.gSize = size.gSize.trim();
-      sizeCounter = sizeCounter + 1;
-      if (sizeCounter === sizes.length) return resolve();
-    });
+    if (cWays.length > 0) {
+      let num = 0;
+      cWays.map((cWay) => {
+        if (cWay.gClr !== '' || cWay.gClr !== null) {
+          cWay.gClr = cWay.gClr.trim();
+        }
+        num = num + 1;
+        if (num === cWays.length) {
+          console.log('Promise trimedcWays');
+          return resolve();
+        }
+      });
+    } else {
+      return resolve();
+    }
   });
 
   const trimedMtrls = new Promise((resolve, reject) => {
-    let trimCounter = 0;
-    mtrls.map((mtrl) => {
-      mtrl.item = mtrl.item.trim();
-      mtrl.spec = mtrl.spec.trim();
-      mtrl.supplier = mtrl.supplier.trim();
-      mtrl.ref_no = mtrl.ref_no.trim();
-      mtrl.position = mtrl.position.trim();
-      mtrl.description = mtrl.description.trim();
-      const mtrlColorPromise = new Promise((resolve) => {
-        let num = 0;
-        mtrl.mtrlColors.map((mtrlColor) => {
-          mtrlColor.mColor = mtrlColor.mColor.trim();
-          num = num + 1;
-          if (num === mtrl.mtrlColors.length) return resolve();
+    if (mtrls.length > 0) {
+      let trimCounter = 0;
+      mtrls.map((mtrl) => {
+        const mtrlList = [
+          'item',
+          'spec',
+          'supplier',
+          'ref_no',
+          'position',
+          'description',
+        ];
+        mtrlList.map((x) => {
+          if (mtrl[x] !== '' || mtrl[x] !== null) mtrl[x] = mtrl[x].trim();
         });
-      });
 
-      const mtrlSPECPromise = new Promise((resolve) => {
-        let num = 0;
-        mtrl.sizeSPECs.map((sizeSPEC) => {
-          sizeSPEC.mSizeSPEC = sizeSPEC.mSizeSPEC.trim();
-          num = num + 1;
-          if (num === mtrl.sizeSPECs.length) return resolve();
+        const mtrlColorPromise = new Promise((resolve) => {
+          if (mtrl.mtrlColors.length > 0) {
+            let num = 0;
+            mtrl.mtrlColors.map((mtrlColor) => {
+              if (mtrl.mColor !== '' || mtrl.mColor !== null) {
+                mtrlColor.mColor = mtrlColor.mColor.trim();
+              }
+
+              num = num + 1;
+              if (num === mtrl.mtrlColors.length) {
+                console.log('Promise mtrlColorPromise');
+                return resolve();
+              }
+            });
+          } else {
+            return resolve();
+          }
         });
-      });
 
-      const mtrlCsptPromise = new Promise((resolve) => {
-        let num = 0;
-        mtrl.cspts.map((cspt) => {
-          cspt.gClr = cspt.gClr.trim();
-          cspt.gSize = cspt.gSize.trim();
-          cspt.mColor = cspt.mColor.trim();
-          cspt.mSizeSPEC = cspt.mSizeSPEC.trim();
-          cspt.unit = cspt.unit.trim();
-          num = num + 1;
-          if (num === mtrl.cspts.length) return resolve();
+        const mtrlSPECPromise = new Promise((resolve) => {
+          if (mtrl.sizeSPECs.length > 0) {
+            let num = 0;
+            mtrl.sizeSPECs.map((sizeSPEC) => {
+              if (sizeSPEC.mSizeSPEC !== '' || sizeSPEC.mSizeSPEC !== null) {
+                sizeSPEC.mSizeSPEC = sizeSPEC.mSizeSPEC.trim();
+              }
+
+              num = num + 1;
+              if (num === mtrl.sizeSPECs.length) {
+                console.log('Promise mtrlSPECPromise');
+                return resolve();
+              }
+            });
+          } else {
+            return resolve();
+          }
         });
-      });
-      //@ Delete the white space from strings of style and client
-      // style = style.trim();
-      // client = client.trim();
-      caseFields.style = caseFields.style.trim();
-      caseFields.client = caseFields.client.trim();
-
-      Promise.all([mtrlColorPromise, mtrlSPECPromise, mtrlCsptPromise]).then(
-        () => {
-          trimCounter = trimCounter + 1;
-          if (trimCounter === mtrls.length) return resolve();
+        if (caseFields.style !== '' || caseFields.style !== null) {
+          caseFields.style = caseFields.style.trim();
         }
-      );
-    });
+
+        if (caseFields.client !== '' || caseFields.client !== null) {
+          caseFields.client = caseFields.client.trim();
+        }
+
+        Promise.all([mtrlColorPromise, mtrlSPECPromise]).then(() => {
+          trimCounter = trimCounter + 1;
+          if (trimCounter === mtrls.length) {
+            console.log('Promise mtrlPromiseAll');
+            return resolve();
+          }
+        });
+      });
+    } else {
+      return resolve();
+    }
   });
 
   // Get the id of case from URL by params
-  Promise.all([trimedcWays, trimedSizes, trimedMtrls])
+  Promise.all([trimedcWays, trimedMtrls])
     .then(async () => {
+      console.log('The Finall PromiseAll');
       if (!cases)
         return res.status(404).json({
           msg: 'Case not found',

@@ -42,11 +42,16 @@ export const USER_LOGOUT = 'USER_LOGOUT';
 export const USER_CLEAR_ERRORS = 'USER_CLEAR_ERRORS';
 export const USER_ERROR = 'USER_ERROR';
 
+//@ Popover  --------------------------------------------------------
+export const CASE_TOGGLE_POPOVER = 'CASE_TOGGLE_POPOVER';
+export const TOGGLE_POPOVER = 'TOGGLE_POPOVER';
+export const CURRENT_ADD = 'CURRENT_ADD';
+export const CURRENT_DELETE = 'CURRENT_DELETE';
+
 //@ Cases -----------------------------------------------------------
 export const CASETYPE_UPDATE = 'CASETYPE_UPDATE';
 export const STYLE_UPDATE = 'STYLE_UPDATE';
 export const CLIENT_UPDATE = 'CLIENT_UPDATE';
-export const CASE_TOGGLE_POPOVER = 'CASE_TOGGLE_POPOVER';
 export const CASE_DOWNLOAD = 'CASE_DOWNLOAD';
 export const CASE_QTY_UPDATE = 'CASE_QTY_UPDATE';
 export const CASE_ERROR = 'CASE_ERROR';
@@ -63,8 +68,6 @@ export const MTRL_ADD = 'MTRL_ADD';
 export const MTRL_UPDATE = 'MTRL_UPDATE';
 export const MTRL_DELETE = 'MTRL_DELETE';
 export const MTRL_COLOR_EXPAND = 'MTRL_COLOR_EXPAND';
-export const CURRENT_ADD = 'CURRENT_ADD';
-export const CURRENT_DELETE = 'CURRENT_DELETE';
 export const CASE_CLEAR = 'CASE_CLEAR';
 export const CASENO_CLEAR = 'CASENO_CLEAR';
 

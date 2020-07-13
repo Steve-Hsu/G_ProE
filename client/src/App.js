@@ -22,6 +22,7 @@ import PrivateComRoute from './components/routing/PrivateComRoute';
 import PrivateUserRoute from './components/routing/PrivateUserRoute';
 
 //Context API
+import PopoverState from './context/popover/PopoverState';
 import ComState from './context/company/ComState';
 import AuthComState from './context/authCom/AuthComState';
 import AuthUserState from './context/authUser/AuthUserState';
@@ -34,6 +35,7 @@ import QuoState from './context/quo/QuoState';
 
 //Global Header for token
 import setAuthToken from './utils/setAuthToken';
+import popoverReducer from './context/popover/popoverReducer';
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
@@ -50,62 +52,64 @@ const App = () => {
                 <SearchBarState>
                   <SrMtrlState>
                     <QuoState>
-                      <Router>
-                        <Fragment>
-                          <Navbar />
-                          <div>
-                            <Switch>
-                              <Route
-                                exact
-                                path='/registercom'
-                                component={ComRegister}
-                              />
-                              <Route
-                                exact
-                                path='/registercom/manager'
-                                component={ComManager}
-                              />
-                              {/* LoginPages */}
-                              <Route
-                                exact
-                                path='/api/auth/company'
-                                component={ComLogin}
-                              />
-                              <Route
-                                exact
-                                path='/api/auth/user'
-                                component={UserLogin}
-                              />
-                              {/* <PrivateRoute */}
-                              <PrivateComRoute
-                                exact
-                                path='/api/users'
-                                component={UserManager}
-                              />
-                              <PrivateUserRoute
-                                exact
-                                path='/api/case/director'
-                                component={Director}
-                              />
-                              <PrivateUserRoute
-                                exact
-                                path='/api/case/merchandiser'
-                                component={CaseMerchandiser}
-                              />
-                              <PrivateUserRoute
-                                path='/api/case/mprice'
-                                component={MPrice}
-                              />
-                              <PrivateUserRoute
-                                path='/api/case/quogarment'
-                                component={Quotation}
-                              />
-                              {/* This NotFound return a page when the previous page is not found. */}
-                              <Route component={NotFound} />
-                            </Switch>
-                          </div>
-                        </Fragment>
-                      </Router>
+                      <PopoverState>
+                        <Router>
+                          <Fragment>
+                            <Navbar />
+                            <div>
+                              <Switch>
+                                <Route
+                                  exact
+                                  path='/registercom'
+                                  component={ComRegister}
+                                />
+                                <Route
+                                  exact
+                                  path='/registercom/manager'
+                                  component={ComManager}
+                                />
+                                {/* LoginPages */}
+                                <Route
+                                  exact
+                                  path='/api/auth/company'
+                                  component={ComLogin}
+                                />
+                                <Route
+                                  exact
+                                  path='/api/auth/user'
+                                  component={UserLogin}
+                                />
+                                {/* <PrivateRoute */}
+                                <PrivateComRoute
+                                  exact
+                                  path='/api/users'
+                                  component={UserManager}
+                                />
+                                <PrivateUserRoute
+                                  exact
+                                  path='/api/case/director'
+                                  component={Director}
+                                />
+                                <PrivateUserRoute
+                                  exact
+                                  path='/api/case/merchandiser'
+                                  component={CaseMerchandiser}
+                                />
+                                <PrivateUserRoute
+                                  path='/api/case/mprice'
+                                  component={MPrice}
+                                />
+                                <PrivateUserRoute
+                                  path='/api/case/quogarment'
+                                  component={Quotation}
+                                />
+                                {/* This NotFound return a page when the previous page is not found. */}
+                                <Route component={NotFound} />
+                              </Switch>
+                            </div>
+                          </Fragment>
+                        </Router>
+                      </PopoverState>
                     </QuoState>
                   </SrMtrlState>
                 </SearchBarState>

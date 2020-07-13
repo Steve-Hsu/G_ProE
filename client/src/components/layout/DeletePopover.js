@@ -2,11 +2,13 @@ import React, { useContext } from 'react';
 import CasesContext from '../../context/cases/casesContext';
 import AuthUserContext from '../../context/authUser/authUserContext';
 import SrMtrlContext from '../../context/srMtrl/srMtrlContext';
+import PopoverContext from '../../context/popover/popoverContext';
 
 const DeletePopover = () => {
   const casesContext = useContext(CasesContext);
   const authUserContext = useContext(AuthUserContext);
   const srMtrlContext = useContext(SrMtrlContext);
+  const popoverContext = useContext(PopoverContext);
   const {
     _id,
     caseType,
@@ -16,8 +18,6 @@ const DeletePopover = () => {
     sizes,
     gQtys,
     mtrls,
-    togglePopover,
-    current,
     deletecWay,
     deleteSize,
     deleteMtrl,
@@ -25,36 +25,46 @@ const DeletePopover = () => {
   } = casesContext;
   const { deleteSRMtrlByMtrl } = srMtrlContext;
   const { comName, comSymbol } = authUserContext;
+  const { togglePopover, current } = popoverContext;
 
-  const onChangeDelete = async (e) => {
+  const onChangeDelete = (e) => {
     e.preventDefault();
+    const cases = {
+      caseType: caseType,
+      style: style,
+      client: client,
+      cWays: cWays,
+      sizes: sizes,
+      gQtys: gQtys,
+      mtrls: mtrls,
+    };
+
     switch (Object.keys(current)[1]) {
       case 'gClr':
-        deletecWay(current.Id);
+        deletecWay(current.id);
+        cases.cWays = cWays.filter((cWay) => {
+          return cWay.id !== current.id;
+        });
+
         break;
       case 'gSize':
-        deleteSize(current.Id);
+        deleteSize(current.id);
+        cases.sizes = sizes.filter((size) => {
+          return size.id !== current.id;
+        });
+
         break;
       case 'item':
-        const mtrlId = current.id;
         deleteSRMtrlByMtrl(comName, comSymbol, current, _id);
-        deleteMtrl(mtrlId);
-        const cases = {
-          caseType: caseType,
-          style: style,
-          client: client,
-          cWays: cWays,
-          sizes: sizes,
-          gQtys: gQtys,
-          mtrls: mtrls.filter((mtrl) => {
-            return mtrl.id !== current.id;
-          }),
-        };
-        uploadCase(cases, _id, false);
+        deleteMtrl(current.id);
+        cases.mtrls = mtrls.filter((mtrl) => {
+          return mtrl.id !== current.id;
+        });
+
         break;
       default:
     }
-
+    uploadCase(cases, _id, false);
     togglePopover(e);
   };
 

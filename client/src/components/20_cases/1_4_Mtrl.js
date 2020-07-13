@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import CasesContext from '../../context/cases/casesContext';
+import PopoverContext from '../../context/popover/popoverContext';
 
 import MtrlClr from './1_4_1_MtrlClr';
 import MtrlSizeSPEC from './1_4_2_MtrlSizeSPEC';
@@ -16,14 +17,11 @@ const Mtrl = ({ mtrl }) => {
   }, [mtrl.unit]);
 
   const casesContext = useContext(CasesContext);
+  const popoverContext = useContext(PopoverContext);
 
-  const {
-    cWays,
-    sizes,
-    togglePopover,
-    expandExtraPanels,
-    addMtrlValue,
-  } = casesContext;
+  const { cWays, sizes, expandExtraPanels, addMtrlValue } = casesContext;
+
+  const { togglePopover } = popoverContext;
 
   //For sparete the postion of btn, here use an inline style.
   //deleteBtn in mtrl.

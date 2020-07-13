@@ -1,10 +1,13 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import CasesContext from '../../context/cases/casesContext';
+import PopoverContext from '../../context/popover/popoverContext';
 
 const ColorWay = ({ cWay }) => {
   const casesContext = useContext(CasesContext);
-  const { cWays, togglePopover, updatecWay } = casesContext;
+  const { cWays, updatecWay } = casesContext;
+  const popoverContext = useContext(PopoverContext);
+  const { togglePopover } = popoverContext;
   //For sparete the postion of btn, here use an inline style.
   //deleteBtn in ColorWay.
 

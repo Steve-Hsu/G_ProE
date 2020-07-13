@@ -16,12 +16,9 @@ import {
   MTRL_ADD,
   MTRL_UPDATE,
   MTRL_DELETE,
-  CASE_TOGGLE_POPOVER,
   CASE_DOWNLOAD,
   CASE_QTY_UPDATE,
   CASE_USER_NOT_AUTHORIZED,
-  CURRENT_ADD,
-  CURRENT_DELETE,
   CASETYPE_UPDATE,
   STYLE_UPDATE,
   CLIENT_UPDATE,
@@ -45,8 +42,6 @@ const CasesState = (props) => {
     gQtys: [],
     mtrls: [],
     deletedMtrls: [],
-    popover: false,
-    current: null,
     formIsHalfFilledOut: true,
     error: null,
     isUpdated: null,
@@ -628,35 +623,6 @@ const CasesState = (props) => {
 
   // @Other functions ----------------------------------------------------------------------------------------------------------
 
-  const togglePopover = (e) => {
-    e.preventDefault();
-    //The id is set in the value of the btn when which is created. so here we fetch id by e.target.value.
-
-    const newPopover = !state.popover;
-    dispatch({ type: CASE_TOGGLE_POPOVER, payload: newPopover });
-    if (newPopover) {
-      const targetId = e.target.value;
-      let subject = {};
-      switch (e.target.name) {
-        case 'cWay':
-          subject = cWays.find(({ id }) => id === targetId);
-          break;
-        case 'size':
-          subject = sizes.find(({ id }) => id === targetId);
-          break;
-        case 'mtrl':
-          subject = mtrls.find(({ id }) => id === targetId);
-          break;
-        default:
-          subject = { key: 'no target id' };
-      }
-
-      dispatch({ type: CURRENT_ADD, payload: subject });
-    } else {
-      dispatch({ type: CURRENT_DELETE });
-    }
-  };
-
   // Add NewCase to database - Submit form
   const uploadNewCase = async (cases) => {
     const config = {
@@ -686,6 +652,9 @@ const CasesState = (props) => {
 
   // Upload existing case- Submit form
   const uploadCase = async (cases, caseId, isDownLoadCase = true) => {
+    console.log('UploadCase is triggered');
+    console.log(caseId);
+    console.log(cases);
     const config = {
       headers: {
         'Content-Type': 'application/json',
@@ -763,8 +732,6 @@ const CasesState = (props) => {
         gQtys: state.gQtys,
         mtrls: state.mtrls,
         deletedMtrls: state.deletedMtrls,
-        popover: state.popover,
-        current: state.current,
         formIsHalfFilledOut: state.formIsHalfFilledOut,
         isUpdated: state.isUpdated,
         addCaseValue,
@@ -781,7 +748,6 @@ const CasesState = (props) => {
         addValueMtrlSizeSPEC,
         addValueMtrlCspt,
         addMtrlValue,
-        togglePopover,
         uploadNewCase,
         uploadCase,
         downloadCase,

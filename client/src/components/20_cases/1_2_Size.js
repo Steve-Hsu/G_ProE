@@ -1,11 +1,13 @@
 import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import CasesContext from '../../context/cases/casesContext';
+import PopoverContext from '../../context/popover/popoverContext';
 
 const Size = ({ size }) => {
   const casesContext = useContext(CasesContext);
-  const { _id, sizes, togglePopover, updateSize } = casesContext;
-
+  const popoverContext = useContext(PopoverContext);
+  const { _id, sizes, updateSize } = casesContext;
+  const { togglePopover } = popoverContext;
   const event = new Event('change');
   //@ Array for generate <option> tags for s<elect> tag.
   const sizeList = [
