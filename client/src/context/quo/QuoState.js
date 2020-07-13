@@ -8,6 +8,7 @@ import {
   QUOFORM_SWITCH,
   QUOFORM_DOWNLOAD,
   QUOPAGE_SWITCH,
+  QUOFORM_DELETE,
 } from '../types';
 
 const QuoState = (props) => {
@@ -29,7 +30,7 @@ const QuoState = (props) => {
         'Content-Type': 'application/json',
       },
     };
-    const res = await axios.get('/api/quo', config);
+    const res = await axios.get('/api/quogarment', config);
     console.log('Upload succeed!');
     dispatch({ type: CASE_LIST_DOWNLOAD, payload: res.data });
   };
@@ -77,7 +78,7 @@ const QuoState = (props) => {
     }
 
     const res = await axios.put(
-      `/api/quo/quoform/${check}/updateuoForm`,
+      `/api/quogarment/quoform/${check}/updatequoForm`,
       body,
       config
     );
@@ -91,10 +92,24 @@ const QuoState = (props) => {
       //     'Content-Type': 'application/json',
       //   },
       // };
-      const res = await axios.get(`/api/quo/quoform/${check}`);
+      const res = await axios.get(`/api/quogarment/quoform/${check}`);
       dispatch({ type: QUOFORM_DOWNLOAD, payload: res.data });
     } else {
       dispatch({ type: QUOFORM_DOWNLOAD, payload: { quoForms: [] } });
+    }
+  };
+
+  const deleteQuoForm = async (body) => {
+    const quoNo = body.quoNo;
+    const quoFormId = body.quoFormId;
+
+    try {
+      //This could be a severe problem
+      //Here the path seem a little strange, I still can't figure it out, only can use the path now to temparalily solve the problem
+      await axios.delete(`quogarment/delete/quoform/${quoNo}/${quoFormId}`);
+      dispatch({ type: QUOFORM_DELETE, payload: quoFormId });
+    } catch (err) {
+      console.log('Delete quoForm have problem', err);
     }
   };
 
@@ -113,6 +128,7 @@ const QuoState = (props) => {
         switchQuoForm,
         uploadQuoForm,
         downLoadQuoForm,
+        deleteQuoForm,
       }}
     >
       {props.children}

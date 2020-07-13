@@ -1,4 +1,9 @@
-import { TOGGLE_POPOVER, CURRENT_ADD, CURRENT_DELETE } from '../types';
+import {
+  TOGGLE_POPOVER,
+  CURRENT_ADD,
+  CURRENT_DELETE,
+  TOGGLE_LOADING,
+} from '../types';
 
 export default (state, action) => {
   switch (action.type) {
@@ -16,6 +21,11 @@ export default (state, action) => {
       return {
         ...state,
         current: null,
+      };
+    case TOGGLE_LOADING:
+      return {
+        ...state,
+        isLoading: !state.isLoading,
       };
     default:
   }

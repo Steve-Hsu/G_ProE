@@ -12,7 +12,7 @@ export const Director = (props) => {
 
   const goQuotation = () => {
     //Jump to other page while keeping authenticated
-    props.history.push('/api/case/quogarment');
+    props.history.push('/api/quogarment');
   };
   const goAR = () => {
     //Jump to other page while keeping authenticated

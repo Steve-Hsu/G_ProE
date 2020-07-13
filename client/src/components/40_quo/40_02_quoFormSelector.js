@@ -10,8 +10,6 @@ const QuoForm = () => {
   const {
     isQuotating,
     quotation,
-    popover,
-    current,
     switchQuoFormSelector,
     uploadQuoForm,
     downLoadQuoForm,
@@ -43,7 +41,7 @@ const QuoForm = () => {
 
   return (
     <Fragment>
-      {popover ? <DeletePopover key={current.id} current={current} /> : null}
+      {/* {popover ? <DeletePopover key={current.id} current={current} /> : null} */}
       <div className='p-1 container container-with-navbar'>
         <button onClick={goBackBtn}>Yes</button> QuoForm
         <form id='addNewQuoForm' onSubmit={addNewQuotation}></form>

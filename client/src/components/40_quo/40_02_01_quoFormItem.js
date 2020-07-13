@@ -1,12 +1,15 @@
 import React, { useContext } from 'react';
 import QuoContext from '../../context/quo/quoContext';
 import CaseContext from '../../context/cases/casesContext';
+import PopoverContext from '../../context/popover/popoverContext';
 
 const QuoFormItem = ({ quoForm }) => {
   const quoContext = useContext(QuoContext);
   const caseContext = useContext(CaseContext);
+  const popoverContext = useContext(PopoverContext);
   const { isQuotating, switchQuoFormSelector, downLoadQuoForm } = quoContext;
-  const { downloadCase, togglePopover } = caseContext;
+  const { downloadCase } = caseContext;
+  const { togglePopover } = popoverContext;
   const labelList = ['quoNo'];
 
   const labelSwitcher = (label) => {
@@ -37,7 +40,11 @@ const QuoFormItem = ({ quoForm }) => {
   };
 
   return (
-    <button onClick={onClick} key={`QuoFormItemBtn$${quoForm.quoNo}`}>
+    <div
+      onClick={onClick}
+      key={`QuoFormItemBtn$${quoForm.quoNo}`}
+      className='btn'
+    >
       <div className='mb-1 p-1 card'>
         <div className='grid-6'>
           {labelList.map((label) => (
@@ -49,7 +56,7 @@ const QuoFormItem = ({ quoForm }) => {
           <div>
             <button
               value={quoForm.id}
-              name='mtrl'
+              name='quoForm'
               onClick={togglePopover}
               className='btn btn-fade btn-square'
               style={deleteBtnPosition}
@@ -59,7 +66,7 @@ const QuoFormItem = ({ quoForm }) => {
           </div>
         </div>
       </div>
-    </button>
+    </div>
   );
 };
 

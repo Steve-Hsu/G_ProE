@@ -7,6 +7,7 @@ import UserContext from '../../context/user/userContext';
 import SearchBarContext from '../../context/searchBar/searchBarContext';
 import CasesContext from '../../context/cases/casesContext';
 import SrMtrlContext from '../../context/srMtrl/srMtrlContext';
+import PopoverContext from '../../context/popover/popoverContext';
 
 const Navbar = ({ title, icon }) => {
   const authComContext = useContext(AuthComContext);
@@ -15,6 +16,7 @@ const Navbar = ({ title, icon }) => {
   const searchBarContext = useContext(SearchBarContext);
   const casesContext = useContext(CasesContext);
   const srMtrlContext = useContext(SrMtrlContext);
+  const popoverContext = useContext(PopoverContext);
 
   // Destructure
   const acom = authComContext;
@@ -23,6 +25,7 @@ const Navbar = ({ title, icon }) => {
   const s = searchBarContext;
   const c = casesContext;
   const sm = srMtrlContext;
+  const p = popoverContext;
 
   useEffect(() => {
     if (c.isUpdated && sm.isUpdated) {
@@ -52,6 +55,7 @@ const Navbar = ({ title, icon }) => {
     c.defaultCase();
     u.clearUsers();
     sm.clearSrMtrl();
+    p.defaultPopover();
   };
 
   const authComLinks = (

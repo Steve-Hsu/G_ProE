@@ -53,7 +53,7 @@ const LeftBar = ({ currentPath }) => {
           form: 'srMtrlForm',
         };
         break;
-      case '/api/case/quogarment':
+      case '/api/quogarment':
         if (quotateFor === 'material') {
           obj = {
             label: 'Update material quotation',

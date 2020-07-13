@@ -14,8 +14,10 @@ const QuoSchema = mongoose.Schema({
   cNo: {
     type: String,
   },
-  quoForms: {
-    type: Array,
+  quoForms: [],
+  versionNum: {
+    type: Number,
+    default: 1,
   },
   date: {
     type: Date,

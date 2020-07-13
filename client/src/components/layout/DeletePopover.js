@@ -3,6 +3,8 @@ import CasesContext from '../../context/cases/casesContext';
 import AuthUserContext from '../../context/authUser/authUserContext';
 import SrMtrlContext from '../../context/srMtrl/srMtrlContext';
 import PopoverContext from '../../context/popover/popoverContext';
+import QuoContext from '../../context/quo/quoContext';
+import Spinner from '../../components/layout/Spinner';
 
 const DeletePopover = () => {
   const casesContext = useContext(CasesContext);
@@ -23,9 +25,11 @@ const DeletePopover = () => {
     deleteMtrl,
     uploadCase,
   } = casesContext;
+  const quoContext = useContext(QuoContext);
   const { deleteSRMtrlByMtrl } = srMtrlContext;
   const { comName, comSymbol } = authUserContext;
-  const { togglePopover, current } = popoverContext;
+  const { togglePopover, toggleLoading, current, isLoading } = popoverContext;
+  const { quotation, uploadQuoFrom, deleteQuoForm } = quoContext;
 
   const onChangeDelete = (e) => {
     e.preventDefault();
@@ -45,14 +49,14 @@ const DeletePopover = () => {
         cases.cWays = cWays.filter((cWay) => {
           return cWay.id !== current.id;
         });
-
+        uploadCase(cases, _id, false);
         break;
       case 'gSize':
         deleteSize(current.id);
         cases.sizes = sizes.filter((size) => {
           return size.id !== current.id;
         });
-
+        uploadCase(cases, _id, false);
         break;
       case 'item':
         deleteSRMtrlByMtrl(comName, comSymbol, current, _id);
@@ -60,12 +64,23 @@ const DeletePopover = () => {
         cases.mtrls = mtrls.filter((mtrl) => {
           return mtrl.id !== current.id;
         });
-
+        uploadCase(cases, _id, false);
+        break;
+      case 'quoNo':
+        const body = {
+          quoNo: current.quoNo,
+          quoFormId: current.id,
+        };
+        deleteQuoForm(body);
         break;
       default:
     }
-    uploadCase(cases, _id, false);
-    togglePopover(e);
+
+    toggleLoading(e);
+    setTimeout(() => {
+      toggleLoading();
+      togglePopover(e);
+    }, 3000);
   };
 
   const words = () => {
@@ -76,6 +91,8 @@ const DeletePopover = () => {
         return `Size :  ${current.gSize}`;
       case 'item':
         return `Material :  ${current.item}`;
+      case 'quoNo':
+        return `Quotation Form : ${current.quoNo}`;
       default:
     }
   };
@@ -83,28 +100,34 @@ const DeletePopover = () => {
   return (
     <div className='popup'>
       <div className='popup-inner'>
-        <div className='popup-container'>
-          <div>You will delete this {`${words()}`}</div>
-          <h3>Are you sure?</h3>
-        </div>
-        <div className='popup-btn-holder'>
+        {isLoading === false ? (
           <div>
-            <button
-              className='btn btn-danger btn-block center'
-              onClick={onChangeDelete}
-            >
-              Delete
-            </button>
+            <div className='popup-container'>
+              <div>You will delete this {`${words()}`}</div>
+              <h3>Are you sure?</h3>
+            </div>
+            <div className='popup-btn-holder'>
+              <div>
+                <button
+                  className='btn btn-danger btn-block center'
+                  onClick={onChangeDelete}
+                >
+                  Delete
+                </button>
+              </div>
+              <div>
+                <button
+                  className='btn btn-primary btn-block center'
+                  onClick={togglePopover}
+                >
+                  Back
+                </button>
+              </div>
+            </div>
           </div>
-          <div>
-            <button
-              className='btn btn-primary btn-block center'
-              onClick={togglePopover}
-            >
-              Back
-            </button>
-          </div>
-        </div>
+        ) : (
+          <Spinner />
+        )}
       </div>
     </div>
   );

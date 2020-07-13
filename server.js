@@ -41,7 +41,7 @@ app.use('/api/srmtrl', require('./routes/30_srMtrl'));
 // mPrice Query
 app.use('/api/srmtrl/query', require('./routes/31_querySrMtrl'));
 // Quotations
-app.use('/api/quo', require('./routes/40_quo'));
+app.use('/api/quogarment', require('./routes/40_quo'));
 
 const PORT = process.env.PORT || 5000;
 

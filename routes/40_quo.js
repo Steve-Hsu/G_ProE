@@ -12,7 +12,7 @@ const Case = require('../models/20_Case');
 const SRMtrl = require('../models/30_srMtrl');
 const QUO = require('../models/40_Quotation');
 
-// @route   GET api/quo
+// @route   GET api/quogarment/
 // @desc    Read the compnay's srMtrl from database
 // @access  Private
 router.get('/', authUser, async (req, res) => {
@@ -71,7 +71,7 @@ router.get('/', authUser, async (req, res) => {
   }
 });
 
-// @route   GET api/quo/quoform/cNo
+// @route   GET api/quogarment/quoform/cNo
 // @desc    Read the compnay's srMtrl from database, and if the quo not existing, create a new one
 // @access  Private
 router.get('/quoform/:cNo', authUser, async (req, res) => {
@@ -101,7 +101,10 @@ router.get('/quoform/:cNo', authUser, async (req, res) => {
     });
 });
 
-router.put('/quoform/:cNo/updateuoForm', authUser, async (req, res) => {
+// @route   PUT api/quogarment/quoform/cNo/updatequoForm
+// @desc    Update or generate quos
+// @access  Private
+router.put('/quoform/:cNo/updatequoForm', authUser, async (req, res) => {
   let user = await User.findById(req.user.id);
   if (!user.quo) {
     return res.status(400).json({ msg: 'Out of authority' });
@@ -111,24 +114,23 @@ router.put('/quoform/:cNo/updateuoForm', authUser, async (req, res) => {
   const cNo = req.params.cNo;
   console.log(cNo);
   const { isNewQuoForm } = req.body;
-  if (isNewQuoForm) {
-    await QUO.findOne({ cNo: cNo, company: comId })
+  const Quo = await QUO.findOne(
+    { cNo: cNo, company: comId },
+    { quoForms: 1, versionNum: 1 }
+  );
 
-      .then((result) => {
-        console.log(result);
-        const versionNum = result.quoForms.length + 1;
-        if (versionNum < 10) {
-          const quoNo = cNo + `_Q0${versionNum}`;
-          return quoNo;
-        } else {
-          const quoNo = cNo + `_Q${versionNum}`;
-          return quoNo;
-        }
-      })
-      .then(async (quoNo) => {
+  if (Quo) {
+    console.log('Quo', Quo);
+    const versionNum = Quo.versionNum;
+    if (Quo.quoForms.length < 99) {
+      if (isNewQuoForm) {
+        const quoNo = cNo + `_Q${versionNum}`;
         await QUO.updateOne(
           { cNo: cNo, company: comId },
           {
+            $set: {
+              versionNum: versionNum + 1,
+            },
             $push: {
               quoForms: {
                 id: uuidv4() + myModule.generateId(),
@@ -142,32 +144,81 @@ router.put('/quoform/:cNo/updateuoForm', authUser, async (req, res) => {
               },
             },
           }
+        )
+          .then(async () => {
+            return await QUO.findOne({ cNo: cNo, company: comId });
+          })
+          .then((result) => {
+            return res.json(result);
+          });
+      } else {
+        const {
+          id,
+          currency,
+          cmpts,
+          mQuos,
+          otherExpenses,
+          fob,
+        } = req.body.form;
+        await QUO.updateOne(
+          { cNo: cNo, company: comId, 'quoForms.id': id },
+          {
+            $set: {
+              'quoForms.$': {
+                currency: currency,
+                cmpts: cmpts,
+                mQuos: mQuos,
+                otherExpenses: otherExpenses,
+                fob: fob,
+              },
+            },
+          }
         );
-      })
-      .then(async () => {
-        return await QUO.findOne({ cNo: cNo, company: comId });
-      })
-      .then((result) => {
-        return res.json(result);
-      });
-  } else {
-    const { id, currency, cmpts, mQuos, otherExpenses, fob } = req.body.form;
-    await QUO.updateOne(
-      { cNo: cNo, company: comId, 'quoForms.id': id },
-      {
-        $set: {
-          'quoForms.$': {
-            currency: currency,
-            cmpts: cmpts,
-            mQuos: mQuos,
-            otherExpenses: otherExpenses,
-            fob: fob,
-          },
-        },
       }
-    );
+    } else {
+      return res
+        .status(400)
+        .json({ msg: 'Over the number of quotation version' });
+    }
+  } else {
+    return res.status(400).json({ msg: 'No such quotation data' });
   }
 });
+
+// @route   DELETE api/quogarment/delete/quoform/cNo/quoFormId
+// @desc    Delete the quoForm in the quos
+// @access  Private
+router.delete(
+  '/delete/quoform/:quoNo/:quoFormId',
+  authUser,
+  async (req, res) => {
+    console.log('delete quoForm is called in backEnd');
+    let user = await User.findById(req.user.id);
+    if (!user.quo) {
+      return res.status(400).json({ msg: 'Out of authority' });
+    }
+    const cNo = req.params.quoNo.slice(0, 14);
+    console.log('This is the cNo', cNo);
+    const quoFormId = req.params.quoFormId;
+    const comId = req.user.company;
+    await QUO.updateOne(
+      { cNo: cNo, company: comId, 'quoForms.id': quoFormId },
+      {
+        $pull: {
+          quoForms: { id: quoFormId },
+        },
+      }
+    )
+      .then(() => {
+        console.log(`The quoForm ${req.params.quoNo} is deleted`);
+        return res.json({ msg: 'Delete the quoForm' });
+      })
+      .catch((err) => {
+        console.log(err);
+        return res.json({ msg: 'Got problem to delete the quoForm' });
+      });
+  }
+);
 
 module.exports = router;
 //   const caseInfo = await Case.findOne(

@@ -100,7 +100,7 @@ const App = () => {
                                   component={MPrice}
                                 />
                                 <PrivateUserRoute
-                                  path='/api/case/quogarment'
+                                  path='/api/quogarment'
                                   component={Quotation}
                                 />
                                 {/* This NotFound return a page when the previous page is not found. */}

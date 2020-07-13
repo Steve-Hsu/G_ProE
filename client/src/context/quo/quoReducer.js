@@ -3,6 +3,7 @@ import {
   QUOFORM_SWITCH,
   QUOFORM_DOWNLOAD,
   QUOPAGE_SWITCH,
+  QUOFORM_DELETE,
 } from '../types';
 
 export default (state, action) => {
@@ -15,6 +16,16 @@ export default (state, action) => {
       return { ...state, quotation: action.payload };
     case QUOPAGE_SWITCH:
       return { ...state, quotateFor: action.payload };
+    case QUOFORM_DELETE:
+      return {
+        ...state,
+        quotation: {
+          ...state,
+          quoForms: state.quotation.quoForms.filter((quoForm) => {
+            return quoForm.id !== action.payload;
+          }),
+        },
+      };
     default:
   }
 };
