@@ -27,7 +27,7 @@ const MPriceForm = ({ currentPath }) => {
         mPrices: srMtrl.mPrices,
       });
     });
-    if (currentPath === '/api/case/quogarment') updateMPricesQuotation(body);
+    if (currentPath === '/api/quogarment') updateMPricesQuotation(body);
     if (currentPath === '/api/case/mprice') updateMPrices(body);
   };
 

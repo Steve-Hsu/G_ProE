@@ -112,76 +112,99 @@ router.put('/quoform/:cNo/updatequoForm', authUser, async (req, res) => {
 
   const comId = req.user.company;
   const cNo = req.params.cNo;
-  console.log(cNo);
-  const { isNewQuoForm } = req.body;
-  const Quo = await QUO.findOne(
-    { cNo: cNo, company: comId },
-    { quoForms: 1, versionNum: 1 }
-  );
+  const Cases = await Case.findOne({ cNo: cNo, company: comId });
+  if (Cases) {
+    console.log(cNo);
+    const { isNewQuoForm } = req.body;
+    const Quo = await QUO.findOne(
+      { cNo: cNo, company: comId },
+      { quoForms: 1, versionNum: 1 }
+    );
 
-  if (Quo) {
-    console.log('Quo', Quo);
-    const versionNum = Quo.versionNum;
-    if (Quo.quoForms.length < 99) {
-      if (isNewQuoForm) {
-        const quoNo = cNo + `_Q${versionNum}`;
-        await QUO.updateOne(
-          { cNo: cNo, company: comId },
-          {
-            $set: {
-              versionNum: versionNum + 1,
-            },
-            $push: {
-              quoForms: {
-                id: uuidv4() + myModule.generateId(),
-                quoNo: quoNo,
-                currency: '',
-                cmpts: [],
-                mQuos: [],
-                otherExpenses: [],
-                fob: '',
-                date: new Date(),
-              },
-            },
-          }
-        )
-          .then(async () => {
-            return await QUO.findOne({ cNo: cNo, company: comId });
-          })
-          .then((result) => {
-            return res.json(result);
+    if (Quo) {
+      console.log('Quo', Quo);
+      const versionNum = Quo.versionNum;
+      if (Quo.quoForms.length < 99) {
+        if (isNewQuoForm) {
+          const createMQuos = new Promise((resolve) => {
+            const mtrls = Cases.mtrls;
+            let num = 0;
+            let newMQuos = [];
+            mtrls.map((mtrl) => {
+              newMQuos.push({
+                mtrlId: mtrl.id,
+                mQuoAddvised: 0,
+                materialFinalQuotation: 0,
+              });
+              num = num + 1;
+              if (num === mtrls.length) {
+                return resolve(newMQuos);
+              }
+            });
           });
-      } else {
-        const {
-          id,
-          currency,
-          cmpts,
-          mQuos,
-          otherExpenses,
-          fob,
-        } = req.body.form;
-        await QUO.updateOne(
-          { cNo: cNo, company: comId, 'quoForms.id': id },
-          {
-            $set: {
-              'quoForms.$': {
-                currency: currency,
-                cmpts: cmpts,
-                mQuos: mQuos,
-                otherExpenses: otherExpenses,
-                fob: fob,
+          const quoNo = cNo + '_Q' + versionNum;
+          Promise.all([createMQuos]).then(async (result) => {
+            await QUO.updateOne(
+              { cNo: cNo, company: comId },
+              {
+                $set: {
+                  versionNum: versionNum + 1,
+                },
+                $push: {
+                  quoForms: {
+                    id: uuidv4() + myModule.generateId(),
+                    quoNo: quoNo,
+                    currency: '',
+                    cmpts: [],
+                    mQuos: result[0],
+                    otherExpenses: [],
+                    fob: '',
+                    date: new Date(),
+                  },
+                },
+              }
+            )
+              .then(async () => {
+                return await QUO.findOne({ cNo: cNo, company: comId });
+              })
+              .then((result) => {
+                return res.json(result);
+              });
+          });
+        } else {
+          const {
+            id,
+            currency,
+            cmpts,
+            mQuos,
+            otherExpenses,
+            fob,
+          } = req.body.form;
+          await QUO.updateOne(
+            { cNo: cNo, company: comId, 'quoForms.id': id },
+            {
+              $set: {
+                'quoForms.$': {
+                  currency: currency,
+                  cmpts: cmpts,
+                  mQuos: mQuos,
+                  otherExpenses: otherExpenses,
+                  fob: fob,
+                },
               },
-            },
-          }
-        );
+            }
+          );
+        }
+      } else {
+        return res
+          .status(400)
+          .json({ msg: 'Over the number of quotation version' });
       }
     } else {
-      return res
-        .status(400)
-        .json({ msg: 'Over the number of quotation version' });
+      return res.status(400).json({ msg: 'No such quotation data' });
     }
   } else {
-    return res.status(400).json({ msg: 'No such quotation data' });
+    return res.status(400).json({ msg: 'No such Case data' });
   }
 });
 

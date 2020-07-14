@@ -14,7 +14,15 @@ const SRMtrl = require('../models/30_srMtrl');
 // @desc    Read the compnay's srMtrl from database
 // @access  Private
 router.get('/', authUser, async (req, res) => {
-  const srMtrls = await SRMtrl.find({ company: req.user.company }).sort({
+  const srMtrls = await SRMtrl.find(
+    { company: req.user.company },
+    {
+      CSRIC: 0,
+      company: 0,
+      'mtrlColors.refs': 0,
+      'sizeSPECs.refs': 0,
+    }
+  ).sort({
     supplier: 1,
     date: -1,
   });
@@ -35,10 +43,18 @@ router.put('/queryresult', authUser, async (req, res) => {
   delete body._id;
   const filed = Object.keys(body);
   const value = Object.values(body);
-  const srMtrls = await SRMtrl.find({
-    company: req.user.company,
-    [filed[0]]: [value[0]],
-  }).sort({
+  const srMtrls = await SRMtrl.find(
+    {
+      company: req.user.company,
+      [filed[0]]: [value[0]],
+    },
+    {
+      CSRIC: 0,
+      company: 0,
+      'mtrlColors.refs': 0,
+      'sizeSPECs.refs': 0,
+    }
+  ).sort({
     supplier: 1,
     date: -1,
   });
