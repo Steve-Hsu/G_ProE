@@ -27,15 +27,10 @@ const PopoverState = (props) => {
   //Action -------
 
   const togglePopover = (e) => {
-    // Here use preventDefault(), the broswer recommand to use e.persist();
-    // e.preventDefault();
-    e.persist();
-
-    //The id is set in the value of the btn when which is created. so here we fetch id by e.target.value.
-
     const newPopover = !state.popover;
     dispatch({ type: TOGGLE_POPOVER, payload: newPopover });
     if (newPopover) {
+      e.preventDefault();
       const targetId = e.target.value;
       let subject = {};
       switch (e.target.name) {
@@ -57,6 +52,8 @@ const PopoverState = (props) => {
 
       dispatch({ type: CURRENT_ADD, payload: subject });
     } else {
+      // Here use preventDefault(), the broswer recommand to use e.persist();
+      e.persist();
       dispatch({ type: CURRENT_DELETE });
     }
   };

@@ -201,10 +201,10 @@ router.put('/quoform/:cNo/updatequoForm', authUser, async (req, res) => {
           .json({ msg: 'Over the number of quotation version' });
       }
     } else {
-      return res.status(400).json({ msg: 'No such quotation data' });
+      return res.status(404).json({ msg: 'No such quotation data' });
     }
   } else {
-    return res.status(400).json({ msg: 'No such Case data' });
+    return res.status(404).json({ msg: 'No such Case data' });
   }
 });
 
@@ -294,7 +294,8 @@ router.delete(
         return res.json({ msg: 'the quos is deleted by mtrl' });
       });
     } else {
-      return res.status(400).json({ msg: 'No such quotation data' });
+      console.log('No such quotation data');
+      return res.status(404).json({ msg: 'No such quotation data' });
     }
   }
 );

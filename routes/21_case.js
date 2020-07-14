@@ -226,6 +226,8 @@ router.post(
 // @access  Private
 router.put('/:id', authUser, async (req, res) => {
   // Check if the user has authority to update case ---------------------------
+  const caseId = req.params.id;
+  console.log('update case caseId', caseId);
   console.log('update case is triggered in backend');
   let user = await User.findById(req.user.id);
   if (!user.cases) {
@@ -235,7 +237,7 @@ router.put('/:id', authUser, async (req, res) => {
   }
 
   // Check if the user have the authority to update the case -------------------
-  let cases = await Case.findById(req.params.id);
+  let cases = await Case.findById(caseId);
   // If the user is case creator, pass !
   if (cases.user.toString() === req.user.id) {
     // if the user's id is added to authorizedUser of this case, pass !
@@ -244,126 +246,136 @@ router.put('/:id', authUser, async (req, res) => {
     return res.status(400).json({ msg: 'Not an authorized user.' });
   }
 
-  // Update case ---------------------------------------------------------------
-  const caseFields = req.body;
-  const { caseType, style, client, cWays, sizes, gQtys, mtrls } = caseFields;
-  //@ Delete the white space from strings of array items in the body, the cWays, and mtrls
-  const trimedcWays = new Promise((resolve) => {
-    if (cWays.length > 0) {
-      let num = 0;
-      cWays.map((cWay) => {
-        if (cWay.gClr !== '' || cWay.gClr !== null) {
-          cWay.gClr = cWay.gClr.trim();
-        }
-        num = num + 1;
-        if (num === cWays.length) {
-          console.log('Promise trimedcWays');
-          return resolve();
-        }
-      });
-    } else {
-      return resolve();
-    }
-  });
+  if (cases) {
+    // Update case ---------------------------------------------------------------
+    const caseFields = req.body;
+    const { caseType, style, client, cWays, sizes, gQtys, mtrls } = caseFields;
+    //@ Delete the white space from strings of array items in the body, the cWays, and mtrls
 
-  const trimedMtrls = new Promise((resolve, reject) => {
-    if (mtrls.length > 0) {
-      let trimCounter = 0;
-      mtrls.map((mtrl) => {
-        const mtrlList = [
-          'item',
-          'spec',
-          'supplier',
-          'ref_no',
-          'position',
-          'description',
-        ];
-        mtrlList.map((x) => {
-          if (mtrl[x] !== '' || mtrl[x] !== null) mtrl[x] = mtrl[x].trim();
-        });
-
-        const mtrlColorPromise = new Promise((resolve) => {
-          if (mtrl.mtrlColors.length > 0) {
-            let num = 0;
-            mtrl.mtrlColors.map((mtrlColor) => {
-              if (mtrl.mColor !== '' || mtrl.mColor !== null) {
-                mtrlColor.mColor = mtrlColor.mColor.trim();
-              }
-
-              num = num + 1;
-              if (num === mtrl.mtrlColors.length) {
-                console.log('Promise mtrlColorPromise');
-                return resolve();
-              }
-            });
-          } else {
+    const trimedcWays = new Promise((resolve) => {
+      if (cWays.length > 0) {
+        let num = 0;
+        cWays.map((cWay) => {
+          if (cWay.gClr !== '' || cWay.gClr !== null) {
+            cWay.gClr = cWay.gClr.trim();
+          }
+          num = num + 1;
+          if (num === cWays.length) {
+            console.log('Promise trimedcWays');
             return resolve();
           }
         });
-
-        const mtrlSPECPromise = new Promise((resolve) => {
-          if (mtrl.sizeSPECs.length > 0) {
-            let num = 0;
-            mtrl.sizeSPECs.map((sizeSPEC) => {
-              if (sizeSPEC.mSizeSPEC !== '' || sizeSPEC.mSizeSPEC !== null) {
-                sizeSPEC.mSizeSPEC = sizeSPEC.mSizeSPEC.trim();
-              }
-
-              num = num + 1;
-              if (num === mtrl.sizeSPECs.length) {
-                console.log('Promise mtrlSPECPromise');
-                return resolve();
-              }
-            });
-          } else {
-            return resolve();
-          }
-        });
-        if (caseFields.style !== '' || caseFields.style !== null) {
-          caseFields.style = caseFields.style.trim();
-        }
-
-        if (caseFields.client !== '' || caseFields.client !== null) {
-          caseFields.client = caseFields.client.trim();
-        }
-
-        Promise.all([mtrlColorPromise, mtrlSPECPromise]).then(() => {
-          trimCounter = trimCounter + 1;
-          if (trimCounter === mtrls.length) {
-            console.log('Promise mtrlPromiseAll');
-            return resolve();
-          }
-        });
-      });
-    } else {
-      return resolve();
-    }
-  });
-
-  // Get the id of case from URL by params
-  Promise.all([trimedcWays, trimedMtrls])
-    .then(async () => {
-      console.log('The Finall PromiseAll');
-      if (!cases)
-        return res.status(404).json({
-          msg: 'Case not found',
-        });
-
-      cases = await Case.updateOne(
-        { _id: req.params.id },
-        {
-          $set: caseFields,
-        },
-        { new: true }
-      );
-      // method .updateOne() will not return the case it self, so here make a one, named "updateCases" and return to the fronend client.
-      let updatedCases = await Case.findOne({ _id: req.params.id });
-      res.json(updatedCases);
-    })
-    .catch((err) => {
-      console.error(err.message);
-      res.status(500).send('Server Error');
+      } else {
+        return resolve();
+      }
     });
+
+    const trimedMtrls = new Promise((resolve, reject) => {
+      if (mtrls.length > 0) {
+        let trimCounter = 0;
+        mtrls.map((mtrl) => {
+          const mtrlList = [
+            'item',
+            'spec',
+            'supplier',
+            'ref_no',
+            'position',
+            'description',
+          ];
+          mtrlList.map((x) => {
+            if (mtrl[x] !== '' || mtrl[x] !== null) mtrl[x] = mtrl[x].trim();
+          });
+
+          const mtrlColorPromise = new Promise((resolve) => {
+            if (mtrl.mtrlColors.length > 0) {
+              let num = 0;
+              mtrl.mtrlColors.map((mtrlColor) => {
+                if (mtrl.mColor !== '' || mtrl.mColor !== null) {
+                  mtrlColor.mColor = mtrlColor.mColor.trim();
+                }
+
+                num = num + 1;
+                if (num === mtrl.mtrlColors.length) {
+                  console.log('Promise mtrlColorPromise');
+                  return resolve();
+                }
+              });
+            } else {
+              return resolve();
+            }
+          });
+
+          const mtrlSPECPromise = new Promise((resolve) => {
+            if (mtrl.sizeSPECs.length > 0) {
+              let num = 0;
+              mtrl.sizeSPECs.map((sizeSPEC) => {
+                if (sizeSPEC.mSizeSPEC !== '' || sizeSPEC.mSizeSPEC !== null) {
+                  sizeSPEC.mSizeSPEC = sizeSPEC.mSizeSPEC.trim();
+                }
+
+                num = num + 1;
+                if (num === mtrl.sizeSPECs.length) {
+                  console.log('Promise mtrlSPECPromise');
+                  return resolve();
+                }
+              });
+            } else {
+              return resolve();
+            }
+          });
+          if (caseFields.style !== '' || caseFields.style !== null) {
+            caseFields.style = caseFields.style.trim();
+          }
+
+          if (caseFields.client !== '' || caseFields.client !== null) {
+            caseFields.client = caseFields.client.trim();
+          }
+
+          Promise.all([mtrlColorPromise, mtrlSPECPromise]).then(() => {
+            trimCounter = trimCounter + 1;
+            if (trimCounter === mtrls.length) {
+              console.log('Promise mtrlPromiseAll');
+              return resolve();
+            }
+          });
+        });
+      } else {
+        return resolve();
+      }
+    });
+
+    // Get the id of case from URL by params
+    Promise.all([trimedcWays, trimedMtrls])
+      .then(async () => {
+        console.log('The Finall PromiseAll');
+        // if (!cases){}
+        //   return res.status(404).json({
+        //     msg: 'Case not found',
+        //   });
+
+        const updatedCase = await Case.findOneAndUpdate(
+          { _id: caseId },
+          {
+            $set: caseFields,
+          },
+          { new: true }
+        );
+        return updatedCase;
+        // method .updateOne() will not return the case it self, so here make a one, named "updateCases" and return to the fronend client.
+      })
+      .then((result) => {
+        console.log('The case is updated');
+        return res.json(result);
+      })
+      .catch((err) => {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+      });
+  } else {
+    return console.log(
+      "No such case, therefore can't update the case, may be caseId got problem"
+    );
+  }
 });
 
 // @route   DELETE api/case/:id
