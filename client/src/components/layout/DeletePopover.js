@@ -13,6 +13,7 @@ const DeletePopover = () => {
   const popoverContext = useContext(PopoverContext);
   const {
     _id,
+    cNo,
     caseType,
     style,
     client,
@@ -29,7 +30,7 @@ const DeletePopover = () => {
   const { deleteSRMtrlByMtrl } = srMtrlContext;
   const { comName, comSymbol } = authUserContext;
   const { togglePopover, toggleLoading, current, isLoading } = popoverContext;
-  const { quotation, uploadQuoFrom, deleteQuoForm } = quoContext;
+  const { quotation, uploadQuoFrom, deleteQuoForm, deletemQuo } = quoContext;
 
   const onChangeDelete = (e) => {
     e.preventDefault();
@@ -60,6 +61,7 @@ const DeletePopover = () => {
         break;
       case 'item':
         deleteSRMtrlByMtrl(comName, comSymbol, current, _id);
+        deletemQuo(cNo, current.id);
         deleteMtrl(current.id);
         cases.mtrls = mtrls.filter((mtrl) => {
           return mtrl.id !== current.id;

@@ -120,6 +120,16 @@ const QuoState = (props) => {
     }
   };
 
+  const deletemQuo = async (cNo, mtrlId) => {
+    console.log('The deletemQuo is triggered');
+    try {
+      await axios.delete(`/api/quogarment/delete/mquosbymtrl/${cNo}/${mtrlId}`);
+      console.log('The mQuo is deleted');
+    } catch (err) {
+      console.log('Got problem deleting the mQuo', err);
+    }
+  };
+
   return (
     <QuoContext.Provider
       value={{
@@ -136,6 +146,7 @@ const QuoState = (props) => {
         uploadQuoForm,
         downLoadQuoForm,
         deleteQuoForm,
+        deletemQuo,
       }}
     >
       {props.children}

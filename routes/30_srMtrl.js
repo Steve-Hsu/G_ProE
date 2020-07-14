@@ -272,7 +272,7 @@ router.put('/:caseId', authUser, async (req, res) => {
             // If the srMtrl exists
             //@_step_1 Insert mtrlColor
             let insertMtrlColor = new Promise(async (resolve, reject) => {
-              console.log('This should be 1 start', mList.CSRIC);
+              // console.log('This should be 1 start', mList.CSRIC);
               let counterOfLoopOfInsertMtrlColor = 0;
               await mList.mtrlColors.map(async (mtrlColor) => {
                 await SRMtrl.findOne(
@@ -328,7 +328,7 @@ router.put('/:caseId', authUser, async (req, res) => {
                       counterOfLoopOfInsertMtrlColor + 1;
                     const num_1 = counterOfLoopOfInsertMtrlColor;
                     if (num_1 === mList.mtrlColors.length) {
-                      console.log('This should be 1 end', mList.CSRIC);
+                      // console.log('This should be 1 end', mList.CSRIC);
                       return resolve();
                     }
                   });
@@ -338,7 +338,7 @@ router.put('/:caseId', authUser, async (req, res) => {
             //@_step_2 Clear the extra refs in mColor
             let clearColorRef = new Promise((resolve, reject) => {
               Promise.all([insertMtrlColor]).then(async () => {
-                console.log('This should be 2 start', mList.CSRIC);
+                // console.log('This should be 2 start', mList.CSRIC);
                 await SRMtrl.findOne(
                   { company: comId, CSRIC: mList.CSRIC },
                   { _id: 0, mtrlColors: 1 }
@@ -379,7 +379,7 @@ router.put('/:caseId', authUser, async (req, res) => {
                     }
                     mtrlColorLoop = mtrlColorLoop + 1;
                     if (mtrlColorLoop === srMtrl.mtrlColors.length) {
-                      console.log('This should be 2 end', mList.CSRIC);
+                      // console.log('This should be 2 end', mList.CSRIC);
                       resolve();
                     }
                   });
@@ -390,7 +390,7 @@ router.put('/:caseId', authUser, async (req, res) => {
             //@_step_3 Delete the mtrlColor in mtrlColors, if the refs of which is 0, means no case ref to it.
             // This Promise.all will wait for the async method, in this case (clearRef), finished all job, then start to do things.
             Promise.all([clearColorRef]).then(() => {
-              console.log('This should be 3 start', mList.CSRIC);
+              // console.log('This should be 3 start', mList.CSRIC);
               SRMtrl.findOne(
                 {
                   company: comId,
@@ -419,7 +419,7 @@ router.put('/:caseId', authUser, async (req, res) => {
                   }
                   mtrlColorLoop = mtrlColorLoop + 1;
                   if (mtrlColorLoop === srMtrl.mtrlColors.length) {
-                    console.log('This should be 3 end', mList.CSRIC);
+                    console.log('srMtrl, The mtrlColors 3 end', mList.CSRIC);
                   }
                 });
               });
@@ -427,7 +427,7 @@ router.put('/:caseId', authUser, async (req, res) => {
 
             //@_step_1 Inser SizeSPECS
             let insertMtrlSPEC = new Promise((resolve, reject) => {
-              console.log('SPEC 1 start', mList.CSRIC);
+              // console.log('SPEC 1 start', mList.CSRIC);
               let counterOfLoopInsertMtrlSPEC = 0;
               mList.sizeSPECs.map(async (sizeSPEC) => {
                 await SRMtrl.findOne({
@@ -473,7 +473,7 @@ router.put('/:caseId', authUser, async (req, res) => {
                       counterOfLoopInsertMtrlSPEC + 1;
                     const num_2 = counterOfLoopInsertMtrlSPEC;
                     if (num_2 === mList.mtrlColors.length) {
-                      console.log('SPEC 1 end', mList.CSRIC);
+                      // console.log('SPEC 1 end', mList.CSRIC);
                       return resolve();
                     }
                   });
@@ -483,7 +483,7 @@ router.put('/:caseId', authUser, async (req, res) => {
             //@_step_2 Clear the extra refs in sizeSPEC
             let clearSPECRef = new Promise((resolve, reject) => {
               Promise.all([insertMtrlSPEC]).then(async () => {
-                console.log('SPEC 2 start', mList.CSRIC);
+                // console.log('SPEC 2 start', mList.CSRIC);
                 await SRMtrl.findOne(
                   {
                     company: comId,
@@ -530,7 +530,7 @@ router.put('/:caseId', authUser, async (req, res) => {
                     }
                     mtrlSPECLoop = mtrlSPECLoop + 1;
                     if (mtrlSPECLoop === srMtrl.sizeSPECs.length) {
-                      console.log('SPEC 2 end', mList.CSRIC);
+                      // console.log('SPEC 2 end', mList.CSRIC);
                       resolve();
                     }
                   });
@@ -541,7 +541,7 @@ router.put('/:caseId', authUser, async (req, res) => {
             //@_step_3 Delete the mtrlColor in mtrlColors, if the refs of which is 0, means no case ref to it.
             // This Promise.all will wait for the async method, in this case (clearRef), finished all job, then start to do things.
             Promise.all([clearSPECRef]).then(() => {
-              console.log('SPEC 3 start', mList.CSRIC);
+              // console.log('SPEC 3 start', mList.CSRIC);
               SRMtrl.findOne(
                 {
                   company: comId,
@@ -570,7 +570,7 @@ router.put('/:caseId', authUser, async (req, res) => {
                   }
                   mtrlSPECLoop = mtrlSPECLoop + 1;
                   if (mtrlSPECLoop === srMtrl.sizeSPECs.length) {
-                    console.log('SPEC 3 end');
+                    console.log('srMtrl, SPEC 3 end');
                   }
                 });
               });
