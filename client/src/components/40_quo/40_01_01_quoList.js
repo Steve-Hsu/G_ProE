@@ -36,7 +36,7 @@ const QuoList = ({ listItem }) => {
     // setTimeout(() => {
     console.log('yes I should download', check);
     downLoadQuoForm(check);
-    // downloadCase(listItem._id);
+    downloadCase(listItem._id);
     // }, 300);
 
     console.log('Yes You hit me');

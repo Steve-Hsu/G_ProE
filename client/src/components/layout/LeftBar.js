@@ -9,7 +9,7 @@ const LeftBar = ({ currentPath }) => {
   const casesContext = useContext(CasesContext);
   const quoContext = useContext(QuoContext);
   const { mtrls, cNo, addcWay, addSize, addMtrl, clearcNo } = casesContext;
-  const { isQuotating, quotateFor } = quoContext;
+  const { isQuotating, quotateFor, currentQuoForm } = quoContext;
 
   //@ Define the current page for passing to searchBar
   let currentPage = '';
@@ -64,7 +64,11 @@ const LeftBar = ({ currentPath }) => {
             label: 'Add new quotation',
             form: 'addNewQuoForm',
           };
-        }
+        } else if (quotateFor === 'garment ' && currentQuoForm !== null)
+          obj = {
+            lable: 'Uploadp the Quotation',
+            form: 'quoForm',
+          };
         break;
       default:
     }

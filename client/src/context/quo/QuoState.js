@@ -5,6 +5,7 @@ import QuoReducer from './quoReducer';
 
 import {
   CASE_LIST_DOWNLOAD,
+  QUOFORM_SELECTOR_SWITCH,
   QUOFORM_SWITCH,
   QUOFORM_DOWNLOAD,
   QUOPAGE_SWITCH,
@@ -16,13 +17,12 @@ const QuoState = (props) => {
     caseList: [],
     quotateFor: null,
     isQuotating: null,
-    quotateVersion: null,
+    openQuoForm: null,
     quotation: { quoForms: [] },
-    popover: false,
-    current: null,
+    currentQuoForm: null,
   };
   const [state, dispatch] = useReducer(QuoReducer, initialState);
-  const { quotateFor, isQuotating } = state;
+  const { quotateFor, isQuotating, openQuoForm } = state;
   //@_action
   const getCaseList = async () => {
     const config = {
@@ -45,18 +45,18 @@ const QuoState = (props) => {
 
   const switchQuoFormSelector = (cNo) => {
     if (isQuotating === null) {
-      dispatch({ type: QUOFORM_SWITCH, payload: cNo });
+      dispatch({ type: QUOFORM_SELECTOR_SWITCH, payload: cNo });
       return cNo;
     } else {
-      dispatch({ type: QUOFORM_SWITCH, payload: null });
+      dispatch({ type: QUOFORM_SELECTOR_SWITCH, payload: null });
       return null;
     }
   };
 
-  const switchQuoForm = (cNo) => {
-    if (isQuotating === null) {
-      dispatch({ type: QUOFORM_SWITCH, payload: cNo });
-      return cNo;
+  const switchQuoForm = (quoFormId) => {
+    if (openQuoForm === null) {
+      dispatch({ type: QUOFORM_SWITCH, payload: quoFormId });
+      return quoFormId;
     } else {
       dispatch({ type: QUOFORM_SWITCH, payload: null });
       return null;
@@ -64,25 +64,32 @@ const QuoState = (props) => {
   };
 
   const uploadQuoForm = async (check, input, form) => {
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-    let body = { isNewQuoForm: true };
-    if (input === false) {
-      body = {
-        isNewQuoForm: false,
-        form: form,
+    const upLoad = new Promise(async (resolve) => {
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
       };
-    }
+      let body = { isNewQuoForm: true };
+      if (input === false) {
+        body = {
+          isNewQuoForm: false,
+          form: form,
+        };
+      }
 
-    const res = await axios.put(
-      `/api/quogarment/quoform/${check}/updatequoForm`,
-      body,
-      config
-    );
-    dispatch({ type: QUOFORM_DOWNLOAD, payload: res.data });
+      const res = await axios.put(
+        `/api/quogarment/quoform/${check}/updatequoForm`,
+        body,
+        config
+      );
+
+      dispatch({ type: QUOFORM_DOWNLOAD, payload: res.data });
+      // Return quoForm id for switch to the QuoForm page.
+
+      return resolve(res.data);
+    });
+    return upLoad;
   };
 
   const downLoadQuoForm = async (check) => {
@@ -119,9 +126,9 @@ const QuoState = (props) => {
         caseList: state.caseList,
         quotateFor: state.quotateFor,
         isQuotating: state.isQuotating,
+        openQuoForm: state.openQuoForm,
         quotation: state.quotation,
-        popover: state.popover,
-        current: state.current,
+        currentQuoForm: state.currentQuoForm,
         getCaseList,
         switchPage,
         switchQuoFormSelector,

@@ -1,6 +1,7 @@
 import {
   CASE_LIST_DOWNLOAD,
   QUOFORM_SWITCH,
+  QUOFORM_SELECTOR_SWITCH,
   QUOFORM_DOWNLOAD,
   QUOPAGE_SWITCH,
   QUOFORM_DELETE,
@@ -10,8 +11,16 @@ export default (state, action) => {
   switch (action.type) {
     case CASE_LIST_DOWNLOAD:
       return { ...state, caseList: action.payload };
-    case QUOFORM_SWITCH:
+    case QUOFORM_SELECTOR_SWITCH:
       return { ...state, isQuotating: action.payload };
+    case QUOFORM_SWITCH:
+      return {
+        ...state,
+        openQuoForm: action.payload,
+        currentQuoForm: state.quotation.quoForms.find(({ id }) => {
+          return id === action.payload;
+        }),
+      };
     case QUOFORM_DOWNLOAD:
       return { ...state, quotation: action.payload };
     case QUOPAGE_SWITCH:

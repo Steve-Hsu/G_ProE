@@ -3,12 +3,20 @@ import QuoContext from '../../context/quo/quoContext';
 import CaseContext from '../../context/cases/casesContext';
 import PopoverContext from '../../context/popover/popoverContext';
 import DeletePopover from '../layout/DeletePopover';
+import QuoMtrl from './40_03_01_quoMtrl';
 
 const QuoForm = () => {
   const quoContext = useContext(QuoContext);
   const caseContext = useContext(CaseContext);
   const popoverContext = useContext(PopoverContext);
-  const { switchQuoForm, downLoadQuoForm } = quoContext;
+  const {
+    switchQuoForm,
+    downLoadQuoForm,
+    currentQuoForm,
+    quotateFor,
+  } = quoContext;
+  const { quoNo, currency, cmpts, mQuos, otherExpenses, fob } = currentQuoForm;
+
   const {
     cNo,
     caseType,
@@ -26,8 +34,6 @@ const QuoForm = () => {
   const onClick = (e) => {
     e.preventDefault();
     switchQuoForm(null);
-    downLoadQuoForm(null);
-    defaultCase();
   };
 
   return (
@@ -35,7 +41,9 @@ const QuoForm = () => {
       <div className='p-1 container container-with-navbar'>
         <button onClick={onClick}>Yes</button>{' '}
         <form id='quoForm' onSubmit={onSubmitQuoForm}>
-          <div>{cNo}</div>
+          <div>Case Number : {cNo}</div>
+          <div>Quotation Number : {quoNo} </div>
+          <div>Now we are quotate for {quotateFor}</div>
           <div>{caseType}</div>
           <div>{style}</div>
           <div>{client}</div>
@@ -47,6 +55,9 @@ const QuoForm = () => {
           {sizes.map((size) => {
             return <span key={size.id}>{size.gSize}</span>;
           })}
+          {mtrls.map((mtrl) => (
+            <QuoMtrl key={`quoMtrl${mtrl.id}`} mtrl={mtrl} />
+          ))}
         </form>
       </div>
     </Fragment>

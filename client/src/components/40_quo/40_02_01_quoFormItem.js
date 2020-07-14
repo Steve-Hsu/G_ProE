@@ -7,7 +7,12 @@ const QuoFormItem = ({ quoForm }) => {
   const quoContext = useContext(QuoContext);
   const caseContext = useContext(CaseContext);
   const popoverContext = useContext(PopoverContext);
-  const { isQuotating, switchQuoFormSelector, downLoadQuoForm } = quoContext;
+  const {
+    isQuotating,
+    switchQuoFormSelector,
+    downLoadQuoForm,
+    switchQuoForm,
+  } = quoContext;
   const { downloadCase } = caseContext;
   const { togglePopover } = popoverContext;
   const labelList = ['quoNo'];
@@ -23,12 +28,12 @@ const QuoFormItem = ({ quoForm }) => {
 
   const onClick = (e) => {
     e.preventDefault();
-
+    const quoFormId = e.target.value;
+    switchQuoForm(quoFormId);
     // let check = switchQuoFormSelector(cNo);
     // setTimeout(() => {
     // console.log('yes I should download', check);
     // downLoadQuoForm(check);
-    // downloadCase(listItem._id);
   };
 
   //For sparete the postion of btn, here use an inline style.
@@ -54,6 +59,14 @@ const QuoFormItem = ({ quoForm }) => {
             </div>
           ))}
           <div>
+            <button
+              value={quoForm.id}
+              name='EditQuoForm'
+              onClick={onClick}
+              className='btn'
+            >
+              Edit
+            </button>
             <button
               value={quoForm.id}
               name='quoForm'

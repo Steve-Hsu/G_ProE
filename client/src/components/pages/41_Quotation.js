@@ -6,6 +6,7 @@ import PopoverContext from '../../context/popover/popoverContext';
 import LeftBar from '../layout/LeftBar';
 import QuoCaseSelector from '../../components/40_quo/40_01_quoCaseSelector';
 import QuoFormSelector from '../../components/40_quo/40_02_quoFormSelector';
+import QuoForm from '../../components/40_quo/40_03_quoForm';
 import SrMtrlForm from '../../components/30_srMtrl/30_01_srMtrlForm';
 import DeletePopover from '../../components/layout/DeletePopover';
 // quoForm
@@ -14,7 +15,7 @@ const Quotation = (props) => {
   // Context
   const quoContext = useContext(QuoContext);
   const popoverContext = useContext(PopoverContext);
-  const { switchPage, quotateFor, isQuotating } = quoContext;
+  const { switchPage, quotateFor, isQuotating, openQuoForm } = quoContext;
   const { popover, current } = popoverContext;
   const currentPath = props.location.pathname;
 
@@ -57,7 +58,9 @@ const Quotation = (props) => {
                 <QuoCaseSelector />
               </div>
             ) : (
-              <QuoFormSelector />
+              <div>
+                {openQuoForm === null ? <QuoFormSelector /> : <QuoForm />}
+              </div>
             )}
           </div>
         ) : null}
