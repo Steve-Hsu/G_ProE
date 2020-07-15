@@ -171,6 +171,7 @@ router.post(
               cspt.mColor = cspt.mColor.trim();
               cspt.mSizeSPEC = cspt.mSizeSPEC.trim();
               cspt.unit = cspt.unit.trim();
+              cspt.cspt = Number(cspt.cspt);
               num = num + 1;
               if (num === mtrl.cspts.length) {
                 console.log('Promise resolve- mtrlCsptPromise'); // Test Code
@@ -402,6 +403,25 @@ router.put('/:id', authUser, async (req, res) => {
               return resolve();
             }
           });
+
+          const mtrlCsptPromise = new Promise((resolve) => {
+            console.log('Promise start- mtrlCsptPromise'); // Test Code
+            let num = 0;
+            mtrl.cspts.map((cspt) => {
+              cspt.gClr = cspt.gClr.trim();
+              cspt.gSize = cspt.gSize.trim();
+              cspt.mColor = cspt.mColor.trim();
+              cspt.mSizeSPEC = cspt.mSizeSPEC.trim();
+              cspt.unit = cspt.unit.trim();
+              cspt.cspt = Number(cspt.cspt);
+              num = num + 1;
+              if (num === mtrl.cspts.length) {
+                console.log('Promise resolve- mtrlCsptPromise'); // Test Code
+                return resolve();
+              }
+            });
+          });
+
           if (caseFields.style !== '' || caseFields.style !== null) {
             caseFields.style = caseFields.style.trim();
           }
@@ -410,7 +430,11 @@ router.put('/:id', authUser, async (req, res) => {
             caseFields.client = caseFields.client.trim();
           }
 
-          Promise.all([mtrlColorPromise, mtrlSPECPromise]).then(() => {
+          Promise.all([
+            mtrlColorPromise,
+            mtrlSPECPromise,
+            mtrlCsptPromise,
+          ]).then(() => {
             trimCounter = trimCounter + 1;
             if (trimCounter === mtrls.length) {
               console.log('Promise mtrlPromiseAll');
