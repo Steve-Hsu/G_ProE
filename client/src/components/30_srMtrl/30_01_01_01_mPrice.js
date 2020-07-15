@@ -13,16 +13,46 @@ const MPrice = ({ mPrice, srMtrl, currentPath }) => {
   //@
   const srMtrlId = srMtrl._id;
 
-  const mPriceList = [
-    'mColor',
-    'sizeSPEC',
-    'unit',
-    'currency',
-    'moq',
-    'moqPrice',
-    'mPrice',
-    'quotation',
-  ];
+  const mPriceList = () => {
+    let arr = [];
+    if (currentPath === '/api/quogarment') {
+      arr = [
+        'mColor',
+        'sizeSPEC',
+        'unit',
+        'currency',
+        'moq',
+        'moqPrice',
+        'mPrice',
+        'quotation',
+      ];
+    } else {
+      arr = [
+        'mColor',
+        'sizeSPEC',
+        'unit',
+        'currency',
+        'moq',
+        'moqPrice',
+        'mPrice',
+      ];
+    }
+    return arr;
+  };
+
+  // const mPriceList = [
+  //   'mColor',
+  //   'sizeSPEC',
+  //   'unit',
+  //   'currency',
+  //   'moq',
+  //   'moqPrice',
+  //   'mPrice',
+  // ];
+
+  // if (currentPath === '/api/quogarment') {
+  //   mPriceList.push('quotation');
+  // }
 
   //@ Funcs
   const labels = (x) => {
@@ -112,7 +142,7 @@ const MPrice = ({ mPrice, srMtrl, currentPath }) => {
   return (
     <div className='card'>
       <div className='grid-4'>
-        {mPriceList.map((m) => {
+        {mPriceList().map((m) => {
           switch (m) {
             case 'mColor':
             case 'sizeSPEC':
@@ -144,11 +174,32 @@ const MPrice = ({ mPrice, srMtrl, currentPath }) => {
                   </select>
                 </div>
               );
-            default:
+            case 'unit':
+            case 'currency':
               return (
                 <div key={`${m}${mPrice.id}`}>
                   <input
                     type='text'
+                    id={`${m}${mPrice.id}`}
+                    name={mPrice.id}
+                    placeholder='.'
+                    onChange={onChange}
+                    className='MPH-input'
+                    value={mPrice[`${m}`] || ''}
+                  />
+                  <label
+                    htmlFor={`${m}${mPrice.id}`}
+                    className='MPH-input-label'
+                  >
+                    {labels(m)}
+                  </label>
+                </div>
+              );
+            default:
+              return (
+                <div key={`${m}${mPrice.id}`}>
+                  <input
+                    type='number'
                     id={`${m}${mPrice.id}`}
                     name={mPrice.id}
                     placeholder='.'

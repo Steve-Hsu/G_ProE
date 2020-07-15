@@ -640,11 +640,11 @@ router.put('/update/mpricevalues', authUser, async (req, res) => {
           },
           {
             $set: {
-              'mPrices.$.unit': mPrice.unit,
-              'mPrices.$.currency': mPrice.currency,
-              'mPrices.$.mPrice': mPrice.mPrice,
-              'mPrices.$.moq': mPrice.moq,
-              'mPrices.$.moqPrice': mPrice.moqPrice,
+              'mPrices.$.unit': mPrice.unit.trim(),
+              'mPrices.$.currency': mPrice.currency.trim(),
+              'mPrices.$.mPrice': Number(mPrice.mPrice),
+              'mPrices.$.moq': Number(mPrice.moq),
+              'mPrices.$.moqPrice': Number(mPrice.moqPrice),
             },
           }
         );
@@ -690,11 +690,11 @@ router.put('/update/mpricevalues', authUser, async (req, res) => {
               },
               {
                 $set: {
-                  'mPrices.$.unit': mPrice.unit,
-                  'mPrices.$.currency': mPrice.currency,
-                  'mPrices.$.mPrice': mPrice.mPrice,
-                  'mPrices.$.moq': mPrice.moq,
-                  'mPrices.$.moqPrice': mPrice.moqPrice,
+                  'mPrices.$.unit': mPrice.unit.trim(),
+                  'mPrices.$.currency': mPrice.currency.trim(),
+                  'mPrices.$.mPrice': Number(mPrice.mPrice),
+                  'mPrices.$.moq': Number(mPrice.moq),
+                  'mPrices.$.moqPrice': Number(mPrice.moqPrice),
                 },
               }
             );
@@ -977,7 +977,7 @@ router.put('/update/mpricevalues/quotation', authUser, async (req, res) => {
           },
           {
             $set: {
-              'mPrices.$.quotation': mPrice.quotation,
+              'mPrices.$.quotation': Number(mPrice.quotation),
             },
           }
         );
@@ -1023,7 +1023,7 @@ router.put('/update/mpricevalues/quotation', authUser, async (req, res) => {
               },
               {
                 $set: {
-                  'mPrices.$.quotation': mPrice.quotation,
+                  'mPrices.$.quotation': Number(mPrice.quotation),
                 },
               }
             );
