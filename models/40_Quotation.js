@@ -19,6 +19,17 @@ const QuoSchema = mongoose.Schema({
     type: Number,
     default: 0,
   },
+  gTQty: {
+    type: Number,
+  },
+  quotatedQty: {
+    type: Number,
+    default: 0,
+  },
+  finishedQuotating: {
+    type: Boolean,
+    default: false,
+  },
   date: {
     type: Date,
     default: Date.now,

@@ -67,74 +67,135 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    console.log('The upload newcase is called in backend'); // Test Code
 
     const { caseType, style, client, cWays, sizes, gQtys, mtrls } = req.body;
     //@ Delete the white space from strings of array items in the body, the cWays, sizes, and mtrls
     const trimedcWays = new Promise((resolve) => {
-      let cWayCounter = 0;
-      cWays.map((cWay) => {
-        cWay.gClr = cWay.gClr.trim();
-        cWayCounter = cWayCounter + 1;
-        if (cWayCounter === cWays.length) return resolve();
-      });
+      console.log('Promise start- trimedcWays'); // Test Code
+      if (cWays.length > 0) {
+        let cWayCounter = 0;
+        cWays.map((cWay) => {
+          cWay.gClr = cWay.gClr.trim();
+          cWayCounter = cWayCounter + 1;
+          if (cWayCounter === cWays.length) {
+            console.log('Promise resolve- trimedcWays'); // Test Code
+            return resolve();
+          }
+        });
+      } else {
+        console.log('Promise resolve- not built cWays yet - trimedcWays'); // Test Code
+        return resolve();
+      }
     });
 
     const trimedSizes = new Promise((resolve) => {
-      let sizeCounter = 0;
-      sizes.map((size) => {
-        size.gSize = size.gSize.trim();
-        sizeCounter = sizeCounter + 1;
-        if (sizeCounter === sizes.length) return resolve();
-      });
+      console.log('Promise start- trimedSizes'); // Test Code
+      if (sizes.length > 0) {
+        let sizeCounter = 0;
+        sizes.map((size) => {
+          size.gSize = size.gSize.trim();
+          sizeCounter = sizeCounter + 1;
+          if (sizeCounter === sizes.length) {
+            console.log('Promise resolve- trimedSizes'); // Test Code
+            return resolve();
+          }
+        });
+      } else {
+        console.log('Promise resolve- not built sizes yet - trimedSizes'); // Test Code
+        return resolve();
+      }
+    });
+
+    //@Steve:  I can set schema to prevent this sring or number problem, however it is a hole for how still code form frontEnd
+    const numberThegQty = new Promise((resolve) => {
+      if (gQtys.length > 0) {
+        let num = 0;
+        gQtys.map((gQty) => {
+          gQty.gQty = Number(gQty.gQty);
+          num = num + 1;
+          if (num === gQtys.length) {
+            console.log('Promise resolve- numberThegQty'); // Test Code
+            return resolve();
+          }
+        });
+      } else {
+        console.log('Promise resolve- not built gQty yet - numberThegQty'); // Test Code
+        return resolve();
+      }
     });
 
     const trimedMtrls = new Promise((resolve, reject) => {
-      let trimCounter = 0;
-      mtrls.map((mtrl) => {
-        mtrl.item = mtrl.item.trim();
-        mtrl.spec = mtrl.spec.trim();
-        mtrl.supplier = mtrl.supplier.trim();
-        mtrl.ref_no = mtrl.ref_no.trim();
-        mtrl.position = mtrl.position.trim();
-        mtrl.description = mtrl.description.trim();
-        const mtrlColorPromise = new Promise((resolve) => {
-          let num = 0;
-          mtrl.mtrlColors.map((mtrlColor) => {
-            mtrlColor.mColor = mtrlColor.mColor.trim();
-            num = num + 1;
-            if (num === mtrl.mtrlColors.length) return resolve();
+      console.log('Promise start- trimedMtrls'); // Test Code
+      if (mtrls.length > 0) {
+        let trimCounter = 0;
+        mtrls.map((mtrl) => {
+          mtrl.item = mtrl.item.trim();
+          mtrl.spec = mtrl.spec.trim();
+          mtrl.supplier = mtrl.supplier.trim();
+          mtrl.ref_no = mtrl.ref_no.trim();
+          mtrl.position = mtrl.position.trim();
+          mtrl.description = mtrl.description.trim();
+          const mtrlColorPromise = new Promise((resolve) => {
+            console.log('Promise start- mtrlColorPromise'); // Test Code
+            let num = 0;
+            mtrl.mtrlColors.map((mtrlColor) => {
+              mtrlColor.mColor = mtrlColor.mColor.trim();
+              num = num + 1;
+              if (num === mtrl.mtrlColors.length) {
+                console.log('Promise resolve- mtrlColorPromise'); // Test Code
+                return resolve();
+              }
+            });
           });
-        });
 
-        const mtrlSPECPromise = new Promise((resolve) => {
-          let num = 0;
-          mtrl.sizeSPECs.map((sizeSPEC) => {
-            sizeSPEC.mSizeSPEC = sizeSPEC.mSizeSPEC.trim();
-            num = num + 1;
-            if (num === mtrl.sizeSPECs.length) return resolve();
+          const mtrlSPECPromise = new Promise((resolve) => {
+            console.log('Promise start- mtrlSPECPromise'); // Test Code
+            let num = 0;
+            mtrl.sizeSPECs.map((sizeSPEC) => {
+              sizeSPEC.mSizeSPEC = sizeSPEC.mSizeSPEC.trim();
+              num = num + 1;
+              if (num === mtrl.sizeSPECs.length) {
+                console.log('Promise resolve- mtrlSPECPromise'); // Test Code
+                return resolve();
+              }
+            });
           });
-        });
 
-        const mtrlCsptPromise = new Promise((resolve) => {
-          let num = 0;
-          mtrl.cspts.map((cspt) => {
-            cspt.gClr = cspt.gClr.trim();
-            cspt.gSize = cspt.gSize.trim();
-            cspt.mColor = cspt.mColor.trim();
-            cspt.mSizeSPEC = cspt.mSizeSPEC.trim();
-            cspt.unit = cspt.unit.trim();
-            num = num + 1;
-            if (num === mtrl.cspts.length) return resolve();
+          const mtrlCsptPromise = new Promise((resolve) => {
+            console.log('Promise start- mtrlCsptPromise'); // Test Code
+            let num = 0;
+            mtrl.cspts.map((cspt) => {
+              cspt.gClr = cspt.gClr.trim();
+              cspt.gSize = cspt.gSize.trim();
+              cspt.mColor = cspt.mColor.trim();
+              cspt.mSizeSPEC = cspt.mSizeSPEC.trim();
+              cspt.unit = cspt.unit.trim();
+              num = num + 1;
+              if (num === mtrl.cspts.length) {
+                console.log('Promise resolve- mtrlCsptPromise'); // Test Code
+                return resolve();
+              }
+            });
           });
-        });
 
-        Promise.all([mtrlColorPromise, mtrlSPECPromise, mtrlCsptPromise]).then(
-          () => {
+          Promise.all([
+            mtrlColorPromise,
+            mtrlSPECPromise,
+            mtrlCsptPromise,
+          ]).then(() => {
+            console.log('1st Promise all start- '); // Test Code
             trimCounter = trimCounter + 1;
-            if (trimCounter === mtrls.length) return resolve();
-          }
-        );
-      });
+            if (trimCounter === mtrls.length) {
+              console.log('1st Promise All resolve'); // Test Code
+              return resolve();
+            }
+          });
+        });
+      } else {
+        console.log('Promise trimedMtrls resolve - no mtrls '); // Test Code
+        return resolve();
+      }
     });
 
     const comSymbol = user.comSymbol;
@@ -194,7 +255,7 @@ router.post(
       '_' +
       caseTypeSymbol;
 
-    Promise.all([trimedcWays, trimedSizes, trimedMtrls])
+    Promise.all([trimedcWays, numberThegQty, trimedSizes, trimedMtrls])
       .then(async () => {
         const newCase = new Case({
           user: req.user.id,
@@ -266,6 +327,24 @@ router.put('/:id', authUser, async (req, res) => {
           }
         });
       } else {
+        return resolve();
+      }
+    });
+
+    //@Steve:  I can set schema to prevent this sring or number problem, however it is a hole for how still code form frontEnd
+    const numberThegQty = new Promise((resolve) => {
+      if (gQtys.length > 0) {
+        let num = 0;
+        gQtys.map((gQty) => {
+          gQty.gQty = Number(gQty.gQty);
+          num = num + 1;
+          if (num === gQtys.length) {
+            console.log('Promise resolve- numberThegQty'); // Test Code
+            return resolve();
+          }
+        });
+      } else {
+        console.log('Promise resolve- not built gQty yet - numberThegQty'); // Test Code
         return resolve();
       }
     });
@@ -345,7 +424,7 @@ router.put('/:id', authUser, async (req, res) => {
     });
 
     // Get the id of case from URL by params
-    Promise.all([trimedcWays, trimedMtrls])
+    Promise.all([trimedcWays, numberThegQty, trimedMtrls])
       .then(async () => {
         console.log('The Finall PromiseAll');
         // if (!cases){}

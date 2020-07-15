@@ -69,7 +69,7 @@ const CasesState = (props) => {
     id: uuidv4() + generateId(),
     cWay: '',
     size: '',
-    gQty: '',
+    gQty: 0,
   };
 
   // According to React : default input should not be an 'null'
@@ -116,7 +116,7 @@ const CasesState = (props) => {
     mColor: '',
     mSizeSPEC: '',
     unit: '',
-    cspt: '',
+    cspt: 0,
     requiredMQty: 0,
   };
 
@@ -625,6 +625,7 @@ const CasesState = (props) => {
 
   // Add NewCase to database - Submit form
   const uploadNewCase = async (cases) => {
+    console.log('uploadNewCase is called in state'); // Test Code
     const config = {
       headers: {
         'Content-Type': 'application/json',

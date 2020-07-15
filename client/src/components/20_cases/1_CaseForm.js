@@ -89,6 +89,7 @@ const CaseForm = () => {
     let updatedCases = {};
     if (cNo === null) {
       // update the state of mPrice
+      console.log('uploadNewCase is called'); // Test Code
       updatedCases = await uploadNewCase(cases);
     } else {
       //Delete the refs of srMtrls from database, that deleted in UI by user

@@ -86,13 +86,45 @@ router.get('/quoform/:cNo', authUser, async (req, res) => {
   await QUO.findOne({ cNo: cNo, company: comId })
     .then((result) => {
       if (!result) {
-        const newQuoForm = new QUO({
-          company: comId,
-          cNo: cNo,
-          quoForms: [],
+        //
+        const garmentQtySum = new Promise(async (resolve) => {
+          const result = await Case.aggregate([
+            {
+              $match: {
+                cNo: cNo,
+                company: mongoose.Types.ObjectId(req.user.company),
+              },
+            },
+            {
+              $project: {
+                totalGarmentQty: { $sum: '$gQtys.gQty' },
+              },
+            },
+          ]);
+          console.log('the totalQtySum', result); // Test Code
+          resolve(result);
         });
-        newQuoForm.save();
-        return res.json(newQuoForm);
+
+        Promise.all([garmentQtySum])
+          .then(async (result) => {
+            // The result of Promise.all() will be an array, since it's default is to treat multiple promise.
+            // And the result get from previous Promise, that is returned by Model.aggretate, which also return an array.
+            // Therefore, in here, the result will be inside an array of array.
+            const totalGarmentQty = result[0][0].totalGarmentQty;
+            console.log('the result in promise all', result); // Test Code
+            const newQuoForm = new QUO({
+              company: comId,
+              cNo: cNo,
+              quoForms: [],
+              gTQty: totalGarmentQty,
+            });
+            newQuoForm.save();
+            return newQuoForm;
+          })
+          .then((newQuoForm) => {
+            return res.json(newQuoForm);
+          });
+        //
       } else {
         const insertMPrice = new Promise(async (resolve, reject) => {
           console.log('Start Promise - insertMPrice'); // Test Code
