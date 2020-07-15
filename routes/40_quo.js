@@ -11,6 +11,7 @@ const User = require('../models/10_User');
 const Case = require('../models/20_Case');
 const SRMtrl = require('../models/30_srMtrl');
 const QUO = require('../models/40_Quotation');
+const { findOne } = require('../models/10_User');
 
 // @route   GET api/quogarment/
 // @desc    Read the compnay's srMtrl from database
@@ -75,7 +76,7 @@ router.get('/', authUser, async (req, res) => {
 // @desc    Read the compnay's srMtrl from database, and if the quo not existing, create a new one
 // @access  Private
 router.get('/quoform/:cNo', authUser, async (req, res) => {
-  let user = await User.findById(req.user.id);
+  const user = await User.findById(req.user.id);
   if (!user.quo) {
     return res.status(400).json({ msg: 'Out of authority' });
   }
@@ -93,7 +94,71 @@ router.get('/quoform/:cNo', authUser, async (req, res) => {
         newQuoForm.save();
         return res.json(newQuoForm);
       } else {
-        return res.json(result);
+        const insertMPrice = new Promise(async (resolve, reject) => {
+          console.log('Start Promise - insertMPrice'); // Test Code
+          const cases = await Case.findOne(
+            { cNo: cNo, company: comId },
+            { mtrls: 1 }
+          );
+          const mtrls = cases.mtrls;
+          console.log('The cases', cases); // Test Code
+          if (mtrls.length > 0) {
+            console.log('found mtrls'); // Test Code
+            const theResult = {
+              quoForms: result.quoForms,
+              versionNum: result.versionNum,
+              _id: result._id,
+              company: result.company,
+              cNo: result.cNo,
+              date: result.date,
+              materialPrice: [],
+            };
+
+            console.log('the theResult', theResult); // Test Code
+            const comName = user.comName;
+            const comSymbol = user.comSymbol;
+            let num = 0;
+
+            await mtrls.map(async (mtrl) => {
+              const supplier = mtrl.supplier;
+              const ref_no = mtrl.ref_no;
+              console.log('The supplier', supplier, 'The ref_no', ref_no); // Test Code
+              const csr = comName + comSymbol + supplier + ref_no;
+              const lowerCasecsr = csr.toLowerCase();
+              const CSRIC = lowerCasecsr.replace(/[^\da-z]/gi, ''); // Only read from "0" to "9" & "a" to "z"
+              console.log('The CSRIC', CSRIC); // Test Code
+              await SRMtrl.findOne({ CSRIC: CSRIC }, { mPrices: 1 })
+                .then((mPrices) => {
+                  console.log('the mPrices', mPrices); // Test Code
+                  theResult.materialPrice.push(mPrices);
+                  return theResult;
+                })
+                .then((theResult) => {
+                  num = num + 1;
+                  if (num === mtrls.length) {
+                    console.log('Promise - insertMPrice - resolve()'); // Test Code
+                    return resolve(theResult);
+                  }
+                })
+                .catch((err) => {
+                  console.log(err);
+                  return 'The Srmtrl problem';
+                });
+            });
+          } else {
+            return reject(
+              'Please create the mtrl for the case before quotation.'
+            );
+          }
+        });
+        Promise.all([insertMPrice])
+          .then((result) => {
+            return res.json(result[0]);
+          })
+          .catch((err) => {
+            console.log(err);
+            return res.json({ error: err, quoForms: [] });
+          });
       }
     })
     .catch((err) => {
@@ -113,7 +178,7 @@ router.put('/quoform/:cNo/updatequoForm', authUser, async (req, res) => {
   const comId = req.user.company;
   const cNo = req.params.cNo;
   const Cases = await Case.findOne({ cNo: cNo, company: comId });
-  if (Cases) {
+  if (Cases.mtrls.length > 0) {
     console.log(cNo);
     const { isNewQuoForm } = req.body;
     const Quo = await QUO.findOne(
@@ -122,11 +187,14 @@ router.put('/quoform/:cNo/updatequoForm', authUser, async (req, res) => {
     );
 
     if (Quo) {
-      console.log('Quo', Quo);
-      const versionNum = Quo.versionNum;
+      console.log('Quo', Quo); // Test Code
+      const versionNum = Quo.versionNum + 1;
       if (Quo.quoForms.length < 99) {
+        // console.log('The quoForm is less then 99'); // Test Code
         if (isNewQuoForm) {
+          // console.log('Have isNewQuoForm from body'); // Test Code
           const createMQuos = new Promise((resolve) => {
+            console.log('Promise createMQuos start');
             const mtrls = Cases.mtrls;
             let num = 0;
             let newMQuos = [];
@@ -137,18 +205,21 @@ router.put('/quoform/:cNo/updatequoForm', authUser, async (req, res) => {
                 materialFinalQuotation: 0,
               });
               num = num + 1;
+              // console.log('1st promise num', num); // Test Code
               if (num === mtrls.length) {
+                console.log('Promised createMQuos');
                 return resolve(newMQuos);
               }
             });
           });
-          const quoNo = cNo + '_Q' + versionNum;
+          const quoNo = cNo + '_QV' + versionNum;
           Promise.all([createMQuos]).then(async (result) => {
+            // console.log('Promise all'); // Test Code
             await QUO.updateOne(
               { cNo: cNo, company: comId },
               {
                 $set: {
-                  versionNum: versionNum + 1,
+                  versionNum: versionNum,
                 },
                 $push: {
                   quoForms: {
@@ -196,15 +267,21 @@ router.put('/quoform/:cNo/updatequoForm', authUser, async (req, res) => {
           );
         }
       } else {
+        console.log('Over the number of quotation version');
         return res
           .status(400)
           .json({ msg: 'Over the number of quotation version' });
       }
     } else {
+      console.log('No such quotation data');
       return res.status(404).json({ msg: 'No such quotation data' });
     }
   } else {
-    return res.status(404).json({ msg: 'No such Case data' });
+    console.log("No such Case data, or the case don't have any mtrl yet ");
+    return res.status(404).json({
+      msg:
+        "No such Case data, or case don't have any material. Please, create material for the case frist",
+    });
   }
 });
 
