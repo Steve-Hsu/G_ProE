@@ -11,7 +11,6 @@ const User = require('../models/10_User');
 const Case = require('../models/20_Case');
 const SRMtrl = require('../models/30_srMtrl');
 const QUO = require('../models/40_Quotation');
-const { findOne } = require('../models/10_User');
 
 // @route   GET api/quogarment/
 // @desc    Read the compnay's srMtrl from database
@@ -84,59 +83,22 @@ router.get('/quoform/:cNo', authUser, async (req, res) => {
   const comId = req.user.company;
   const cNo = req.params.cNo;
   await QUO.findOne({ cNo: cNo, company: comId })
-    .then((result) => {
-      if (!result) {
-        //
-        const garmentQtySum = new Promise(async (resolve) => {
-          const result = await Case.aggregate([
-            {
-              $match: {
-                cNo: cNo,
-                company: mongoose.Types.ObjectId(req.user.company),
-              },
-            },
-            {
-              $project: {
-                totalGarmentQty: { $sum: '$gQtys.gQty' },
-              },
-            },
-          ]);
-          console.log('the totalQtySum', result); // Test Code
-          resolve(result);
-        });
+    .then(async (result) => {
+      const cases = await Case.findOne(
+        { cNo: cNo, company: comId },
+        { mtrls: 1 }
+      );
+      const mtrls = cases.mtrls;
+      // console.log('The cases', cases); // Test Code
+      if (mtrls.length > 0) {
+        //@ Part_1 getTheResult
+        const getTheResult = new Promise(async (resolve, reject) => {
+          // console.log('Start Promise - getTheResult '); // Test Code
+          let theResult = {};
+          if (result) {
+            // console.log('get existing quo'); // Test Code
 
-        Promise.all([garmentQtySum])
-          .then(async (result) => {
-            // The result of Promise.all() will be an array, since it's default is to treat multiple promise.
-            // And the result get from previous Promise, that is returned by Model.aggretate, which also return an array.
-            // Therefore, in here, the result will be inside an array of array.
-            const totalGarmentQty = result[0][0].totalGarmentQty;
-            console.log('the result in promise all', result); // Test Code
-            const newQuoForm = new QUO({
-              company: comId,
-              cNo: cNo,
-              quoForms: [],
-              gTQty: totalGarmentQty,
-            });
-            newQuoForm.save();
-            return newQuoForm;
-          })
-          .then((newQuoForm) => {
-            return res.json(newQuoForm);
-          });
-        //
-      } else {
-        const insertMPrice = new Promise(async (resolve, reject) => {
-          console.log('Start Promise - insertMPrice'); // Test Code
-          const cases = await Case.findOne(
-            { cNo: cNo, company: comId },
-            { mtrls: 1 }
-          );
-          const mtrls = cases.mtrls;
-          console.log('The cases', cases); // Test Code
-          if (mtrls.length > 0) {
-            console.log('found mtrls'); // Test Code
-            const theResult = {
+            theResult = {
               quoForms: result.quoForms,
               versionNum: result.versionNum,
               _id: result._id,
@@ -145,23 +107,73 @@ router.get('/quoform/:cNo', authUser, async (req, res) => {
               date: result.date,
               materialPrice: [],
             };
+            // console.log('resolve Promise - getTheResult - exist Quo'); // Test Code
+            return resolve(theResult);
+          } else {
+            // console.log('start create new quo');
+            theResult = await Case.aggregate([
+              {
+                $match: {
+                  cNo: cNo,
+                  company: mongoose.Types.ObjectId(req.user.company),
+                },
+              },
+              {
+                $project: {
+                  totalGarmentQty: { $sum: '$gQtys.gQty' },
+                },
+              },
+            ])
+              .then((totalQtySum) => {
+                // console.log('the totalQtySum', totalQtySum); // Test Code
+                return totalQtySum;
+              })
+              .then(async (totalQtySum) => {
+                const totalGarmentQty = totalQtySum[0].totalGarmentQty;
+                const newQuo = new QUO({
+                  company: comId,
+                  cNo: cNo,
+                  quoForms: [],
+                  gTQty: totalGarmentQty,
+                });
+                newQuo.save();
+                return newQuo;
+              })
+              .then((newQuo) => {
+                theResult = {
+                  quoForms: newQuo.quoForms,
+                  versionNum: newQuo.versionNum,
+                  _id: newQuo._id,
+                  company: newQuo.company,
+                  cNo: newQuo.cNo,
+                  date: newQuo.date,
+                  materialPrice: [],
+                };
+                return resolve(theResult);
+              });
+          }
+        });
 
-            console.log('the theResult', theResult); // Test Code
-            const comName = user.comName;
-            const comSymbol = user.comSymbol;
-            let num = 0;
+        //@ Part_2 insertMPrice
+        Promise.all([getTheResult]).then(async (result) => {
+          let theResult = result[0];
 
+          // console.log('the theResult', theResult); // Test Code
+          const comName = user.comName;
+          const comSymbol = user.comSymbol;
+          let num = 0;
+          const insertMPrice = new Promise(async (resolve) => {
             await mtrls.map(async (mtrl) => {
               const supplier = mtrl.supplier;
               const ref_no = mtrl.ref_no;
-              console.log('The supplier', supplier, 'The ref_no', ref_no); // Test Code
+              // console.log('The supplier', supplier, 'The ref_no', ref_no); // Test Code
               const csr = comName + comSymbol + supplier + ref_no;
               const lowerCasecsr = csr.toLowerCase();
               const CSRIC = lowerCasecsr.replace(/[^\da-z]/gi, ''); // Only read from "0" to "9" & "a" to "z"
               console.log('The CSRIC', CSRIC); // Test Code
               await SRMtrl.findOne({ CSRIC: CSRIC }, { mPrices: 1 })
                 .then((mPrices) => {
-                  console.log('the mPrices', mPrices); // Test Code
+                  // console.log('the mPrices', mPrices); // Test Code
                   theResult.materialPrice.push(mPrices);
                   return theResult;
                 })
@@ -177,20 +189,19 @@ router.get('/quoform/:cNo', authUser, async (req, res) => {
                   return 'The Srmtrl problem';
                 });
             });
-          } else {
-            return reject(
-              'Please create the mtrl for the case before quotation.'
-            );
-          }
-        });
-        Promise.all([insertMPrice])
-          .then((result) => {
-            return res.json(result[0]);
-          })
-          .catch((err) => {
-            console.log(err);
-            return res.json({ error: err, quoForms: [] });
           });
+          Promise.all([insertMPrice])
+            .then((result) => {
+              console.log('The Promise.all result - return the quotation');
+              return res.json(result[0]);
+            })
+            .catch((err) => {
+              console.log(err);
+              return res.json({ error: err, quoForms: [] });
+            });
+        });
+      } else {
+        return reject('Please create the mtrl for the case before quotation.');
       }
     })
     .catch((err) => {
@@ -199,8 +210,9 @@ router.get('/quoform/:cNo', authUser, async (req, res) => {
 });
 
 // @route   PUT api/quogarment/quoform/cNo/updatequoForm
-// @desc    Update or generate quos
+// @desc    Update or generate quoform
 // @access  Private
+// @result  return object contain the array "quoForms" and the object "versionNum" of QUO
 router.put('/quoform/:cNo/updatequoForm', authUser, async (req, res) => {
   let user = await User.findById(req.user.id);
   if (!user.quo) {
@@ -268,9 +280,13 @@ router.put('/quoform/:cNo/updatequoForm', authUser, async (req, res) => {
               }
             )
               .then(async () => {
-                return await QUO.findOne({ cNo: cNo, company: comId });
+                return await QUO.findOne(
+                  { cNo: cNo, company: comId },
+                  { _id: 0, quoForms: 1, versionNum: 1 }
+                );
               })
               .then((result) => {
+                // console.log('the result of generate new quoform', result); // Test Code
                 return res.json(result);
               });
           });
@@ -410,42 +426,3 @@ router.delete(
 );
 
 module.exports = router;
-//   const caseInfo = await Case.findOne(
-//     {
-//       cNo: cNo,
-//       company: comId,
-//     },
-//     { cNo: 1, caseType: 1, style: 1, client: 1, mtrls: 1 }
-//   ).catch((err) => {
-//     console.log("MongoDB or internet problem, can't find caseInfo", err);
-//   });
-//   // Get the information from two forms, the quoForm and caseInfo to make a form sent back to client.
-//   Promise.all([quoForm, caseInfo])
-//     .then(() => {
-//       let finalForm = {};
-//       if (quoForm.cNo === caseInfo.cNo) {
-//         finalForm = {
-//           company: quoForm.company,
-//           cNo: quoForm.cNo,
-//           client: caseInfo.client,
-//           style: caseInfo.style,
-//           caseType: caseInfo.caseType,
-//           currency: quoForm.currency,
-//           cmpts: quoForm.cmpts,
-//           mtrlQuos: quoForm.MtrlQuos,
-//           otherExpense: quoForm.otherExpense,
-//           fob: quoForm.fob,
-//           mtrls: caseInfo.mtrls,
-//         };
-//         // mtrls array, only for showing to the user, not need to be part of quoForm in Database.
-//       }
-//       return finalForm;
-//     })
-//     .then((result) => {
-//       console.log(`this is final quoForm ${result.cNo} is sent out`);
-//       return res.json(result);
-//     })
-//     .catch((err) => {
-//       console.log('Insert caseInfo to quoForm problem', err);
-//     });
-// });

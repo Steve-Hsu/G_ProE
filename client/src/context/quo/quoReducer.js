@@ -3,6 +3,7 @@ import {
   QUOFORM_SWITCH,
   QUOFORM_SELECTOR_SWITCH,
   QUOFORM_DOWNLOAD,
+  QUOTATION_DOWNLOAD,
   QUOPAGE_SWITCH,
   QUOFORM_DELETE,
 } from '../types';
@@ -22,6 +23,15 @@ export default (state, action) => {
         }),
       };
     case QUOFORM_DOWNLOAD:
+      return {
+        ...state,
+        quotation: {
+          ...state.quotation,
+          versionNum: action.payload.versionNum,
+          quoForms: action.payload.quoForms,
+        },
+      };
+    case QUOTATION_DOWNLOAD:
       return { ...state, quotation: action.payload };
     case QUOPAGE_SWITCH:
       return { ...state, quotateFor: action.payload };
@@ -29,7 +39,7 @@ export default (state, action) => {
       return {
         ...state,
         quotation: {
-          ...state,
+          ...state.quotation,
           quoForms: state.quotation.quoForms.filter((quoForm) => {
             return quoForm.id !== action.payload;
           }),

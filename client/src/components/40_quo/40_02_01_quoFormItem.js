@@ -45,11 +45,7 @@ const QuoFormItem = ({ quoForm }) => {
   };
 
   return (
-    <div
-      onClick={onClick}
-      key={`QuoFormItemBtn$${quoForm.quoNo}`}
-      className='btn'
-    >
+    <div key={`QuoFormItemBtn$${quoForm.quoNo}`} className='card'>
       <div className='mb-1 p-1 card'>
         <div className='grid-6'>
           {labelList.map((label) => (

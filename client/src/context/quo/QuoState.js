@@ -10,6 +10,7 @@ import {
   QUOFORM_DOWNLOAD,
   QUOPAGE_SWITCH,
   QUOFORM_DELETE,
+  QUOTATION_DOWNLOAD,
 } from '../types';
 
 const QuoState = (props) => {
@@ -94,15 +95,10 @@ const QuoState = (props) => {
 
   const downLoadQuoForm = async (check) => {
     if (check !== null) {
-      // const config = {
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      // };
       const res = await axios.get(`/api/quogarment/quoform/${check}`);
-      dispatch({ type: QUOFORM_DOWNLOAD, payload: res.data });
+      dispatch({ type: QUOTATION_DOWNLOAD, payload: res.data });
     } else {
-      dispatch({ type: QUOFORM_DOWNLOAD, payload: { quoForms: [] } });
+      dispatch({ type: QUOTATION_DOWNLOAD, payload: { quoForms: [] } });
     }
   };
 

@@ -36,13 +36,13 @@ const QuoForm = () => {
 
   const addNewQuotation = (e) => {
     e.preventDefault();
+    // uploadQuoForm(isQuotating, true);
 
     uploadQuoForm(isQuotating, true).then((result) => {
       const quoForms = result.quoForms;
       const newQuoFormId = quoForms[quoForms.length - 1].id;
-      setTimeout(() => {
-        switchQuoForm(newQuoFormId);
-      }, 300);
+      switchQuoForm(newQuoFormId);
+      setTimeout(() => {}, 300);
     });
   };
 
