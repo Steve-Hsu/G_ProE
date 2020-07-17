@@ -62,7 +62,7 @@ router.get('/', authUser, async (req, res) => {
 
   try {
     Promise.all([caseList, insertList]).then(async () => {
-      console.log('caseList is sent out');
+      console.log('caseList is sent out', caseList);
       return res.json(caseList);
     });
   } catch (err) {
@@ -270,6 +270,8 @@ router.put('/quoform/:cNo/updatequoForm', authUser, async (req, res) => {
                     id: uuidv4() + myModule.generateId(),
                     quoNo: quoNo,
                     currency: '',
+                    quoSizes: [],
+                    quocWays: [],
                     cmpts: [],
                     mQuos: result[0],
                     otherExpenses: [],
@@ -294,6 +296,8 @@ router.put('/quoform/:cNo/updatequoForm', authUser, async (req, res) => {
           const {
             id,
             currency,
+            quoSizes,
+            quocWays,
             cmpts,
             mQuos,
             otherExpenses,
@@ -305,6 +309,8 @@ router.put('/quoform/:cNo/updatequoForm', authUser, async (req, res) => {
               $set: {
                 'quoForms.$': {
                   currency: currency,
+                  quoSizes: quoSizes,
+                  quocWays: quocWays,
                   cmpts: cmpts,
                   mQuos: mQuos,
                   otherExpenses: otherExpenses,

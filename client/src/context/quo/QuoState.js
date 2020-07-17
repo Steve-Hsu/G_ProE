@@ -11,6 +11,7 @@ import {
   QUOPAGE_SWITCH,
   QUOFORM_DELETE,
   QUOTATION_DOWNLOAD,
+  QUOFORM_UPDATE,
 } from '../types';
 
 const QuoState = (props) => {
@@ -19,11 +20,25 @@ const QuoState = (props) => {
     quotateFor: null,
     isQuotating: null,
     openQuoForm: null,
-    quotation: { quoForms: [] },
+    quotation: {
+      quoForms: [
+        // {
+        //   id: '',
+        //   quoNo: '',
+        //   currency: '',
+        //   quoSizes: [],
+        //   quocWays: [],
+        //   cmpts: [],
+        //   mQuos: [],
+        //   otherExpenses: [],
+        //   fob: '',
+        // },
+      ],
+    },
     currentQuoForm: null,
   };
   const [state, dispatch] = useReducer(QuoReducer, initialState);
-  const { quotateFor, isQuotating, openQuoForm } = state;
+  const { quotateFor, isQuotating, openQuoForm, quotation } = state;
   //@_action
   const getCaseList = async () => {
     const config = {
@@ -32,7 +47,7 @@ const QuoState = (props) => {
       },
     };
     const res = await axios.get('/api/quogarment', config);
-    console.log('Upload succeed!');
+    console.log('download succeed!');
     dispatch({ type: CASE_LIST_DOWNLOAD, payload: res.data });
   };
 
@@ -126,6 +141,30 @@ const QuoState = (props) => {
     }
   };
 
+  const updateQuoSize = (quoFormId, size) => {
+    const quoForms = quotation.quoForms;
+    const quoForm = quoForms.find(({ id }) => id === quoFormId);
+    const haveTheQuoSize = quoForm.quoSizes.includes(size);
+    if (haveTheQuoSize) {
+      quoForm.quoSizes.splice(quoForm.quoSizes.indexOf(size), 1);
+    } else {
+      quoForm.quoSizes.push(size);
+    }
+    dispatch({ type: QUOFORM_UPDATE, payload: quoForms });
+  };
+
+  const updateQuocWay = (quoFormId, cWay) => {
+    const quoForms = quotation.quoForms;
+    const quoForm = quoForms.find(({ id }) => id === quoFormId);
+    const haveTheQuocWay = quoForm.quocWays.includes(cWay);
+    if (haveTheQuocWay) {
+      quoForm.quocWays.splice(quoForm.quocWays.indexOf(cWay), 1);
+    } else {
+      quoForm.quocWays.push(cWay);
+    }
+    dispatch({ type: QUOFORM_UPDATE, payload: quoForms });
+  };
+
   return (
     <QuoContext.Provider
       value={{
@@ -143,6 +182,8 @@ const QuoState = (props) => {
         downLoadQuoForm,
         deleteQuoForm,
         deletemQuo,
+        updateQuoSize,
+        updateQuocWay,
       }}
     >
       {props.children}

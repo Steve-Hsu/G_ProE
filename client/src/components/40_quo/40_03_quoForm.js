@@ -3,8 +3,9 @@ import QuoContext from '../../context/quo/quoContext';
 import CaseContext from '../../context/cases/casesContext';
 import PopoverContext from '../../context/popover/popoverContext';
 import DeletePopover from '../layout/DeletePopover';
-import QuoMtrl from './40_03_01_quoMtrl';
-
+import SizeSelector from './40_03_01_sizeSelector';
+import CWaySelector from './40_03_02_cWaySelector';
+import QuoMtrl from './40_03_03_quoMtrl';
 const QuoForm = () => {
   const quoContext = useContext(QuoContext);
   const caseContext = useContext(CaseContext);
@@ -52,12 +53,12 @@ const QuoForm = () => {
             return <span key={cWay.id}>{cWay.gClr}, </span>;
           })}
           <div>Sizes : Total {sizes.length} sizes</div>
-          {sizes.map((size) => {
-            return <span key={size.id}>{size.gSize}</span>;
-          })}
+          <SizeSelector sizes={sizes} />
+          <CWaySelector cWays={cWays} />
           {mtrls.map((mtrl) => (
             <QuoMtrl key={`quoMtrl${mtrl.id}`} mtrl={mtrl} />
           ))}
+          <div>What?</div>
         </form>
       </div>
     </Fragment>

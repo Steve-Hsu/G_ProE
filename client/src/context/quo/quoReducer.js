@@ -6,6 +6,7 @@ import {
   QUOTATION_DOWNLOAD,
   QUOPAGE_SWITCH,
   QUOFORM_DELETE,
+  QUOFORM_UPDATE,
 } from '../types';
 
 export default (state, action) => {
@@ -43,6 +44,14 @@ export default (state, action) => {
           quoForms: state.quotation.quoForms.filter((quoForm) => {
             return quoForm.id !== action.payload;
           }),
+        },
+      };
+    case QUOFORM_UPDATE:
+      return {
+        ...state,
+        quotation: {
+          ...state.quotation,
+          quoForms: action.payload,
         },
       };
     default:

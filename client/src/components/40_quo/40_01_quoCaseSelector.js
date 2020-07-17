@@ -8,15 +8,19 @@ const MPriceForm = () => {
   const srMtrlContext = useContext(SrMtrlContext);
   const quoContext = useContext(QuoContext);
   const { srMtrls, getSrMtrls, updateMPrices } = srMtrlContext;
-  const { caseList, isQuotating, switchQuoForm, getCaseList } = quoContext;
+  const {
+    caseList,
+    quotateFor,
+    isQuotating,
+    switchQuoForm,
+    getCaseList,
+  } = quoContext;
 
   useEffect(() => {
-    if (caseList.length === 0) {
-      getCaseList();
-    }
+    getCaseList();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [quotateFor, isQuotating]);
   //@ funcs
 
   //@ return

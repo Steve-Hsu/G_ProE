@@ -135,6 +135,7 @@ const CaseForm = () => {
                 placeholder='.'
                 className='MPH-input'
                 value={style || ''}
+                required
               />
               <label htmlFor='caseStyle' className='MPH-input-label'>
                 Style
@@ -149,6 +150,7 @@ const CaseForm = () => {
                 placeholder='.'
                 className='MPH-input'
                 value={client || ''}
+                required
               />
               <label htmlFor='caseClient' className='MPH-input-label'>
                 Client

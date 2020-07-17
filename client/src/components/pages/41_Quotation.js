@@ -15,13 +15,22 @@ const Quotation = (props) => {
   // Context
   const quoContext = useContext(QuoContext);
   const popoverContext = useContext(PopoverContext);
-  const { switchPage, quotateFor, isQuotating, openQuoForm } = quoContext;
+  const {
+    switchPage,
+    quotateFor,
+    isQuotating,
+    openQuoForm,
+    // getCaseList,
+  } = quoContext;
   const { popover, current } = popoverContext;
   const currentPath = props.location.pathname;
 
   const onClick = (e) => {
     e.preventDefault();
     switchPage(e.target.value);
+    // if (e.target.value === 'garment') {
+    //   getCaseList();
+    // }
   };
   return (
     <Fragment>

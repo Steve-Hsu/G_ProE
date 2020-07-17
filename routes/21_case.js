@@ -71,12 +71,20 @@ router.post(
 
     const { caseType, style, client, cWays, sizes, gQtys, mtrls } = req.body;
     //@ Delete the white space from strings of array items in the body, the cWays, sizes, and mtrls
+    let trimedStyle = '';
+    let trimedClient = '';
+    if (style !== null || style !== '') {
+      trimedStyle = style.toLowerCase().trim();
+    }
+    if (client !== null || client !== '') {
+      trimedClient = client.toLowerCase().trim();
+    }
     const trimedcWays = new Promise((resolve) => {
       console.log('Promise start- trimedcWays'); // Test Code
       if (cWays.length > 0) {
         let cWayCounter = 0;
         cWays.map((cWay) => {
-          cWay.gClr = cWay.gClr.trim();
+          cWay.gClr = cWay.gClr.toLowerCase().trim();
           cWayCounter = cWayCounter + 1;
           if (cWayCounter === cWays.length) {
             console.log('Promise resolve- trimedcWays'); // Test Code
@@ -94,7 +102,7 @@ router.post(
       if (sizes.length > 0) {
         let sizeCounter = 0;
         sizes.map((size) => {
-          size.gSize = size.gSize.trim();
+          size.gSize = size.gSize.toUpperCase().trim();
           sizeCounter = sizeCounter + 1;
           if (sizeCounter === sizes.length) {
             console.log('Promise resolve- trimedSizes'); // Test Code
@@ -130,17 +138,24 @@ router.post(
       if (mtrls.length > 0) {
         let trimCounter = 0;
         mtrls.map((mtrl) => {
-          mtrl.item = mtrl.item.trim();
-          mtrl.spec = mtrl.spec.trim();
-          mtrl.supplier = mtrl.supplier.trim();
-          mtrl.ref_no = mtrl.ref_no.trim();
-          mtrl.position = mtrl.position.trim();
-          mtrl.description = mtrl.description.trim();
+          const mtrlList = [
+            'item',
+            'spec',
+            'supplier',
+            'ref_no',
+            'position',
+            'description',
+          ];
+          mtrlList.map((x) => {
+            if (mtrl[x] !== '' || mtrl[x] !== null)
+              mtrl[x] = mtrl[x].toLowerCase().trim();
+          });
+
           const mtrlColorPromise = new Promise((resolve) => {
             console.log('Promise start- mtrlColorPromise'); // Test Code
             let num = 0;
             mtrl.mtrlColors.map((mtrlColor) => {
-              mtrlColor.mColor = mtrlColor.mColor.trim();
+              mtrlColor.mColor = mtrlColor.mColor.toLowerCase().trim();
               num = num + 1;
               if (num === mtrl.mtrlColors.length) {
                 console.log('Promise resolve- mtrlColorPromise'); // Test Code
@@ -153,7 +168,7 @@ router.post(
             console.log('Promise start- mtrlSPECPromise'); // Test Code
             let num = 0;
             mtrl.sizeSPECs.map((sizeSPEC) => {
-              sizeSPEC.mSizeSPEC = sizeSPEC.mSizeSPEC.trim();
+              sizeSPEC.mSizeSPEC = sizeSPEC.mSizeSPEC.toLowerCase().trim();
               num = num + 1;
               if (num === mtrl.sizeSPECs.length) {
                 console.log('Promise resolve- mtrlSPECPromise'); // Test Code
@@ -166,11 +181,11 @@ router.post(
             console.log('Promise start- mtrlCsptPromise'); // Test Code
             let num = 0;
             mtrl.cspts.map((cspt) => {
-              cspt.gClr = cspt.gClr.trim();
-              cspt.gSize = cspt.gSize.trim();
-              cspt.mColor = cspt.mColor.trim();
-              cspt.mSizeSPEC = cspt.mSizeSPEC.trim();
-              cspt.unit = cspt.unit.trim();
+              cspt.gClr = cspt.gClr.toLowerCase().trim();
+              cspt.gSize = cspt.gSize.toUpperCase().trim();
+              cspt.mColor = cspt.mColor.toLowerCase().trim();
+              cspt.mSizeSPEC = cspt.mSizeSPEC.toLowerCase().trim();
+              cspt.unit = cspt.unit.toLowerCase().trim();
               cspt.cspt = Number(cspt.cspt);
               num = num + 1;
               if (num === mtrl.cspts.length) {
@@ -263,8 +278,8 @@ router.post(
           company: req.user.company,
           cNo: newCNO,
           caseType,
-          style: style.trim(),
-          client: client.trim(),
+          style: trimedStyle,
+          client: trimedClient,
           cWays,
           sizes,
           gQtys,
@@ -311,15 +326,22 @@ router.put('/:id', authUser, async (req, res) => {
   if (cases) {
     // Update case ---------------------------------------------------------------
     const caseFields = req.body;
-    const { caseType, style, client, cWays, sizes, gQtys, mtrls } = caseFields;
+    const { cWays, gQtys, mtrls } = caseFields;
     //@ Delete the white space from strings of array items in the body, the cWays, and mtrls
+    if (caseFields.style !== '' || caseFields.style !== null) {
+      caseFields.style = caseFields.style.toLowerCase().trim();
+    }
+
+    if (caseFields.client !== '' || caseFields.client !== null) {
+      caseFields.client = caseFields.client.toLowerCase().trim();
+    }
 
     const trimedcWays = new Promise((resolve) => {
       if (cWays.length > 0) {
         let num = 0;
         cWays.map((cWay) => {
           if (cWay.gClr !== '' || cWay.gClr !== null) {
-            cWay.gClr = cWay.gClr.trim();
+            cWay.gClr = cWay.gClr.toLowerCase().trim();
           }
           num = num + 1;
           if (num === cWays.length) {
@@ -363,7 +385,8 @@ router.put('/:id', authUser, async (req, res) => {
             'description',
           ];
           mtrlList.map((x) => {
-            if (mtrl[x] !== '' || mtrl[x] !== null) mtrl[x] = mtrl[x].trim();
+            if (mtrl[x] !== '' || mtrl[x] !== null)
+              mtrl[x] = mtrl[x].toLowerCase().trim();
           });
 
           const mtrlColorPromise = new Promise((resolve) => {
@@ -371,7 +394,7 @@ router.put('/:id', authUser, async (req, res) => {
               let num = 0;
               mtrl.mtrlColors.map((mtrlColor) => {
                 if (mtrl.mColor !== '' || mtrl.mColor !== null) {
-                  mtrlColor.mColor = mtrlColor.mColor.trim();
+                  mtrlColor.mColor = mtrlColor.mColor.toLowerCase().trim();
                 }
 
                 num = num + 1;
@@ -390,7 +413,7 @@ router.put('/:id', authUser, async (req, res) => {
               let num = 0;
               mtrl.sizeSPECs.map((sizeSPEC) => {
                 if (sizeSPEC.mSizeSPEC !== '' || sizeSPEC.mSizeSPEC !== null) {
-                  sizeSPEC.mSizeSPEC = sizeSPEC.mSizeSPEC.trim();
+                  sizeSPEC.mSizeSPEC = sizeSPEC.mSizeSPEC.toLowerCase().trim();
                 }
 
                 num = num + 1;
@@ -408,11 +431,11 @@ router.put('/:id', authUser, async (req, res) => {
             console.log('Promise start- mtrlCsptPromise'); // Test Code
             let num = 0;
             mtrl.cspts.map((cspt) => {
-              cspt.gClr = cspt.gClr.trim();
-              cspt.gSize = cspt.gSize.trim();
-              cspt.mColor = cspt.mColor.trim();
-              cspt.mSizeSPEC = cspt.mSizeSPEC.trim();
-              cspt.unit = cspt.unit.trim();
+              cspt.gClr = cspt.gClr.toLowerCase().trim();
+              cspt.gSize = cspt.gSize.toUpperCase().trim();
+              cspt.mColor = cspt.mColor.toLowerCase().trim();
+              cspt.mSizeSPEC = cspt.mSizeSPEC.toLowerCase().trim();
+              cspt.unit = cspt.unit.toLowerCase().trim();
               cspt.cspt = Number(cspt.cspt);
               num = num + 1;
               if (num === mtrl.cspts.length) {
@@ -421,14 +444,6 @@ router.put('/:id', authUser, async (req, res) => {
               }
             });
           });
-
-          if (caseFields.style !== '' || caseFields.style !== null) {
-            caseFields.style = caseFields.style.trim();
-          }
-
-          if (caseFields.client !== '' || caseFields.client !== null) {
-            caseFields.client = caseFields.client.trim();
-          }
 
           Promise.all([
             mtrlColorPromise,
