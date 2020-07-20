@@ -201,11 +201,14 @@ router.get('/quoform/:cNo', authUser, async (req, res) => {
             });
         });
       } else {
-        return reject('Please create the mtrl for the case before quotation.');
+        const err = 'Please create the mtrl for the case before quotation.';
+        console.log(err);
+        return res.json({ error: err, quoForms: [] });
       }
     })
     .catch((err) => {
       console.log("MongoDB or internet problem, can't find quoForm", err);
+      return res.json({ error: err, quoForms: [] });
     });
 });
 

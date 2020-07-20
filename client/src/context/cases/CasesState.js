@@ -111,8 +111,6 @@ const CasesState = (props) => {
     gQty: '',
     mtrl: '',
     // Human readable info :
-    gClr: '',
-    gSize: '',
     mColor: '',
     mSizeSPEC: '',
     unit: '',
@@ -458,8 +456,6 @@ const CasesState = (props) => {
         size: gQty.size,
         gQty: gQty.id,
         mtrl: newMtrl.id,
-        gClr: cWays.find(({ id }) => id === gQty.cWay).gClr,
-        gSize: sizes.find(({ id }) => id === gQty.size).gSize,
       };
       return newMtrl.cspts.push(newCspt);
     });

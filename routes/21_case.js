@@ -219,8 +219,6 @@ router.post(
             console.log('Promise start- mtrlCsptPromise'); // Test Code
             let num = 0;
             mtrl.cspts.map((cspt) => {
-              cspt.gClr = cspt.gClr.toLowerCase().trim();
-              cspt.gSize = cspt.gSize.toUpperCase().trim();
               cspt.mColor = cspt.mColor.toLowerCase().trim();
               cspt.mSizeSPEC = cspt.mSizeSPEC.toLowerCase().trim();
               cspt.unit = cspt.unit.toLowerCase().trim();
@@ -506,8 +504,6 @@ router.put('/:id', authUser, async (req, res) => {
             console.log('Promise start- mtrlCsptPromise'); // Test Code
             let num = 0;
             mtrl.cspts.map((cspt) => {
-              cspt.gClr = cspt.gClr.toLowerCase().trim();
-              cspt.gSize = cspt.gSize.toUpperCase().trim();
               cspt.mColor = cspt.mColor.toLowerCase().trim();
               cspt.mSizeSPEC = cspt.mSizeSPEC.toLowerCase().trim();
               cspt.unit = cspt.unit.toLowerCase().trim();
