@@ -87,7 +87,7 @@ router.post(
           const trimTheCWay = new Promise((resolve) => {
             //Trim the gClr
             if (cWay.gClr === '' || cWay.gClr === null) {
-              cWay.gClr = 'empty';
+              cWay.gClr = 'empty colorway';
               resolve();
             } else {
               cWay.gClr = cWay.gClr.toLowerCase().trim();
@@ -379,7 +379,7 @@ router.put('/:id', authUser, async (req, res) => {
           const trimTheCWay = new Promise((resolve) => {
             //Trim the gClr
             if (cWay.gClr === '' || cWay.gClr === null) {
-              cWay.gClr = 'empty';
+              cWay.gClr = 'empty colorway';
               resolve();
             } else {
               cWay.gClr = cWay.gClr.toLowerCase().trim();

@@ -22,6 +22,29 @@ const ColorWay = ({ cWay }) => {
   const maxWdsLength = '50';
   const colorWayLength = maxWdsLength;
 
+  const te = {
+    color: 'orange',
+  };
+
+  const warningTextBoxStyle = () => {
+    let obj = {};
+    if (
+      cWay.gClr.match('empty colorway') ||
+      cWay.gClr.match('duplicated_colorway') ||
+      cWay.gClr === ''
+    ) {
+      obj = {
+        color: 'white',
+        background: 'red',
+      };
+    } else {
+      obj = {
+        color: 'orange',
+      };
+    }
+    return obj;
+  };
+
   return (
     <div className='grid-3-1' style={{ height: '68px' }}>
       <div>
@@ -34,7 +57,7 @@ const ColorWay = ({ cWay }) => {
           maxLength={colorWayLength}
           autoFocus
           className='MPH-input'
-          style={{ color: 'orange' }}
+          style={warningTextBoxStyle()}
           value={cWay.gClr || ''}
         />
         <label htmlFor={cWay.id} className='MPH-input-label'>
