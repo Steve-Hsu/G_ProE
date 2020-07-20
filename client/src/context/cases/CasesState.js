@@ -257,10 +257,10 @@ const CasesState = (props) => {
     console.log(gQtyId);
     let materials = mtrls;
     let material = materials.find(({ id }) => id === mtrlId);
-    console.log(
-      'this is gQty',
-      gQtys.find(({ id }) => id === gQtyId)
-    );
+    // console.log(
+    //   'this is gQty',
+    //   gQtys.find(({ id }) => id === gQtyId)
+    // ); // Test Code
     let Qty = gQtys.find(({ id }) => id === gQtyId).gQty;
 
     material.cspts.map((cspt) => {

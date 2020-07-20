@@ -82,17 +82,55 @@ router.post(
     const trimedcWays = new Promise((resolve) => {
       console.log('Promise start- trimedcWays'); // Test Code
       if (cWays.length > 0) {
-        let cWayCounter = 0;
+        let num = 0;
         cWays.map((cWay) => {
-          cWay.gClr = cWay.gClr.toLowerCase().trim();
-          cWayCounter = cWayCounter + 1;
-          if (cWayCounter === cWays.length) {
-            console.log('Promise resolve- trimedcWays'); // Test Code
-            return resolve();
-          }
+          const trimTheCWay = new Promise((resolve) => {
+            //Trim the gClr
+            if (cWay.gClr === '' || cWay.gClr === null) {
+              cWay.gClr = 'empty';
+              resolve();
+            } else {
+              cWay.gClr = cWay.gClr.toLowerCase().trim();
+              resolve();
+            }
+          });
+
+          // Prevent duplicated empty colorWay
+          const preventDuplicatedCWay = new Promise((resolve) => {
+            Promise.all([trimTheCWay]).then(() => {
+              const currentcWay = cWay.gClr;
+              const numOfThecWay = cWays.filter((el) => el.gClr === currentcWay)
+                .length;
+              if (numOfThecWay > 1) {
+                let count = 0;
+                let num = 0;
+                cWays.map((cWay) => {
+                  num++;
+                  if (cWay.gClr === currentcWay) {
+                    count++;
+                    cWay.gClr =
+                      currentcWay + ' - duplicated_colorway_' + String(count);
+                  }
+
+                  if (num === cWays.length) {
+                    resolve();
+                  }
+                });
+              } else {
+                resolve();
+              }
+            });
+          });
+
+          Promise.all([preventDuplicatedCWay]).then(() => {
+            num = num + 1;
+            if (num === cWays.length) {
+              console.log('Promise trimedcWays');
+              return resolve();
+            }
+          });
         });
       } else {
-        console.log('Promise resolve- not built cWays yet - trimedcWays'); // Test Code
         return resolve();
       }
     });
@@ -340,14 +378,51 @@ router.put('/:id', authUser, async (req, res) => {
       if (cWays.length > 0) {
         let num = 0;
         cWays.map((cWay) => {
-          if (cWay.gClr !== '' || cWay.gClr !== null) {
-            cWay.gClr = cWay.gClr.toLowerCase().trim();
-          }
-          num = num + 1;
-          if (num === cWays.length) {
-            console.log('Promise trimedcWays');
-            return resolve();
-          }
+          const trimTheCWay = new Promise((resolve) => {
+            //Trim the gClr
+            if (cWay.gClr === '' || cWay.gClr === null) {
+              cWay.gClr = 'empty';
+              resolve();
+            } else {
+              cWay.gClr = cWay.gClr.toLowerCase().trim();
+              resolve();
+            }
+          });
+
+          // Prevent duplicated empty colorWay
+          const preventDuplicatedCWay = new Promise((resolve) => {
+            Promise.all([trimTheCWay]).then(() => {
+              const currentcWay = cWay.gClr;
+              const numOfThecWay = cWays.filter((el) => el.gClr === currentcWay)
+                .length;
+              if (numOfThecWay > 1) {
+                let count = 0;
+                let num = 0;
+                cWays.map((cWay) => {
+                  num++;
+                  if (cWay.gClr === currentcWay) {
+                    count++;
+                    cWay.gClr =
+                      currentcWay + ' - duplicated_colorway_' + String(count);
+                  }
+
+                  if (num === cWays.length) {
+                    resolve();
+                  }
+                });
+              } else {
+                resolve();
+              }
+            });
+          });
+
+          Promise.all([preventDuplicatedCWay]).then(() => {
+            num = num + 1;
+            if (num === cWays.length) {
+              console.log('Promise trimedcWays');
+              return resolve();
+            }
+          });
         });
       } else {
         return resolve();
