@@ -5,7 +5,7 @@ import CaseContext from '../../context/cases/casesContext';
 const QuoList = ({ listItem }) => {
   const quoContext = useContext(QuoContext);
   const caseContext = useContext(CaseContext);
-  const { isQuotating, switchQuoFormSelector, downLoadQuoForm } = quoContext;
+  const { isQuotating, switchQuoFormSelector, downLoadQuoHead } = quoContext;
   const { downloadCase } = caseContext;
   const labelList = [
     'cNo',
@@ -35,7 +35,7 @@ const QuoList = ({ listItem }) => {
     let check = switchQuoFormSelector(listItem.cNo);
     // setTimeout(() => {
     console.log('yes I should download', check);
-    downLoadQuoForm(check);
+    downLoadQuoHead(check);
     downloadCase(listItem._id);
     // }, 300);
 

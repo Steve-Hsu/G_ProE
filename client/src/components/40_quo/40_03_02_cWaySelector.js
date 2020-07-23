@@ -6,7 +6,7 @@ const CWaySelector = ({ cWays }) => {
 
   const { currentQuoForm, updateQuocWay, quotation } = quoContext;
 
-  const quoFormId = currentQuoForm.id;
+  const quoFormId = currentQuoForm._id;
 
   const onClick = (e) => {
     e.preventDefault();
@@ -17,7 +17,7 @@ const CWaySelector = ({ cWays }) => {
   };
 
   const btnClickedStyle = (subject) => {
-    const quoForm = quotation.quoForms.find(({ id }) => id === quoFormId);
+    const quoForm = quotation.quoForms.find(({ _id }) => _id === quoFormId);
     const haveTheQuocWay = quoForm.quocWays.includes(subject);
     if (haveTheQuocWay) {
       return {

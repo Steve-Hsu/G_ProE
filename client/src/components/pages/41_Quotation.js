@@ -34,7 +34,8 @@ const Quotation = (props) => {
   };
   return (
     <Fragment>
-      {popover ? <DeletePopover key={current.id} current={current} /> : null}
+      {/* {popover ? <DeletePopover key={current.id} current={current} /> : null} */}
+      {popover ? <DeletePopover key={current._id} current={current} /> : null}
       <div className='grid-1-4'>
         {/* Grid-1 */}
         <LeftBar currentPath={currentPath} />

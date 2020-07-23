@@ -6,17 +6,17 @@ const SizeSelector = ({ sizes }) => {
 
   const { currentQuoForm, updateQuoSize, quotation } = quoContext;
 
-  const quoFormId = currentQuoForm.id;
+  const quoFormId = currentQuoForm._id;
 
   const onClick = (e) => {
     e.preventDefault();
-    if (currentQuoForm.id !== null) {
+    if (currentQuoForm._id !== null) {
       const sizeValue = e.target.name;
       updateQuoSize(quoFormId, sizeValue);
     }
   };
   const btnClickedStyle = (subject) => {
-    const quoForm = quotation.quoForms.find(({ id }) => id === quoFormId);
+    const quoForm = quotation.quoForms.find(({ _id }) => _id === quoFormId);
     const haveTheQuoSize = quoForm.quoSizes.includes(subject);
     if (haveTheQuoSize) {
       return {

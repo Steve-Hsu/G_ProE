@@ -68,10 +68,10 @@ const DeletePopover = () => {
         });
         uploadCase(cases, _id, false);
         break;
-      case 'quoNo':
+      case 'quocWays':
         const body = {
           quoNo: current.quoNo,
-          quoFormId: current.id,
+          quoFormId: current._id,
         };
         deleteQuoForm(body);
         break;

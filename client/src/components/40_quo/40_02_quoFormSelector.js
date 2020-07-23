@@ -13,7 +13,7 @@ const QuoForm = () => {
     switchQuoFormSelector,
     switchQuoForm,
     uploadQuoForm,
-    downLoadQuoForm,
+    downLoadQuoHead,
   } = quoContext;
   const {
     cNo,
@@ -30,7 +30,7 @@ const QuoForm = () => {
   const goBackBtn = (e) => {
     e.preventDefault();
     switchQuoFormSelector(null);
-    downLoadQuoForm(null);
+    downLoadQuoHead(null);
     defaultCase();
   };
 
@@ -40,7 +40,9 @@ const QuoForm = () => {
 
     uploadQuoForm(isQuotating, true).then((result) => {
       const quoForms = result.quoForms;
-      const newQuoFormId = quoForms[quoForms.length - 1].id;
+      console.log(result);
+      const newQuoFormId = quoForms[quoForms.length - 1]._id;
+      console.log(newQuoFormId);
       switchQuoForm(newQuoFormId);
       setTimeout(() => {}, 300);
     });
@@ -50,10 +52,10 @@ const QuoForm = () => {
     <Fragment>
       {/* {popover ? <DeletePopover key={current.id} current={current} /> : null} */}
       <div className='p-1 container container-with-navbar'>
-        <button onClick={goBackBtn}>Yes</button> QuoForm
+        <button onClick={goBackBtn}>Go Back</button> QuoForm
         <form id='addNewQuoForm' onSubmit={addNewQuotation}></form>
         {quotation.quoForms.map((quoForm) => (
-          <QuoFormItem quoForm={quoForm} key={quoForm.id} />
+          <QuoFormItem quoForm={quoForm} key={quoForm._id} />
         ))}
       </div>
     </Fragment>

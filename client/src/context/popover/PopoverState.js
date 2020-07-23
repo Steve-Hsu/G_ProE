@@ -44,7 +44,7 @@ const PopoverState = (props) => {
           subject = mtrls.find(({ id }) => id === targetId);
           break;
         case 'quoForm':
-          subject = quotation.quoForms.find(({ id }) => id === targetId);
+          subject = quotation.quoForms.find(({ _id }) => _id === targetId);
           break;
         default:
           subject = { key: 'no target id' };

@@ -108,13 +108,24 @@ const QuoState = (props) => {
     return upLoad;
   };
 
-  const downLoadQuoForm = async (check) => {
+  const downLoadQuoHead = async (check) => {
     if (check !== null) {
-      const res = await axios.get(`/api/quogarment/quoform/${check}`);
+      const res = await axios.get(`/api/quogarment/quohead/${check}`);
       dispatch({ type: QUOTATION_DOWNLOAD, payload: res.data });
     } else {
       dispatch({ type: QUOTATION_DOWNLOAD, payload: { quoForms: [] } });
     }
+  };
+
+  const downLoadmtrlPrice = async (body) => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const res = await axios.put(`/api/quogarment/quotateadvise/`, body, config);
+    dispatch({ type: QUOFORM_UPDATE, payload: res.data });
   };
 
   const deleteQuoForm = async (body) => {
@@ -143,7 +154,7 @@ const QuoState = (props) => {
 
   const updateQuoSize = (quoFormId, size) => {
     const quoForms = quotation.quoForms;
-    const quoForm = quoForms.find(({ id }) => id === quoFormId);
+    const quoForm = quoForms.find(({ _id }) => _id === quoFormId);
     const haveTheQuoSize = quoForm.quoSizes.includes(size);
     if (haveTheQuoSize) {
       quoForm.quoSizes.splice(quoForm.quoSizes.indexOf(size), 1);
@@ -155,7 +166,7 @@ const QuoState = (props) => {
 
   const updateQuocWay = (quoFormId, cWay) => {
     const quoForms = quotation.quoForms;
-    const quoForm = quoForms.find(({ id }) => id === quoFormId);
+    const quoForm = quoForms.find(({ _id }) => _id === quoFormId);
     const haveTheQuocWay = quoForm.quocWays.includes(cWay);
     if (haveTheQuocWay) {
       quoForm.quocWays.splice(quoForm.quocWays.indexOf(cWay), 1);
@@ -179,7 +190,8 @@ const QuoState = (props) => {
         switchQuoFormSelector,
         switchQuoForm,
         uploadQuoForm,
-        downLoadQuoForm,
+        downLoadQuoHead,
+        downLoadmtrlPrice,
         deleteQuoForm,
         deletemQuo,
         updateQuoSize,

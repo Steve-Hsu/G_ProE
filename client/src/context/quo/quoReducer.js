@@ -19,8 +19,8 @@ export default (state, action) => {
       return {
         ...state,
         openQuoForm: action.payload,
-        currentQuoForm: state.quotation.quoForms.find(({ id }) => {
-          return id === action.payload;
+        currentQuoForm: state.quotation.quoForms.find(({ _id }) => {
+          return _id === action.payload;
         }),
       };
     case QUOFORM_DOWNLOAD:
@@ -42,7 +42,7 @@ export default (state, action) => {
         quotation: {
           ...state.quotation,
           quoForms: state.quotation.quoForms.filter((quoForm) => {
-            return quoForm.id !== action.payload;
+            return quoForm._id !== action.payload;
           }),
         },
       };

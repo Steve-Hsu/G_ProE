@@ -12,11 +12,21 @@ const QuoForm = () => {
   const popoverContext = useContext(PopoverContext);
   const {
     switchQuoForm,
-    downLoadQuoForm,
+    downLoadmtrlPrice,
     currentQuoForm,
     quotateFor,
   } = quoContext;
-  const { quoNo, currency, cmpts, mQuos, otherExpenses, fob } = currentQuoForm;
+  const {
+    _id,
+    quoNo,
+    quoSizes,
+    quocWays,
+    currency,
+    cmpts,
+    mQuos,
+    otherExpenses,
+    fob,
+  } = currentQuoForm;
 
   const {
     cNo,
@@ -34,13 +44,28 @@ const QuoForm = () => {
 
   const onClick = (e) => {
     e.preventDefault();
-    switchQuoForm(null);
+    switch (e.target.name) {
+      case 'goBackBtn':
+        switchQuoForm(null);
+        break;
+      case 'quotationBtn':
+        const body = {
+          quoNo: quoNo,
+          quoFormId: _id,
+          quoSizes: quoSizes,
+          quocWays: quocWays,
+        };
+        downLoadmtrlPrice(body);
+      default:
+    }
   };
 
   return (
     <Fragment>
       <div className='p-1 container container-with-navbar'>
-        <button onClick={onClick}>Yes</button>{' '}
+        <button name='goBackBtn' onClick={onClick}>
+          Go Back
+        </button>{' '}
         <form id='quoForm' onSubmit={onSubmitQuoForm}>
           <div>Case Number : {cNo}</div>
           <div>Quotation Number : {quoNo} </div>
@@ -55,6 +80,11 @@ const QuoForm = () => {
           <div>Sizes : Total {sizes.length} sizes</div>
           <SizeSelector sizes={sizes} />
           <CWaySelector cWays={cWays} />
+          <div>
+            <button name='quotationBtn' value={_id} onClick={onClick}>
+              Quotate
+            </button>
+          </div>
           {mtrls.map((mtrl) => (
             <QuoMtrl key={`quoMtrl${mtrl.id}`} mtrl={mtrl} />
           ))}

@@ -84,7 +84,8 @@ const MPrice = ({ mPrice, srMtrl, currentPath }) => {
 
   const onChange = (e) => {
     e.preventDefault();
-    addSrMtrlValue(e, srMtrlId, mPriceList);
+    const list = mPriceList();
+    addSrMtrlValue(e, srMtrlId, list);
   };
 
   const selectList = (x) => {

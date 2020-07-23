@@ -6,33 +6,42 @@ mongoose.set('useFindAndModify', false);
 
 // @desc    Materal belong to cases.
 // Steve    The material will be generated after case is created, each materal in the bom (case) will generate 1 material in this collection by this schema. Each materal will be inserted the ID of the case, after the case are moved to purchase order, the materal in this collection of the case should be all deleted. Because we will have another collection to hold all the data of the materals by it MIC, the spec, supplier, and ref_no. 2020/05/26
-const QuoSchema = mongoose.Schema({
+const QuoFormSchema = mongoose.Schema({
   company: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'company',
   },
-  cNo: {
+  quoHead: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'quoHead',
+  },
+  quoNo: {
     type: String,
   },
-  quoForms: [],
-  versionNum: {
-    type: Number,
-    default: 0,
+  currency: {
+    type: String,
   },
-  gTQty: {
-    type: Number,
+  quoSizes: {
+    type: Array,
   },
-  quotatedQty: {
-    type: Number,
-    default: 0,
+  quocWays: {
+    type: Array,
   },
-  finishedQuotating: {
-    type: Boolean,
-    default: false,
+  cmpts: {
+    type: Array,
+  },
+  mQuos: {
+    type: Array,
+  },
+  otherExenses: {
+    type: Array,
+  },
+  fob: {
+    type: Number,
   },
   date: {
     type: Date,
     default: Date.now,
   },
 });
-module.exports = mongoose.model('quo', QuoSchema);
+module.exports = mongoose.model('quoForm', QuoFormSchema);

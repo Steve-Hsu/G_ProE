@@ -4,7 +4,7 @@ import QuoContext from '../../context/quo/quoContext';
 const QuoMtrl = ({ mtrl }) => {
   const quoContext = useContext(QuoContext);
 
-  const { isQuotating, switchQuoFormSelector, downLoadQuoForm } = quoContext;
+  const { isQuotating, switchQuoFormSelector } = quoContext;
 
   return (
     // <div className='mb-1 p-1 card'>
