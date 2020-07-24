@@ -7,6 +7,7 @@ import {
   QUOPAGE_SWITCH,
   QUOFORM_DELETE,
   QUOFORM_UPDATE,
+  CURRETQUOFORM_UPDATE,
 } from '../types';
 
 export default (state, action) => {
@@ -53,6 +54,11 @@ export default (state, action) => {
           ...state.quotation,
           quoForms: action.payload,
         },
+      };
+    case CURRETQUOFORM_UPDATE:
+      return {
+        ...state,
+        currentQuoForm: action.payload,
       };
     default:
   }

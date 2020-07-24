@@ -403,6 +403,7 @@ router.put('/quotateadvise', authUser, async (req, res) => {
     return res.status(400).json({ msg: 'Out of authority' });
   }
 
+  //@ Declare needed elements ----------------------------------
   const comId = req.user.company;
   const comName = user.comName;
   const comSymbol = user.comSymbol;
@@ -462,11 +463,6 @@ router.put('/quotateadvise', authUser, async (req, res) => {
     });
   }
 
-  const totalgQty = gQtys.reduce((result, currentItem) => {
-    result += currentItem.gQty;
-    return result;
-  }, 0);
-
   const sizes = cases.sizes;
   if (sizes.length === 0 || !sizes) {
     console.log("The case don't have garment sizes");
@@ -491,13 +487,37 @@ router.put('/quotateadvise', authUser, async (req, res) => {
     });
   }
 
+  //@ Declare needed total gQtys ----------------------------------
+  //Here the total gQtys means the sum of the quantity of the sizes and colors the user selexted, not the total quantity of the case
+  const quoSizesInId = quoSizes.map((size) => {
+    return sizes.find(({ gSize }) => gSize === size).id;
+  });
+  // console.log(quoSizesInId); // Test Code
+
+  const quocWaysInId = quocWays.map((cWay) => {
+    return cWays.find(({ gClr }) => gClr === cWay).id;
+  });
+  // console.log(quocWaysInId); // Test Code
+
+  const totalgQty = gQtys.reduce((result, currentItem) => {
+    if (
+      quoSizesInId.includes(currentItem.size) &&
+      quocWaysInId.includes(currentItem.cWay)
+    ) {
+      result += currentItem.gQty;
+    }
+    return result;
+  }, 0);
+  console.log('The totalgQty of the color & size selected', totalgQty); // Test Code
+
+  //@ Start main counting ------------------------------------------------
   const insertmtrlQuotation = new Promise(async (resolve, reject) => {
     await QuoForm.updateOne(
       { _id: quoFormId },
       { quoSizes: quoSizes, quocWays: quocWays }
     );
+    let mQuoNum = 0;
     mQuos.map((mQuo) => {
-      let num = 0;
       const mtrlId = mQuo.mtrlId;
       const mtrl = mtrls.find(({ id }) => id === mtrlId);
       if (!mtrl) {
@@ -510,9 +530,12 @@ router.put('/quotateadvise', authUser, async (req, res) => {
         .toLowerCase()
         .replace(/[^\da-z]/gi, '');
 
+      // The key value of this function, it will hold the final result
+      let sizeAndColorWeightedPrice = 0;
+
       const getWeightedAVGPrice = new Promise(async (resolve, reject) => {
-        quoSizes.reduce(async (sizeAndColorWeightedPrice, quoSize) => {
-          let num = 0;
+        let quoSizesNum = 0;
+        quoSizes.map(async (quoSize) => {
           const garmentSize = sizes.find(({ gSize }) => gSize === quoSize);
           if (!garmentSize) {
             console.log(
@@ -540,28 +563,35 @@ router.put('/quotateadvise', authUser, async (req, res) => {
           });
           // console.log('475 gQtyOfTheSize', gQtyOfTheSize); // Test Code
 
-          const totalQtyOfTheSize = gQtyOfTheSize.reduce(
+          // The selected sum of quantity of this size
+          const selectedQtyOfTheSize = gQtyOfTheSize.reduce(
             (result, currentItem) => {
-              result += currentItem.gQty;
+              if (quocWaysInId.includes(currentItem.cWay)) {
+                result += currentItem.gQty;
+              }
               return result;
             },
             0
           );
-          // console.log('484 totalQtyOfTheSize', totalQtyOfTheSize); // Test Code
+          // console.log('484 selectedQtyOfTheSize', selectedQtyOfTheSize); // Test Code
 
-          if (totalQtyOfTheSize === 0) {
+          if (selectedQtyOfTheSize === 0) {
             console.log("The Size Don't have any quantity");
             return reject("The Size Don't have any quantity");
           }
 
-          console.log('totalQtyOfTheSize', totalQtyOfTheSize);
-          console.log('totalgQty', totalgQty);
+          console.log(
+            'selectedQtyOfTheSize of the size',
+            quoSizesNum + 1,
+            selectedQtyOfTheSize
+          ); // Test Code
 
-          const weightOftheSize = totalQtyOfTheSize / totalgQty;
+          const weightOftheSize = selectedQtyOfTheSize / totalgQty;
 
           const getColorWeightedPrice = new Promise((resolve, reject) => {
-            let num = 0;
-            quocWays.reduce(async (colorWeightedPrice, gColor) => {
+            let quocWaysNum = 0;
+            let colorWeightedPrice = 0;
+            quocWays.map(async (gColor) => {
               //@_colorWay Id
               const garmentcWay = cWays.find(({ gClr }) => gClr === gColor);
               // console.log('496, the garmentcWay ', garmentcWay); // Test Code
@@ -575,6 +605,7 @@ router.put('/quotateadvise', authUser, async (req, res) => {
                 );
               }
               const cWayId = garmentcWay.id;
+              console.log('578, The cWayId', cWayId); // Test Code
 
               //@_mtrlColor
               const mtrlColor = mtrl.mtrlColors.find(
@@ -610,46 +641,29 @@ router.put('/quotateadvise', authUser, async (req, res) => {
               // console.log('531, the CSRIC ', CSRIC); // Test Code
 
               const materialQuotation = mPrice.quotation;
-              // console.log('542, the gQtyOfTheSize', gQtyOfTheSize); // Test Code
-              // console.log('543, The cWayId', cWayId); // Test Code
+
               const gQty = gQtyOfTheSize.find(({ cWay }) => cWay === cWayId);
-              // console.log('546, the gQty', gQty); // Test Code
+              // console.log('617, the gQty', gQty); // Test Code
               const qtyOfTheSizeAndcWay = gQty.gQty;
-              const weightOfThecWay = qtyOfTheSizeAndcWay / totalQtyOfTheSize;
+              console.log(
+                '619, the qtyOfTheSizeAndcWay',
+                qtyOfTheSizeAndcWay,
+                'the',
+                quocWaysNum,
+                'time'
+              ); // Test Code
+              const weightOfThecWay =
+                qtyOfTheSizeAndcWay / selectedQtyOfTheSize;
+
               colorWeightedPrice =
                 colorWeightedPrice + materialQuotation * weightOfThecWay;
-              num = num + 1;
-              if (num === quocWays.length) {
+              quocWaysNum = quocWaysNum + 1;
+
+              if (quocWaysNum === quocWays.length) {
+                console.log('The colorWeightedPrice', colorWeightedPrice); // Test Code
                 resolve(colorWeightedPrice);
               }
-
-              // .then((result) => {
-              //   if (!result) {
-              //     console.log("The material don't have srMtrl");
-              //     return reject("The material don't have srMtrl");
-              //   }
-              //   return result;
-              // })
-              // .then((result) => {
-              //   console.log('539, the result ', result);
-              //   const materialQuotation = result.quotation;
-              //   const gQty = gQtyOfTheSize.find(({ cWay }) => {
-              //     cWay = cWayId;
-              //   });
-              //   const qtyOfTheSizeAndcWay = gQty.gQty;
-              //   const weightOfThecWay =
-              //     qtyOfTheSizeAndcWay / totalQtyOfTheSize;
-              //   colorWeightedPrice =
-              //     colorWeightedPrice + materialQuotation * weightOfThecWay;
-              //   return colorWeightedPrice;
-              // })
-              // .then((colorWeightedPrice) => {
-              //   num = num + 1;
-              //   if (num === quocWays.length) {
-              //     resolve(colorWeightedPrice);
-              //   }
-              // });
-            }, 0);
+            });
           });
 
           Promise.all([getColorWeightedPrice])
@@ -659,7 +673,6 @@ router.put('/quotateadvise', authUser, async (req, res) => {
               sizeAndColorWeightedPrice =
                 sizeAndColorWeightedPrice +
                 colorWeightedPrice * weightOftheSize;
-              console.log('The Promise all_1 weightOftheSize', weightOftheSize); // Test Code
               console.log(
                 'The Promise all_1 sizeAndColorWdightedPrice',
                 sizeAndColorWeightedPrice
@@ -667,24 +680,29 @@ router.put('/quotateadvise', authUser, async (req, res) => {
               return sizeAndColorWeightedPrice;
             })
             .then((sizeAndColorWeightedPrice) => {
-              num = num + 1;
-              if (num === quoSizes.length) {
+              quoSizesNum = quoSizesNum + 1;
+              console.log(
+                'The quoSizesNum',
+                quoSizesNum,
+                'the quoSizes.length',
+                quoSizes.length
+              );
+              if (quoSizesNum === quoSizes.length) {
                 return resolve(sizeAndColorWeightedPrice);
               }
             })
             .catch((err) => {
               console.log(err);
             });
-        }, 0);
+        });
       });
 
       // Connect to mongoDB updload the AVGPRICE
       Promise.all([getWeightedAVGPrice])
         .then(async (result) => {
           const AVGPrice = result[0];
-          console.log('The Promise all_2 result ', result); // Test Code
           console.log('The Promise all_2 AVGPrice ', AVGPrice); // Test Code
-          const updatedQuoForms = await QuoForm.findOneAndUpdate(
+          await QuoForm.findOneAndUpdate(
             {
               company: comId,
               quoNo: quoNo,
@@ -699,14 +717,14 @@ router.put('/quotateadvise', authUser, async (req, res) => {
             }
           );
         })
-        .then(async (updatedQuoForms) => {
-          num = num + 1;
-          if (num === mQuos.length) {
+        .then(async () => {
+          mQuoNum = mQuoNum + 1;
+          if (mQuoNum === mQuos.length) {
             const quoForms = await QuoForm.find({
               company: comId,
               quoHead: quoHeadId,
             });
-            console.log('The Promise all_2 resolove ', updatedQuoForms); // Test Code
+            console.log('The Promise all_2 resolove '); // Test Code
             return resolve(quoForms);
           }
         })
@@ -719,7 +737,7 @@ router.put('/quotateadvise', authUser, async (req, res) => {
   Promise.all([insertmtrlQuotation])
     .then((result) => {
       const resQuoForms = result[0];
-      console.log('The material quotation is finished ', resQuoForms); // Test Code
+      // console.log('The material quotation is finished ', resQuoForms); // Test Code
       return res.json(resQuoForms);
     })
     .catch((err) => {

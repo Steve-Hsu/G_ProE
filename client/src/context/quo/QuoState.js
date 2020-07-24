@@ -12,6 +12,7 @@ import {
   QUOFORM_DELETE,
   QUOTATION_DOWNLOAD,
   QUOFORM_UPDATE,
+  CURRETQUOFORM_UPDATE,
 } from '../types';
 
 const QuoState = (props) => {
@@ -162,6 +163,7 @@ const QuoState = (props) => {
       quoForm.quoSizes.push(size);
     }
     dispatch({ type: QUOFORM_UPDATE, payload: quoForms });
+    dispatch({ type: CURRETQUOFORM_UPDATE, payload: quoForm });
   };
 
   const updateQuocWay = (quoFormId, cWay) => {
@@ -174,6 +176,7 @@ const QuoState = (props) => {
       quoForm.quocWays.push(cWay);
     }
     dispatch({ type: QUOFORM_UPDATE, payload: quoForms });
+    dispatch({ type: CURRETQUOFORM_UPDATE, payload: quoForm });
   };
 
   return (
