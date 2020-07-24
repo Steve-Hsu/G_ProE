@@ -273,6 +273,7 @@ router.put('/quoform/:cNo/updatequoForm', authUser, async (req, res) => {
               newMQuos.push({
                 mtrlId: mtrl.id,
                 mQuoAddvised: 0,
+                csptAddvised: 0,
                 materialFinalQuotation: 0,
               });
               num = num + 1;
@@ -530,178 +531,221 @@ router.put('/quotateadvise', authUser, async (req, res) => {
         .toLowerCase()
         .replace(/[^\da-z]/gi, '');
 
-      // The key value of this function, it will hold the final result
+      //@ The key value of this function, it will hold the final result
       let sizeAndColorWeightedPrice = 0;
+      let sizeAndColorWeightedCSPT = 0;
 
-      const getWeightedAVGPrice = new Promise(async (resolve, reject) => {
-        let quoSizesNum = 0;
-        quoSizes.map(async (quoSize) => {
-          const garmentSize = sizes.find(({ gSize }) => gSize === quoSize);
-          if (!garmentSize) {
-            console.log(
-              'The mQuo have the garment size that not exist in the case'
-            );
-            return reject(
-              'The mQuo have the garment size that not exist in the case'
-            );
-          }
-          const gSizeId = garmentSize.id;
-          const sizeSPEC = mtrl.sizeSPECs.find(({ size }) => size === gSizeId);
-          if (!sizeSPEC) {
-            console.log(
-              "The material don't have this size SPEC for this garment size"
-            );
-
-            return reject(
-              "The material don't have this size SPEC for this garment size"
-            );
-          }
-          const materialSPEC = sizeSPEC.mSizeSPEC;
-
-          const gQtyOfTheSize = gQtys.filter((i) => {
-            return i.size === gSizeId;
-          });
-          // console.log('475 gQtyOfTheSize', gQtyOfTheSize); // Test Code
-
-          // The selected sum of quantity of this size
-          const selectedQtyOfTheSize = gQtyOfTheSize.reduce(
-            (result, currentItem) => {
-              if (quocWaysInId.includes(currentItem.cWay)) {
-                result += currentItem.gQty;
-              }
-              return result;
-            },
-            0
-          );
-          // console.log('484 selectedQtyOfTheSize', selectedQtyOfTheSize); // Test Code
-
-          if (selectedQtyOfTheSize === 0) {
-            console.log("The Size Don't have any quantity");
-            return reject("The Size Don't have any quantity");
-          }
-
-          console.log(
-            'selectedQtyOfTheSize of the size',
-            quoSizesNum + 1,
-            selectedQtyOfTheSize
-          ); // Test Code
-
-          const weightOftheSize = selectedQtyOfTheSize / totalgQty;
-
-          const getColorWeightedPrice = new Promise((resolve, reject) => {
-            let quocWaysNum = 0;
-            let colorWeightedPrice = 0;
-            quocWays.map(async (gColor) => {
-              //@_colorWay Id
-              const garmentcWay = cWays.find(({ gClr }) => gClr === gColor);
-              // console.log('496, the garmentcWay ', garmentcWay); // Test Code
-              // console.log('497, the gColor', gColor); // Test Code
-              if (!garmentcWay) {
-                console.log(
-                  'The mQuo have the garment color way that not exist in the case'
-                );
-                return reject(
-                  'The mQuo have the garment color way that not exist in the case'
-                );
-              }
-              const cWayId = garmentcWay.id;
-              console.log('578, The cWayId', cWayId); // Test Code
-
-              //@_mtrlColor
-              const mtrlColor = mtrl.mtrlColors.find(
-                ({ cWay }) => cWay === cWayId
+      const getWeightedAVGPriceAndAVGCSPT = new Promise(
+        async (resolve, reject) => {
+          let quoSizesNum = 0;
+          quoSizes.map(async (quoSize) => {
+            const garmentSize = sizes.find(({ gSize }) => gSize === quoSize);
+            if (!garmentSize) {
+              console.log(
+                'The mQuo have the garment size that not exist in the case'
               );
-              if (!mtrlColor) {
-                console.log("The material don't have this color way");
-                return reject("The material don't have this color way");
-              }
+              return reject(
+                'The mQuo have the garment size that not exist in the case'
+              );
+            }
+            const gSizeId = garmentSize.id;
+            const sizeSPEC = mtrl.sizeSPECs.find(
+              ({ size }) => size === gSizeId
+            );
+            if (!sizeSPEC) {
+              console.log(
+                "The material don't have this size SPEC for this garment size"
+              );
 
-              //@_srMtrl mtrl quotation
-              const materialColor = mtrlColor.mColor;
-              const srMtrl = await SRMtrl.findOne(
-                {
-                  CSRIC: CSRIC,
-                  mPrices: {
-                    $elemMatch: {
-                      mColor: materialColor,
-                      sizeSPEC: materialSPEC,
+              return reject(
+                "The material don't have this size SPEC for this garment size"
+              );
+            }
+            const materialSPEC = sizeSPEC.mSizeSPEC;
+
+            const gQtyOfTheSize = gQtys.filter((i) => {
+              return i.size === gSizeId;
+            });
+            // console.log('475 gQtyOfTheSize', gQtyOfTheSize); // Test Code
+
+            // The selected sum of quantity of this size
+            const selectedQtyOfTheSize = gQtyOfTheSize.reduce(
+              (result, currentItem) => {
+                if (quocWaysInId.includes(currentItem.cWay)) {
+                  result += currentItem.gQty;
+                }
+                return result;
+              },
+              0
+            );
+            // console.log('484 selectedQtyOfTheSize', selectedQtyOfTheSize); // Test Code
+
+            if (selectedQtyOfTheSize === 0) {
+              console.log("The Size Don't have any quantity");
+              return reject("The Size Don't have any quantity");
+            }
+
+            console.log(
+              'selectedQtyOfTheSize of the size',
+              quoSizesNum + 1,
+              selectedQtyOfTheSize
+            ); // Test Code
+
+            const weightOftheSize = selectedQtyOfTheSize / totalgQty;
+
+            const getColorWeightedPriceAndCSPT = new Promise(
+              (resolve, reject) => {
+                let quocWaysNum = 0;
+                //@ The key value of the colorWeightedPrice
+                let colorWeightedPrice = 0;
+                let colorWeightedCSPT = 0;
+                quocWays.map(async (gColor) => {
+                  //@_colorWay Id
+                  const garmentcWay = cWays.find(({ gClr }) => gClr === gColor);
+                  // console.log('496, the garmentcWay ', garmentcWay); // Test Code
+                  // console.log('497, the gColor', gColor); // Test Code
+                  if (!garmentcWay) {
+                    console.log(
+                      'The mQuo have the garment color way that not exist in the case'
+                    );
+                    return reject(
+                      'The mQuo have the garment color way that not exist in the case'
+                    );
+                  }
+                  const cWayId = garmentcWay.id;
+                  console.log('578, The cWayId', cWayId); // Test Code
+
+                  //@_mtrlColor
+                  const mtrlColor = mtrl.mtrlColors.find(
+                    ({ cWay }) => cWay === cWayId
+                  );
+                  if (!mtrlColor) {
+                    console.log("The material don't have this color way");
+                    return reject("The material don't have this color way");
+                  }
+
+                  //@_srMtrl mtrl quotation
+                  const materialColor = mtrlColor.mColor;
+                  const srMtrl = await SRMtrl.findOne(
+                    {
+                      CSRIC: CSRIC,
+                      mPrices: {
+                        $elemMatch: {
+                          mColor: materialColor,
+                          sizeSPEC: materialSPEC,
+                        },
+                      },
                     },
-                  },
-                },
-                { 'mPrices.$': 1 }
-              );
-              if (!srMtrl) {
-                console.log("The material doesn't have Price yet");
-                return reject("The material doesn't have Price yet");
+                    { 'mPrices.$': 1 }
+                  );
+                  if (!srMtrl) {
+                    console.log("The material doesn't have Price yet");
+                    return reject("The material doesn't have Price yet");
+                  }
+                  // console.log('531, the srMtrl ', srMtrl); // Test Code
+                  const mPrice = srMtrl.mPrices[0];
+
+                  // console.log('531, the mPrice ', mPrice); // Test Code
+                  // console.log('531, the CSRIC ', CSRIC); // Test Code
+
+                  const materialQuotation = mPrice.quotation;
+
+                  //@_get CSPT
+                  const cspts = mtrl.cspts;
+                  const cspt = cspts.reduce((result, currentItem) => {
+                    if (
+                      currentItem.cWay === cWayId &&
+                      currentItem.size === gSizeId
+                    ) {
+                      result = result + currentItem.cspt;
+                    }
+                    return result;
+                  }, 0);
+
+                  const gQty = gQtyOfTheSize.find(
+                    ({ cWay }) => cWay === cWayId
+                  );
+                  // console.log('617, the gQty', gQty); // Test Code
+                  const qtyOfTheSizeAndcWay = gQty.gQty;
+                  console.log(
+                    '619, the qtyOfTheSizeAndcWay',
+                    qtyOfTheSizeAndcWay,
+                    'the',
+                    quocWaysNum,
+                    'time'
+                  ); // Test Code
+                  const weightOfThecWay =
+                    qtyOfTheSizeAndcWay / selectedQtyOfTheSize;
+
+                  colorWeightedPrice =
+                    colorWeightedPrice + materialQuotation * weightOfThecWay;
+
+                  colorWeightedCSPT =
+                    colorWeightedCSPT + cspt * weightOfThecWay;
+
+                  quocWaysNum = quocWaysNum + 1;
+
+                  if (quocWaysNum === quocWays.length) {
+                    console.log('The colorWeightedPrice', colorWeightedPrice); // Test Code
+                    console.log('The colorWeightedPrice', colorWeightedCSPT); // Test Code
+                    resolve([colorWeightedPrice, colorWeightedCSPT]);
+                  }
+                });
               }
-              // console.log('531, the srMtrl ', srMtrl); // Test Code
-              const mPrice = srMtrl.mPrices[0];
+            );
 
-              // console.log('531, the mPrice ', mPrice); // Test Code
-              // console.log('531, the CSRIC ', CSRIC); // Test Code
+            Promise.all([getColorWeightedPriceAndCSPT])
+              .then((result) => {
+                const colorWeightedPrice = result[0][0];
+                const colorWeightedCSPT = result[0][1];
+                console.log(
+                  'The Promise all_1 colorWeightedPrice',
+                  colorWeightedPrice
+                ); // Test Code
+                console.log(
+                  'The Promise all_1 colorWeightedCSPT',
+                  colorWeightedCSPT
+                ); // Test Code
 
-              const materialQuotation = mPrice.quotation;
+                sizeAndColorWeightedPrice =
+                  sizeAndColorWeightedPrice +
+                  colorWeightedPrice * weightOftheSize;
+                console.log(
+                  'The Promise all_1 sizeAndColorWdightedPrice',
+                  sizeAndColorWeightedPrice
+                ); // Test Code
 
-              const gQty = gQtyOfTheSize.find(({ cWay }) => cWay === cWayId);
-              // console.log('617, the gQty', gQty); // Test Code
-              const qtyOfTheSizeAndcWay = gQty.gQty;
-              console.log(
-                '619, the qtyOfTheSizeAndcWay',
-                qtyOfTheSizeAndcWay,
-                'the',
-                quocWaysNum,
-                'time'
-              ); // Test Code
-              const weightOfThecWay =
-                qtyOfTheSizeAndcWay / selectedQtyOfTheSize;
-
-              colorWeightedPrice =
-                colorWeightedPrice + materialQuotation * weightOfThecWay;
-              quocWaysNum = quocWaysNum + 1;
-
-              if (quocWaysNum === quocWays.length) {
-                console.log('The colorWeightedPrice', colorWeightedPrice); // Test Code
-                resolve(colorWeightedPrice);
-              }
-            });
+                sizeAndColorWeightedCSPT =
+                  sizeAndColorWeightedCSPT +
+                  colorWeightedCSPT * weightOftheSize;
+                return [sizeAndColorWeightedPrice, sizeAndColorWeightedCSPT];
+              })
+              .then((result) => {
+                quoSizesNum = quoSizesNum + 1;
+                console.log(
+                  'The quoSizesNum',
+                  quoSizesNum,
+                  'the quoSizes.length',
+                  quoSizes.length
+                );
+                if (quoSizesNum === quoSizes.length) {
+                  return resolve(result);
+                }
+              })
+              .catch((err) => {
+                console.log(err);
+              });
           });
-
-          Promise.all([getColorWeightedPrice])
-            .then((result) => {
-              const colorWeightedPrice = result[0];
-              console.log('The Promise all_1 ', colorWeightedPrice); // Test Code
-              sizeAndColorWeightedPrice =
-                sizeAndColorWeightedPrice +
-                colorWeightedPrice * weightOftheSize;
-              console.log(
-                'The Promise all_1 sizeAndColorWdightedPrice',
-                sizeAndColorWeightedPrice
-              ); // Test Code
-              return sizeAndColorWeightedPrice;
-            })
-            .then((sizeAndColorWeightedPrice) => {
-              quoSizesNum = quoSizesNum + 1;
-              console.log(
-                'The quoSizesNum',
-                quoSizesNum,
-                'the quoSizes.length',
-                quoSizes.length
-              );
-              if (quoSizesNum === quoSizes.length) {
-                return resolve(sizeAndColorWeightedPrice);
-              }
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        });
-      });
+        }
+      );
 
       // Connect to mongoDB updload the AVGPRICE
-      Promise.all([getWeightedAVGPrice])
+      Promise.all([getWeightedAVGPriceAndAVGCSPT])
         .then(async (result) => {
-          const AVGPrice = result[0].toFixed(2); //Rounding number in 2nd decimal place
+          const AVGPrice = result[0][0].toFixed(2); //Rounding number in 2nd decimal place
+          const AVGCSPT = result[0][1].toFixed(2);
           console.log('The Promise all_2 AVGPrice ', AVGPrice); // Test Code
+          console.log('The Promise all_2 AVGCSPT ', AVGCSPT); // Test Code
           await QuoForm.findOneAndUpdate(
             {
               company: comId,
@@ -713,6 +757,7 @@ router.put('/quotateadvise', authUser, async (req, res) => {
             {
               $set: {
                 'mQuos.$.mQuoAddvised': AVGPrice,
+                'mQuos.$.csptAddvised': AVGCSPT,
               },
             }
           );

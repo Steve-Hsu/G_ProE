@@ -28,6 +28,7 @@ const MtrlCspt = ({ size, mtrl }) => {
         min='0'
         max='999'
         className='MPH-input'
+        step='.01'
       />
       <label
         htmlFor={cspt.id}

@@ -4,8 +4,21 @@ import QuoContext from '../../context/quo/quoContext';
 const QuoMtrl = ({ mtrl }) => {
   const quoContext = useContext(QuoContext);
 
-  const { isQuotating, switchQuoFormSelector } = quoContext;
+  const { isQuotating, switchQuoFormSelector, currentQuoForm } = quoContext;
+  const {
+    _id,
+    quoNo,
+    quoSizes,
+    quocWays,
+    currency,
+    cmpts,
+    mQuos,
+    otherExpenses,
+    fob,
+  } = currentQuoForm;
 
+  const advisedPrice = mQuos.find(({ mtrlId }) => mtrlId === mtrl.id)
+    .mQuoAddvised;
   return (
     // <div className='mb-1 p-1 card'>
     <div className='grid-1-5-1-1-1-1-1 card mb-1 p-1'>
@@ -18,10 +31,10 @@ const QuoMtrl = ({ mtrl }) => {
           {mtrl.supplier} / {mtrl.ref_no} / {mtrl.sizeSPECs[0]} /{' '}
           {mtrl.position}
         </div> */}
-      <div>unit</div>
-      <div>price</div>
+      <div>{mtrl.unit}</div>
+      <div>{advisedPrice}</div>
       <div>qantity</div>
-      <div>advised</div>
+
       <div>Final</div>
 
       {/* {mtrl.map((label) => (
