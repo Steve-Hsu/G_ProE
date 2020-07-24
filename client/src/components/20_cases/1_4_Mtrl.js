@@ -19,7 +19,7 @@ const Mtrl = ({ mtrl }) => {
   const casesContext = useContext(CasesContext);
   const popoverContext = useContext(PopoverContext);
 
-  const { cWays, sizes, expandExtraPanels, addMtrlValue } = casesContext;
+  const { cNo, cWays, sizes, expandExtraPanels, addMtrlValue } = casesContext;
 
   const { togglePopover } = popoverContext;
 
@@ -270,15 +270,17 @@ const Mtrl = ({ mtrl }) => {
         </div>
 
         <div>
-          <button
-            value={mtrl.id}
-            name='mtrl'
-            onClick={togglePopover}
-            className='btn btn-fade btn-square'
-            style={deleteBtnPosition}
-          >
-            x
-          </button>
+          {cNo === null ? null : (
+            <button
+              value={mtrl.id}
+              name='mtrl'
+              onClick={togglePopover}
+              className='btn btn-fade btn-square'
+              style={deleteBtnPosition}
+            >
+              x
+            </button>
+          )}
         </div>
       </div>
       {/* {Row_3} */}

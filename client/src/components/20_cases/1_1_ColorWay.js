@@ -5,7 +5,7 @@ import PopoverContext from '../../context/popover/popoverContext';
 
 const ColorWay = ({ cWay }) => {
   const casesContext = useContext(CasesContext);
-  const { cWays, updatecWay } = casesContext;
+  const { cNo, cWays, updatecWay } = casesContext;
   const popoverContext = useContext(PopoverContext);
   const { togglePopover } = popoverContext;
   //For sparete the postion of btn, here use an inline style.
@@ -66,15 +66,17 @@ const ColorWay = ({ cWay }) => {
         </label>
       </div>
       <div style={{ height: '68px' }}>
-        <button
-          value={cWay.id}
-          name='cWay'
-          onClick={togglePopover}
-          className='btn btn-fade btn-square'
-          style={deleteBtnPosition}
-        >
-          x
-        </button>
+        {cNo === null ? null : (
+          <button
+            value={cWay.id}
+            name='cWay'
+            onClick={togglePopover}
+            className='btn btn-fade btn-square'
+            style={deleteBtnPosition}
+          >
+            x
+          </button>
+        )}
       </div>
     </div>
   );

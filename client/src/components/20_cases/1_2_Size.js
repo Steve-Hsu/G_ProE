@@ -6,7 +6,7 @@ import PopoverContext from '../../context/popover/popoverContext';
 const Size = ({ size }) => {
   const casesContext = useContext(CasesContext);
   const popoverContext = useContext(PopoverContext);
-  const { _id, sizes, updateSize } = casesContext;
+  const { _id, cNo, sizes, updateSize } = casesContext;
   const { togglePopover } = popoverContext;
   const event = new Event('change');
   //@ Array for generate <option> tags for s<elect> tag.
@@ -106,16 +106,17 @@ const Size = ({ size }) => {
           );
         })}
       </select>
-
-      <button
-        name='size'
-        value={size.id}
-        onClick={togglePopover}
-        className='btn btn-fade btn-square'
-        style={deleteBtnPosition}
-      >
-        x
-      </button>
+      {cNo === null ? null : (
+        <button
+          name='size'
+          value={size.id}
+          onClick={togglePopover}
+          className='btn btn-fade btn-square'
+          style={deleteBtnPosition}
+        >
+          x
+        </button>
+      )}
     </div>
   );
 };
