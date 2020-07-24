@@ -700,7 +700,7 @@ router.put('/quotateadvise', authUser, async (req, res) => {
       // Connect to mongoDB updload the AVGPRICE
       Promise.all([getWeightedAVGPrice])
         .then(async (result) => {
-          const AVGPrice = result[0];
+          const AVGPrice = result[0].toFixed(2); //Rounding number in 2nd decimal place
           console.log('The Promise all_2 AVGPrice ', AVGPrice); // Test Code
           await QuoForm.findOneAndUpdate(
             {
