@@ -197,10 +197,15 @@ const QuoState = (props) => {
   };
 
   const updateCurrentQuoForm = (e) => {
-    const nameOfItem = e.target.name;
+    const nameOfTarget = e.target.name;
+    const idOfTarget = e.target.id;
     const value = e.target.value;
     const quoForm = currentQuoForm;
-    switch (nameOfItem) {
+    const idOfItem = String(e.target.id).slice(
+      nameOfTarget.length,
+      idOfTarget.length
+    );
+    switch (nameOfTarget) {
       case 'currency':
         quoForm.currency = value;
         break;
@@ -218,6 +223,26 @@ const QuoState = (props) => {
       case 'deleteOtherExpense':
         quoForm.otherExpenses = quoForm.otherExpenses.filter((i) => {
           return i.id !== value;
+        });
+        break;
+      case 'cspt':
+        quoForm.mQuos.map((mQuo) => {
+          if (mQuo.mtrlId === idOfItem) {
+            mQuo.csptAddvised = e.target.value;
+            let mtrlQuotation = mQuo.csptAddvised * mQuo.mQuoAddvised;
+            mQuo.materialFinalQuotation = Number(mtrlQuotation).toFixed(2);
+          }
+          return mQuo;
+        });
+        break;
+      case 'unitprice':
+        quoForm.mQuos.map((mQuo) => {
+          if (mQuo.mtrlId === idOfItem) {
+            mQuo.mQuoAddvised = e.target.value;
+            let mtrlQuotation = mQuo.csptAddvised * mQuo.mQuoAddvised;
+            mQuo.materialFinalQuotation = Number(mtrlQuotation).toFixed(2);
+          }
+          return mQuo;
         });
         break;
       default:

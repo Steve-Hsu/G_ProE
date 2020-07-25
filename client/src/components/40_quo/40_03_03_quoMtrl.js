@@ -4,7 +4,12 @@ import QuoContext from '../../context/quo/quoContext';
 const QuoMtrl = ({ mtrl }) => {
   const quoContext = useContext(QuoContext);
 
-  const { isQuotating, switchQuoFormSelector, currentQuoForm } = quoContext;
+  const {
+    isQuotating,
+    switchQuoFormSelector,
+    currentQuoForm,
+    updateCurrentQuoForm,
+  } = quoContext;
   const {
     _id,
     quoNo,
@@ -17,8 +22,14 @@ const QuoMtrl = ({ mtrl }) => {
     fob,
   } = currentQuoForm;
 
-  const advisedPrice = mQuos.find(({ mtrlId }) => mtrlId === mtrl.id)
-    .mQuoAddvised;
+  const mQuo = mQuos.find(({ mtrlId }) => mtrlId === mtrl.id);
+  const { mQuoAddvised, csptAddvised, materialFinalQuotation } = mQuo;
+
+  const onChange = (e) => {
+    e.preventDefault();
+    updateCurrentQuoForm(e);
+  };
+
   return (
     // <div className='mb-1 p-1 card'>
     <div className='grid-1-5-1-1-1-1-1 card mb-1 p-1'>
@@ -32,10 +43,33 @@ const QuoMtrl = ({ mtrl }) => {
           {mtrl.position}
         </div> */}
       <div>{mtrl.unit}</div>
-      <div>{advisedPrice}</div>
-      <div>qantity</div>
-
-      <div>Final</div>
+      <div>
+        Consumption
+        <input
+          type='number'
+          id={`cspt${mtrl.id}`}
+          name='cspt'
+          min='0'
+          max='999'
+          step='.01'
+          value={csptAddvised || ''}
+          onChange={onChange}
+        />
+      </div>
+      <div>
+        Unit Price
+        <input
+          type='number'
+          id={`unitprice${mtrl.id}`}
+          name='unitprice'
+          min='0'
+          max='9999999'
+          step='.01'
+          value={mQuoAddvised || ''}
+          onChange={onChange}
+        />
+      </div>
+      <div>{materialFinalQuotation}</div>
 
       {/* {mtrl.map((label) => (
             <div key={`QuoListItem${label}${listItem.cNo}`}>

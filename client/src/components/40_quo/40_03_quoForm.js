@@ -100,7 +100,7 @@ const QuoForm = () => {
             type='text'
             name='currency'
             onChange={onChange}
-            id={_id}
+            id={`currency${_id}`}
             value={currency || ''}
           />
           <div>Sizes : Total {sizes.length} sizes</div>
@@ -117,7 +117,7 @@ const QuoForm = () => {
               step='.01'
               name='cm'
               onChange={onChange}
-              id={_id}
+              id={`cm${_id}`}
               min='0'
               max='99999'
               value={cm || ''}
