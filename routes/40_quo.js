@@ -12,7 +12,6 @@ const Case = require('../models/20_Case');
 const SRMtrl = require('../models/30_srMtrl');
 const QuoHead = require('../models/40_QuoHead');
 const QuoForm = require('../models/41_QuoForm');
-const { find } = require('../models/40_QuoHead');
 
 // @route   GET api/quogarment/
 // @desc    Read the compnay's srMtrl from database
@@ -104,10 +103,9 @@ router.get('/quohead/:cNo', authUser, async (req, res) => {
               // quoForms: result.quoForms,
               versionNum: result.versionNum,
               _id: result._id,
-              company: result.company,
               cNo: result.cNo,
               date: result.date,
-              materialPrice: [],
+              quoForms: [],
             };
             // console.log('resolve Promise - getTheResult - exist Quo'); // Test Code
             return resolve(theResult);
@@ -141,84 +139,91 @@ router.get('/quohead/:cNo', authUser, async (req, res) => {
                 newQuo.save();
                 return newQuo;
               })
-              .then((newQuo) => {
-                theResult = {
-                  quoForms: [], // For client state to hold the datas from collection QuoForm
-                  versionNum: newQuo.versionNum,
-                  _id: newQuo._id,
-                  company: newQuo.company,
-                  cNo: newQuo.cNo,
-                  date: newQuo.date,
-                  materialPrice: [],
+              .then(async (newQuo) => {
+                const theQuoHead = await QuoHead.findOne(
+                  { _id: newQuo._id },
+                  { company: 0 }
+                );
+                const theResult = {
+                  // quoForms: result.quoForms,
+                  versionNum: theQuoHead.versionNum,
+                  _id: theQuoHead._id,
+                  cNo: theQuoHead.cNo,
+                  date: theQuoHead.date,
+                  quoForms: [],
                 };
                 return resolve(theResult);
               });
           }
         });
 
-        //@ Part_2 insertMPrice
-        Promise.all([getTheResult]).then(async (result) => {
-          let theResult = result[0];
+        //@ Part_2 insertMPrice // 07/25 Steve: I think we don't need inserMPrice.
+        // Promise.all([getTheResult]).then(async (result) => {
+        //   let theResult = result[0];
 
-          // console.log('the theResult', theResult); // Test Code
-          const comName = user.comName;
-          const comSymbol = user.comSymbol;
-          let num = 0;
-          const insertMPrice = new Promise(async (resolve) => {
-            await mtrls.map(async (mtrl) => {
-              const supplier = mtrl.supplier;
-              const ref_no = mtrl.ref_no;
-              // console.log('The supplier', supplier, 'The ref_no', ref_no); // Test Code
-              const csr = comName + comSymbol + supplier + ref_no;
-              const lowerCasecsr = csr.toLowerCase();
-              const CSRIC = lowerCasecsr.replace(/[^\da-z]/gi, ''); // Only read from "0" to "9" & "a" to "z"
-              console.log('The CSRIC', CSRIC); // Test Code
-              await SRMtrl.findOne({ CSRIC: CSRIC }, { mPrices: 1 })
-                .then((mPrices) => {
-                  // console.log('the mPrices', mPrices); // Test Code
-                  theResult.materialPrice.push(mPrices);
-                  return theResult;
-                })
-                .then((theResult) => {
-                  num = num + 1;
-                  if (num === mtrls.length) {
-                    console.log('Promise - insertMPrice - resolve()'); // Test Code
-                    return resolve(theResult);
-                  }
-                })
-                .catch((err) => {
-                  console.log(err);
-                  return 'The Srmtrl problem';
-                });
-            });
-          });
+        //   // console.log('the theResult', theResult); // Test Code
+        //   const comName = user.comName;
+        //   const comSymbol = user.comSymbol;
+        //   let num = 0;
+        //   const insertMPrice = new Promise(async (resolve) => {
+        //     await mtrls.map(async (mtrl) => {
+        //       const supplier = mtrl.supplier;
+        //       const ref_no = mtrl.ref_no;
+        //       // console.log('The supplier', supplier, 'The ref_no', ref_no); // Test Code
+        //       const csr = comName + comSymbol + supplier + ref_no;
+        //       const lowerCasecsr = csr.toLowerCase();
+        //       const CSRIC = lowerCasecsr.replace(/[^\da-z]/gi, ''); // Only read from "0" to "9" & "a" to "z"
+        //       console.log('The CSRIC', CSRIC); // Test Code
+        //       await SRMtrl.findOne({ CSRIC: CSRIC }, { mPrices: 1 })
+        //         .then((mPrices) => {
+        //           // console.log('the mPrices', mPrices); // Test Code
+        //           theResult.materialPrice.push(mPrices);
+        //           return theResult;
+        //         })
+        //         .then((theResult) => {
+        //           num = num + 1;
+        //           if (num === mtrls.length) {
+        //             console.log('Promise - insertMPrice - resolve()'); // Test Code
+        //             return resolve(theResult);
+        //           }
+        //         })
+        //         .catch((err) => {
+        //           console.log(err);
+        //           return 'The Srmtrl problem';
+        //         });
+        //     });
+        //   });
 
-          /////////////////////////////
-          //@ Part_3 insert quoForm
-          Promise.all([insertMPrice])
-            .then(async (result) => {
-              const quoHead = result[0];
-              const quoHeadId = quoHead._id;
+        /////////////////////////////
+        //@ Part_3 insert quoForm
+        Promise.all([getTheResult])
+          .then(async (result) => {
+            const quoHead = result[0];
+            const quoHeadId = quoHead._id;
 
-              const quoForms = await QuoForm.find({
+            const quoForms = await QuoForm.find(
+              {
                 company: comId,
                 quoHead: quoHeadId,
-              });
+              },
+              { company: 0 }
+            );
 
-              if (quoForms) {
-                quoHead.quoForms = quoForms;
-              }
-              return quoHead;
-            })
-            .then((result) => {
-              console.log('The Promise.all result - return the quotation');
-              return res.json(result);
-            })
-            .catch((err) => {
-              console.log(err);
-              return res.json({ error: err, quoForms: [] });
-            });
-        });
+            if (quoForms) {
+              quoHead.quoForms = quoForms;
+            }
+            console.log('this is the quoHead', quoHead);
+            return quoHead;
+          })
+          .then((result) => {
+            console.log('The Promise.all result - return the quotation');
+            return res.json(result);
+          })
+          .catch((err) => {
+            console.log(err);
+            return res.json({ error: err, quoForms: [] });
+          });
+        // });
       } else {
         const err = 'Please create the mtrl for the case before quotation.';
         console.log(err);
@@ -235,7 +240,7 @@ router.get('/quohead/:cNo', authUser, async (req, res) => {
 // @desc    Update or generate quoform
 // @access  Private
 // @result  return object contain the array "quoForms" and the object "versionNum" of QUO
-router.put('/quoform/:cNo/updatequoForm', authUser, async (req, res) => {
+router.put('/quoform/:cNo/uploadquoForm', authUser, async (req, res) => {
   let user = await User.findById(req.user.id);
   if (!user.quo) {
     return res.status(400).json({ msg: 'Out of authority' });
@@ -260,10 +265,11 @@ router.put('/quoform/:cNo/updatequoForm', authUser, async (req, res) => {
         company: comId,
         quoHead: quoHeadId,
       });
-      if (quoForms.length < 99) {
-        // console.log('The quoForm is less then 99'); // Test Code
-        if (isNewQuoForm) {
-          // console.log('Have isNewQuoForm from body'); // Test Code
+      if (isNewQuoForm) {
+        // console.log('Have isNewQuoForm from body'); // Test Code
+        if (quoForms.length < 99) {
+          // console.log('The quoForm is less then 99'); // Test Code
+
           const createMQuos = new Promise((resolve) => {
             console.log('Promise createMQuos start');
             const mtrls = Cases.mtrls;
@@ -317,10 +323,14 @@ router.put('/quoform/:cNo/updatequoForm', authUser, async (req, res) => {
               currency: '',
               quoSizes: [],
               quocWays: [],
-              cmpts: [],
+              quotatedQty: 0,
+              cm: 0,
               mQuos: result[0],
+              mQuosTotal: 0,
               otherExpenses: [],
-              fob: '',
+              otherExpensesTotal: 0,
+              fob: 0,
+              useAsFinalQuotation: false,
               date: new Date(),
             })
               .then(async () => {
@@ -336,10 +346,13 @@ router.put('/quoform/:cNo/updatequoForm', authUser, async (req, res) => {
                 return result;
               })
               .then(async (result) => {
-                const quoForms = await QuoForm.find({
-                  company: comId,
-                  quoHead: quoHeadId,
-                });
+                const quoForms = await QuoForm.find(
+                  {
+                    company: comId,
+                    quoHead: quoHeadId,
+                  },
+                  { company: 0 }
+                );
                 result.quoForms = quoForms;
                 console.log('The result of insert QuoForms', result); // Test Code
                 return result;
@@ -350,36 +363,152 @@ router.put('/quoform/:cNo/updatequoForm', authUser, async (req, res) => {
               });
           });
         } else {
-          const {
-            _id,
-            currency,
-            quoSizes,
-            quocWays,
-            cmpts,
-            mQuos,
-            otherExpenses,
-            fob,
-          } = req.body.form;
-          await QuoForm.updateOne(
-            { company: comId, _id: _id },
-            {
-              $set: {
-                currency: currency,
-                quoSizes: quoSizes,
-                quocWays: quocWays,
-                cmpts: cmpts,
-                mQuos: mQuos,
-                otherExpenses: otherExpenses,
-                fob: fob,
-              },
-            }
-          );
+          console.log('Over the number of quotation version');
+          return res
+            .status(400)
+            .json({ msg: 'Over the number of quotation version' });
         }
       } else {
-        console.log('Over the number of quotation version');
-        return res
-          .status(400)
-          .json({ msg: 'Over the number of quotation version' });
+        //@ define element
+        const { gQtys, sizes, cWays } = Cases;
+        const {
+          _id,
+          quoNo,
+          cm,
+          currency,
+          quoSizes,
+          quocWays,
+          mQuos,
+          otherExpenses,
+          useAsFinalQuotation,
+        } = req.body.form;
+
+        if (quoSizes.length === 0) {
+          console.log('No sizes selected for quotating');
+          return res.status(404).json({
+            msg: 'No sizes selected for quotating',
+          });
+        }
+
+        if (quocWays.length === 0) {
+          console.log('No colorways selected for quotating');
+          return res.status(404).json({
+            msg: 'No colorways selected for quotating',
+          });
+        }
+
+        //@ Get the quotatedQty
+        const quotatedQtyCounting = new Promise(async (resolve) => {
+          //Here the total gQtys means the sum of the quantity of the sizes and colors the user selexted, not the total quantity of the case
+          const quoSizesInId = quoSizes.map((size) => {
+            return sizes.find(({ gSize }) => gSize === size).id;
+          });
+          // console.log(quoSizesInId); // Test Code
+
+          const quocWaysInId = quocWays.map((cWay) => {
+            return cWays.find(({ gClr }) => gClr === cWay).id;
+          });
+          // console.log(quocWaysInId); // Test Code
+
+          const quotatedQty = gQtys.reduce((result, currentItem) => {
+            if (
+              quoSizesInId.includes(currentItem.size) &&
+              quocWaysInId.includes(currentItem.cWay)
+            ) {
+              result += currentItem.gQty;
+            }
+            return result;
+          }, 0);
+          resolve(quotatedQty);
+        });
+
+        const mQuosCounting = new Promise(async (resolve) => {
+          let num = 0;
+          let mQuosTotal = 0;
+          mQuos.map((mQuo) => {
+            num = num + 1;
+            mQuo.materialFinalQuotation = Number(
+              mQuo.mQuoAddvised * mQuo.csptAddvised
+            ).toFixed(2);
+          });
+          if (num === mQuos.length) {
+            mQuosTotal = mQuos.reduce((res, curr) => {
+              res = res + curr.materialFinalQuotation;
+              return res;
+            }, 0);
+            num = num + 1;
+            resolve(mQuosTotal);
+          }
+        });
+
+        const otherExpensesCounting = new Promise(async (resolve) => {
+          let otherExpensesTotal = 0;
+          if (otherExpenses.length === 0) {
+            resolve(otherExpensesTotal);
+          } else {
+            otherExpensesTotal = otherExpenses.reduce((res, curr) => {
+              res = res + curr.cost;
+              return res;
+            }, 0);
+            resolve(otherExpensesTotal);
+          }
+        });
+
+        Promise.all([quotatedQtyCounting, mQuosCounting, otherExpensesCounting])
+          .then(async (result) => {
+            const quotatedQty = result[0];
+            const mQuosTotal = result[1];
+            const otherExpensesTotal = result[2];
+            const FOB =
+              Number(cm) + Number(mQuosTotal) + Number(otherExpensesTotal);
+            console.log(cm, '-', mQuosTotal, '-', otherExpensesTotal);
+            await QuoForm.updateOne(
+              { company: comId, _id: _id, quoNo: quoNo },
+              {
+                $set: {
+                  quoSizes: quoSizes,
+                  quocWays: quocWays,
+                  currency: currency,
+                  quotatedQty: quotatedQty,
+                  cm: cm,
+                  mQuos: mQuos,
+                  mQuosTotal: mQuosTotal,
+                  otherExpenses: otherExpenses,
+                  otherExpensesTotal: otherExpensesTotal,
+                  fob: Number(FOB).toFixed(2),
+                  useAsFinalQuotation: useAsFinalQuotation,
+                },
+              }
+            );
+          })
+          .then(async () => {
+            const quoHead = await QuoHead.findOne(
+              { cNo: cNo, company: comId },
+              { _id: 0, versionNum: 1 }
+            );
+            let result = {
+              versionNum: quoHead.versionNum,
+              quoForms: [],
+            };
+            console.log('The result of the quoHead', result); // Test Code
+            return result;
+          })
+          .then(async (result) => {
+            const quoForms = await QuoForm.find(
+              {
+                company: comId,
+                quoHead: quoHeadId,
+              },
+              { company: 0 }
+            );
+            result.quoForms = quoForms;
+            console.log('The result of insert QuoForms', result); // Test Code
+            return result;
+          })
+          .then((result) => {
+            console.log('the result of generate new quoform', result); // Test Code
+            return res.json(result);
+          });
       }
     } else {
       console.log('No such quotation data');
@@ -411,6 +540,19 @@ router.put('/quotateadvise', authUser, async (req, res) => {
   const { quoNo, quoFormId, quoSizes, quocWays } = req.body;
   // console.log(quoNo); // Test Code
   // console.log(quoFormId); // Test Code
+  if (quoSizes.length === 0) {
+    console.log('No sizes selected for quotating');
+    return res.status(404).json({
+      msg: 'No sizes selected for quotating',
+    });
+  }
+
+  if (quocWays.length === 0) {
+    console.log('No colorways selected for quotating');
+    return res.status(404).json({
+      msg: 'No colorways selected for quotating',
+    });
+  }
 
   const quoForm = await QuoForm.findOne({
     company: comId,
@@ -744,6 +886,7 @@ router.put('/quotateadvise', authUser, async (req, res) => {
         .then(async (result) => {
           const AVGPrice = result[0][0].toFixed(2); //Rounding number in 2nd decimal place
           const AVGCSPT = result[0][1].toFixed(2);
+          const mtrlPrice = Number(AVGPrice * AVGCSPT).toFixed(2);
           console.log('The Promise all_2 AVGPrice ', AVGPrice); // Test Code
           console.log('The Promise all_2 AVGCSPT ', AVGCSPT); // Test Code
           await QuoForm.findOneAndUpdate(
@@ -756,8 +899,10 @@ router.put('/quotateadvise', authUser, async (req, res) => {
             // { $set: { 'quoForms.$.mQuos.mQuoAddvised': AVGPrice } }
             {
               $set: {
-                'mQuos.$.mQuoAddvised': AVGPrice,
-                'mQuos.$.csptAddvised': AVGCSPT,
+                quotatedQty: Number(totalgQty),
+                'mQuos.$.mQuoAddvised': Number(AVGPrice),
+                'mQuos.$.csptAddvised': Number(AVGCSPT),
+                'mQuos.$.materialFinalQuotation': Number(mtrlPrice),
               },
             }
           );
@@ -765,10 +910,59 @@ router.put('/quotateadvise', authUser, async (req, res) => {
         .then(async () => {
           mQuoNum = mQuoNum + 1;
           if (mQuoNum === mQuos.length) {
-            const quoForms = await QuoForm.find({
-              company: comId,
-              quoHead: quoHeadId,
-            });
+            const addUp = await QuoForm.aggregate([
+              {
+                $match: {
+                  quoNo: quoNo,
+                  _id: mongoose.Types.ObjectId(quoFormId),
+                  company: mongoose.Types.ObjectId(req.user.company),
+                },
+              },
+              {
+                $project: {
+                  cm: 1,
+                  mQuosAddUp: { $sum: '$mQuos.materialFinalQuotation' },
+                  otherExpensesAddUp: { $sum: '$otherExpenses.cost' },
+                },
+              },
+            ]);
+
+            const cm = addUp[0].cm;
+            const mQuosTotal = addUp[0].mQuosAddUp;
+            const otherExpensesTotal = addUp[0].otherExpensesAddUp;
+            const FOB =
+              Number(cm) + Number(mQuosTotal) + Number(otherExpensesTotal);
+            console.log(
+              'cm_',
+              cm,
+              'mQuosTotal_',
+              mQuosTotal,
+              'otherExpensesTotal_',
+              otherExpensesTotal,
+              'FOB_',
+              FOB
+            ); // Test Code
+
+            await QuoForm.updateOne(
+              {
+                company: comId,
+                quoHead: quoHeadId,
+              },
+              {
+                mQuosTotal: mQuosTotal,
+                otherExpensesTotal: otherExpensesTotal,
+                fob: Number(FOB).toFixed(2),
+              }
+            );
+
+            const quoForms = await QuoForm.find(
+              {
+                company: comId,
+                quoHead: quoHeadId,
+              },
+              { company: 0 }
+            );
+
             console.log('The Promise all_2 resolove '); // Test Code
             return resolve(quoForms);
           }

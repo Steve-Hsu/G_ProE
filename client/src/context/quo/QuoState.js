@@ -1,5 +1,6 @@
 import React, { useReducer } from 'react';
 import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
 import QuoContext from './quoContext';
 import QuoReducer from './quoReducer';
 
@@ -39,7 +40,23 @@ const QuoState = (props) => {
     currentQuoForm: null,
   };
   const [state, dispatch] = useReducer(QuoReducer, initialState);
-  const { quotateFor, isQuotating, openQuoForm, quotation } = state;
+  const {
+    quotateFor,
+    isQuotating,
+    openQuoForm,
+    quotation,
+    currentQuoForm,
+  } = state;
+
+  //@ Id for prevent uuid duplicated
+  const generateId = () => {
+    return (
+      //generate 22 digits string with number or character.
+      Math.random().toString(36).substring(2, 15) +
+      Math.random().toString(36).substring(2, 15)
+    );
+  };
+
   //@_action
   const getCaseList = async () => {
     const config = {
@@ -80,23 +97,17 @@ const QuoState = (props) => {
     }
   };
 
-  const uploadQuoForm = async (check, input, form) => {
+  const uploadQuoForm = async (cNo, isNewQuoForm, form) => {
     const upLoad = new Promise(async (resolve) => {
       const config = {
         headers: {
           'Content-Type': 'application/json',
         },
       };
-      let body = { isNewQuoForm: true };
-      if (input === false) {
-        body = {
-          isNewQuoForm: false,
-          form: form,
-        };
-      }
+      const body = { isNewQuoForm: isNewQuoForm, form: form };
 
       const res = await axios.put(
-        `/api/quogarment/quoform/${check}/updatequoForm`,
+        `/api/quogarment/quoform/${cNo}/uploadquoForm`,
         body,
         config
       );
@@ -119,6 +130,7 @@ const QuoState = (props) => {
   };
 
   const downLoadmtrlPrice = async (body) => {
+    const quoFormId = body.quoFormId;
     const config = {
       headers: {
         'Content-Type': 'application/json',
@@ -126,7 +138,12 @@ const QuoState = (props) => {
     };
 
     const res = await axios.put(`/api/quogarment/quotateadvise/`, body, config);
+
+    const quoForm = res.data.filter((i) => {
+      return i._id === quoFormId;
+    });
     dispatch({ type: QUOFORM_UPDATE, payload: res.data });
+    dispatch({ type: CURRETQUOFORM_UPDATE, payload: quoForm[0] });
   };
 
   const deleteQuoForm = async (body) => {
@@ -179,6 +196,36 @@ const QuoState = (props) => {
     dispatch({ type: CURRETQUOFORM_UPDATE, payload: quoForm });
   };
 
+  const updateCurrentQuoForm = (e) => {
+    const nameOfItem = e.target.name;
+    const value = e.target.value;
+    const quoForm = currentQuoForm;
+    switch (nameOfItem) {
+      case 'currency':
+        quoForm.currency = value;
+        break;
+      case 'cm':
+        quoForm.cm = value;
+        break;
+      case 'addOtherExpense':
+        quoForm.otherExpenses.push({
+          id: uuidv4() + generateId(),
+          costName: '',
+          costDescription: '',
+          cost: 0,
+        });
+        break;
+      case 'deleteOtherExpense':
+        quoForm.otherExpenses = quoForm.otherExpenses.filter((i) => {
+          return i.id !== value;
+        });
+        break;
+      default:
+    }
+
+    dispatch({ type: CURRETQUOFORM_UPDATE, payload: quoForm });
+  };
+
   return (
     <QuoContext.Provider
       value={{
@@ -199,6 +246,7 @@ const QuoState = (props) => {
         deletemQuo,
         updateQuoSize,
         updateQuocWay,
+        updateCurrentQuoForm,
       }}
     >
       {props.children}

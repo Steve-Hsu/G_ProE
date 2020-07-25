@@ -6,6 +6,7 @@ import DeletePopover from '../layout/DeletePopover';
 import SizeSelector from './40_03_01_sizeSelector';
 import CWaySelector from './40_03_02_cWaySelector';
 import QuoMtrl from './40_03_03_quoMtrl';
+import QuoOtherEx from './40_03_04_quoOtherEx';
 const QuoForm = () => {
   const quoContext = useContext(QuoContext);
   const caseContext = useContext(CaseContext);
@@ -15,6 +16,9 @@ const QuoForm = () => {
     downLoadmtrlPrice,
     currentQuoForm,
     quotateFor,
+    uploadQuoForm,
+    isQuotating,
+    updateCurrentQuoForm,
   } = quoContext;
   const {
     _id,
@@ -22,9 +26,10 @@ const QuoForm = () => {
     quoSizes,
     quocWays,
     currency,
-    cmpts,
     mQuos,
+    mQuosTotal,
     otherExpenses,
+    cm,
     fob,
   } = currentQuoForm;
 
@@ -40,7 +45,20 @@ const QuoForm = () => {
     defaultCase,
   } = caseContext;
   const { popover, current } = popoverContext;
-  const onSubmitQuoForm = () => {};
+  const onSubmitQuoForm = (e) => {
+    console.log('here triggered');
+    e.preventDefault();
+    // uploadQuoForm(isQuotating, true);
+
+    uploadQuoForm(isQuotating, false, currentQuoForm).then((result) => {
+      console.log('QuoForm is updated');
+    });
+  };
+
+  const onChange = (e) => {
+    e.preventDefault();
+    updateCurrentQuoForm(e);
+  };
 
   const onClick = (e) => {
     e.preventDefault();
@@ -56,6 +74,10 @@ const QuoForm = () => {
           quocWays: quocWays,
         };
         downLoadmtrlPrice(body);
+        break;
+      case 'addOtherExpense':
+        updateCurrentQuoForm(e);
+        break;
       default:
     }
   };
@@ -73,14 +95,33 @@ const QuoForm = () => {
           <div>{caseType}</div>
           <div>{style}</div>
           <div>{client}</div>
-          <div>Color Ways : Total {cWays.length} Color Ways</div>
-          {cWays.map((cWay) => {
-            return <span key={cWay.id}>{cWay.gClr}, </span>;
-          })}
+          <div>Quotation currency</div>
+          <input
+            type='text'
+            name='currency'
+            onChange={onChange}
+            id={_id}
+            value={currency || ''}
+          />
           <div>Sizes : Total {sizes.length} sizes</div>
+          <div>Quotated Sizes</div>
           <SizeSelector sizes={sizes} />
+
+          <div>Color Ways : Total {cWays.length} Color Ways</div>
+          <div>Quotated colorWays</div>
           <CWaySelector cWays={cWays} />
           <div>
+            <div>CM</div>
+            <input
+              type='number'
+              step='.01'
+              name='cm'
+              onChange={onChange}
+              id={_id}
+              min='0'
+              max='99999'
+              value={cm || ''}
+            />
             <button name='quotationBtn' value={_id} onClick={onClick}>
               Quotate
             </button>
@@ -88,7 +129,15 @@ const QuoForm = () => {
           {mtrls.map((mtrl) => (
             <QuoMtrl key={`quoMtrl${mtrl.id}`} mtrl={mtrl} />
           ))}
-          <div>What?</div>
+          <div>{`Subtotal of material : ${mQuosTotal}`}</div>
+          <button name='addOtherExpense' onClick={onClick}>
+            Add other expense
+          </button>
+          {otherExpenses.length === 0
+            ? null
+            : otherExpenses.map((oE) => (
+                <QuoOtherEx key={`otherExpense${oE.id}`} otherExpense={oE} />
+              ))}
         </form>
       </div>
     </Fragment>

@@ -9,7 +9,7 @@ const LeftBar = ({ currentPath }) => {
   const casesContext = useContext(CasesContext);
   const quoContext = useContext(QuoContext);
   const { mtrls, cNo, addcWay, addSize, addMtrl, clearcNo } = casesContext;
-  const { isQuotating, quotateFor, currentQuoForm } = quoContext;
+  const { isQuotating, quotateFor, openQuoForm } = quoContext;
 
   //@ Define the current page for passing to searchBar
   let currentPage = '';
@@ -59,16 +59,34 @@ const LeftBar = ({ currentPath }) => {
             label: 'Update material quotation',
             form: 'srMtrlForm',
           };
-        } else if (quotateFor === 'garment' && isQuotating !== null) {
-          obj = {
-            label: 'Add new quotation',
-            form: 'addNewQuoForm',
-          };
-        } else if (quotateFor === 'garment ' && currentQuoForm !== null)
-          obj = {
-            lable: 'Uploadp the Quotation',
-            form: 'quoForm',
-          };
+        } else if (quotateFor === 'garment') {
+          if (isQuotating !== null && openQuoForm === null) {
+            obj = {
+              label: 'Add new quotation',
+              form: 'addNewQuoForm',
+            };
+          } else if (isQuotating !== null && openQuoForm !== null) {
+            obj = {
+              label: 'Uploadp the Quotation',
+              form: 'quoForm',
+            };
+          }
+        }
+        // if (quotateFor === 'material') {
+        //   obj = {
+        //     label: 'Update material quotation',
+        //     form: 'srMtrlForm',
+        //   };
+        // } else if (quotateFor === 'garment' && isQuotating !== null) {
+        //   obj = {
+        //     label: 'Add new quotation',
+        //     form: 'addNewQuoForm',
+        //   };
+        // } else if (quotateFor === 'garment ' && openQuoForm !== null)
+        //   obj = {
+        //     lable: 'Uploadp the Quotation',
+        //     form: 'quoForm',
+        //   };
         break;
       default:
     }

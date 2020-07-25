@@ -27,17 +27,40 @@ const QuoFormSchema = mongoose.Schema({
   quocWays: {
     type: Array,
   },
-  cmpts: {
-    type: Array,
+  quotatedQty: {
+    type: Number,
   },
-  mQuos: {
-    type: Array,
+  cm: {
+    type: Number,
   },
-  otherExenses: {
-    type: Array,
+  mQuos: [
+    {
+      mtrlId: String,
+      mQuoAddvised: Number,
+      csptAddvised: Number,
+      materialFinalQuotation: Number,
+    },
+  ],
+  mQuosTotal: {
+    type: Number,
+  },
+  otherExpenses: [
+    {
+      _id: false, // to prevent mess up and the object is generated from client so don't generate duplicated _id
+      id: String,
+      costName: String,
+      costDescription: String,
+      cost: Number,
+    },
+  ],
+  otherExpensesTotal: {
+    type: Number,
   },
   fob: {
     type: Number,
+  },
+  useAsFinalQuotation: {
+    type: Boolean,
   },
   date: {
     type: Date,
