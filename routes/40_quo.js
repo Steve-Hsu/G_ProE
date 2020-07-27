@@ -433,24 +433,27 @@ router.put('/quoform/:cNo/uploadquoForm', authUser, async (req, res) => {
           });
           if (num === mQuos.length) {
             mQuosTotal = mQuos.reduce((res, curr) => {
-              res = res + curr.materialFinalQuotation;
+              res = res + Number(curr.materialFinalQuotation);
               return res;
             }, 0);
-            num = num + 1;
             resolve(mQuosTotal);
           }
         });
 
         const otherExpensesCounting = new Promise(async (resolve) => {
+          let num = 0;
           let otherExpensesTotal = 0;
           if (otherExpenses.length === 0) {
             resolve(otherExpensesTotal);
           } else {
             otherExpensesTotal = otherExpenses.reduce((res, curr) => {
-              res = res + curr.cost;
+              num = num + 1;
+              res = res + Number(curr.cost);
               return res;
             }, 0);
-            resolve(otherExpensesTotal);
+            if (num === otherExpenses.length) {
+              resolve(otherExpensesTotal);
+            }
           }
         });
 

@@ -14,28 +14,17 @@ const MPrice = ({ mPrice, srMtrl, currentPath }) => {
   const srMtrlId = srMtrl._id;
 
   const mPriceList = () => {
-    let arr = [];
+    let arr = [
+      'mColor',
+      'sizeSPEC',
+      'unit',
+      'currency',
+      'moq',
+      'moqPrice',
+      'mPrice',
+    ];
     if (currentPath === '/api/quogarment') {
-      arr = [
-        'mColor',
-        'sizeSPEC',
-        'unit',
-        'currency',
-        'moq',
-        'moqPrice',
-        'mPrice',
-        'quotation',
-      ];
-    } else {
-      arr = [
-        'mColor',
-        'sizeSPEC',
-        'unit',
-        'currency',
-        'moq',
-        'moqPrice',
-        'mPrice',
-      ];
+      arr.push('quotation');
     }
     return arr;
   };
@@ -118,19 +107,21 @@ const MPrice = ({ mPrice, srMtrl, currentPath }) => {
 
   // update the select when donwload
   const loadSelectUnitTagIndex = () => {
-    document
-      .getElementById(`option${mPrice.mColor}mColor${mPrice.id}`)
-      .removeAttribute('selected');
-    document
-      .getElementById(`option${mPrice.mColor}mColor${mPrice.id}`)
-      .setAttribute('selected', 'selected');
+    if (currentPath !== '/api/quogarment') {
+      document
+        .getElementById(`option${mPrice.mColor}mColor${mPrice.id}`)
+        .removeAttribute('selected');
+      document
+        .getElementById(`option${mPrice.mColor}mColor${mPrice.id}`)
+        .setAttribute('selected', 'selected');
 
-    document
-      .getElementById(`option${mPrice.sizeSPEC}sizeSPEC${mPrice.id}`)
-      .removeAttribute('selected');
-    document
-      .getElementById(`option${mPrice.sizeSPEC}sizeSPEC${mPrice.id}`)
-      .setAttribute('selected', 'selected');
+      document
+        .getElementById(`option${mPrice.sizeSPEC}sizeSPEC${mPrice.id}`)
+        .removeAttribute('selected');
+      document
+        .getElementById(`option${mPrice.sizeSPEC}sizeSPEC${mPrice.id}`)
+        .setAttribute('selected', 'selected');
+    }
   };
 
   //@ Style
@@ -144,80 +135,115 @@ const MPrice = ({ mPrice, srMtrl, currentPath }) => {
     <div className='card'>
       <div className='grid-4'>
         {mPriceList().map((m) => {
-          switch (m) {
-            case 'mColor':
-            case 'sizeSPEC':
-              return (
-                <div key={`${m}${mPrice.id}`}>
-                  <select
-                    id={`${m}${mPrice.id}`}
-                    name={mPrice.id}
-                    list={m}
-                    placeholder='Unit'
-                    onChange={onChange}
-                    default='yd'
-                    className='select-primary-sub'
-                  >
-                    {selectList(m).map((o) => {
-                      // if (o === '') {
-                      //   o === 'NoValue';
-                      // }
-                      return (
-                        <option
-                          key={`option${o}${m}${mPrice.id}`}
-                          id={`option${o}${m}${mPrice.id}`}
-                          value={o}
-                        >
-                          {o}
-                        </option>
-                      );
-                    })}
-                  </select>
-                </div>
-              );
-            case 'unit':
-            case 'currency':
-              return (
-                <div key={`${m}${mPrice.id}`}>
-                  <input
-                    type='text'
-                    id={`${m}${mPrice.id}`}
-                    name={mPrice.id}
-                    placeholder='.'
-                    onChange={onChange}
-                    className='MPH-input'
-                    value={mPrice[`${m}`] || ''}
-                  />
-                  <label
-                    htmlFor={`${m}${mPrice.id}`}
-                    className='MPH-input-label'
-                  >
-                    {labels(m)}
-                  </label>
-                </div>
-              );
-            default:
-              return (
-                <div key={`${m}${mPrice.id}`}>
-                  <input
-                    type='number'
-                    id={`${m}${mPrice.id}`}
-                    name={mPrice.id}
-                    placeholder='.'
-                    onChange={onChange}
-                    className='MPH-input'
-                    value={mPrice[`${m}`] || ''}
-                  />
-                  <label
-                    htmlFor={`${m}${mPrice.id}`}
-                    className='MPH-input-label'
-                  >
-                    {labels(m)}
-                  </label>
-                </div>
-              );
+          if (currentPath === '/api/quogarment') {
+            switch (m) {
+              case 'quotation':
+                return (
+                  <div key={`${m}${mPrice.id}`}>
+                    <input
+                      type='number'
+                      id={`${m}${mPrice.id}`}
+                      name={mPrice.id}
+                      placeholder='.'
+                      onChange={onChange}
+                      className='MPH-input'
+                      value={mPrice[`${m}`] || ''}
+                    />
+                    <label
+                      htmlFor={`${m}${mPrice.id}`}
+                      className='MPH-input-label'
+                    >
+                      {labels(m)}
+                    </label>
+                  </div>
+                );
+              default:
+                return (
+                  <div key={`${m}${mPrice.id}`}>
+                    <label htmlFor={`${m}${mPrice.id}`} className='label'>
+                      {labels(m)}
+                    </label>
+                    <div className='lead'>{mPrice[`${m}`]}</div>
+                  </div>
+                );
+            }
+          } else {
+            switch (m) {
+              case 'mColor':
+              case 'sizeSPEC':
+                return (
+                  <div key={`${m}${mPrice.id}`}>
+                    <select
+                      id={`${m}${mPrice.id}`}
+                      name={mPrice.id}
+                      list={m}
+                      placeholder='Unit'
+                      onChange={onChange}
+                      default='yd'
+                      className='select-primary-sub'
+                    >
+                      {selectList(m).map((o) => {
+                        // if (o === '') {
+                        //   o === 'NoValue';
+                        // }
+                        return (
+                          <option
+                            key={`option${o}${m}${mPrice.id}`}
+                            id={`option${o}${m}${mPrice.id}`}
+                            value={o}
+                          >
+                            {o}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </div>
+                );
+              case 'unit':
+              case 'currency':
+                return (
+                  <div key={`${m}${mPrice.id}`}>
+                    <input
+                      type='text'
+                      id={`${m}${mPrice.id}`}
+                      name={mPrice.id}
+                      placeholder='.'
+                      onChange={onChange}
+                      className='MPH-input'
+                      value={mPrice[`${m}`] || ''}
+                    />
+                    <label
+                      htmlFor={`${m}${mPrice.id}`}
+                      className='MPH-input-label'
+                    >
+                      {labels(m)}
+                    </label>
+                  </div>
+                );
+              default:
+                return (
+                  <div key={`${m}${mPrice.id}`}>
+                    <input
+                      type='number'
+                      id={`${m}${mPrice.id}`}
+                      name={mPrice.id}
+                      placeholder='.'
+                      onChange={onChange}
+                      className='MPH-input'
+                      value={mPrice[`${m}`] || ''}
+                    />
+                    <label
+                      htmlFor={`${m}${mPrice.id}`}
+                      className='MPH-input-label'
+                    >
+                      {labels(m)}
+                    </label>
+                  </div>
+                );
+            }
           }
         })}
+
         {currentPath === '/api/case/mprice' ? (
           <div>
             <button

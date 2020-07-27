@@ -69,7 +69,6 @@ const QuoMtrl = ({ mtrl }) => {
           onChange={onChange}
         />
       </div>
-      <div>{materialFinalQuotation}</div>
 
       {/* {mtrl.map((label) => (
             <div key={`QuoListItem${label}${listItem.cNo}`}>

@@ -30,6 +30,7 @@ const QuoForm = () => {
     mQuosTotal,
     otherExpenses,
     cm,
+    otherExpensesTotal,
     fob,
   } = currentQuoForm;
 
@@ -138,6 +139,8 @@ const QuoForm = () => {
             : otherExpenses.map((oE) => (
                 <QuoOtherEx key={`otherExpense${oE.id}`} otherExpense={oE} />
               ))}
+          <div>{`Subtotal of material : ${otherExpensesTotal}`}</div>
+          <div>{`FOB : ${fob}`}</div>
         </form>
       </div>
     </Fragment>
