@@ -11,7 +11,7 @@ const Case = require('../models/20_Case');
 // @access  Private
 router.post('/', authUser, async (req, res) => {
   // Extract the value of the variable "query" in the form body
-  const companyId = req.body.companyId;
+  const companyId = req.user.company;
   const searchKeyword = req.body.query;
   try {
     // This query you may check : https://stackoverflow.com/questions/26814456/how-to-get-all-the-values-that-contains-part-of-a-string-using-mongoose-find

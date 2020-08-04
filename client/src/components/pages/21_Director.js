@@ -14,10 +14,12 @@ export const Director = (props) => {
     //Jump to other page while keeping authenticated
     props.history.push('/api/quogarment');
   };
-  const goAR = () => {
+
+  const goPurchase = () => {
     //Jump to other page while keeping authenticated
-    props.history.push('/api/case/user/ar');
+    props.history.push('/api/purchase');
   };
+
   const goProgress = () => {
     //Jump to other page while keeping authenticated
     props.history.push('/api/case/user/progress');
@@ -46,9 +48,9 @@ export const Director = (props) => {
           </a>
         </div>
         <div>
-          <a onClick={goAR} className='cursor'>
+          <a onClick={goPurchase} className='cursor'>
             <i className='fas fa-sign-out-alt'></i>{' '}
-            <span className='hide-lg'>A/R Accounts receivable</span>
+            <span className='hide-lg'>Purchase</span>
           </a>
         </div>
         <div>

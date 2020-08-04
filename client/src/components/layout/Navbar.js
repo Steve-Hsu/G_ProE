@@ -8,6 +8,7 @@ import SearchBarContext from '../../context/searchBar/searchBarContext';
 import CasesContext from '../../context/cases/casesContext';
 import SrMtrlContext from '../../context/srMtrl/srMtrlContext';
 import PopoverContext from '../../context/popover/popoverContext';
+import PurContext from '../../context/pur/purContext';
 
 const Navbar = ({ title, icon }) => {
   const authComContext = useContext(AuthComContext);
@@ -17,6 +18,7 @@ const Navbar = ({ title, icon }) => {
   const casesContext = useContext(CasesContext);
   const srMtrlContext = useContext(SrMtrlContext);
   const popoverContext = useContext(PopoverContext);
+  const purContext = useContext(PurContext);
 
   // Destructure
   const acom = authComContext;
@@ -26,6 +28,7 @@ const Navbar = ({ title, icon }) => {
   const c = casesContext;
   const sm = srMtrlContext;
   const p = popoverContext;
+  const pur = purContext;
 
   useEffect(() => {
     if (c.isUpdated && sm.isUpdated) {
@@ -42,13 +45,7 @@ const Navbar = ({ title, icon }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sm.isUpdated]);
 
-  const onLogoutCom = () => {
-    au.logoutUser();
-    acom.logoutCom();
-    u.clearUsers();
-  };
-
-  const onLogoutUser = () => {
+  const onLogout = () => {
     acom.logoutCom();
     au.logoutUser();
     s.toggleIndexList();
@@ -56,13 +53,14 @@ const Navbar = ({ title, icon }) => {
     u.clearUsers();
     sm.clearSrMtrl();
     p.defaultPopover();
+    pur.defaultPurState();
   };
 
   const authComLinks = (
     <Fragment>
       <li>Hello ! {acom.company && acom.company.comName.toUpperCase()}</li>
       <li>
-        <a onClick={onLogoutCom} href='#!'>
+        <a onClick={onLogout} href='#!'>
           <i className='fas fa-sign-out-alt'></i>{' '}
           <span className='hide-sm'>Logout</span>
         </a>
@@ -76,7 +74,7 @@ const Navbar = ({ title, icon }) => {
         Hello ! {au.name && au.name.charAt(0).toUpperCase() + au.name.slice(1)}
       </li>
       <li>
-        <a onClick={onLogoutUser} href='#!'>
+        <a onClick={onLogout} href='#!'>
           <i className='fas fa-sign-out-alt'></i>{' '}
           <span className='hide-sm'>Logout</span>
         </a>

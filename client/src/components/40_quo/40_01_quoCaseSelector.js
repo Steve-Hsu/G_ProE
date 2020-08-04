@@ -4,7 +4,7 @@ import QuoContext from '../../context/quo/quoContext';
 //@ Child component
 import QuoList from './40_01_01_quoList';
 
-const MPriceForm = () => {
+const QuoCaseSelector = () => {
   const srMtrlContext = useContext(SrMtrlContext);
   const quoContext = useContext(QuoContext);
   const { srMtrls, getSrMtrls, updateMPrices } = srMtrlContext;
@@ -37,4 +37,4 @@ const MPriceForm = () => {
   );
 };
 
-export default MPriceForm;
+export default QuoCaseSelector;

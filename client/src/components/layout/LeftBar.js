@@ -20,8 +20,11 @@ const LeftBar = ({ currentPath }) => {
     case '/api/case/mprice':
       currentPage = 'mprice';
       break;
-    case '/api/case/quogarment':
+    case '/api/quogarment':
       currentPage = 'quotation';
+      break;
+    case '/api/purchase':
+      currentPage = 'purchase';
     default:
   }
 
@@ -72,21 +75,12 @@ const LeftBar = ({ currentPath }) => {
             };
           }
         }
-        // if (quotateFor === 'material') {
-        //   obj = {
-        //     label: 'Update material quotation',
-        //     form: 'srMtrlForm',
-        //   };
-        // } else if (quotateFor === 'garment' && isQuotating !== null) {
-        //   obj = {
-        //     label: 'Add new quotation',
-        //     form: 'addNewQuoForm',
-        //   };
-        // } else if (quotateFor === 'garment ' && openQuoForm !== null)
-        //   obj = {
-        //     lable: 'Uploadp the Quotation',
-        //     form: 'quoForm',
-        //   };
+        break;
+      case '/api/purchase':
+        obj = {
+          label: 'Create Order Summary',
+          form: 'purchase',
+        };
         break;
       default:
     }

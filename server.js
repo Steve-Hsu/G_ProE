@@ -42,6 +42,10 @@ app.use('/api/srmtrl', require('./routes/30_srMtrl'));
 app.use('/api/srmtrl/query', require('./routes/31_querySrMtrl'));
 // Quotations
 app.use('/api/quogarment', require('./routes/40_quo'));
+// Purchase
+app.use('/api/purchase', require('./routes/50_pur'));
+// Query cases of Purchase
+app.use('/api/purchase/query', require('./routes/51_queryPur'));
 
 const PORT = process.env.PORT || 5000;
 

@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
-import AuthUserContext from '../../context/authUser/authUserContext';
 import SearchBarContext from '../../context/searchBar/searchBarContext';
 import SearchBarListItem from './SearchBarListItem';
+import PurContext from '../../context/pur/purContext';
 
 const SearchBar = ({ currentPage }) => {
-  const authUserContext = useContext(AuthUserContext);
   const searchBarContext = useContext(SearchBarContext);
-  const { company } = authUserContext;
+  const purContext = useContext(PurContext);
+
   const {
     isQuery,
     indexList,
@@ -15,6 +15,8 @@ const SearchBar = ({ currentPage }) => {
     toggleIndexList,
   } = searchBarContext;
 
+  const { searchCaseList } = purContext;
+
   const onSubmit = (e) => {
     e.preventDefault();
 
@@ -22,9 +24,6 @@ const SearchBar = ({ currentPage }) => {
     if (String(e.target.value).length > 1) {
       // Without body-parser, Here make a fake body object manually
       const body = {
-        companyId: company,
-        // The two line follows here, L1 for input with form, triggered with submit, L2 triggered with onKeyUp event.
-        // query: e.target.query.value, // L1
         query: e.target.value, // L2
       };
       switch (currentPage) {
@@ -33,6 +32,10 @@ const SearchBar = ({ currentPage }) => {
           break;
         case 'mprice':
           searchSrMtrlIndex(body);
+          break;
+        case 'purchase':
+          searchCaseList(body);
+          break;
         default:
       }
     }
@@ -44,19 +47,13 @@ const SearchBar = ({ currentPage }) => {
     }
   };
   return (
-    <form
-      // name='queryForm' // L1
-      // id={company} // L1
-      // onKeyUp={onSubmit} // L1
-      // onSubmit={onSubmit} // L1
-      style={{ background: 'red', width: '100%' }}
-    >
+    <form style={{ background: 'red', width: '100%' }}>
       {/* L1 */}
       {/* <input type='text' name='query' onChange={onChange} /> */}
       {/* L2 */}
       <div>Search</div>
       <input
-        id={company}
+        id='searchbar'
         type='text'
         name='queryForm'
         onChange={onChange}

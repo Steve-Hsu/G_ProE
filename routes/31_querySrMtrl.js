@@ -12,7 +12,7 @@ const SRMtrl = require('../models/30_srMtrl');
 // @desc    Query the srMtrl
 // @access  Private
 router.post('/', authUser, async (req, res) => {
-  const companyId = req.body.companyId;
+  const companyId = req.user.company;
   const searchKeyword = req.body.query;
 
   //@1 Search supplir

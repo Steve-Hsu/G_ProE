@@ -11,6 +11,7 @@ import Director from './components/pages/21_Director';
 import CaseMerchandiser from './components/pages/22_CaseMerchandiser';
 import MPrice from './components/pages/31_MPrice';
 import Quotation from './components/pages/41_Quotation';
+import Purchase from './components/pages/51_Purchase';
 //ComRouter
 import ComLogin from './components/authPage/10_ComLogin';
 import UserLogin from './components/authPage/20_UserLogin';
@@ -32,6 +33,7 @@ import CasesState from './context/cases/CasesState';
 import SearchBarState from './context/searchBar/SearchBarState';
 import SrMtrlState from './context/srMtrl/SrMtrlState';
 import QuoState from './context/quo/QuoState';
+import PurState from './context/pur/PurState';
 
 //Global Header for token
 import setAuthToken from './utils/setAuthToken';
@@ -52,64 +54,70 @@ const App = () => {
                 <SearchBarState>
                   <SrMtrlState>
                     <QuoState>
-                      <PopoverState>
-                        <Router>
-                          <Fragment>
-                            <Navbar />
-                            <div>
-                              <Switch>
-                                <Route
-                                  exact
-                                  path='/registercom'
-                                  component={ComRegister}
-                                />
-                                <Route
-                                  exact
-                                  path='/registercom/manager'
-                                  component={ComManager}
-                                />
-                                {/* LoginPages */}
-                                <Route
-                                  exact
-                                  path='/api/auth/company'
-                                  component={ComLogin}
-                                />
-                                <Route
-                                  exact
-                                  path='/api/auth/user'
-                                  component={UserLogin}
-                                />
-                                {/* <PrivateRoute */}
-                                <PrivateComRoute
-                                  exact
-                                  path='/api/users'
-                                  component={UserManager}
-                                />
-                                <PrivateUserRoute
-                                  exact
-                                  path='/api/case/director'
-                                  component={Director}
-                                />
-                                <PrivateUserRoute
-                                  exact
-                                  path='/api/case/merchandiser'
-                                  component={CaseMerchandiser}
-                                />
-                                <PrivateUserRoute
-                                  path='/api/case/mprice'
-                                  component={MPrice}
-                                />
-                                <PrivateUserRoute
-                                  path='/api/quogarment'
-                                  component={Quotation}
-                                />
-                                {/* This NotFound return a page when the previous page is not found. */}
-                                <Route component={NotFound} />
-                              </Switch>
-                            </div>
-                          </Fragment>
-                        </Router>
-                      </PopoverState>
+                      <PurState>
+                        <PopoverState>
+                          <Router>
+                            <Fragment>
+                              <Navbar />
+                              <div>
+                                <Switch>
+                                  <Route
+                                    exact
+                                    path='/registercom'
+                                    component={ComRegister}
+                                  />
+                                  <Route
+                                    exact
+                                    path='/registercom/manager'
+                                    component={ComManager}
+                                  />
+                                  {/* LoginPages */}
+                                  <Route
+                                    exact
+                                    path='/api/auth/company'
+                                    component={ComLogin}
+                                  />
+                                  <Route
+                                    exact
+                                    path='/api/auth/user'
+                                    component={UserLogin}
+                                  />
+                                  {/* <PrivateRoute */}
+                                  <PrivateComRoute
+                                    exact
+                                    path='/api/users'
+                                    component={UserManager}
+                                  />
+                                  <PrivateUserRoute
+                                    exact
+                                    path='/api/case/director'
+                                    component={Director}
+                                  />
+                                  <PrivateUserRoute
+                                    exact
+                                    path='/api/case/merchandiser'
+                                    component={CaseMerchandiser}
+                                  />
+                                  <PrivateUserRoute
+                                    path='/api/case/mprice'
+                                    component={MPrice}
+                                  />
+                                  <PrivateUserRoute
+                                    path='/api/quogarment'
+                                    component={Quotation}
+                                  />
+                                  <PrivateUserRoute
+                                    path='/api/purchase'
+                                    component={Purchase}
+                                  />
+                                  {/* This NotFound return a page when the previous page is not found. */}
+                                  <Route component={NotFound} />
+                                </Switch>
+                              </div>
+                            </Fragment>
+                          </Router>
+                        </PopoverState>
+                      </PurState>
                     </QuoState>
                   </SrMtrlState>
                 </SearchBarState>
