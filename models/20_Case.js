@@ -67,6 +67,8 @@ const CaseSchema = mongoose.Schema({
   },
   poDate: {
     // The date, all the PO related to this case are completed.
+    type: Date,
+    default: null,
   },
 });
 

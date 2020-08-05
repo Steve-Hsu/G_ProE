@@ -4,16 +4,25 @@ import { v4 as uuidv4 } from 'uuid';
 import PurContext from './purContext';
 import PurReducer from './purReducer';
 
-import { CASE_LIST_DOWNLOAD, SELECTEDCASES_UPDATE, DEFAULT } from '../types';
+import {
+  CASE_LIST_DOWNLOAD,
+  SELECTEDCASES_UPDATE,
+  DEFAULT,
+  PURPAGE_SWITCH,
+  OS_LIST_DOWNLOAD,
+  OS_CURRENT,
+} from '../types';
 
 const PurState = (props) => {
   const initialState = {
-    poList: [],
+    osList: [],
     caseList: [],
     selectedCases: [],
+    openPage: null,
+    currentOrderSummary: null,
   };
   const [state, dispatch] = useReducer(PurReducer, initialState);
-  const { poList, caseList } = state;
+  const { caseList, openPage, currentOrderSummary } = state;
   //@_action
   const getCaseList = async () => {
     const res = await axios.get('/api/purchase');
@@ -77,17 +86,44 @@ const PurState = (props) => {
     dispatch({ type: DEFAULT });
   };
 
+  const switchPage = (value) => {
+    if (value) {
+      dispatch({ type: PURPAGE_SWITCH, payload: value });
+    } else {
+      dispatch({ type: PURPAGE_SWITCH, payload: null });
+    }
+  };
+
+  const getOsList = async () => {
+    const res = await axios.get('/api/purchase/ordersummary');
+    console.log('download succeed!');
+    dispatch({ type: OS_LIST_DOWNLOAD, payload: res.data });
+  };
+
+  const switchOsCurrent = (osItem) => {
+    if (currentOrderSummary === null) {
+      dispatch({ type: OS_CURRENT, payload: osItem });
+    } else {
+      dispatch({ type: OS_CURRENT, payload: null });
+    }
+  };
+
   return (
     <PurContext.Provider
       value={{
-        poList: state.poList,
+        osList: state.osList,
         caseList: state.caseList,
         selectedCases: state.selectedCases,
+        openPage: state.openPage,
+        currentOrderSummary: state.currentOrderSummary,
         getCaseList,
         searchCaseList,
         selectCase,
         createOrderSummary,
         defaultPurState,
+        switchPage,
+        getOsList,
+        switchOsCurrent,
       }}
     >
       {props.children}

@@ -23,7 +23,10 @@ router.get('/', authUser, async (req, res) => {
   }
   let caseList = await Case.aggregate([
     {
-      $match: { company: mongoose.Types.ObjectId(req.user.company) },
+      $match: {
+        company: mongoose.Types.ObjectId(req.user.company),
+        poDate: null,
+      },
     },
     {
       $project: {
@@ -70,6 +73,23 @@ router.get('/', authUser, async (req, res) => {
   }
 });
 
+// @route   GET api/purchase/ordersummary
+// @desc    Read the compnay's srMtrl from database
+// @access  Private
+router.get('/ordersummary', authUser, async (req, res) => {
+  let user = await User.findById(req.user.id);
+  if (!user.po) {
+    return res.status(400).json({ msg: 'Out of authority' });
+  }
+  const comId = req.user.company;
+  let osList = await OS.find({ company: comId }, { company: 0 });
+  if (osList.length === 0) {
+    return res.status(400).json({ msg: 'No order summary found' });
+  } else {
+    return res.json(osList);
+  }
+});
+
 // @route   post api/purchase
 // @desc    generate order summary by the list of case's Id, then generate purchases orders seperated by suppliers.
 // @access  Private
@@ -94,7 +114,7 @@ router.post('/', authUser, async (req, res) => {
   const oss = await OS.find({
     $and: [
       { company: comId },
-      { osNo: { $regex: comSymbol + twoDigitYear + 'OS', $options: 'i' } }, // Query the same cases in same year by cNo, It promises return cases of same company in same year
+      { osNo: { $regex: comSymbol + twoDigitYear + 'POS', $options: 'i' } }, // Query the same cases in same year by cNo, It promises return cases of same company in same year
     ],
   }).sort({
     date: -1,
@@ -116,7 +136,7 @@ router.post('/', authUser, async (req, res) => {
 
   // Create new Os number
   let newOsNumber = osNumber.toString().split(',').join('');
-  const newOsNO = comSymbol + twoDigitYear + 'OS' + '_' + newOsNumber;
+  const newOsNO = comSymbol + twoDigitYear + 'POS' + '_' + newOsNumber;
 
   //@ Define the elements for OS -------------------------------------------------
   let cNoList = [];
@@ -131,11 +151,18 @@ router.post('/', authUser, async (req, res) => {
     caseIds.map(async (item) => {
       let mtrlNum = 0;
       const caseId = item;
-      const theCase = await Case.findOne({ _id: caseId, company: comId });
+      const theCase = await Case.findOne({
+        _id: caseId,
+        company: comId,
+        poDate: null,
+      });
       if (!theCase) {
-        console.log("Can't find one of the Case");
+        console.log(
+          "One of case dosen't exist or has being purchased by other order summary"
+        );
         return res.status(404).json({
-          msg: "The case dosen't exist",
+          msg:
+            "One of case dosen't exist or has being purchased by other order summary",
         });
       }
 
@@ -176,7 +203,7 @@ router.post('/', authUser, async (req, res) => {
             return true;
           });
 
-          console.log('The existingCaseMtrl', existCaseMtrl); // Test Code
+          // console.log('The existingCaseMtrl', existCaseMtrl); // Test Code
 
           if (existCaseMtrl.length === 0) {
             if (!supplierList.includes(supplier)) {
@@ -223,20 +250,39 @@ router.post('/', authUser, async (req, res) => {
   });
 
   //@ Create an Order Summary to OS collection -------------------------------------------------
-  Promise.all([insertCaseMtrls]).then(() => {
-    const orderSummary = new OS({
-      company: comId,
-      osNo: newOsNO,
-      caseIds: caseIds,
-      cNos: cNoList,
-      clients: clientList,
-      suppliers: supplierList,
-      caseMtrls: caseMtrls,
-    });
+  Promise.all([insertCaseMtrls])
+    .then(() => {
+      const orderSummary = new OS({
+        company: comId,
+        osNo: newOsNO,
+        caseIds: caseIds,
+        cNos: cNoList,
+        clients: clientList,
+        suppliers: supplierList,
+        caseMtrls: caseMtrls,
+      });
 
-    orderSummary.save();
-    console.log('The order summary is generated');
-  });
+      orderSummary.save();
+      console.log('The order summary is generated');
+    })
+    .then(async () => {
+      caseIds.map(async (caseId) => {
+        await Case.updateOne(
+          { company: comId, _id: caseId },
+          { $currentDate: { poDate: Date } }
+        );
+      });
+    })
+    .then(async () => {
+      const result = await OS.findOne(
+        { company: comId, osNo: newOsNO },
+        { company: 0 }
+      );
+      return res.json(result);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 
   //@ Loop through the cases and lock up all these cases, preventing merchandisor updating anything.
   //The price refs to srMtrl, and since other case, which not be put into order summary may still use same srMtrl, so we can't and no necessary to lock up the srMtrl.

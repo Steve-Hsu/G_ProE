@@ -14,7 +14,6 @@ const PoSelector = () => {
   } = purContext;
 
   useEffect(() => {
-    alert('yes');
     getCaseList();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

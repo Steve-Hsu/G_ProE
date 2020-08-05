@@ -52,9 +52,7 @@ const Quotation = (props) => {
           </div>
         ) : quotateFor === 'material' ? (
           <div className='p-1 container container-with-navbar'>
-            <button value={null} onClick={onClick}>
-              go back
-            </button>
+            <button onClick={onClick}>go back</button>
             <SrMtrlForm currentPath={currentPath} />
           </div>
         ) : quotateFor === 'garment' ? (
@@ -62,9 +60,7 @@ const Quotation = (props) => {
             {isQuotating === null ? (
               <div className='p-1 container container-with-navbar'>
                 {' '}
-                <button value={null} onClick={onClick}>
-                  go back
-                </button>
+                <button onClick={onClick}>go back</button>
                 <QuoCaseSelector />
               </div>
             ) : (
