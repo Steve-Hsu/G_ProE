@@ -12,9 +12,9 @@ const MPriceForm = ({ currentPath }) => {
     updateMPricesQuotation,
   } = srMtrlContext;
   useEffect(() => {
-    if (srMtrls.length === 0) {
-      getSrMtrls();
-    }
+    // if (srMtrls.length === 0) {
+    getSrMtrls();
+    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   //@ funcs

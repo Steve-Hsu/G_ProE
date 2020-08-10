@@ -5,6 +5,8 @@ import {
   PURPAGE_SWITCH,
   OS_LIST_DOWNLOAD,
   OS_CURRENT,
+  PO_CURRENT,
+  PO_CURRENT_MTRLPRICE,
 } from '../types';
 
 export default (state, action) => {
@@ -21,11 +23,13 @@ export default (state, action) => {
       };
     case DEFAULT:
       return {
-        poList: [],
+        osList: [],
         caseList: [],
         selectedCases: [],
         openPage: null,
         currentOrderSummary: null,
+        currentPo: null,
+        currentPoPriceList: [],
       };
     case PURPAGE_SWITCH:
       return {
@@ -41,6 +45,16 @@ export default (state, action) => {
       return {
         ...state,
         currentOrderSummary: action.payload,
+      };
+    case PO_CURRENT:
+      return {
+        ...state,
+        currentPo: action.payload,
+      };
+    case PO_CURRENT_MTRLPRICE:
+      return {
+        ...state,
+        currentPoPriceList: action.payload,
       };
     default:
   }

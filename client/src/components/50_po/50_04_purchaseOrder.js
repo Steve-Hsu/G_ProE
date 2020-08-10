@@ -1,38 +1,34 @@
-import React, { useContext, Fragment } from 'react';
+import React, { useContext, Fragment, useEffect } from 'react';
 import PurContext from '../../context/pur/purContext';
+import PoItem from './50_04_01_poItem';
 
 const OrderSummary = () => {
   // const { downloadCase } = caseContext;
-  const labelList = ['osNo'];
+
   const purContext = useContext(PurContext);
-  const {
-    selectedCases,
-    selectCase,
-    switchPage,
-    switchOsCurrent,
-    currentOrderSummary,
-  } = purContext;
-  const { suppliers } = currentOrderSummary;
+  const { currentOrderSummary, currentPo, getMaterialPrice } = purContext;
+  const { caseMtrls } = currentOrderSummary;
+  useEffect(() => {
+    const currentMtrls = caseMtrls.filter((mtrl) => {
+      return mtrl.supplier === currentPo;
+    });
 
-  const labelSwitcher = (label) => {
-    switch (label) {
-      case 'osNo':
-        return 'Order Summary No.';
-      default:
-        return label.charAt(0).toUpperCase() + label.slice(1);
-    }
-  };
-
-  const onClick = (e) => {
-    e.preventDefault();
-    switchPage(e.target.value);
-  };
+    getMaterialPrice(currentPo, currentMtrls);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Fragment>
-      <div className='p-1 container container-with-navbar'>
-        <div>Can you see me</div>
-      </div>
+      {/* {currentPoPriceList === [] ? null : (
+        <div> */}
+      {caseMtrls.map((mtrl) => {
+        if (mtrl.supplier == currentPo) {
+          console.log(mtrl.supplier);
+          return <PoItem key={mtrl.id} mtrl={mtrl} />;
+        } else {
+          return null;
+        }
+      })}
     </Fragment>
   );
 };

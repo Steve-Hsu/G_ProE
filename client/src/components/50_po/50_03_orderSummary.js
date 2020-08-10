@@ -25,7 +25,7 @@ const OrderSummary = () => {
 
   const onClick = (e) => {
     e.preventDefault();
-    switchPage(e.target.value);
+    switchPage(e.target.value, e.target.id);
   };
 
   return (

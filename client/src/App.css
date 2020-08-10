@@ -216,6 +216,18 @@ img {
   grid-gap: var(--gap);
 }
 
+.grid-15 {
+  display: grid;
+  grid-template-columns: repeat(15, 1fr);
+  grid-gap: var(--gap);
+}
+
+.gridAuto {
+  display: grid;
+  grid-template: auto 1fr auto / auto 1fr auto;
+  grid-gap: var(--gap);
+}
+
 /* grid - 2 block*/
 .grid-1-4 {
   display: grid;
@@ -279,6 +291,36 @@ img {
 
 .grid-gap-lg {
   grid-gap: 2rem;
+}
+
+/* @Custom grid */
+/* Purchase Order Sheet */
+.gridCol-1-3 {
+  grid-column: 1/3;
+}
+.gridCol-3-7 {
+  grid-column: 3/7;
+}
+.gridCol-7-9 {
+  grid-column: 7/9;
+}
+.gridCol-9-10 {
+  grid-column: 9/10;
+}
+.gridCol-10-11 {
+  grid-column: 10/11;
+}
+.gridCol-11-12 {
+  grid-column: 11/12;
+}
+.gridCol-12-13 {
+  grid-column: 12/13;
+}
+.gridCol-13-14 {
+  grid-column: 13/14;
+}
+.gridCol-14-16 {
+  grid-column: 14/16;
 }
 
 /* @button */

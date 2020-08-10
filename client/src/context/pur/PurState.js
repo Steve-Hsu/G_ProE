@@ -11,6 +11,8 @@ import {
   PURPAGE_SWITCH,
   OS_LIST_DOWNLOAD,
   OS_CURRENT,
+  PO_CURRENT,
+  PO_CURRENT_MTRLPRICE,
 } from '../types';
 
 const PurState = (props) => {
@@ -20,6 +22,8 @@ const PurState = (props) => {
     selectedCases: [],
     openPage: null,
     currentOrderSummary: null,
+    currentPo: null,
+    currentPoPriceList: [],
   };
   const [state, dispatch] = useReducer(PurReducer, initialState);
   const { caseList, openPage, currentOrderSummary } = state;
@@ -86,17 +90,37 @@ const PurState = (props) => {
     dispatch({ type: DEFAULT });
   };
 
-  const switchPage = (value) => {
-    if (value) {
-      if (value === 'osSelector') {
+  const switchPage = (value, id = null) => {
+    switch (value) {
+      case 'osSelector':
         dispatch({ type: PURPAGE_SWITCH, payload: value });
         dispatch({ type: OS_CURRENT, payload: null });
-      } else {
+        break;
+      case 'orderSummary':
         dispatch({ type: PURPAGE_SWITCH, payload: value });
-      }
-    } else {
-      dispatch({ type: PURPAGE_SWITCH, payload: null });
+        dispatch({ type: PO_CURRENT, payload: id });
+        dispatch({ type: PO_CURRENT_MTRLPRICE, payload: [] });
+        break;
+      case null:
+      case '':
+        dispatch({ type: PURPAGE_SWITCH, payload: null });
+        break;
+      default:
+        dispatch({ type: PURPAGE_SWITCH, payload: value });
+        dispatch({ type: PO_CURRENT, payload: id });
+        break;
     }
+
+    // if (value) {
+    //   if (value === 'osSelector') {
+    //     dispatch({ type: PURPAGE_SWITCH, payload: value });
+    //     dispatch({ type: OS_CURRENT, payload: null });
+    //   } else {
+    //     dispatch({ type: PURPAGE_SWITCH, payload: value });
+    //   }
+    // } else {
+    //   dispatch({ type: PURPAGE_SWITCH, payload: null });
+    // }
   };
 
   const getOsList = async () => {
@@ -113,6 +137,25 @@ const PurState = (props) => {
     }
   };
 
+  const getMaterialPrice = async (currentPo, caseMtrls) => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const body = {
+      currentPo: currentPo,
+      caseMtrls: caseMtrls,
+    };
+    try {
+      const res = await axios.post('/api/purchase/materialprice', body, config);
+      console.log('Get the material prices');
+      dispatch({ type: PO_CURRENT_MTRLPRICE, payload: res.data });
+    } catch (err) {
+      console.log(err.msg, 'Get the material prices');
+    }
+  };
+
   return (
     <PurContext.Provider
       value={{
@@ -121,6 +164,8 @@ const PurState = (props) => {
         selectedCases: state.selectedCases,
         openPage: state.openPage,
         currentOrderSummary: state.currentOrderSummary,
+        currentPo: state.currentPo,
+        currentPoPriceList: state.currentPoPriceList,
         getCaseList,
         searchCaseList,
         selectCase,
@@ -129,6 +174,7 @@ const PurState = (props) => {
         switchPage,
         getOsList,
         switchOsCurrent,
+        getMaterialPrice,
       }}
     >
       {props.children}

@@ -14,7 +14,7 @@ const SRMtrl = require('../models/30_srMtrl');
 const OS = require('../models/50_OS');
 
 // @route   GET api/purchase
-// @desc    Read the compnay's srMtrl from database
+// @desc    Read the compnay's case with cNo, style, client,
 // @access  Private
 router.get('/', authUser, async (req, res) => {
   let user = await User.findById(req.user.id);
@@ -74,7 +74,7 @@ router.get('/', authUser, async (req, res) => {
 });
 
 // @route   GET api/purchase/ordersummary
-// @desc    Read the compnay's srMtrl from database
+// @desc    Read the compnay's all of order Summary from database
 // @access  Private
 router.get('/ordersummary', authUser, async (req, res) => {
   let user = await User.findById(req.user.id);
@@ -194,7 +194,7 @@ router.post('/', authUser, async (req, res) => {
             mSizeSPEC: cspt.mSizeSPEC,
           };
 
-          existCaseMtrl = caseMtrls.filter((i) => {
+          const existCaseMtrl = caseMtrls.filter((i) => {
             for (var key in currentCsptMtrl) {
               if (i[key] === undefined || i[key] != currentCsptMtrl[key]) {
                 return false;
@@ -286,6 +286,113 @@ router.post('/', authUser, async (req, res) => {
 
   //@ Loop through the cases and lock up all these cases, preventing merchandisor updating anything.
   //The price refs to srMtrl, and since other case, which not be put into order summary may still use same srMtrl, so we can't and no necessary to lock up the srMtrl.
+});
+
+// @route   GET api/purchase/materialprice
+// @desc    Read the compnay's srMtrl from database
+// @access  Private
+// Result   Return an array named "materialPriceList"
+router.post('/materialprice', authUser, async (req, res) => {
+  let user = await User.findById(req.user.id);
+  if (!user.po) {
+    return res.status(400).json({ msg: 'Out of authority' });
+  }
+  const comId = req.user.company;
+  const { currentPo, caseMtrls } = req.body;
+  // the currentPo is the name of the supplier
+  console.log('the currentPo', currentPo); // Test Code
+
+  //This is the result will be returned to client
+  const materialPriceList = [];
+
+  const filteredCaseMtrls = caseMtrls.filter((mtrl) => {
+    return mtrl.supplier === currentPo;
+  });
+
+  let caseMtrlsCount = 0;
+  const insertSrPrice = new Promise(async (resolve, reject) => {
+    filteredCaseMtrls.map(async (mtrl) => {
+      const { id, supplier, ref_no, mColor, mSizeSPEC } = mtrl;
+
+      const srMtrl = await SRMtrl.findOne(
+        {
+          company: comId,
+          supplier: currentPo,
+          ref_no: ref_no,
+        },
+        { mPrices: 1 }
+      );
+      if (!srMtrl || srMtrl.mPrices.length === 0) {
+        console.log(
+          "No such material or the material dosen't have any price built in the srMtrl database"
+        );
+        return res.status(404).json({
+          msg:
+            "No such material or the material dosen't have any price built in the srMtrl database",
+        });
+      }
+      // console.log('the srMrls', srMtrl); // Test Code
+      // extract the mPrice that match to the current material with name of supplier, ref_no, mColor and mSizeSPEC
+      const { mPrices } = srMtrl;
+      const srMtrlCondition = {
+        mColor: mColor,
+        sizeSPEC: mSizeSPEC,
+      };
+      // console.log('The srMtrlCondition', srMtrlCondition); // Test Code
+      const currentSrMtrlPrice = mPrices.filter((i) => {
+        for (var key in srMtrlCondition) {
+          if (i[key] === undefined || i[key] != srMtrlCondition[key]) {
+            return false;
+          }
+        }
+        return true;
+      });
+      // console.log('the currentSrMtrlPrice', currentSrMtrlPrice); // Test Code
+      // Push the information to the materialPriceList
+      let { unit, currency, mPrice, moq, moqPrice } = currentSrMtrlPrice[0];
+
+      if (!unit) {
+        unit = 'undefined';
+      }
+      if (!currency) {
+        curreny = 'undefined';
+      }
+      if (!mPrice) {
+        mPrice = 'undefined';
+      }
+      if (!moq) {
+        moq = 'undefined';
+      }
+      if (!moqPrice) {
+        moqPrice = 'undefined';
+      }
+      materialPriceList.push({
+        id: id,
+        unit: unit,
+        currency: currency,
+        mPrice: mPrice,
+        moq: moq,
+        moqPrice: moqPrice,
+      });
+
+      caseMtrlsCount = caseMtrlsCount + 1;
+      if (caseMtrlsCount === filteredCaseMtrls.length) {
+        resolve();
+      }
+    });
+  }).catch((err) => {
+    console.log(err);
+  });
+
+  Promise.all([insertSrPrice])
+    .then(() => {
+      // console.log('the mtaterialPriceList', materialPriceList); // Test Code
+      console.log('the material Price is returned!');
+      return res.json(materialPriceList);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
 module.exports = router;

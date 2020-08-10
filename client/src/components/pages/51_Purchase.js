@@ -20,7 +20,7 @@ const Purchase = (props) => {
   };
 
   return (
-    <div className='grid-1-4'>
+    <Fragment>
       {/* Grid-1 */}
       {openPage === null ? (
         <div className='p-1 container container-with-navbar'>
@@ -32,21 +32,21 @@ const Purchase = (props) => {
           </button>
         </div>
       ) : openPage === 'caseSelector' ? (
-        <Fragment>
+        <div className='grid-1-4'>
           <LeftBar currentPath={currentPath} />
           <div className='p-1 container container-with-navbar'>
             <button onClick={onClick}>go back</button>
             <CaseSelector />
           </div>
-        </Fragment>
+        </div>
       ) : openPage === 'osSelector' ? (
-        <Fragment>
+        <div className='grid-1-4'>
           <LeftBar currentPath={currentPath} />
           <div className='p-1 container container-with-navbar'>
             <button onClick={onClick}>go back</button>
             <OsSelector />
           </div>
-        </Fragment>
+        </div>
       ) : openPage === 'orderSummary' ? (
         <Fragment>
           <div className='p-1 container container-with-navbar'>
@@ -66,7 +66,7 @@ const Purchase = (props) => {
           </div>
         </Fragment>
       ) : null}
-    </div>
+    </Fragment>
   );
 };
 export default Purchase;
