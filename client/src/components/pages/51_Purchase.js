@@ -3,10 +3,11 @@ import React, { useContext, Fragment } from 'react';
 import LeftBar from '../layout/LeftBar';
 import CaseSelector from '../50_po/50_01_caseSelector';
 import OsSelector from '../50_po/50_02_osSelector';
-import orderSummary from '../50_po/50_03_orderSummary';
+import OrderSummary from '../50_po/50_03_orderSummary';
+import PurchaseOrder from '../50_po/50_04_purchaseOrder';
+
 // Context
 import PurContext from '../../context/pur/purContext';
-import OrderSummary from '../50_po/50_03_orderSummary';
 
 const Purchase = (props) => {
   const purContext = useContext(PurContext);
@@ -53,6 +54,15 @@ const Purchase = (props) => {
               go back
             </button>
             <OrderSummary />
+          </div>
+        </Fragment>
+      ) : openPage === 'purchaseOrder' ? (
+        <Fragment>
+          <div className='p-1 container container-with-navbar'>
+            <button value='orderSummary' onClick={onClick}>
+              go back
+            </button>
+            <PurchaseOrder />
           </div>
         </Fragment>
       ) : null}

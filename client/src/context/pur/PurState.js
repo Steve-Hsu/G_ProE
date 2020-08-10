@@ -88,7 +88,12 @@ const PurState = (props) => {
 
   const switchPage = (value) => {
     if (value) {
-      dispatch({ type: PURPAGE_SWITCH, payload: value });
+      if (value === 'osSelector') {
+        dispatch({ type: PURPAGE_SWITCH, payload: value });
+        dispatch({ type: OS_CURRENT, payload: null });
+      } else {
+        dispatch({ type: PURPAGE_SWITCH, payload: value });
+      }
     } else {
       dispatch({ type: PURPAGE_SWITCH, payload: null });
     }
