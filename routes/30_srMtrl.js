@@ -98,11 +98,145 @@ router.put('/:caseId', authUser, async (req, res) => {
   let mtrls = cases.mtrls;
 
   mtrls.map(async (mtrl) => {
+    //@ Check if the mtrl is alread have srMtrl, if have , it must be srMtrl with different supplier and ref_no, how ever have both same caseId and mtrlId in the refs in either mtrlColors and sizeSPECs
+
+    const checkDuplicatedSrMtrl = new Promise(async (resolve) => {
+      let checkNum = 0;
+      // Delete the refs of mtrlColors in the duplicated SrMtrl
+      let SrMtrlId = '';
+      const existingMtrlColorRef = await SRMtrl.find({
+        supplier: { $ne: mtrl.supplier },
+        ref_no: { $ne: mtrl.ref_no },
+        'mtrlColors.refs': { caseId: caseId, mtrlId: mtrl.id },
+      });
+
+      if (existingMtrlColorRef.length > 0) {
+        // If the srMtrl only have one item in mtrlColors, then delete the item.
+        console.log('the existingRef', existingMtrlColorRef); // Test Code
+        await SRMtrl.findOneAndUpdate(
+          {
+            supplier: { $ne: mtrl.supplier },
+            ref_no: { $ne: mtrl.ref_no },
+            'mtrlColors.refs': { caseId: caseId, mtrlId: mtrl.id },
+          },
+          {
+            $pull: {
+              'mtrlColors.$.refs': { caseId: caseId, mtrlId: mtrl.id },
+            },
+          }
+        ).then(() => {
+          SrMtrlId = existingMtrlColorRef[0]._id;
+          checkNum = checkNum + 1;
+        });
+      } else {
+        checkNum = checkNum + 1;
+      }
+
+      // Delete the refs of sizeSPECs in the duplicated SrMtrl
+      const existingSizeSPECRef = await SRMtrl.find({
+        supplier: { $ne: mtrl.supplier },
+        ref_no: { $ne: mtrl.ref_no },
+        'sizeSPECs.refs': { caseId: caseId, mtrlId: mtrl.id },
+      });
+
+      if (existingSizeSPECRef.length > 0) {
+        console.log('the existingRef', existingSizeSPECRef); // Test Code
+        await SRMtrl.findOneAndUpdate(
+          {
+            supplier: { $ne: mtrl.supplier },
+            ref_no: { $ne: mtrl.ref_no },
+            'sizeSPECs.refs': { caseId: caseId, mtrlId: mtrl.id },
+          },
+          {
+            $pull: { 'sizeSPECs.$.refs': { caseId: caseId, mtrlId: mtrl.id } },
+          }
+        ).then(() => {
+          SrMtrlId = existingSizeSPECRef[0]._id;
+          checkNum = checkNum + 1;
+        });
+      } else {
+        checkNum = checkNum + 1;
+      }
+
+      if (checkNum >= 2) {
+        console.log(
+          'The promise checkDuplicatedSrMtrl is resolved',
+          'and it is the result the id ',
+          SrMtrlId
+        ); // Test Code
+        resolve(SrMtrlId);
+      }
+    });
+
+    Promise.all([checkDuplicatedSrMtrl]).then(async (result) => {
+      // console.log(
+      //   'The promise all of checkDuplicatedSrMtrl is called',
+      //   'and the result',
+      //   result
+      // ); // test Code
+      const targetId = result[0];
+      if (targetId !== '') {
+        // Delete the object in mtrlColors and sizeSPECs, which with refs.length === 0, in other words, no any case and mtrl ref to this object.
+        const targetSrMtrl = await SRMtrl.findOne({ _id: targetId });
+        const deleteTopObj = new Promise((resolve) => {
+          // console.log('The targetSrMtrl', targetSrMtrl); // Test Code
+          let num1 = 0;
+          let num2 = 0;
+          targetSrMtrl.mtrlColors.map(async (m) => {
+            if (m.refs.length === 0) {
+              // console.log('I got you, the mtrlColor !');  // Test Code
+              await SRMtrl.updateOne(
+                { _id: targetId },
+                { $pull: { mtrlColors: { id: m.id } } }
+              );
+            }
+            num1 = num1 + 1;
+            if (
+              num1 === targetSrMtrl.mtrlColors.length &&
+              num2 === targetSrMtrl.sizeSPECs.length
+            ) {
+              resolve(targetId);
+            }
+          });
+
+          targetSrMtrl.sizeSPECs.map(async (s) => {
+            if (s.refs.length === 0) {
+              // console.log('I got you, the sizeSPEC !'); // Test Code
+              await SRMtrl.updateOne(
+                { _id: targetId },
+                { $pull: { sizeSPECs: { id: s.id } } }
+              );
+            }
+            num2 = num2 + 1;
+            if (
+              num1 === targetSrMtrl.mtrlColors.length &&
+              num2 === targetSrMtrl.sizeSPECs.length
+            ) {
+              resolve(targetId);
+            }
+          });
+        });
+
+        Promise.all([deleteTopObj]).then(async (result) => {
+          // Delete the srMtrl that has both mtrlColors and sizeSPECs with length === 0. In other words, no any case and mtrl ref to this srMtrl
+          const targetId = result[0];
+          const finalTargetSrMtrl = await SRMtrl.findOne({ _id: targetId });
+          const mtrlColorLength = finalTargetSrMtrl.mtrlColors.length;
+          const sizeSPECLength = finalTargetSrMtrl.sizeSPECs.length;
+          const checkNum = mtrlColorLength + sizeSPECLength;
+          if (checkNum === 0) {
+            await SRMtrl.findByIdAndRemove({ _id: targetId });
+          }
+        });
+      }
+    });
+
+    //@ Start update refs
     const newCSRIC = (comName + comSymbol + mtrl.supplier + mtrl.ref_no)
       .toLowerCase()
       .replace(/[^\da-z]/gi, '');
-    console.log('comsymbo', comSymbol);
-    console.log('newCSRIC', newCSRIC);
+    // console.log('comsymbo', comSymbol); // Test Code
+    // console.log('newCSRIC', newCSRIC); // Test Code
     let existingSrMtrlObj = mLists.find(({ CSRIC }) => CSRIC === newCSRIC);
     //If the srMtrl is not existing in the mLists then generete a new one
     //This line makes sure the mList never contain duplicated srMtrl with same CSRIC
@@ -430,13 +564,14 @@ router.put('/:caseId', authUser, async (req, res) => {
               // console.log('SPEC 1 start', mList.CSRIC);
               let counterOfLoopInsertMtrlSPEC = 0;
               mList.sizeSPECs.map(async (sizeSPEC) => {
+                console.log('This is the sizeSPEC', sizeSPEC); // Test Code
                 await SRMtrl.findOne({
                   company: comId,
                   CSRIC: mList.CSRIC,
                   'sizeSPECs.mSizeSPEC': sizeSPEC.mSizeSPEC,
                 })
                   .then(async (srMtrl) => {
-                    if (srMtrl === 0) {
+                    if (srMtrl === null) {
                       // if no such mSizeSPEC in the srMtrl.sizeSPECs
                       await SRMtrl.updateOne(
                         {
