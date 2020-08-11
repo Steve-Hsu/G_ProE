@@ -8,14 +8,30 @@ const authUser = require('../middleware/authUser');
 
 // Schema
 const User = require('../models/10_User');
+const Com = require('../models/00_Company');
 
 // @route   Get api/auth/users
 // @desc    Get logged in as a user
 // @access  Private
 router.get('/', authUser, async (req, res) => {
+  const user = await User.findOne(
+    { _id: req.user.id },
+    { name: 1, comName: 1, comSymbol: 1 }
+  );
+  const comId = req.user.company;
+  const company = await Com.findOne(
+    { _id: comId },
+    { address: 1, phone: 1, comNameTail: 1 }
+  );
+
+  const returnUser = {
+    ...user._doc,
+    comAddress: company.address,
+    comPhone: company.phone,
+    comNameTail: company.comNameTail,
+  };
   try {
-    const user = await User.findById(req.user.id).select('-password');
-    res.json(user);
+    res.json(returnUser);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');

@@ -44,6 +44,7 @@ const AuthComState = (props) => {
 
   // Register Company
   const registerCom = async (formData) => {
+    console.log('The registerCom function is tritred'); // Test Code
     // Use axios sent out a POST, must use "config" warpping the headers
     const config = {
       headers: {
@@ -53,6 +54,7 @@ const AuthComState = (props) => {
 
     try {
       const res = await axios.post('/registercom', formData, config);
+
       dispatch({
         //Get token
         type: COM_REGISTER_SUCCESS,

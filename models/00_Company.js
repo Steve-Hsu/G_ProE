@@ -9,11 +9,21 @@ const ComSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  // comNameTail, like some company have "Co.,Ltd" something like that, may be some company quired add it to its purchase order or quotations.
+  comNameTail: {
+    type: String,
+  },
   comSymbol: {
     // This comSymbol is a shortened name of the company, It will be used when generate document numbers, for example for purchase order or quotations
     type: String,
     required: true,
     unique: true,
+  },
+  address: {
+    type: String,
+  },
+  phone: {
+    type: String,
   },
   email: {
     type: String,

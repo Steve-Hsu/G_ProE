@@ -66,11 +66,12 @@ const App = () => {
                                     path='/registercom'
                                     component={ComRegister}
                                   />
-                                  <Route
+                                  {/* on construction */}
+                                  {/* <Route
                                     exact
                                     path='/registercom/manager'
                                     component={ComManager}
-                                  />
+                                  /> */}
                                   {/* LoginPages */}
                                   <Route
                                     exact

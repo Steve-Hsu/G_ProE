@@ -23,6 +23,7 @@ const ComRegister = (props) => {
 
   const [company, setCompany] = useState({
     comName: '',
+    comNameTail: '',
     comSymbol: '',
     email: '',
     password: '',
@@ -30,7 +31,15 @@ const ComRegister = (props) => {
     code: '',
   });
 
-  const { comName, comSymbol, email, password, password2, code } = company;
+  const {
+    comName,
+    comNameTail,
+    comSymbol,
+    email,
+    password,
+    password2,
+    code,
+  } = company;
 
   const onChange = (e) =>
     setCompany({ ...company, [e.target.name]: e.target.value });
@@ -39,6 +48,7 @@ const ComRegister = (props) => {
     e.preventDefault();
     if (comName === '' || email === '' || password === '') {
       setAlert('Please enter all fields', 'danger');
+      console.log('Please enter all fields', 'danger'); // Test Code
     } else if (password !== password2) {
       setAlert('Passwords do not match', 'danger');
     } else if (code !== process.env.REACT_APP_STEVE_ID) {
@@ -47,6 +57,7 @@ const ComRegister = (props) => {
       registerCom({
         //This is a formData
         comName,
+        comNameTail,
         comSymbol,
         email,
         password,
@@ -69,6 +80,16 @@ const ComRegister = (props) => {
             type='text'
             name='comName'
             value={comName}
+            onChange={onChange}
+          />
+        </div>
+        {/* {Company name tail, like Co.,Ltd, Ltd, etc.} */}
+        <div className='form-group'>
+          <label htmlFor='comNameTail'>Limited Company</label>
+          <input
+            type='text'
+            name='comNameTail'
+            value={comNameTail}
             onChange={onChange}
           />
         </div>
