@@ -4,6 +4,7 @@ import AuthUserContext from '../../context/authUser/authUserContext';
 import SrMtrlContext from '../../context/srMtrl/srMtrlContext';
 import PopoverContext from '../../context/popover/popoverContext';
 import QuoContext from '../../context/quo/quoContext';
+import PurContext from '../../context/pur/purContext';
 import Spinner from '../../components/layout/Spinner';
 
 const DeletePopover = () => {
@@ -11,6 +12,7 @@ const DeletePopover = () => {
   const authUserContext = useContext(AuthUserContext);
   const srMtrlContext = useContext(SrMtrlContext);
   const popoverContext = useContext(PopoverContext);
+  const purContext = useContext(PurContext);
   const {
     _id,
     cNo,
@@ -30,7 +32,8 @@ const DeletePopover = () => {
   const { deleteSRMtrlByMtrl } = srMtrlContext;
   const { comName, comSymbol } = authUserContext;
   const { togglePopover, toggleLoading, current, isLoading } = popoverContext;
-  const { quotation, uploadQuoFrom, deleteQuoForm, deletemQuo } = quoContext;
+  const { deleteQuoForm, deletemQuo } = quoContext;
+  const { deleteOs } = purContext;
 
   const onChangeDelete = (e) => {
     e.preventDefault();
@@ -75,6 +78,8 @@ const DeletePopover = () => {
         };
         deleteQuoForm(body);
         break;
+      case 'cNos':
+        deleteOs(current._id);
       default:
     }
 
@@ -95,6 +100,8 @@ const DeletePopover = () => {
         return `Material :  ${current.item}`;
       case 'quoNo':
         return `Quotation Form : ${current.quoNo}`;
+      case 'cNos':
+        return `Order Summary : ${current.osNo}`;
       default:
     }
   };

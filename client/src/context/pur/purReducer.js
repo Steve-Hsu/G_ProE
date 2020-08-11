@@ -7,6 +7,7 @@ import {
   OS_CURRENT,
   PO_CURRENT,
   PO_CURRENT_MTRLPRICE,
+  OS_DELETE,
 } from '../types';
 
 export default (state, action) => {
@@ -55,6 +56,13 @@ export default (state, action) => {
       return {
         ...state,
         currentPoPriceList: action.payload,
+      };
+    case OS_DELETE:
+      return {
+        ...state,
+        osList: state.osList.filter((os) => {
+          return os._id !== action.payload;
+        }),
       };
     default:
   }

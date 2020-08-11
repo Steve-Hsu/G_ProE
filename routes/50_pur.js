@@ -395,4 +395,33 @@ router.post('/materialprice', authUser, async (req, res) => {
     });
 });
 
+// @route   GET api/purchase/materialprice
+// @desc    Read the compnay's srMtrl from database
+// @access  Private
+// Result   Return an array named "materialPriceList"
+router.delete('/deleteos/:osId', authUser, async (req, res) => {
+  let user = await User.findById(req.user.id);
+  if (!user.po) {
+    return res.status(400).json({ msg: 'Out of authority' });
+  }
+
+  const comId = req.user.company;
+  const osId = req.params.osId;
+  const theOS = await OS.findOne({ company: comId, _id: osId }, { cNos: 1 });
+  console.log(osId); // Test Code
+  //@ Turn the poDate of cases back to "null"
+  // Don't need return any of this result immediately, so don't make any promise here.
+  const caseList = theOS.cNos;
+  caseList.map(async (c) => {
+    await Case.updateOne({ cNo: c }, { poDate: null });
+  });
+
+  await OS.findOneAndDelete({ company: comId, _id: osId }).then(() => {
+    console.log(`The order summary ${osId} is deleted.`);
+    return res.json({
+      msg: `The order summary ${osId} is deleted.`,
+    });
+  });
+});
+
 module.exports = router;

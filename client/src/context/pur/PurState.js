@@ -13,6 +13,7 @@ import {
   OS_CURRENT,
   PO_CURRENT,
   PO_CURRENT_MTRLPRICE,
+  OS_DELETE,
 } from '../types';
 
 const PurState = (props) => {
@@ -156,6 +157,15 @@ const PurState = (props) => {
     }
   };
 
+  const deleteOs = async (osId) => {
+    try {
+      await axios.delete(`/api/purchase/deleteos/${osId}`);
+      dispatch({ type: OS_DELETE, payload: osId });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <PurContext.Provider
       value={{
@@ -175,6 +185,7 @@ const PurState = (props) => {
         getOsList,
         switchOsCurrent,
         getMaterialPrice,
+        deleteOs,
       }}
     >
       {props.children}

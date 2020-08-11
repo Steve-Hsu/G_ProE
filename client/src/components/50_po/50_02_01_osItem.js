@@ -1,11 +1,15 @@
 import React, { useContext, Fragment } from 'react';
 import PurContext from '../../context/pur/purContext';
+import PopoverContext from '../../context/popover/popoverContext';
 
 const OsItem = ({ osItem }) => {
   // const { downloadCase } = caseContext;
   const labelList = ['osNo'];
   const purContext = useContext(PurContext);
-  const { selectedCases, selectCase, switchPage, switchOsCurrent } = purContext;
+  const { switchPage, switchOsCurrent, deleteOs } = purContext;
+
+  const popoverContext = useContext(PopoverContext);
+  const { togglePopover } = popoverContext;
 
   const labelSwitcher = (label) => {
     switch (label) {
@@ -23,20 +27,17 @@ const OsItem = ({ osItem }) => {
     switchOsCurrent(osItem);
   };
 
-  //   const btnClickedStyle = (id) => {
-  //     const haveSelectedTheCasae = selectedCases.includes(id);
-  //     if (haveSelectedTheCasae) {
-  //       return {
-  //         color: 'white',
-  //         background: 'var(--primary-color)',
-  //         // transition: 'all 0.5s',
-  //         border: '0',
-  //         borderBottom: '1px solid var(--primary - color)',
-  //       };
-  //     } else {
-  //       return {};
-  //     }
-  //   };
+  const deleteBtn = (e) => {
+    e.preventDefault();
+    const osId = e.target.value;
+    deleteOs(osId);
+  };
+
+  const deleteBtnPosition = {
+    top: ' 70%',
+    left: '100%',
+    transform: 'translate(-2rem, -1rem)',
+  };
 
   return (
     <div className='grid-4 card'>
@@ -48,6 +49,15 @@ const OsItem = ({ osItem }) => {
       ))}
       <button value='orderSummary' onClick={onClick}>
         Check
+      </button>
+      <button
+        value={osItem._id}
+        name='deleteOs'
+        onClick={togglePopover}
+        className='btn btn-fade btn-square'
+        style={deleteBtnPosition}
+      >
+        x
       </button>
     </div>
   );

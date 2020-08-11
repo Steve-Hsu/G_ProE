@@ -10,6 +10,7 @@ import {
 } from '../types';
 import CasesContext from '../../context/cases/casesContext';
 import QuoContext from '../../context/quo/quoContext';
+import PurContext from '../../context/pur/purContext';
 
 const PopoverState = (props) => {
   //State -------
@@ -21,8 +22,10 @@ const PopoverState = (props) => {
   const [state, dispatch] = useReducer(popoverReducer, initialState);
   const casesContext = useContext(CasesContext);
   const quoContext = useContext(QuoContext);
+  const purContext = useContext(PurContext);
   const { cWays, sizes, mtrls } = casesContext;
   const { quotation } = quoContext;
+  const { osList } = purContext;
 
   //Action -------
 
@@ -45,6 +48,9 @@ const PopoverState = (props) => {
           break;
         case 'quoForm':
           subject = quotation.quoForms.find(({ _id }) => _id === targetId);
+          break;
+        case 'deleteOs':
+          subject = osList.find(({ _id }) => _id === targetId);
           break;
         default:
           subject = { key: 'no target id' };
