@@ -4,9 +4,10 @@ import CasesContext from '../../context/cases/casesContext';
 
 const MtrlSizeSPEC = ({ sizeSPEC, mtrlId }) => {
   const casesContext = useContext(CasesContext);
-  const { addValueMtrlSizeSPEC, sizes } = casesContext;
+  const { addValueMtrlSizeSPEC, sizes, mtrls } = casesContext;
   const { mSizeSPEC } = sizeSPEC;
   const sizeLable = sizes.find(({ id }) => id === sizeSPEC.size).gSize;
+  const multipleSPEC = mtrls.find(({ id }) => id === mtrlId).multipleSPEC;
 
   //@ Value for input
   //words length limit
@@ -26,7 +27,7 @@ const MtrlSizeSPEC = ({ sizeSPEC, mtrlId }) => {
         className='MPH-input'
       />
       <label htmlFor={sizeSPEC.id} className='MPH-input-label'>
-        SPEC for {sizeLable}
+        {multipleSPEC == true ? `For ${sizeLable}` : 'For all Size'}
       </label>
     </div>
   );

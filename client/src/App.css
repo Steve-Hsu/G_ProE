@@ -171,8 +171,21 @@ img {
   margin: 3rem 0;
 }
 
-.mb {
-  margin-bottom: var(--gap);
+.mt {
+  margin-top: var(--gap);
+}
+
+.mt-1 {
+  margin-top: 1rem;
+}
+.mt-2 {
+  margin-top: 2rem;
+}
+.mt-3 {
+  margin-top: 3rem;
+}
+.mt {
+  margin-top: var(--gap);
 }
 
 .mb-1 {
@@ -349,7 +362,7 @@ img {
   height: 2.3rem;
   width: 100%;
   border: none;
-  border-bottom: 1px solid var(--fade-color);
+  /* border-bottom: 1px solid rgba(255, 255, 255, 0); */
   background: none;
   transition: all 0.5s;
 }
@@ -473,6 +486,75 @@ img {
   border-radius: 50%;
 }
 
+/* @Check Box */
+/* Toggle Switch */
+.toggleSwitch {
+  width: 7rem;
+  display: flex;
+  justify-content: space-between;
+  padding-right: 1rem;
+}
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 26px;
+}
+
+.switchInput {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+/* The circle in the toggle switch */
+.slider:before {
+  position: absolute;
+  content: '';
+  height: 22px;
+  width: 23px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+
+.switchInput:checked + .slider {
+  background-color: #2196f3;
+}
+
+/* input:focus + .slider {
+  box-shadow: 0 0 1px #2196f3;
+} */
+
+.switchInput:checked + .slider:before {
+  -webkit-transform: translateX(23px);
+  -ms-transform: translateX(23px);
+  transform: translateX(23px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 24px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
 /* @Forms */
 
 .form-text {
@@ -515,7 +597,7 @@ table th {
 
 /* @input */
 input {
-  margin: 1rem 0;
+  margin: 0;
   /* border-radius: 5px; */
 }
 input[type='number'],
@@ -530,7 +612,7 @@ textarea {
   padding: 0.4rem;
   font-size: 1.2rem;
   border: 0;
-  border-bottom: 1px solid var(--fade-color);
+  border-bottom: 1px solid rgba(255, 255, 255, 0);
 }
 
 input[type='submit'],
@@ -550,7 +632,7 @@ button {
   background: var(--primary-color);
   transition: all 0.5s;
   border: 0;
-  border-bottom: 1px solid var(--primary-color);
+  /* border-bottom: 1px solid var(--primary-color); */
 }
 
 .select-primary-sub {
@@ -573,7 +655,7 @@ button {
   font-size: 1rem;
   display: block;
   opacity: 1;
-  transform: translateY(-3rem);
+  transform: translateY(-2rem);
   transform-origin: 0 0;
   transition: all 0.3s;
 }
@@ -607,7 +689,7 @@ button {
 
 .MPH-input:focus + .MPH-input-label,
 .MPH-input:not(:placeholder-shown) + .MPH-input-label {
-  transform: translateY(-4rem) scale(0.7);
+  transform: translateY(-3rem) scale(0.7);
   color: var(--primary-color);
 }
 /* Usage : Use a div with class .MPH-input-group to warp a input and babel, the input will transform it size when focused. */
@@ -751,7 +833,7 @@ button {
 }
 
 .tiny {
-  font-size: 0.8rem;
+  font-size: 0.6rem;
 }
 
 /* Font-color */

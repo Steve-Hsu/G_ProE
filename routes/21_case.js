@@ -193,7 +193,14 @@ router.post(
             console.log('Promise start- mtrlColorPromise'); // Test Code
             let num = 0;
             mtrl.mtrlColors.map((mtrlColor) => {
-              mtrlColor.mColor = mtrlColor.mColor.toLowerCase().trim();
+              if (mtrl.multipleColor == true) {
+                mtrlColor.mColor = mtrlColor.mColor.toLowerCase().trim();
+              } else {
+                mtrlColor.mColor = mtrl.mtrlColors[0].mColor
+                  .toLowerCase()
+                  .trim();
+              }
+
               num = num + 1;
               if (num === mtrl.mtrlColors.length) {
                 console.log('Promise resolve- mtrlColorPromise'); // Test Code
@@ -206,7 +213,14 @@ router.post(
             console.log('Promise start- mtrlSPECPromise'); // Test Code
             let num = 0;
             mtrl.sizeSPECs.map((sizeSPEC) => {
-              sizeSPEC.mSizeSPEC = sizeSPEC.mSizeSPEC.toLowerCase().trim();
+              if (mtrl.multipleSPEC == true) {
+                sizeSPEC.mSizeSPEC = sizeSPEC.mSizeSPEC.toLowerCase().trim();
+              } else {
+                sizeSPEC.mSizeSPEC = mtrl.sizeSPECs[0].mSizeSPEC
+                  .toLowerCase()
+                  .trim();
+              }
+
               num = num + 1;
               if (num === mtrl.sizeSPECs.length) {
                 console.log('Promise resolve- mtrlSPECPromise'); // Test Code
@@ -219,10 +233,27 @@ router.post(
             console.log('Promise start- mtrlCsptPromise'); // Test Code
             let num = 0;
             mtrl.cspts.map((cspt) => {
-              cspt.mColor = cspt.mColor.toLowerCase().trim();
-              cspt.mSizeSPEC = cspt.mSizeSPEC.toLowerCase().trim();
+              if (mtrl.multipleColor == true) {
+                cspt.mColor = cspt.mColor.toLowerCase().trim();
+              } else {
+                cspt.mColor = mtrl.mtrlColors[0].mColor.toLowerCase().trim();
+              }
+
+              if (mtrl.multipleSPEC == true) {
+                cspt.mSizeSPEC = cspt.mSizeSPEC.toLowerCase().trim();
+              } else {
+                cspt.mSizeSPEC = mtrl.sizeSPECs[0].mSizeSPEC
+                  .toLowerCase()
+                  .trim();
+              }
+
+              if (mtrl.multipleCSPT == true) {
+                cspt.cspt = Number(cspt.cspt);
+              } else {
+                cspt.cspt = Number(mtrl.cspts[0].cspt);
+              }
+
               cspt.unit = cspt.unit.toLowerCase().trim();
-              cspt.cspt = Number(cspt.cspt);
               num = num + 1;
               if (num === mtrl.cspts.length) {
                 console.log('Promise resolve- mtrlCsptPromise'); // Test Code
@@ -467,7 +498,13 @@ router.put('/:id', authUser, async (req, res) => {
               let num = 0;
               mtrl.mtrlColors.map((mtrlColor) => {
                 if (mtrl.mColor !== '' || mtrl.mColor !== null) {
-                  mtrlColor.mColor = mtrlColor.mColor.toLowerCase().trim();
+                  if (mtrl.multipleColor == true) {
+                    mtrlColor.mColor = mtrlColor.mColor.toLowerCase().trim();
+                  } else {
+                    mtrlColor.mColor = mtrl.mtrlColors[0].mColor
+                      .toLowerCase()
+                      .trim();
+                  }
                 }
 
                 num = num + 1;
@@ -486,7 +523,15 @@ router.put('/:id', authUser, async (req, res) => {
               let num = 0;
               mtrl.sizeSPECs.map((sizeSPEC) => {
                 if (sizeSPEC.mSizeSPEC !== '' || sizeSPEC.mSizeSPEC !== null) {
-                  sizeSPEC.mSizeSPEC = sizeSPEC.mSizeSPEC.toLowerCase().trim();
+                  if (mtrl.multipleSPEC == true) {
+                    sizeSPEC.mSizeSPEC = sizeSPEC.mSizeSPEC
+                      .toLowerCase()
+                      .trim();
+                  } else {
+                    sizeSPEC.mSizeSPEC = mtrl.sizeSPECs[0].mSizeSPEC
+                      .toLowerCase()
+                      .trim();
+                  }
                 }
 
                 num = num + 1;
@@ -504,10 +549,27 @@ router.put('/:id', authUser, async (req, res) => {
             console.log('Promise start- mtrlCsptPromise'); // Test Code
             let num = 0;
             mtrl.cspts.map((cspt) => {
-              cspt.mColor = cspt.mColor.toLowerCase().trim();
-              cspt.mSizeSPEC = cspt.mSizeSPEC.toLowerCase().trim();
+              if (mtrl.multipleColor == true) {
+                cspt.mColor = cspt.mColor.toLowerCase().trim();
+              } else {
+                cspt.mColor = mtrl.mtrlColors[0].mColor.toLowerCase().trim();
+              }
+
+              if (mtrl.multipleSPEC == true) {
+                cspt.mSizeSPEC = cspt.mSizeSPEC.toLowerCase().trim();
+              } else {
+                cspt.mSizeSPEC = mtrl.sizeSPECs[0].mSizeSPEC
+                  .toLowerCase()
+                  .trim();
+              }
+
+              if (mtrl.multipleCSPT == true) {
+                cspt.cspt = Number(cspt.cspt);
+              } else {
+                cspt.cspt = Number(mtrl.cspts[0].cspt);
+              }
+
               cspt.unit = cspt.unit.toLowerCase().trim();
-              cspt.cspt = Number(cspt.cspt);
               num = num + 1;
               if (num === mtrl.cspts.length) {
                 console.log('Promise resolve- mtrlCsptPromise'); // Test Code

@@ -4,9 +4,10 @@ import CasesContext from '../../context/cases/casesContext';
 
 const MtrlClr = ({ mtrlColor, mtrlId }) => {
   const casesContext = useContext(CasesContext);
-  const { addValueMtrlColor, cWays } = casesContext;
+  const { addValueMtrlColor, cWays, mtrls } = casesContext;
   const { mColor } = mtrlColor;
   const cWayLable = cWays.find(({ id }) => id === mtrlColor.cWay).gClr;
+  const multipleColor = mtrls.find(({ id }) => id === mtrlId).multipleColor;
 
   //@ Value for input
   //words length limit
@@ -26,7 +27,7 @@ const MtrlClr = ({ mtrlColor, mtrlId }) => {
         className='MPH-input'
       />
       <label htmlFor={mtrlColor.id} className='MPH-input-label'>
-        Color on {cWayLable}
+        {multipleColor == true ? `For ${cWayLable}` : 'For all ColorWay'}
       </label>
     </div>
   );

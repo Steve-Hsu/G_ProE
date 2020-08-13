@@ -12,7 +12,7 @@ const MtrlCspt = ({ size, mtrl }) => {
 
   const sizeId = size.id;
   const cspt = mtrl.cspts.find(({ size }) => size === sizeId); // This is JS array's find method, it returns 1 item, if some many are found, only still return first item
-
+  const multipleCSPT = mtrl.multipleCSPT;
   return (
     // <Fragment>
     //   {cspt ? (
@@ -30,10 +30,9 @@ const MtrlCspt = ({ size, mtrl }) => {
         className='MPH-input'
         step='.01'
       />
-      <label
-        htmlFor={cspt.id}
-        className='MPH-input-label'
-      >{`${size.gSize}`}</label>
+      <label htmlFor={cspt.id} className='MPH-input-label'>
+        {multipleCSPT == true ? `For ${size.gSize}` : 'For all Size'}
+      </label>
     </div>
     //   ) : null}
     // </Fragment>

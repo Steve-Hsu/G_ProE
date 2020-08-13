@@ -88,6 +88,9 @@ const CasesState = (props) => {
     expandColor: false,
     expandSizeSPEC: false,
     expandCspt: false,
+    multipleColor: false,
+    multipleSPEC: false,
+    multipleCSPT: false,
   };
 
   let newMtrlColor = {
@@ -558,7 +561,7 @@ const CasesState = (props) => {
   };
 
   const addMtrlValue = (e) => {
-    e.preventDefault();
+    // e.preventDefault(); // I face problem with checkbox, after removing this function, everything works fine, even other input tag too.
     // For label tag need to target the Id, so here we save the id in the e.target.name
     const mtrlId = e.target.name;
     let materials = mtrls;
@@ -588,8 +591,17 @@ const CasesState = (props) => {
           cspt.unit = e.target.value;
           return material;
         });
-
         break;
+      case 'multipleColor':
+      case 'multipleSPEC':
+      case 'multipleCSPT':
+        materials.find(({ id }) => id === mtrlId)[e.target.id] = e.target
+          .checked
+          ? true
+          : false;
+        console.log(e.target.checked);
+        break;
+      //  setUser({ ...user, [e.target.id]: e.target.checked ? true : false });
       default:
     }
     updateMaterials(materials);
