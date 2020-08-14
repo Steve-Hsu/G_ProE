@@ -772,10 +772,10 @@ const CasesState = (props) => {
         addCaseValue,
         addcWay,
         updatecWay,
-        deletecWay,
         addSize,
-        // updateSize, // If it end up not be used, you should delete the action in the state and reducer
-        // deleteSize,
+        updateSize,
+        // deleteSize,// If it end up not be used, you should delete the action in the state and reducer
+        // deletecWay,
         addMtrl,
         deleteMtrl,
         expandExtraPanels,

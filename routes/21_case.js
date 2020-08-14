@@ -683,7 +683,7 @@ router.put('/delete/:caseId/:subjectId', authUser, async (req, res) => {
   console.log('the subjectId', subjectId); // Test Code
   console.log('the subject', subject); // Test Code
 
-  const theCase = await Case.find({ _id: caseId, company: comId });
+  const theCase = await Case.findOne({ _id: caseId, company: comId });
 
   if (theCase.length === 0) {
     console.log('No such case');
@@ -692,9 +692,119 @@ router.put('/delete/:caseId/:subjectId', authUser, async (req, res) => {
     });
   }
 
-  // const mtrls = theCase.mtrls
-  // mtrls.map(()=>)
+  const mtrls = theCase.mtrls;
 
+  const deleteSrMtrl = new Promise((resolve) => {
+    let numOfdeleteRef = 0;
+    const deleteRef = new Promise((resolve) => {
+      mtrls.map(async (mtrl) => {
+        const supplier = mtrl.supplier;
+        const ref_no = mtrl.ref_no;
+        const mtrlId = mtrl.id;
+        if (subject === 'gClr') {
+          const mColor = mtrl.mtrlColors.find(({ cWay }) => cWay === subjectId)
+            .mColor;
+          const checkMColor = mtrl.mtrlColors.filter(
+            (mtrlColor) => mtrlColor.mColor === mColor
+          );
+          // If the mColor is refed by not only one colorway of the material, then we shouldn't delete it from the srMtrls.
+          if (checkMColor.length == 1) {
+            await SRMtrl.updateOne(
+              {
+                company: comId,
+                supplier: supplier,
+                ref_no: ref_no,
+                'mtrlColors.mColor': mColor,
+              },
+              {
+                $pull: {
+                  'mtrlColors.$.refs': { caseId: caseId, mtrlId: mtrlId },
+                },
+              }
+            );
+          }
+          numOfdeleteRef = numOfdeleteRef + 1;
+        }
+        if (subject === 'gSize') {
+          const mSizeSPEC = mtrl.sizeSPECs.find(
+            ({ size }) => size === subjectId
+          ).mSizeSPEC;
+          const checkMSizeSPEC = mtrl.sizeSPECs.filter(
+            (sizeSPEC) => sizeSPEC.mSizeSPEC === mSizeSPEC
+          );
+          // If the mSizeSPEC is refed by not only one colorway of the material, then we shouldn't delete it from the srMtrls.
+          if (checkMSizeSPEC.length == 1) {
+            await SRMtrl.updateOne(
+              {
+                company: comId,
+                supplier: supplier,
+                ref_no: ref_no,
+                'sizeSPECs.mSizeSPEC': mSizeSPEC,
+              },
+              {
+                $pull: {
+                  'sizeSPECs.$.refs': {
+                    caseId: caseId,
+                    mtrlId: mtrlId,
+                  },
+                },
+              }
+            );
+          }
+
+          numOfdeleteRef = numOfdeleteRef + 1;
+        }
+        if (numOfdeleteRef === mtrls.length) {
+          resolve();
+        }
+      });
+    });
+    Promise.all([deleteRef]).then(async () => {
+      console.log('the promise all of deleteRef');
+      let num = 0;
+      mtrls.map(async (mtrl) => {
+        const supplier = mtrl.supplier;
+        const ref_no = mtrl.ref_no;
+
+        //The mongoDB code below, will only delete item in the array "mtrlColors" or item in the array "sizeSPECs".
+        await SRMtrl.updateOne(
+          {
+            company: comId,
+            supplier: supplier,
+            ref_no: ref_no,
+          },
+          {
+            $pull: {
+              mtrlColors: { refs: { $size: 0 } },
+              sizeSPECs: { refs: { $size: 0 } },
+            },
+          }
+        );
+
+        num = num + 1;
+        if (num === mtrls.length) {
+          return resolve();
+        }
+      });
+    });
+    // });
+  });
+
+  // Delete the srMtrl if the mtrlColors and sizeSPECs of which is empty
+  Promise.all([deleteSrMtrl]).then(async () => {
+    mtrls.map(async (mtrl) => {
+      const supplier = mtrl.supplier;
+      const ref_no = mtrl.ref_no;
+      await SRMtrl.deleteOne({
+        company: comId,
+        supplier: supplier,
+        ref_no: ref_no,
+        // 'mtrlColors.mColor': mColor,
+        mtrlColors: { $size: 0 },
+        sizeSPECs: { $size: 0 },
+      });
+    });
+  });
   try {
     //@_Step_1 Delete gClr and gQty
     const deleteItem = new Promise(async (resolve) => {
