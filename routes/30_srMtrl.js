@@ -1186,4 +1186,41 @@ router.put('/update/mpricevalues/quotation', authUser, async (req, res) => {
   }
 });
 
+// @route   PUT api/srmtrl/deleterefbygclrorgsize
+// @desc    Delete the refs of rsMtrl by Mtrl
+// @access  Private
+// router.put(
+//   '/deleterefbygclrorgsize/:caseId/:subject:id',
+//   authUser,
+//   async (req, res) => {
+//     const user = await User.findById(req.user.id);
+//     if (!user.cases) {
+//       return res.status(400).json({
+//         msg: 'Out of authority',
+//       });
+//     }
+//     const { subject } = req.body;
+//     const userId = req.user.id;
+//     const comId = req.user.company;
+//     const caseId = req.params.caseId;
+
+//     const theCase = Case.find({ _id: caseId, company: comId });
+//     if (theCase.length === 0) {
+//       console.log('No such case');
+//       return res.status(404).json({
+//         msg: 'No such case',
+//       });
+//     }
+
+//     const mtrls = theCase.mtrls;
+
+//     //No meed to reply any thing to client immediately so don't use promise.
+//     mtrls.map(async(mtrl) => {
+//       const supplier = mtrl.supplier
+//       const ref_no = mtrl.ref_no
+//       const
+//     });
+//   }
+// );
+
 module.exports = router;

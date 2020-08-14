@@ -23,10 +23,11 @@ const DeletePopover = () => {
     sizes,
     gQtys,
     mtrls,
-    deletecWay,
-    deleteSize,
+    // deletecWay,
+    // deleteSize,
     deleteMtrl,
     uploadCase,
+    deletecWayOrgSize,
   } = casesContext;
   const quoContext = useContext(QuoContext);
   const { deleteSRMtrlByMtrl } = srMtrlContext;
@@ -46,21 +47,15 @@ const DeletePopover = () => {
       gQtys: gQtys,
       mtrls: mtrls,
     };
-
+    const caseId = _id;
     switch (Object.keys(current)[1]) {
       case 'gClr':
-        deletecWay(current.id);
-        cases.cWays = cWays.filter((cWay) => {
-          return cWay.id !== current.id;
-        });
-        uploadCase(cases, _id, false);
+        // deletecWay(current.id);
+        deletecWayOrgSize('gClr', caseId, current.id);
         break;
       case 'gSize':
-        deleteSize(current.id);
-        cases.sizes = sizes.filter((size) => {
-          return size.id !== current.id;
-        });
-        uploadCase(cases, _id, false);
+        // deleteSize(current.id);
+        deletecWayOrgSize('gSize', caseId, current.id);
         break;
       case 'item':
         deleteSRMtrlByMtrl(comName, comSymbol, current, _id);
@@ -87,7 +82,7 @@ const DeletePopover = () => {
     setTimeout(() => {
       toggleLoading();
       togglePopover(e);
-    }, 3000);
+    }, 1500);
   };
 
   const words = () => {

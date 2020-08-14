@@ -161,6 +161,7 @@ const CasesState = (props) => {
 
   const deletegQtyBycWay = (cWayId) => {
     let Qtys = gQtys.filter((gQty) => gQty.cWay !== cWayId);
+    // console.log("I'm here deleteQtyBycWay", Qtys); // Test Code
     dispatch({ type: CASE_QTY_UPDATE, payload: Qtys });
   };
 
@@ -274,6 +275,7 @@ const CasesState = (props) => {
   };
 
   const deleteMtrlCsptBycWay = (cWayId) => {
+    console.log('deleteMtrlCspt is triggered');
     let materials = mtrls;
     materials.map((mtrl) => {
       return (mtrl.cspts = mtrl.cspts.filter((cspt) => cspt.cWay !== cWayId));
@@ -306,6 +308,7 @@ const CasesState = (props) => {
   };
 
   const deleteMtrlColor = (cWayId) => {
+    // console.log('DeleteMtrlColor is triggered'); // Test Code
     let materials = mtrls;
     materials.map((mtrl) => {
       return (mtrl.mtrlColors = mtrl.mtrlColors.filter(
@@ -726,6 +729,29 @@ const CasesState = (props) => {
     dispatch({ type: TOGGLE_ISUPDATE, payload: false });
   };
 
+  const deletecWayOrgSize = async (subject, caseId, subjectId) => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const body = {
+      subject: subject,
+    };
+    console.log(caseId, 'in the state');
+
+    try {
+      const res = await axios.put(
+        `/api/case/delete/${caseId}/${subjectId}`,
+        body,
+        config
+      );
+      dispatch({ type: CASE_DOWNLOAD, payload: res.data });
+    } catch (err) {
+      console.log('Download new case faild, server problems');
+    }
+  };
+
   return (
     <CasesContext.Provider
       value={{
@@ -748,8 +774,8 @@ const CasesState = (props) => {
         updatecWay,
         deletecWay,
         addSize,
-        updateSize,
-        deleteSize,
+        // updateSize, // If it end up not be used, you should delete the action in the state and reducer
+        // deleteSize,
         addMtrl,
         deleteMtrl,
         expandExtraPanels,
@@ -763,6 +789,7 @@ const CasesState = (props) => {
         defaultCase,
         clearcNo,
         turnCaseIsUpdatedFalse,
+        deletecWayOrgSize,
       }}
     >
       {props.children}

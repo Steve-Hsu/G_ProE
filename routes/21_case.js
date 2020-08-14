@@ -5,6 +5,7 @@ const { check, validationResult } = require('express-validator');
 
 const User = require('../models/10_User');
 const Case = require('../models/20_Case');
+const SRMtrl = require('../models/30_srMtrl');
 
 // @route   GET api/case/user
 // @desc    Read the user's cases from database
@@ -653,6 +654,102 @@ router.delete('/:id', authUser, async (req, res) => {
 
     res.json({
       msg: 'Case removed',
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route   PUT api/case/delete/casId/subjectId
+// @desc    Delete gClr, gSize, or mtrl
+// @Steve
+// @access  Private
+router.put('/delete/:caseId/:subjectId', authUser, async (req, res) => {
+  // Check if the user has authority to update case ---------------------------
+  // console.log('The router triggered'); // Test Code
+  let user = await User.findById(req.user.id);
+  if (!user.cases) {
+    return res.status(400).json({
+      msg: 'Out of authority',
+    });
+  }
+
+  const caseId = req.params.caseId;
+  const comId = req.user.company;
+  const subjectId = req.params.subjectId;
+  const subject = req.body.subject;
+  console.log('the caseId', caseId); // Test Code
+  console.log('the subjectId', subjectId); // Test Code
+  console.log('the subject', subject); // Test Code
+
+  const theCase = await Case.find({ _id: caseId, company: comId });
+
+  if (theCase.length === 0) {
+    console.log('No such case');
+    return res.status(404).json({
+      msg: 'No such case',
+    });
+  }
+
+  // const mtrls = theCase.mtrls
+  // mtrls.map(()=>)
+
+  try {
+    //@_Step_1 Delete gClr and gQty
+    const deleteItem = new Promise(async (resolve) => {
+      if (subject === 'gClr') {
+        console.log('Should Delete cWay'); // Test Code
+        await Case.updateOne(
+          { _id: caseId, company: comId },
+          {
+            $pull: {
+              cWays: { id: subjectId },
+              gQtys: { cWay: subjectId },
+              'mtrls.$[].mtrlColors': { cWay: subjectId },
+              'mtrls.$[].cspts': { cWay: subjectId },
+            },
+          }
+        )
+          .then(() => {
+            resolve();
+          })
+          .catch((err) => {
+            console.log(err);
+            return err;
+          });
+      }
+      //@_Step_1 Delete gSize and gQty
+      if (subject === 'gSize') {
+        console.log('Should Delete size'); // Test Code
+        await Case.updateOne(
+          { _id: caseId, company: comId },
+          {
+            $pull: {
+              sizes: { id: subjectId },
+              gQtys: { size: subjectId },
+              'mtrls.$[].sizeSPECs': { size: subjectId },
+              'mtrls.$[].cspts': { size: subjectId },
+            },
+          }
+        )
+          .then(() => {
+            resolve();
+          })
+          .catch((err) => {
+            console.log(err);
+            return err;
+          });
+      }
+    });
+
+    Promise.all([deleteItem]).then(async () => {
+      const result = await Case.findOne({
+        _id: caseId,
+        company: comId,
+      });
+
+      return res.json(result);
     });
   } catch (err) {
     console.error(err.message);
