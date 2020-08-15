@@ -9,7 +9,8 @@ import PopoverContext from '../../context/popover/popoverContext';
 import ColorWay from './1_1_ColorWay';
 import Size from './1_2_Size';
 import Qty from './1_3_Qty';
-import Mtrl from './1_4_Mtrl';
+import MtrlTable from './1_4_MtrlTable';
+import MtrlBoard from './1_5_MtrlBoard';
 import DeletePopover from '../layout/DeletePopover';
 
 const CaseForm = () => {
@@ -35,6 +36,7 @@ const CaseForm = () => {
     uploadNewCase,
     uploadCase,
     error,
+    isBoardMode,
   } = casesContext;
   const { comName, comSymbol } = authUserContext;
   const { updateSrMtrlByMtrl } = srMtrlContext;
@@ -116,6 +118,10 @@ const CaseForm = () => {
       .setAttribute('selected', 'selected');
   };
 
+  const onChange = (e) => {
+    addCaseValue(e);
+  };
+
   return (
     <Fragment>
       {/* // Ask the user when they want to jump to another page wihout saving datas */}
@@ -124,23 +130,26 @@ const CaseForm = () => {
       <div className='p-1 container container-with-navbar'>
         <div>
           <form id='caseForm' onSubmit={onSubmitCase}>
-            <div>
-              <div>Case No. : {cNo === null ? 'New Case' : cNo}</div>
+            {/* Case Information */}
+            <div className='lead'>Case Information</div>
+            <div className='grid-1-5 row-gap-md round-card bg-white mb-2'>
+              <div className='v-center-content'>CaseNo.</div>
+              <div>{cNo === null ? 'New Case' : cNo}</div>
+
+              <div className='v-center-content'>Style</div>
               <input
                 id='caseStyle'
                 type='text'
                 name='style'
                 onChange={addCaseValue}
                 maxLength={styleLength}
-                placeholder='.'
-                className='MPH-input'
+                placeholder='Enter the name of style'
+                // className='MPH-input'
                 value={style || ''}
                 required
               />
-              <label htmlFor='caseStyle' className='MPH-input-label'>
-                Style
-              </label>
 
+              <div className='v-center-content'>Client</div>
               <input
                 id='caseClient'
                 type='text'
@@ -148,19 +157,18 @@ const CaseForm = () => {
                 onChange={addCaseValue}
                 maxLength={clientLength}
                 placeholder='.'
-                className='MPH-input'
+                // className='MPH-input'
                 value={client || ''}
                 required
               />
-              <label htmlFor='caseClient' className='MPH-input-label'>
-                Client
-              </label>
+
+              <div className='v-center-content'>Case Type</div>
               <select
                 id='caseType'
                 name='caseType'
                 list='caseTypeList'
                 onChange={addCaseValue}
-                className='select-primary-sub'
+                className='select-primary'
                 required
               >
                 {caseTypeList.map((t) => {
@@ -179,69 +187,103 @@ const CaseForm = () => {
 
             {/* CS-Breakdown table */}
             {/* Color -------------------------- */}
-            <div>Color-Size-Breakdown</div>
-            <div className='grid-1-6-1'>
-              <div></div>
-              <div style={breakDownTable}>
-                {sizes.map((size) => (
-                  <Size key={size.id} size={size} />
-                ))}
+            <div className='lead'>Color-Size-Breakdown</div>
+            <div className='row-gap-md round-card bg-white mb-2'>
+              <div className='grid-1-6-1 mb-2'>
+                <div></div>
+                <div style={breakDownTable}>
+                  {sizes.map((size) => (
+                    <Size key={size.id} size={size} />
+                  ))}
+                </div>
+                <div className='lead text-primary'>SubTotal</div>
               </div>
-              <div className='lead text-primary'>SubTotal</div>
-            </div>
-            <div className='grid-1-6-1'>
-              <div>
-                {cWays.map((cWay) => (
-                  <ColorWay key={cWay.id} cWay={cWay} />
-                ))}
-              </div>
-              <div style={breakDownTable}>
-                {sizes.map((size) => (
-                  <div key={`Qty${size.id}`}>
-                    {gQtys.map((gQty) => (
-                      <Qty key={gQty.id} size={size} gQty={gQty} />
-                    ))}
-                  </div>
-                ))}
-              </div>
-              <div>
-                {cWays.map((cWay) => {
-                  let subtotal = 0;
-                  gQtys.map((gQty) => {
-                    if (gQty.cWay === cWay.id) {
-                      subtotal = subtotal + Number(gQty.gQty);
-                    }
-                    return subtotal;
-                  });
-                  return (
-                    <div
-                      style={{ height: '68px' }}
-                      key={`subtotalOf${cWay.id}`}
-                    >
-                      <div className='tiny text-primary'>{cWay.gClr}</div>
-                      <div className='lead'>{subtotal}</div>
+              <div className='grid-1-6-1'>
+                <div>
+                  {cWays.map((cWay) => (
+                    <ColorWay key={cWay.id} cWay={cWay} />
+                  ))}
+                </div>
+                <div style={breakDownTable}>
+                  {sizes.map((size) => (
+                    <div key={`Qty${size.id}`}>
+                      {gQtys.map((gQty) => (
+                        <Qty key={gQty.id} size={size} gQty={gQty} />
+                      ))}
                     </div>
-                  );
-                })}
-                <div className='lead text-primary'>Total Qantity</div>
-                <div className='large'>
-                  {gQtys.reduce(
-                    (partial_sum, gQty) => partial_sum + Number(gQty.gQty),
-                    0
-                  )}
+                  ))}
+                </div>
+                <div>
+                  {cWays.map((cWay) => {
+                    let subtotal = 0;
+                    gQtys.map((gQty) => {
+                      if (gQty.cWay === cWay.id) {
+                        subtotal = subtotal + Number(gQty.gQty);
+                      }
+                      return subtotal;
+                    });
+                    return (
+                      <div
+                        style={{ height: '68px' }}
+                        key={`subtotalOf${cWay.id}`}
+                      >
+                        <div className='tiny text-primary'>{cWay.gClr}</div>
+                        <div className='lead'>{subtotal}</div>
+                      </div>
+                    );
+                  })}
+                  <div className='lead text-primary'>Total Qantity</div>
+                  <div className='large'>
+                    {gQtys.reduce(
+                      (partial_sum, gQty) => partial_sum + Number(gQty.gQty),
+                      0
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-            <br />
 
             {/* Material -------------------------- */}
-            <div>
-              Materials<br></br>
+            <div className='grid-6'>
+              <div className='lead'>
+                Materials<br></br>
+              </div>
+              <div className='sq-toggleSwitch '>
+                <label className='sq-switch'>
+                  <input
+                    className='sq-switchInput'
+                    name='isBoardMode'
+                    type='checkbox'
+                    checked={isBoardMode == true}
+                    onChange={onChange}
+                  />
+                  <div className='sq-slider h-scatter-content v-center-content'>
+                    <div className='sq-block center-content '>
+                      <i class='fas fa-list-ul'> Table</i>
+                    </div>
+                    <div className='sq-block center-content '>
+                      <i class='fas fa-table'> Board</i>
+                    </div>
+                  </div>
+                </label>
+                <span></span>
+              </div>
             </div>
+
             <div>
-              {mtrls.map((mtrl) => (
-                <Mtrl key={mtrl.id} mtrl={mtrl} />
-              ))}
+              {isBoardMode === true ? (
+                <div className='flexBox'>
+                  {mtrls.map((mtrl) => (
+                    <MtrlBoard key={mtrl.id} mtrl={mtrl} />
+                  ))}
+                </div>
+              ) : (
+                <div>
+                  {mtrls.map((mtrl) => (
+                    <MtrlTable key={mtrl.id} mtrl={mtrl} />
+                  ))}
+                </div>
+              )}
             </div>
           </form>
         </div>

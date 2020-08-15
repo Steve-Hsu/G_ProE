@@ -19,6 +19,7 @@ import {
   TOGGLE_ISUPDATE,
   CASE_CLEAR,
   CASENO_CLEAR,
+  TOGGLE_CASE,
 } from '../types';
 
 export default (state, action) => {
@@ -119,6 +120,8 @@ export default (state, action) => {
         mtrls: [],
         formIsHalfFilledOut: true,
         error: null,
+        isUpdated: null,
+        isBoardMode: false,
       };
     case CASENO_CLEAR:
       return {
@@ -141,11 +144,18 @@ export default (state, action) => {
         mtrls: [],
         formIsHalfFilledOut: true,
         error: action.payload,
+        isUpdated: null,
+        isBoardMode: false,
       };
     case TOGGLE_ISUPDATE:
       return {
         ...state,
         isUpdated: action.payload,
+      };
+    case TOGGLE_CASE:
+      return {
+        ...state,
+        [action.payload]: !state[action.payload],
       };
     default:
   }

@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import CasesContext from '../../context/cases/casesContext';
 import PopoverContext from '../../context/popover/popoverContext';
 
-import MtrlClr from './1_4_1_MtrlClr';
-import MtrlSizeSPEC from './1_4_2_MtrlSizeSPEC';
-import MtrlCspt from './1_4_3_MtrlCspt';
+import MtrlClr from './1_6_1_MtrlClr';
+import MtrlSizeSPEC from './1_6_2_MtrlSizeSPEC';
+import MtrlCspt from './1_6_3_MtrlCspt';
 
 const Mtrl = ({ mtrl }) => {
   useEffect(() => {
@@ -19,7 +19,14 @@ const Mtrl = ({ mtrl }) => {
   const casesContext = useContext(CasesContext);
   const popoverContext = useContext(PopoverContext);
 
-  const { cNo, cWays, sizes, expandExtraPanels, addMtrlValue } = casesContext;
+  const {
+    cNo,
+    cWays,
+    sizes,
+    expandExtraPanels,
+    addMtrlValue,
+    addCaseValue,
+  } = casesContext;
 
   const { togglePopover } = popoverContext;
 
@@ -174,8 +181,18 @@ const Mtrl = ({ mtrl }) => {
     );
   };
 
+  const onClick = (e) => {
+    addCaseValue(e);
+  };
+
+  const goBack = (e) => {
+    e.target.name = mtrl.id;
+    e.target.id = 'isEditingMtrl';
+    addMtrlValue(e);
+  };
+
   return (
-    <div className='mb-1 p-1 card'>
+    <div className='mb-1 p-1 card' id='isEditingMtrl' onClick={onClick}>
       {/* Row_1  */}
       <div className='grid-6'>
         {/* Row_1 - Item */}
@@ -215,7 +232,8 @@ const Mtrl = ({ mtrl }) => {
       {/* Row_2  */}
       <div className='grid-6'>
         {/* Row_2 - Icon Space */}
-        <div></div>
+        {/* The positon of the btn  should be reranged*/}
+        <div onClick={goBack}>Go Back</div>
         {/* Row_2 - Position */}
         <div
           key={`${item_titles[3]}${mtrl.id}`}

@@ -25,6 +25,7 @@ import {
   CASE_CLEAR,
   CASENO_CLEAR,
   TOGGLE_ISUPDATE,
+  TOGGLE_CASE,
 } from '../types';
 
 const CasesState = (props) => {
@@ -45,6 +46,7 @@ const CasesState = (props) => {
     formIsHalfFilledOut: true,
     error: null,
     isUpdated: null,
+    isBoardMode: false,
   };
 
   const generateId = () => {
@@ -91,6 +93,7 @@ const CasesState = (props) => {
     multipleColor: false,
     multipleSPEC: false,
     multipleCSPT: false,
+    isEditingMtrl: false,
   };
 
   let newMtrlColor = {
@@ -602,7 +605,10 @@ const CasesState = (props) => {
           .checked
           ? true
           : false;
-        console.log(e.target.checked);
+        break;
+      case 'isEditingMtrl':
+        const bool = materials.find(({ id }) => id === mtrlId)[e.target.id];
+        materials.find(({ id }) => id === mtrlId)[e.target.id] = !bool;
         break;
       //  setUser({ ...user, [e.target.id]: e.target.checked ? true : false });
       default:
@@ -611,24 +617,31 @@ const CasesState = (props) => {
   };
 
   const addCaseValue = (e) => {
-    e.preventDefault();
-    try {
-      if (e.target.name === 'style') {
+    // e.preventDefault();
+    switch (e.target.name) {
+      case 'style':
         dispatch({ type: STYLE_UPDATE, payload: e.target.value });
-      } else if (e.target.name === 'client') {
+        break;
+      case 'client':
         dispatch({ type: CLIENT_UPDATE, payload: e.target.value });
-      } else if (e.target.name === 'gQty') {
+        break;
+      case 'gQty':
         let Qtys = gQtys;
         let Qty = Qtys.find(({ id }) => id === e.target.id);
         Qty.gQty = e.target.value;
 
         dispatch({ type: CASE_QTY_UPDATE, payload: Qtys });
         mtrls.map((mtrl) => updateCsptRequiredMQty(mtrl.id, Qty.id));
-      } else if (e.target.name === 'caseType') {
+        break;
+      case 'client':
         dispatch({ type: CASETYPE_UPDATE, payload: e.target.value });
-      }
-    } catch (err) {
-      console.log(err);
+        break;
+      case 'isBoardMode':
+      case 'isEditingMtrl':
+        console.log('is triggered -----too');
+        dispatch({ type: TOGGLE_CASE, payload: e.target.name });
+        break;
+      default:
     }
   };
 
@@ -769,6 +782,7 @@ const CasesState = (props) => {
         deletedMtrls: state.deletedMtrls,
         formIsHalfFilledOut: state.formIsHalfFilledOut,
         isUpdated: state.isUpdated,
+        isBoardMode: state.isBoardMode,
         addCaseValue,
         addcWay,
         updatecWay,
