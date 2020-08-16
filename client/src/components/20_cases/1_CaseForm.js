@@ -259,10 +259,10 @@ const CaseForm = () => {
                   />
                   <div className='sq-slider h-scatter-content v-center-content'>
                     <div className='sq-block center-content '>
-                      <i class='fas fa-list-ul'> Table</i>
+                      <i className='fas fa-list-ul'> Table</i>
                     </div>
                     <div className='sq-block center-content '>
-                      <i class='fas fa-table'> Board</i>
+                      <i className='fas fa-table'> Board</i>
                     </div>
                   </div>
                 </label>

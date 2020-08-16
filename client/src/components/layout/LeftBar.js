@@ -1,14 +1,21 @@
 import React, { useContext } from 'react';
-import AuthContext from '../../context/authUser/authUserContext';
 import CasesContext from '../../context/cases/casesContext';
 import QuoContext from '../../context/quo/quoContext';
 import SearchBar from './SearchBar';
+import Papa from 'papaparse';
 
 const LeftBar = ({ currentPath }) => {
-  const authContext = useContext(AuthContext);
   const casesContext = useContext(CasesContext);
   const quoContext = useContext(QuoContext);
-  const { mtrls, cNo, addcWay, addSize, addMtrl, clearcNo } = casesContext;
+  const {
+    mtrls,
+    cNo,
+    addcWay,
+    addSize,
+    addMtrl,
+    clearcNo,
+    readCsvCase,
+  } = casesContext;
   const { isQuotating, quotateFor, openQuoForm } = quoContext;
 
   //@ Define the current page for passing to searchBar
@@ -89,12 +96,35 @@ const LeftBar = ({ currentPath }) => {
 
   let btnSwitcher = updateBtnlabel();
 
+  const readCsv = () => {
+    const csv = document.getElementById('upload-csv').files[0];
+    if (csv) {
+      Papa.parse(csv, {
+        download: true,
+        header: true,
+        complete: (result) => {
+          console.log(result);
+          readCsvCase(result.data);
+        },
+      });
+    } else {
+      console.log('Please Select a csv file before reading it');
+    }
+  };
+
   return (
     <div className='container-with-navbar leftbar p-1 test-2'>
       <div className='leftbar-component test-4'>
         {' '}
         {'Import style from Excel'}
-        <input type='text' name='import' id='imoprt' />
+        {/* Read CSV */}
+        {currentPage === 'case' ? (
+          <div>
+            <input type='file' id='upload-csv' accept='.csv' />
+
+            <button onClick={readCsv}>Read CSV</button>
+          </div>
+        ) : null}
         {'Submit'}
         <input
           type='submit'

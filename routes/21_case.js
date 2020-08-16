@@ -179,15 +179,15 @@ router.post(
         mtrls.map((mtrl) => {
           const mtrlList = [
             'item',
-            'spec',
             'supplier',
             'ref_no',
             'position',
             'description',
           ];
           mtrlList.map((x) => {
-            if (mtrl[x] !== '' || mtrl[x] !== null)
+            if (mtrl[x] !== '' || mtrl[x] !== null) {
               mtrl[x] = mtrl[x].toLowerCase().trim();
+            }
           });
 
           const mtrlColorPromise = new Promise((resolve) => {
@@ -253,6 +253,9 @@ router.post(
               } else {
                 cspt.cspt = Number(mtrl.cspts[0].cspt);
               }
+
+              cspt.requiredMQty =
+                cspt.cspt * gQtys.find(({ id }) => id === cspt.gQty).gQty;
 
               cspt.unit = cspt.unit.toLowerCase().trim();
               num = num + 1;
@@ -483,15 +486,15 @@ router.put('/:id', authUser, async (req, res) => {
         mtrls.map((mtrl) => {
           const mtrlList = [
             'item',
-            'spec',
             'supplier',
             'ref_no',
             'position',
             'description',
           ];
           mtrlList.map((x) => {
-            if (mtrl[x] !== '' || mtrl[x] !== null)
+            if (mtrl[x] !== '' || mtrl[x] !== null) {
               mtrl[x] = mtrl[x].toLowerCase().trim();
+            }
           });
 
           const mtrlColorPromise = new Promise((resolve) => {
@@ -569,6 +572,9 @@ router.put('/:id', authUser, async (req, res) => {
               } else {
                 cspt.cspt = Number(mtrl.cspts[0].cspt);
               }
+
+              cspt.requiredMQty =
+                cspt.cspt * gQtys.find(({ id }) => id === cspt.gQty).gQty;
 
               cspt.unit = cspt.unit.toLowerCase().trim();
               num = num + 1;

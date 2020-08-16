@@ -60,7 +60,7 @@ const CasesState = (props) => {
   // @object Model
   // For setting state more convenient
   const newCWay = {
-    id: uuidv4() + generateId(),
+    id: '',
     gClr: '',
   };
   const newSize = {
@@ -76,9 +76,9 @@ const CasesState = (props) => {
 
   // According to React : default input should not be an 'null'
   const newMtrl = {
-    id: uuidv4() + generateId(),
+    // id: '',
     item: '',
-    spec: '',
+    // spec: '',
     supplier: '',
     ref_no: '',
     position: '',
@@ -162,16 +162,16 @@ const CasesState = (props) => {
     dispatch({ type: CASE_QTY_UPDATE, payload: gQtys });
   };
 
-  const deletegQtyBycWay = (cWayId) => {
-    let Qtys = gQtys.filter((gQty) => gQty.cWay !== cWayId);
-    // console.log("I'm here deleteQtyBycWay", Qtys); // Test Code
-    dispatch({ type: CASE_QTY_UPDATE, payload: Qtys });
-  };
+  // const deletegQtyBycWay = (cWayId) => {
+  //   let Qtys = gQtys.filter((gQty) => gQty.cWay !== cWayId);
+  //   // console.log("I'm here deleteQtyBycWay", Qtys); // Test Code
+  //   dispatch({ type: CASE_QTY_UPDATE, payload: Qtys });
+  // };
 
-  const deletegQtyBySize = (sizeId) => {
-    let Qtys = gQtys.filter((gQty) => gQty.size !== sizeId);
-    dispatch({ type: CASE_QTY_UPDATE, payload: Qtys });
-  };
+  // const deletegQtyBySize = (sizeId) => {
+  //   let Qtys = gQtys.filter((gQty) => gQty.size !== sizeId);
+  //   dispatch({ type: CASE_QTY_UPDATE, payload: Qtys });
+  // };
 
   // @mtrl.cspts.cspt item ----------------------------
   const addMtrlCsptBygQty = (gQty) => {
@@ -277,22 +277,22 @@ const CasesState = (props) => {
     updateMaterials(materials);
   };
 
-  const deleteMtrlCsptBycWay = (cWayId) => {
-    console.log('deleteMtrlCspt is triggered');
-    let materials = mtrls;
-    materials.map((mtrl) => {
-      return (mtrl.cspts = mtrl.cspts.filter((cspt) => cspt.cWay !== cWayId));
-    });
-    updateMaterials(materials);
-  };
+  // const deleteMtrlCsptBycWay = (cWayId) => {
+  //   console.log('deleteMtrlCspt is triggered');
+  //   let materials = mtrls;
+  //   materials.map((mtrl) => {
+  //     return (mtrl.cspts = mtrl.cspts.filter((cspt) => cspt.cWay !== cWayId));
+  //   });
+  //   updateMaterials(materials);
+  // };
 
-  const deleteMtrlCsptBySize = (sizeId) => {
-    let materials = mtrls;
-    materials.map((mtrl) => {
-      return (mtrl.cspts = mtrl.cspts.filter((cspt) => cspt.size !== sizeId));
-    });
-    updateMaterials(materials);
-  };
+  // const deleteMtrlCsptBySize = (sizeId) => {
+  //   let materials = mtrls;
+  //   materials.map((mtrl) => {
+  //     return (mtrl.cspts = mtrl.cspts.filter((cspt) => cspt.size !== sizeId));
+  //   });
+  //   updateMaterials(materials);
+  // };
 
   // @mtrl.mtrlColors.mtrlColor item ----------------------------
   const addMtrlColor = (cWayId) => {
@@ -310,16 +310,16 @@ const CasesState = (props) => {
     updateMaterials(materials);
   };
 
-  const deleteMtrlColor = (cWayId) => {
-    // console.log('DeleteMtrlColor is triggered'); // Test Code
-    let materials = mtrls;
-    materials.map((mtrl) => {
-      return (mtrl.mtrlColors = mtrl.mtrlColors.filter(
-        (mtrlColor) => mtrlColor.cWay !== cWayId
-      ));
-    });
-    updateMaterials(materials);
-  };
+  // const deleteMtrlColor = (cWayId) => {
+  //   // console.log('DeleteMtrlColor is triggered'); // Test Code
+  //   let materials = mtrls;
+  //   materials.map((mtrl) => {
+  //     return (mtrl.mtrlColors = mtrl.mtrlColors.filter(
+  //       (mtrlColor) => mtrlColor.cWay !== cWayId
+  //     ));
+  //   });
+  //   updateMaterials(materials);
+  // };
 
   // @mtrl.mSizeSPECs.mSizeSPEC item ----------------------------
   const addMtrlSizeSPEC = (sizeId) => {
@@ -336,25 +336,33 @@ const CasesState = (props) => {
     updateMaterials(materials);
   };
 
-  const deleteMtrlSizeSPEC = (sizeId) => {
-    let materials = mtrls;
-    materials.map((mtrl) => {
-      return (mtrl.sizeSPECs = mtrl.sizeSPECs.filter(
-        (mtrlSPEC) => mtrlSPEC.size !== sizeId
-      ));
-    });
-    updateMaterials(materials);
-  };
+  // const deleteMtrlSizeSPEC = (sizeId) => {
+  //   let materials = mtrls;
+  //   materials.map((mtrl) => {
+  //     return (mtrl.sizeSPECs = mtrl.sizeSPECs.filter(
+  //       (mtrlSPEC) => mtrlSPEC.size !== sizeId
+  //     ));
+  //   });
+  //   updateMaterials(materials);
+  // };
 
   // @Export using functions ----------------------------------------------------------------------------------------------------------
   const addcWay = (e) => {
-    e.preventDefault();
-    if (cWays.length < 20) {
-      // Add the new color way to each material
-      addQtyBycWay(newCWay.id);
-      addMtrlColor(newCWay.id);
+    if (e) {
+      e.preventDefault();
+    }
 
-      dispatch({ type: CLR_WAY_ADD, payload: newCWay });
+    if (cWays.length < 20) {
+      let newCWayId = uuidv4() + generateId();
+      // Add the new color way to each material
+
+      addQtyBycWay(newCWayId);
+      addMtrlColor(newCWayId);
+
+      dispatch({
+        type: CLR_WAY_ADD,
+        payload: { id: newCWayId, gClr: '' },
+      });
     }
 
     // Update all new cspt generated by the new cWay.
@@ -384,13 +392,13 @@ const CasesState = (props) => {
     mtrls.map((mtrl) => updateCsptgClr(mtrl.id, targetID));
   };
 
-  const deletecWay = (cWayId) => {
-    //Delete the cWay in eatch mtrl
-    deletegQtyBycWay(cWayId);
-    deleteMtrlColor(cWayId);
-    deleteMtrlCsptBycWay(cWayId);
-    dispatch({ type: CLR_WAY_DELETE, payload: cWayId });
-  };
+  // const deletecWay = (cWayId) => {
+  //   //Delete the cWay in eatch mtrl
+  //   deletegQtyBycWay(cWayId);
+  //   deleteMtrlColor(cWayId);
+  //   deleteMtrlCsptBycWay(cWayId);
+  //   dispatch({ type: CLR_WAY_DELETE, payload: cWayId });
+  // };
 
   const addSize = (e) => {
     // e.preventDefault : the e here is the app itself. Prevent it set back to default value
@@ -428,50 +436,111 @@ const CasesState = (props) => {
     mtrls.map((mtrl) => updateCsptgSize(mtrl.id, targetID));
   };
 
-  const deleteSize = (sizeId) => {
-    //Delete the size SPEC in eatch mtrl
-    deletegQtyBySize(sizeId);
-    deleteMtrlSizeSPEC(sizeId);
-    deleteMtrlCsptBySize(sizeId);
-    dispatch({ type: SIZE_DELETE, payload: sizeId });
-  };
+  // const deleteSize = (sizeId) => {
+  //   //Delete the size SPEC in eatch mtrl
+  //   deletegQtyBySize(sizeId);
+  //   deleteMtrlSizeSPEC(sizeId);
+  //   deleteMtrlCsptBySize(sizeId);
+  //   dispatch({ type: SIZE_DELETE, payload: sizeId });
+  // };
 
   const addMtrl = (e) => {
-    e.preventDefault();
-    //Update the mtrlColors to the new mtrl, before adding it to mtrls
-    cWays.map((cWay) => {
-      return newMtrl.mtrlColors.push({
-        id: uuidv4() + generateId(),
-        mtrl: newMtrl.id,
-        cWay: cWay.id,
-        mColor: '',
-      });
-    });
-    //Update the mtrlSizeSPEC to the new mtrl, before adding it to mtrls
-    sizes.map((size) => {
-      return newMtrl.sizeSPECs.push({
-        id: uuidv4() + generateId(),
-        mtrl: newMtrl.id,
-        size: size.id,
-        mSizeSPEC: '',
-      });
-    });
-    //Update the cspt to the new mtrl, before adding it to mtrls
-    gQtys.map((gQty) => {
-      newCspt = {
-        ...newCspt,
-        id: uuidv4() + generateId(),
-        cWay: gQty.cWay,
-        size: gQty.size,
-        gQty: gQty.id,
-        mtrl: newMtrl.id,
-      };
-      return newMtrl.cspts.push(newCspt);
-    });
-
-    if (mtrls.length < 500) {
-      dispatch({ type: MTRL_ADD, payload: newMtrl });
+    if (e) {
+      e.preventDefault();
     }
+    const newMtrlId = uuidv4() + generateId();
+    if (mtrls.length < 500) {
+      console.log(cWays.length);
+      let mtrlColorNum = 0;
+      const mtrlColors = cWays.map((cWay, idx) => {
+        mtrlColorNum = idx;
+        return {
+          ...newMtrlColor,
+          id: uuidv4() + generateId(),
+          mtrl: newMtrlId,
+          cWay: cWay.id,
+        };
+      });
+
+      let sizeSPECNum = 0;
+      const sizeSPECs = sizes.map((size, idx) => {
+        sizeSPECNum = idx;
+        return {
+          ...newSizeSPEC,
+          id: uuidv4() + generateId(),
+          mtrl: newMtrlId,
+          size: size.id,
+        };
+      });
+
+      let gQtyNum = 0;
+      const cspts = gQtys.map((gQty, idx) => {
+        gQtyNum = idx;
+        return {
+          ...newCspt,
+          id: uuidv4() + generateId(),
+          cWay: gQty.cWay,
+          size: gQty.size,
+          gQty: gQty.id,
+          mtrl: newMtrlId,
+        };
+      });
+
+      console.log('the MtrlColors', mtrlColors);
+
+      if (
+        mtrlColorNum + 1 === cWays.length &&
+        sizeSPECNum + 1 === sizes.length &&
+        gQtyNum + 1 === gQtys.length
+      ) {
+        dispatch({
+          type: MTRL_ADD,
+          payload: {
+            ...newMtrl,
+            id: newMtrlId,
+            mtrlColors: mtrlColors,
+            sizeSPECs: sizeSPECs,
+            cspts: cspts,
+          },
+        });
+      }
+    }
+
+    //Update the mtrlColors to the new mtrl, before adding it to mtrls
+
+    // cWays.map((cWay) => {
+    //   return newMtrl.mtrlColors.push({
+    //     id: uuidv4() + generateId(),
+    //     mtrl: newMtrl.id,
+    //     cWay: cWay.id,
+    //     mColor: '',
+    //   });
+    // });
+    // //Update the mtrlSizeSPEC to the new mtrl, before adding it to mtrls
+    // sizes.map((size) => {
+    //   return newMtrl.sizeSPECs.push({
+    //     id: uuidv4() + generateId(),
+    //     mtrl: newMtrl.id,
+    //     size: size.id,
+    //     mSizeSPEC: '',
+    //   });
+    // });
+    // //Update the cspt to the new mtrl, before adding it to mtrls
+    // gQtys.map((gQty) => {
+    //   newCspt = {
+    //     ...newCspt,
+    //     id: uuidv4() + generateId(),
+    //     cWay: gQty.cWay,
+    //     size: gQty.size,
+    //     gQty: gQty.id,
+    //     mtrl: newMtrl.id,
+    //   };
+    //   return newMtrl.cspts.push(newCspt);
+    // });
+
+    // if (mtrls.length < 500) {
+    //   dispatch({ type: MTRL_ADD, payload: newMtrl });
+    // }
   };
 
   const deleteMtrl = (mtrlId) => {
@@ -575,9 +644,9 @@ const CasesState = (props) => {
       case 'Item' + String(mtrlId):
         materials.find(({ id }) => id === mtrlId).item = e.target.value;
         break;
-      case 'SPEC' + String(mtrlId):
-        materials.find(({ id }) => id === mtrlId).spec = e.target.value;
-        break;
+      // case 'SPEC' + String(mtrlId):
+      //   materials.find(({ id }) => id === mtrlId).spec = e.target.value;
+      //   break;
       case 'Supplier' + String(mtrlId):
         materials.find(({ id }) => id === mtrlId).supplier = e.target.value;
         break;
@@ -625,6 +694,9 @@ const CasesState = (props) => {
       case 'client':
         dispatch({ type: CLIENT_UPDATE, payload: e.target.value });
         break;
+      case 'caseType':
+        dispatch({ type: CASETYPE_UPDATE, payload: e.target.value });
+        break;
       case 'gQty':
         let Qtys = gQtys;
         let Qty = Qtys.find(({ id }) => id === e.target.id);
@@ -632,9 +704,6 @@ const CasesState = (props) => {
 
         dispatch({ type: CASE_QTY_UPDATE, payload: Qtys });
         mtrls.map((mtrl) => updateCsptRequiredMQty(mtrl.id, Qty.id));
-        break;
-      case 'client':
-        dispatch({ type: CASETYPE_UPDATE, payload: e.target.value });
         break;
       case 'isBoardMode':
       case 'isEditingMtrl':
@@ -765,6 +834,60 @@ const CasesState = (props) => {
     }
   };
 
+  const readCsvCase = (csv) => {
+    if (csv[0].style) {
+      dispatch({ type: STYLE_UPDATE, payload: csv[0].style });
+    }
+    // Count how many color way
+    const colorWayKeys = Object.keys(csv[0]).filter((i) => i.includes('color'));
+    console.log(colorWayKeys);
+
+    const addcWayPro = new Promise((resolve) => {
+      colorWayKeys.map((cWay, idx) => {
+        addcWay();
+        console.log('the index in colorWayKeys', idx);
+        console.log('cWays', cWays);
+        if (cWays.length === colorWayKeys.length) {
+          resolve();
+        }
+      });
+    });
+
+    Promise.all([addcWayPro]).then(() => {
+      const addMtrls = new Promise((resolve) => {
+        console.log('After the promise the cWays length', cWays.length);
+        csv.map((mtrl, idx) => {
+          console.log('The 1st step addMtrl should be called');
+          addMtrl();
+
+          if (idx + 1 === csv.length) {
+            resolve();
+          }
+        });
+      });
+      Promise.all([addMtrls]).then(() => {
+        // let materials = mtrls;
+        // const csvKeys = Object.keys(csv[0]);
+        // materials.map((mtrl, idx) => {
+        //   // Add item, ref_no, position, description, unit
+        //   const currentCsv = csv[idx];
+        //   csvKeys.map((key) => {
+        //     if (mtrl[key]) {
+        //       mtrl[key] = currentCsv[key];
+        //     }
+        //   });
+        //   // Add mtrlColor
+        //   colorWayKeys.map((key, idx) => {
+        //     mtrl.mtrlColors[idx].mColor = currentCsv[key];
+        //   });
+        //   if (idx === materials.length) {
+        //     updateMaterials(materials);
+        //   }
+        // });
+      });
+    });
+  };
+
   return (
     <CasesContext.Provider
       value={{
@@ -804,6 +927,7 @@ const CasesState = (props) => {
         clearcNo,
         turnCaseIsUpdatedFalse,
         deletecWayOrgSize,
+        readCsvCase,
       }}
     >
       {props.children}
