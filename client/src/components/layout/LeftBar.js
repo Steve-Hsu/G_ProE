@@ -8,13 +8,15 @@ const LeftBar = ({ currentPath }) => {
   const casesContext = useContext(CasesContext);
   const quoContext = useContext(QuoContext);
   const {
+    cWays,
     mtrls,
     cNo,
     addcWay,
     addSize,
     addMtrl,
     clearcNo,
-    readCsvCase,
+    readCsvInsertCWay,
+    readCsvInsertMtrl,
   } = casesContext;
   const { isQuotating, quotateFor, openQuoForm } = quoContext;
 
@@ -102,9 +104,11 @@ const LeftBar = ({ currentPath }) => {
       Papa.parse(csv, {
         download: true,
         header: true,
-        complete: (result) => {
+        complete: async (result) => {
           console.log(result);
-          readCsvCase(result.data);
+          readCsvInsertCWay(result.data);
+          console.log('In the left bar', cWays);
+          readCsvInsertMtrl(result.data);
         },
       });
     } else {

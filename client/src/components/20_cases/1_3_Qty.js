@@ -29,7 +29,9 @@ const Qty = ({ size, gQty }) => {
             className='MPH-input'
           />
           <label htmlFor={gQty.id} className='MPH-input-label'>
-            {cWays.find(({ id }) => id === gQty.cWay).gClr}
+            {cWays.find(({ id }) => id === gQty.cWay) == true
+              ? cWays.find(({ id }) => id === gQty.cWay).gClr
+              : null}
             {'  '}
             {size.gSize}
           </label>

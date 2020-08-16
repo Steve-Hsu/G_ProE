@@ -53,9 +53,10 @@ const Mtrl = ({ mtrl }) => {
   ];
 
   const loadCaseSelectUnitTagIndex = () => {
-    document
-      .getElementById(`${mtrl.unit}${mtrl.id}`)
-      .setAttribute('selected', 'selected');
+    const theMtrl = document.getElementById(`${mtrl.unit}${mtrl.id}`);
+    if (theMtrl) {
+      theMtrl.setAttribute('selected', 'selected');
+    }
   };
 
   // Ajust the color of dropdown btn when the attached table is expaneded.

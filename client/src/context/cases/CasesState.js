@@ -135,6 +135,7 @@ const CasesState = (props) => {
 
   // @gQtys.gQty item ----------------------------
   const addQtyBycWay = (cWayId) => {
+    console.log("I'am called"); // Test Code
     sizes.map((size) => {
       newgQty = {
         ...newgQty,
@@ -347,13 +348,16 @@ const CasesState = (props) => {
   // };
 
   // @Export using functions ----------------------------------------------------------------------------------------------------------
-  const addcWay = (e) => {
+  const addcWay = (e, newCWayId = uuidv4() + generateId()) => {
     if (e) {
       e.preventDefault();
     }
 
     if (cWays.length < 20) {
-      let newCWayId = uuidv4() + generateId();
+      // if (newCWayId === null) {
+      //   newCWayId = uuidv4() + generateId();
+      // }
+
       // Add the new color way to each material
 
       addQtyBycWay(newCWayId);
@@ -444,103 +448,107 @@ const CasesState = (props) => {
   //   dispatch({ type: SIZE_DELETE, payload: sizeId });
   // };
 
-  const addMtrl = (e) => {
+  const addMtrl = (e, colorWays = cWays, mtrlObj = null) => {
     if (e) {
       e.preventDefault();
     }
     const newMtrlId = uuidv4() + generateId();
     if (mtrls.length < 500) {
-      console.log(cWays.length);
       let mtrlColorNum = 0;
-      const mtrlColors = cWays.map((cWay, idx) => {
-        mtrlColorNum = idx;
-        return {
-          ...newMtrlColor,
-          id: uuidv4() + generateId(),
-          mtrl: newMtrlId,
-          cWay: cWay.id,
-        };
-      });
-
       let sizeSPECNum = 0;
-      const sizeSPECs = sizes.map((size, idx) => {
-        sizeSPECNum = idx;
-        return {
-          ...newSizeSPEC,
-          id: uuidv4() + generateId(),
-          mtrl: newMtrlId,
-          size: size.id,
-        };
-      });
-
       let gQtyNum = 0;
-      const cspts = gQtys.map((gQty, idx) => {
-        gQtyNum = idx;
-        return {
-          ...newCspt,
-          id: uuidv4() + generateId(),
-          cWay: gQty.cWay,
-          size: gQty.size,
-          gQty: gQty.id,
-          mtrl: newMtrlId,
-        };
-      });
+      let mtrlColors = [];
+      let sizeSPECs = [];
+      let cspts = [];
+      let cWayLength = 0;
+      let sizesLength = 0;
+      let gQtyLength = 0;
+
+      if (colorWays.length === 0) {
+        cWayLength = 1;
+      } else {
+        cWayLength = colorWays.length;
+        mtrlColors = colorWays.map((colorWay, idx) => {
+          mtrlColorNum = idx;
+          return {
+            ...newMtrlColor,
+            id: uuidv4() + generateId(),
+            mtrl: newMtrlId,
+            cWay: colorWay.id,
+          };
+        });
+      }
+
+      if (sizes.length === 0) {
+        sizesLength = 1;
+      } else {
+        sizesLength = sizes.length;
+        sizeSPECs = sizes.map((size, idx) => {
+          sizeSPECNum = idx;
+          return {
+            ...newSizeSPEC,
+            id: uuidv4() + generateId(),
+            mtrl: newMtrlId,
+            size: size.id,
+          };
+        });
+      }
+
+      if (gQtys.length === 0) {
+        gQtyLength = 1;
+      } else {
+        gQtyLength = gQtys.length;
+        cspts = gQtys.map((gQty, idx) => {
+          gQtyNum = idx;
+          return {
+            ...newCspt,
+            id: uuidv4() + generateId(),
+            cWay: gQty.cWay,
+            size: gQty.size,
+            gQty: gQty.id,
+            mtrl: newMtrlId,
+          };
+        });
+      }
 
       console.log('the MtrlColors', mtrlColors);
 
       if (
-        mtrlColorNum + 1 === cWays.length &&
-        sizeSPECNum + 1 === sizes.length &&
-        gQtyNum + 1 === gQtys.length
+        mtrlColorNum + 1 === cWayLength &&
+        sizeSPECNum + 1 === sizesLength &&
+        gQtyNum + 1 === gQtyLength
       ) {
-        dispatch({
-          type: MTRL_ADD,
-          payload: {
-            ...newMtrl,
-            id: newMtrlId,
-            mtrlColors: mtrlColors,
-            sizeSPECs: sizeSPECs,
-            cspts: cspts,
-          },
-        });
+        if (mtrlObj === null) {
+          dispatch({
+            type: MTRL_ADD,
+            payload: {
+              ...newMtrl,
+              id: newMtrlId,
+              mtrlColors: mtrlColors,
+              sizeSPECs: sizeSPECs,
+              cspts: cspts,
+            },
+          });
+        } else {
+          const { item, ref_no, position, description, unit } = mtrlObj;
+          dispatch({
+            type: MTRL_ADD,
+            payload: {
+              ...newMtrl,
+              item,
+              ref_no,
+              position,
+              description,
+              unit,
+              id: newMtrlId,
+              mtrlColors: mtrlColors,
+              sizeSPECs: sizeSPECs,
+              cspts: cspts,
+            },
+          });
+        }
       }
     }
-
-    //Update the mtrlColors to the new mtrl, before adding it to mtrls
-
-    // cWays.map((cWay) => {
-    //   return newMtrl.mtrlColors.push({
-    //     id: uuidv4() + generateId(),
-    //     mtrl: newMtrl.id,
-    //     cWay: cWay.id,
-    //     mColor: '',
-    //   });
-    // });
-    // //Update the mtrlSizeSPEC to the new mtrl, before adding it to mtrls
-    // sizes.map((size) => {
-    //   return newMtrl.sizeSPECs.push({
-    //     id: uuidv4() + generateId(),
-    //     mtrl: newMtrl.id,
-    //     size: size.id,
-    //     mSizeSPEC: '',
-    //   });
-    // });
-    // //Update the cspt to the new mtrl, before adding it to mtrls
-    // gQtys.map((gQty) => {
-    //   newCspt = {
-    //     ...newCspt,
-    //     id: uuidv4() + generateId(),
-    //     cWay: gQty.cWay,
-    //     size: gQty.size,
-    //     gQty: gQty.id,
-    //     mtrl: newMtrl.id,
-    //   };
-    //   return newMtrl.cspts.push(newCspt);
-    // });
-
-    // if (mtrls.length < 500) {
-    //   dispatch({ type: MTRL_ADD, payload: newMtrl });
-    // }
   };
 
   const deleteMtrl = (mtrlId) => {
@@ -834,7 +842,9 @@ const CasesState = (props) => {
     }
   };
 
-  const readCsvCase = (csv) => {
+  const readCsvInsertCWay = (csv) => {
+    console.log('The beggning ', cWays);
+
     if (csv[0].style) {
       dispatch({ type: STYLE_UPDATE, payload: csv[0].style });
     }
@@ -842,51 +852,93 @@ const CasesState = (props) => {
     const colorWayKeys = Object.keys(csv[0]).filter((i) => i.includes('color'));
     console.log(colorWayKeys);
 
-    const addcWayPro = new Promise((resolve) => {
-      colorWayKeys.map((cWay, idx) => {
-        addcWay();
-        console.log('the index in colorWayKeys', idx);
-        console.log('cWays', cWays);
-        if (cWays.length === colorWayKeys.length) {
-          resolve();
-        }
-      });
+    // const insertcWay = new Promise((resolve) => {
+    const cWayIds = colorWayKeys.map((cWay) => {
+      const newcWayId = uuidv4() + generateId();
+      addcWay(null, newcWayId);
+      // if (idx + 1 == colorWayKeys.length) {
+      //   return resolve(cWayIds);
+      // }
+
+      return { id: newcWayId, gClr: '' };
     });
 
-    Promise.all([addcWayPro]).then(() => {
-      const addMtrls = new Promise((resolve) => {
-        console.log('After the promise the cWays length', cWays.length);
-        csv.map((mtrl, idx) => {
-          console.log('The 1st step addMtrl should be called');
-          addMtrl();
-
-          if (idx + 1 === csv.length) {
-            resolve();
-          }
-        });
-      });
-      Promise.all([addMtrls]).then(() => {
-        // let materials = mtrls;
-        // const csvKeys = Object.keys(csv[0]);
-        // materials.map((mtrl, idx) => {
-        //   // Add item, ref_no, position, description, unit
-        //   const currentCsv = csv[idx];
-        //   csvKeys.map((key) => {
-        //     if (mtrl[key]) {
-        //       mtrl[key] = currentCsv[key];
-        //     }
-        //   });
-        //   // Add mtrlColor
-        //   colorWayKeys.map((key, idx) => {
-        //     mtrl.mtrlColors[idx].mColor = currentCsv[key];
-        //   });
-        //   if (idx === materials.length) {
-        //     updateMaterials(materials);
-        //   }
-        // });
-      });
+    console.log('the cWyaIds', cWayIds);
+    // });
+    csv.map((mtrlObj, idx) => {
+      console.log('The 1st step addMtrl should be called');
+      addMtrl(null, cWayIds, mtrlObj);
     });
   };
+
+  const readCsvInsertMtrl = (csv) => {
+    // console.log('In the readCsvInsertMtrl', cWays);
+    // const insertMtrl = new Promise((resolve) => {
+    //   csv.map((mtrl, idx) => {
+    //     console.log('The 1st step addMtrl should be called');
+    //     addMtrl();
+    //     if (idx + 1 === csv.length) {
+    //       resolve();
+    //     }
+    //   });
+    // });
+  };
+  // const addcWayPro = await new Promise((resolve) => {
+  //   insertcWay(colorWayKeys, resolve);
+  //   // colorWayKeys.map(async (cWay, idx) => {
+  //   //   addcWay();
+  //   //   console.log('the index in colorWayKeys', idx);
+  //   //   console.log('cWays', cWays);
+  //   //   if (idx + 1 === colorWayKeys.length) {
+  //   //     // console.log('The updatedState', updatedState.cWays);
+  //   //     resolve();
+  //   //   }
+  //   // });
+  // });
+
+  // // console.log('the ref', updatedState.cWays);
+  // // setTimeout(() => {
+  // //   const newCWay = state.cWays;
+  // //   console.log('set time out cWays', newCWay);
+  // //   console.log('the ref', updatedState.cWays);
+  // // }, 5000);
+
+  // Promise.all([addcWayPro]).then(() => {
+  //   // updatedState.current.focus();
+  //   console.log('The updatedState', updatedState);
+  //   const addMtrls = new Promise((resolve) => {
+  //     console.log('After the promise the cWays length', cWays.length);
+  //     csv.map((mtrl, idx) => {
+  //       console.log('The 1st step addMtrl should be called');
+  //       addMtrl();
+
+  //       if (idx + 1 === csv.length) {
+  //         resolve();
+  //       }
+  //     });
+  //   });
+  //   Promise.all([addMtrls]).then(() => {
+  //     // let materials = mtrls;
+  //     // const csvKeys = Object.keys(csv[0]);
+  //     // materials.map((mtrl, idx) => {
+  //     //   // Add item, ref_no, position, description, unit
+  //     //   const currentCsv = csv[idx];
+  //     //   csvKeys.map((key) => {
+  //     //     if (mtrl[key]) {
+  //     //       mtrl[key] = currentCsv[key];
+  //     //     }
+  //     //   });
+  //     //   // Add mtrlColor
+  //     //   colorWayKeys.map((key, idx) => {
+  //     //     mtrl.mtrlColors[idx].mColor = currentCsv[key];
+  //     //   });
+  //     //   if (idx === materials.length) {
+  //     //     updateMaterials(materials);
+  //     //   }
+  //     // });
+  //   });
+  // });
+  // };
 
   return (
     <CasesContext.Provider
@@ -927,7 +979,8 @@ const CasesState = (props) => {
         clearcNo,
         turnCaseIsUpdatedFalse,
         deletecWayOrgSize,
-        readCsvCase,
+        readCsvInsertCWay,
+        readCsvInsertMtrl,
       }}
     >
       {props.children}
