@@ -15,8 +15,7 @@ const LeftBar = ({ currentPath }) => {
     addSize,
     addMtrl,
     clearcNo,
-    readCsvInsertCWay,
-    readCsvInsertMtrl,
+    getStyleFromCSV,
   } = casesContext;
   const { isQuotating, quotateFor, openQuoForm } = quoContext;
 
@@ -106,9 +105,9 @@ const LeftBar = ({ currentPath }) => {
         header: true,
         complete: async (result) => {
           console.log(result);
-          readCsvInsertCWay(result.data);
+          getStyleFromCSV(result.data);
           console.log('In the left bar', cWays);
-          readCsvInsertMtrl(result.data);
+          // readCsvInsertMtrl(result.data);
         },
       });
     } else {

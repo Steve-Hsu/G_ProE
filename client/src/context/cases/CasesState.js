@@ -842,7 +842,7 @@ const CasesState = (props) => {
     }
   };
 
-  const readCsvInsertCWay = (csv) => {
+  const getStyleFromCSV = (csv) => {
     console.log('The beggning ', cWays);
 
     if (csv[0].style) {
@@ -870,75 +870,6 @@ const CasesState = (props) => {
       addMtrl(null, cWayIds, mtrlObj);
     });
   };
-
-  const readCsvInsertMtrl = (csv) => {
-    // console.log('In the readCsvInsertMtrl', cWays);
-    // const insertMtrl = new Promise((resolve) => {
-    //   csv.map((mtrl, idx) => {
-    //     console.log('The 1st step addMtrl should be called');
-    //     addMtrl();
-    //     if (idx + 1 === csv.length) {
-    //       resolve();
-    //     }
-    //   });
-    // });
-  };
-  // const addcWayPro = await new Promise((resolve) => {
-  //   insertcWay(colorWayKeys, resolve);
-  //   // colorWayKeys.map(async (cWay, idx) => {
-  //   //   addcWay();
-  //   //   console.log('the index in colorWayKeys', idx);
-  //   //   console.log('cWays', cWays);
-  //   //   if (idx + 1 === colorWayKeys.length) {
-  //   //     // console.log('The updatedState', updatedState.cWays);
-  //   //     resolve();
-  //   //   }
-  //   // });
-  // });
-
-  // // console.log('the ref', updatedState.cWays);
-  // // setTimeout(() => {
-  // //   const newCWay = state.cWays;
-  // //   console.log('set time out cWays', newCWay);
-  // //   console.log('the ref', updatedState.cWays);
-  // // }, 5000);
-
-  // Promise.all([addcWayPro]).then(() => {
-  //   // updatedState.current.focus();
-  //   console.log('The updatedState', updatedState);
-  //   const addMtrls = new Promise((resolve) => {
-  //     console.log('After the promise the cWays length', cWays.length);
-  //     csv.map((mtrl, idx) => {
-  //       console.log('The 1st step addMtrl should be called');
-  //       addMtrl();
-
-  //       if (idx + 1 === csv.length) {
-  //         resolve();
-  //       }
-  //     });
-  //   });
-  //   Promise.all([addMtrls]).then(() => {
-  //     // let materials = mtrls;
-  //     // const csvKeys = Object.keys(csv[0]);
-  //     // materials.map((mtrl, idx) => {
-  //     //   // Add item, ref_no, position, description, unit
-  //     //   const currentCsv = csv[idx];
-  //     //   csvKeys.map((key) => {
-  //     //     if (mtrl[key]) {
-  //     //       mtrl[key] = currentCsv[key];
-  //     //     }
-  //     //   });
-  //     //   // Add mtrlColor
-  //     //   colorWayKeys.map((key, idx) => {
-  //     //     mtrl.mtrlColors[idx].mColor = currentCsv[key];
-  //     //   });
-  //     //   if (idx === materials.length) {
-  //     //     updateMaterials(materials);
-  //     //   }
-  //     // });
-  //   });
-  // });
-  // };
 
   return (
     <CasesContext.Provider
@@ -979,8 +910,7 @@ const CasesState = (props) => {
         clearcNo,
         turnCaseIsUpdatedFalse,
         deletecWayOrgSize,
-        readCsvInsertCWay,
-        readCsvInsertMtrl,
+        getStyleFromCSV,
       }}
     >
       {props.children}
