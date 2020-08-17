@@ -871,6 +871,14 @@ const CasesState = (props) => {
     });
   };
 
+  const getM_list = () => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+  };
+
   return (
     <CasesContext.Provider
       value={{
