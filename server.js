@@ -9,6 +9,26 @@ connectDB();
 // Init Middleware for testing to send body in JSON
 app.use(express.json({ extended: false }));
 
+//For Cors issue Setting
+app.use((req, res, next) => {
+  // Allows to specific source you send your request.
+  //特殊值 *，設置所有 origin 都被允許。
+  //但使用特殊值 * 要格外小心，因為這會使 Server 容易受到跨站請求的偽需求攻擊
+  //You'd set the '*' to your domain after you push the app to heroku
+  res.header(
+    'Access-Control-Allow-Origin',
+    '*'
+    // 'http://127.0.0.1:5000/m-list, http://localhost:3000'
+  );
+  // Allow to some specific header you send out, use * represents all kind of header you send out is ok.
+  res.header('Access-Control-Allow-Headers', '*');
+
+  // Allows to this request method you send out
+  if (req.method === 'OPTIONS') {
+    res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, PATCH, DELETE');
+  }
+});
+
 //EndPoint
 app.get('/', (req, res) =>
   res.json({

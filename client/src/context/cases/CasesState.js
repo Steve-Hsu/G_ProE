@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 import CasesContext from './casesContext';
 import CasesReducer from './casesReducer';
+import Papa from 'papaparse';
 
 //@Global Header for token
 
@@ -843,8 +844,6 @@ const CasesState = (props) => {
   };
 
   const getStyleFromCSV = (csv) => {
-    console.log('The beggning ', cWays);
-
     if (csv[0].style) {
       dispatch({ type: STYLE_UPDATE, payload: csv[0].style });
     }
@@ -856,9 +855,6 @@ const CasesState = (props) => {
     const cWayIds = colorWayKeys.map((cWay) => {
       const newcWayId = uuidv4() + generateId();
       addcWay(null, newcWayId);
-      // if (idx + 1 == colorWayKeys.length) {
-      //   return resolve(cWayIds);
-      // }
 
       return { id: newcWayId, gClr: '' };
     });
@@ -871,12 +867,38 @@ const CasesState = (props) => {
     });
   };
 
-  const getM_list = () => {
+  const getM_list = async (JSONBOM) => {
     const config = {
       headers: {
         'Content-Type': 'application/json',
       },
     };
+    // cors - anywhere
+    // Since I sent out a request to 3rd party API, the cors-anywhere is required
+    // const cors = 'https://cors-anywhere.herokuapp.com/';
+    const url = 'http://127.0.0.1:5000/m-list';
+    const res = await axios.post(`${url}`, JSONBOM, config);
+    const csv = res.data;
+
+    console.log('The csv, the res.data', csv);
+
+    if (csv) {
+      // getStyleFromCSV(csv);
+      Papa.parse(csv, {
+        header: true,
+        // download: true, // When the "csv" is a path, to local or url, this option must be used
+        complete: async (result) => {
+          console.log('The result in complete', result.data);
+          getStyleFromCSV(result.data);
+          console.log('In the left bar', cWays);
+        },
+      });
+    } else {
+      console.log('Please Select a csv file before reading it');
+    }
+
+    // console.log(res.data);
+    return null;
   };
 
   return (
@@ -919,6 +941,7 @@ const CasesState = (props) => {
         turnCaseIsUpdatedFalse,
         deletecWayOrgSize,
         getStyleFromCSV,
+        getM_list,
       }}
     >
       {props.children}

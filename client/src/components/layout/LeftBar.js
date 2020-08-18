@@ -2,7 +2,8 @@ import React, { useContext } from 'react';
 import CasesContext from '../../context/cases/casesContext';
 import QuoContext from '../../context/quo/quoContext';
 import SearchBar from './SearchBar';
-import Papa from 'papaparse';
+// import Papa from 'papaparse';
+import readXlsxFile from 'read-excel-file';
 
 const LeftBar = ({ currentPath }) => {
   const casesContext = useContext(CasesContext);
@@ -16,6 +17,7 @@ const LeftBar = ({ currentPath }) => {
     addMtrl,
     clearcNo,
     getStyleFromCSV,
+    getM_list,
   } = casesContext;
   const { isQuotating, quotateFor, openQuoForm } = quoContext;
 
@@ -97,21 +99,35 @@ const LeftBar = ({ currentPath }) => {
 
   let btnSwitcher = updateBtnlabel();
 
-  const readCsv = () => {
-    const csv = document.getElementById('upload-csv').files[0];
-    if (csv) {
-      Papa.parse(csv, {
-        download: true,
-        header: true,
-        complete: async (result) => {
-          console.log(result);
-          getStyleFromCSV(result.data);
-          console.log('In the left bar', cWays);
-          // readCsvInsertMtrl(result.data);
-        },
+  // const readCsv = (csv) => {
+  //   if (csv) {
+  //     Papa.parse(csv, {
+  //       download: true,
+  //       header: true,
+  //       complete: async (result) => {
+  //         console.log(result);
+  //         getStyleFromCSV(result.data);
+  //         console.log('In the left bar', cWays);
+  //         // readCsvInsertMtrl(result.data);
+  //       },
+  //     });
+  //   } else {
+  //     console.log('Please Select a csv file before reading it');
+  //   }
+  // };
+  const readExcel = () => {
+    const excel = document.getElementById('upload-excel').files[0];
+    console.log('The excel', excel);
+    console.log('The type of the excel itself', typeof excel);
+    if (excel) {
+      readXlsxFile(excel).then((rows) => {
+        const JSONRows = JSON.stringify(rows);
+        console.log(`The type of the rows, ${typeof JSONRows}`);
+        console.log('The result ', JSONRows);
+        getM_list(JSONRows);
       });
     } else {
-      console.log('Please Select a csv file before reading it');
+      console.log('Please Select a excel file before reading it');
     }
   };
 
@@ -123,9 +139,9 @@ const LeftBar = ({ currentPath }) => {
         {/* Read CSV */}
         {currentPage === 'case' ? (
           <div>
-            <input type='file' id='upload-csv' accept='.csv' />
+            <input type='file' id='upload-excel' accept='.xls, .xlsx' />
 
-            <button onClick={readCsv}>Read CSV</button>
+            <button onClick={readExcel}>Read Excel</button>
           </div>
         ) : null}
         {'Submit'}
