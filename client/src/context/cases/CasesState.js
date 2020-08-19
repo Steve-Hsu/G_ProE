@@ -520,7 +520,7 @@ const CasesState = (props) => {
         });
       }
 
-      console.log('the MtrlColors', mtrlColors);
+      // console.log('the MtrlColors', mtrlColors); // Test Code
 
       // Make sure the 3 element, mtrlColors, sizeSPECs, and cspt are exising or done
       if (
@@ -893,9 +893,7 @@ const CasesState = (props) => {
         'Content-Type': 'application/json',
       },
     };
-    // cors - anywhere
-    // Since I sent out a request to 3rd party API, the cors-anywhere is required
-    // const cors = 'https://cors-anywhere.herokuapp.com/';
+
     const url = 'http://127.0.0.1:5000/m-list';
     const res = await axios.post(`${url}`, JSONBOM, config);
     const csv = res.data;
@@ -903,14 +901,13 @@ const CasesState = (props) => {
     console.log('The csv, the res.data', csv);
 
     if (csv) {
-      // getStyleFromCSV(csv);
       Papa.parse(csv, {
         header: true,
         // download: true, // When the "csv" is a path, to local or url, this option must be used
         complete: async (result) => {
-          console.log('The result in complete', result.data);
+          // console.log('The result in complete', result.data); // Test Code
           getStyleFromCSV(result.data);
-          console.log('In the left bar', cWays);
+          // console.log('In the left bar', cWays); // Test Code
         },
       });
     } else {

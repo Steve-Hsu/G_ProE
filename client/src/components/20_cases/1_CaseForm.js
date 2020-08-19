@@ -122,6 +122,40 @@ const CaseForm = () => {
     addCaseValue(e);
   };
 
+  const mtrlItems = (switcher) => {
+    const valueOfItems = mtrls.map((mtrl) => {
+      return mtrl.item;
+    });
+    const uniques = valueOfItems.filter((item, idx) => {
+      return valueOfItems.indexOf(item) == idx;
+    });
+
+    const lengthOfItems = uniques.map((uni) => {
+      return mtrls.filter((mtrl) => mtrl.item === uni).length;
+    });
+
+    const result = uniques.map((uni) => {
+      if (uni == '') {
+        return 'undefined';
+      } else if (uni) {
+        return uni;
+      } else {
+        return 'empty';
+      }
+    });
+    switch (switcher) {
+      case 'result':
+        return result;
+
+      case 'lengthOfItems':
+        return lengthOfItems;
+
+      case 'unique':
+        return uniques;
+      default:
+    }
+  };
+
   return (
     <Fragment>
       {/* // Ask the user when they want to jump to another page wihout saving datas */}
@@ -272,12 +306,38 @@ const CaseForm = () => {
 
             <div>
               {isBoardMode === true ? (
-                <div className='flexBox'>
-                  {mtrls.map((mtrl) => (
-                    <MtrlBoard key={mtrl.id} mtrl={mtrl} />
+                <Fragment>
+                  {mtrlItems('result').map((mtrlItem, idx) => (
+                    <div key={`boardOf${mtrlItem}`} className='mt-1'>
+                      <div className='grid-4'>
+                        <div>{mtrlItem.toUpperCase()}</div>
+                        <div>
+                          The number of this material is{' '}
+                          {mtrlItems('lengthOfItems')[idx]}
+                        </div>
+                      </div>
+
+                      <div className='flexBox' key={`flexBoxOf${mtrlItem}`}>
+                        {mtrls.map((mtrl) => {
+                          var re = new RegExp(mtrl.item, 'i');
+                          if (re.test(mtrlItems('unique')[idx])) {
+                            return (
+                              <MtrlBoard key={mtrl.id} mtrl={mtrl}></MtrlBoard>
+                            );
+                          } else {
+                            return null;
+                          }
+                        })}
+                      </div>
+                    </div>
                   ))}
-                </div>
+                </Fragment>
               ) : (
+                // <div className='flexBox'>
+                //   {mtrls.map((mtrl) => (
+                //     <MtrlBoard key={mtrl.id} mtrl={mtrl} />
+                //   ))}
+                // </div>
                 <div>
                   {mtrls.map((mtrl) => (
                     <MtrlTable key={mtrl.id} mtrl={mtrl} />

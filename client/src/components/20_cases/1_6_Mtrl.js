@@ -23,6 +23,7 @@ const Mtrl = ({ mtrl }) => {
     cNo,
     cWays,
     sizes,
+    mtrls,
     expandExtraPanels,
     addMtrlValue,
     addCaseValue,
@@ -194,6 +195,12 @@ const Mtrl = ({ mtrl }) => {
 
   return (
     <div className='mb-1 p-1 card' id='isEditingMtrl' onClick={onClick}>
+      {/* Title area */}
+      <div className='grid-6 mb-1'>
+        <div className='lead'>{Number(mtrls.indexOf(mtrl) + 1)}</div>
+        {/* The positon of the btn  should be reranged*/}
+        <div onClick={goBack}>Go Back</div>
+      </div>
       {/* Row_1  */}
       <div className='grid-6'>
         {/* Row_1 - Item */}
@@ -233,8 +240,7 @@ const Mtrl = ({ mtrl }) => {
       {/* Row_2  */}
       <div className='grid-6'>
         {/* Row_2 - Icon Space */}
-        {/* The positon of the btn  should be reranged*/}
-        <div onClick={goBack}>Go Back</div>
+        <div></div>
         {/* Row_2 - Position */}
         <div
           key={`${item_titles[3]}${mtrl.id}`}
