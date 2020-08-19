@@ -464,18 +464,26 @@ const CasesState = (props) => {
       let cWayLength = 0;
       let sizesLength = 0;
       let gQtyLength = 0;
+      let multipleColor = false;
 
       if (colorWays.length === 0) {
         cWayLength = 1;
       } else {
         cWayLength = colorWays.length;
+        multipleColor = true;
         mtrlColors = colorWays.map((colorWay, idx) => {
           mtrlColorNum = idx;
+          let mColor = '';
+          if (mtrlObj !== null) {
+            let index = Number(idx + 1);
+            mColor = mtrlObj[`color_way_${index}`];
+          }
           return {
             ...newMtrlColor,
             id: uuidv4() + generateId(),
             mtrl: newMtrlId,
             cWay: colorWay.id,
+            mColor: mColor,
           };
         });
       }
@@ -514,12 +522,14 @@ const CasesState = (props) => {
 
       console.log('the MtrlColors', mtrlColors);
 
+      // Make sure the 3 element, mtrlColors, sizeSPECs, and cspt are exising or done
       if (
         mtrlColorNum + 1 === cWayLength &&
         sizeSPECNum + 1 === sizesLength &&
         gQtyNum + 1 === gQtyLength
       ) {
         if (mtrlObj === null) {
+          // Manual create a new mtrl
           dispatch({
             type: MTRL_ADD,
             payload: {
@@ -528,15 +538,24 @@ const CasesState = (props) => {
               mtrlColors: mtrlColors,
               sizeSPECs: sizeSPECs,
               cspts: cspts,
+              multipleColor: multipleColor,
             },
           });
         } else {
-          const { item, ref_no, position, description, unit } = mtrlObj;
+          // Create new mtrl by input a csv, the mtrlObj is the item in the csv sheet
+          const {
+            item,
+            ref_no,
+            position,
+            description,
+            unit,
+            CATEGORY,
+          } = mtrlObj;
           dispatch({
             type: MTRL_ADD,
             payload: {
               ...newMtrl,
-              item,
+              item: CATEGORY,
               ref_no,
               position,
               description,
@@ -545,6 +564,7 @@ const CasesState = (props) => {
               mtrlColors: mtrlColors,
               sizeSPECs: sizeSPECs,
               cspts: cspts,
+              multipleColor: multipleColor,
             },
           });
         }
