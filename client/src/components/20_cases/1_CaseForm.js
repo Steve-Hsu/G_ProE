@@ -320,12 +320,40 @@ const CaseForm = () => {
                       <div className='flexBox' key={`flexBoxOf${mtrlItem}`}>
                         {mtrls.map((mtrl) => {
                           var re = new RegExp(mtrl.item, 'i');
-                          if (re.test(mtrlItems('unique')[idx])) {
-                            return (
-                              <MtrlBoard key={mtrl.id} mtrl={mtrl}></MtrlBoard>
-                            );
-                          } else {
-                            return null;
+                          switch (mtrl.item) {
+                            case undefined:
+                              if (mtrlItem === 'empty') {
+                                return (
+                                  <MtrlBoard
+                                    key={mtrl.id}
+                                    mtrl={mtrl}
+                                  ></MtrlBoard>
+                                );
+                              } else {
+                                return null;
+                              }
+                            case '':
+                              if (mtrlItem === 'undefined') {
+                                return (
+                                  <MtrlBoard
+                                    key={mtrl.id}
+                                    mtrl={mtrl}
+                                  ></MtrlBoard>
+                                );
+                              } else {
+                                return null;
+                              }
+                            default:
+                              if (re.test(mtrlItems('unique')[idx])) {
+                                return (
+                                  <MtrlBoard
+                                    key={mtrl.id}
+                                    mtrl={mtrl}
+                                  ></MtrlBoard>
+                                );
+                              } else {
+                                return null;
+                              }
                           }
                         })}
                       </div>

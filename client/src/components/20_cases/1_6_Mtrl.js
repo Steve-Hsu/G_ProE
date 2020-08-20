@@ -15,6 +15,9 @@ const Mtrl = ({ mtrl }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mtrl.unit]);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const casesContext = useContext(CasesContext);
   const popoverContext = useContext(PopoverContext);
