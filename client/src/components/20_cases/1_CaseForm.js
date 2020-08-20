@@ -325,7 +325,7 @@ const CaseForm = () => {
                               if (mtrlItem === 'empty') {
                                 return (
                                   <MtrlBoard
-                                    key={mtrl.id}
+                                    key={`empty${mtrl.id}`}
                                     mtrl={mtrl}
                                   ></MtrlBoard>
                                 );
@@ -336,7 +336,7 @@ const CaseForm = () => {
                               if (mtrlItem === 'undefined') {
                                 return (
                                   <MtrlBoard
-                                    key={mtrl.id}
+                                    key={`undefined${mtrl.id}`}
                                     mtrl={mtrl}
                                   ></MtrlBoard>
                                 );
@@ -347,7 +347,7 @@ const CaseForm = () => {
                               if (re.test(mtrlItems('unique')[idx])) {
                                 return (
                                   <MtrlBoard
-                                    key={mtrl.id}
+                                    key={`unique${mtrl.id}`}
                                     mtrl={mtrl}
                                   ></MtrlBoard>
                                 );

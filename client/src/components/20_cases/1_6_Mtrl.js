@@ -34,6 +34,10 @@ const Mtrl = ({ mtrl }) => {
 
   const { togglePopover } = popoverContext;
 
+  //@ Value for input
+  //words length limit
+  const maxWdsLength = '300';
+
   //For sparete the postion of btn, here use an inline style.
   //deleteBtn in mtrl.
   const deleteBtnPosition = {
@@ -148,23 +152,54 @@ const Mtrl = ({ mtrl }) => {
     addMtrlValue(e);
   };
 
+  const onChange2 = (e) => {
+    const elem = document.getElementById(e.target.id);
+
+    elem.addEventListener('blur', (e) => {
+      addMtrlValue(e);
+      elem.setAttribute('value', `${mtrlAttribute('item') || ''}`);
+    });
+  };
+
   const inputItemObj = (subject) => {
-    return (
-      <>
-        <input
-          type='text'
-          id={`${subject}${mtrl.id}`}
-          name={mtrl.id}
-          placeholder='.'
-          onChange={addMtrlValue}
-          className='MPH-input'
-          value={mtrlAttribute(subject) || ''}
-        />
-        <label htmlFor={`${subject}${mtrl.id}`} className='MPH-input-label'>
-          {subject}
-        </label>
-      </>
-    );
+    if (subject === 'Item') {
+      //Prevent update when user enter the value for item, espacially in board mode, if don't, it will cause alot of delay
+      return (
+        <>
+          {/* <div className='tiny text-primary transition'>{subject}</div> */}
+          <input
+            type='text'
+            id={`${subject}${mtrl.id}`}
+            name={mtrl.id}
+            placeholder={
+              mtrlAttribute(subject).charAt(0).toUpperCase() +
+              mtrlAttribute(subject).slice(1)
+            }
+            onChange={onChange2}
+            className='item-input'
+            maxLength={maxWdsLength}
+          />
+        </>
+      );
+    } else {
+      return (
+        <>
+          <input
+            type='text'
+            id={`${subject}${mtrl.id}`}
+            name={mtrl.id}
+            placeholder='.'
+            onChange={addMtrlValue}
+            className='MPH-input'
+            value={mtrlAttribute(subject) || ''}
+            maxLength={maxWdsLength}
+          />
+          <label htmlFor={`${subject}${mtrl.id}`} className='MPH-input-label'>
+            {subject}
+          </label>
+        </>
+      );
+    }
   };
 
   const toggleSwitchObj = (subject) => {
@@ -200,9 +235,28 @@ const Mtrl = ({ mtrl }) => {
     <div className='mb-1 p-1 card' id='isEditingMtrl' onClick={onClick}>
       {/* Title area */}
       <div className='grid-6 mb-1'>
-        <div className='lead'>{Number(mtrls.indexOf(mtrl) + 1)}</div>
         {/* The positon of the btn  should be reranged*/}
-        <div onClick={goBack}>Go Back</div>
+        <div onClick={goBack}>
+          <i className='fas fa-chevron-left'></i>
+        </div>
+        <div className='lead'>{Number(mtrls.indexOf(mtrl) + 1)}</div>
+        <></>
+        <></>
+        <></>
+        {/* Row_1 - Delete Btn */}
+        <div>
+          {cNo === null ? null : (
+            <button
+              value={mtrl.id}
+              name='mtrl'
+              onClick={togglePopover}
+              className='btn btn-fade btn-square'
+              style={deleteBtnPosition}
+            >
+              x
+            </button>
+          )}
+        </div>
       </div>
       {/* Row_1  */}
       <div className='grid-6'>
@@ -220,30 +274,16 @@ const Mtrl = ({ mtrl }) => {
         {/* Row_1 - Ref_no */}
         <div
           key={`${item_titles[2]}${mtrl.id}`}
-          style={{ gridColumn: '4 / 6' }}
+          style={{ gridColumn: '4 / 7' }}
         >
           {inputItemObj(item_titles[2])}
-        </div>
-        {/* Row_1 - Delete Btn */}
-        <div>
-          {cNo === null ? null : (
-            <button
-              value={mtrl.id}
-              name='mtrl'
-              onClick={togglePopover}
-              className='btn btn-fade btn-square'
-              style={deleteBtnPosition}
-            >
-              x
-            </button>
-          )}
         </div>
       </div>
 
       {/* Row_2  */}
       <div className='grid-6'>
         {/* Row_2 - Icon Space */}
-        <div></div>
+        <></>
         {/* Row_2 - Position */}
         <div
           key={`${item_titles[3]}${mtrl.id}`}

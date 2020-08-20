@@ -749,6 +749,29 @@ textarea:focus {
   color: var(--primary-color);
 }
 
+/* customised input */
+.item-input[type='text'] {
+  background: rgba(255, 255, 255, 0);
+  height: 3rem;
+  position: relative;
+  font-size: 3rem;
+  z-index: 2;
+}
+.item-input::placeholder {
+  position: relative;
+  color: #333;
+  font-size: 3rem;
+  z-index: 3;
+}
+/* when focus, the placeholer turn white */
+.item-input:focus::placeholder {
+  color: rgba(255, 255, 255, 0);
+}
+
+/* .item-input::placeholder:focus {
+  color: white;
+} */
+
 @keyframes labelUp {
   0% {
     color: var(--primary-color);

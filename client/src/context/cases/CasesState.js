@@ -78,7 +78,7 @@ const CasesState = (props) => {
   // According to React : default input should not be an 'null'
   const newMtrl = {
     // id: '',
-    item: '',
+    item: 'Item',
     // spec: '',
     supplier: '',
     ref_no: '',
