@@ -9,14 +9,12 @@ const LeftBar = ({ currentPath }) => {
   const casesContext = useContext(CasesContext);
   const quoContext = useContext(QuoContext);
   const {
-    cWays,
     mtrls,
     cNo,
     addcWay,
     addSize,
     addMtrl,
     clearcNo,
-    getStyleFromCSV,
     getM_list,
   } = casesContext;
   const { isQuotating, quotateFor, openQuoForm } = quoContext;
