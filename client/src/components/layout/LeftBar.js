@@ -20,7 +20,17 @@ const LeftBar = ({ currentPath }) => {
     getM_list,
   } = casesContext;
   const { isQuotating, quotateFor, openQuoForm } = quoContext;
-
+  const SHEET_NAME_LIST = [
+    'bom',
+    'trims',
+    'shell',
+    'fabric',
+    'accessories',
+    'spec',
+    '228184',
+    '#334183',
+    'tabelle1',
+  ];
   //@ Define the current page for passing to searchBar
   let currentPage = '';
   switch (currentPath) {
@@ -99,6 +109,7 @@ const LeftBar = ({ currentPath }) => {
 
   let btnSwitcher = updateBtnlabel();
 
+  // Parse CSV locally----,
   // const readCsv = (csv) => {
   //   if (csv) {
   //     Papa.parse(csv, {
@@ -115,16 +126,53 @@ const LeftBar = ({ currentPath }) => {
   //     console.log('Please Select a csv file before reading it');
   //   }
   // };
+
+  // Parse Excel by http request
   const readExcel = () => {
     const excel = document.getElementById('upload-excel').files[0];
     console.log('The excel', excel);
     console.log('The type of the excel itself', typeof excel);
     if (excel) {
-      readXlsxFile(excel).then((rows) => {
-        const JSONRows = JSON.stringify(rows);
-        console.log(`The type of the rows, ${typeof JSONRows}`);
-        console.log('The result ', JSONRows);
-        getM_list(JSONRows);
+      const regex = new RegExp(SHEET_NAME_LIST.join('|'), 'i');
+      let resultSheet = new Array();
+
+      readXlsxFile(excel, { getSheets: true }).then((sheets) => {
+        console.log('the sheets name', sheets);
+
+        const insertArr = new Promise((resolve) => {
+          let num_L_1 = 0;
+          sheets.map((sheet) => {
+            if (regex.test(sheet.name)) {
+              console.log('the sheet pushed', sheet.name);
+              readXlsxFile(excel, { sheet: sheet.name }).then((rows) => {
+                console.log(typeof rows);
+                console.log('the rows', rows);
+
+                rows.map((row, idx) => {
+                  resultSheet.push(row);
+                  if (idx + 1 == rows.length) {
+                    num_L_1 = num_L_1 + 1;
+                    if (num_L_1 === sheets.length) {
+                      resolve();
+                    }
+                  }
+                });
+              });
+            } else {
+              num_L_1 = num_L_1 + 1;
+              if (num_L_1 == sheet.length) {
+                resolve();
+              }
+            }
+          });
+        });
+
+        Promise.all([insertArr]).then(() => {
+          console.log('the resultSheet', resultSheet);
+          const JSONRows = JSON.stringify(resultSheet);
+          console.log('the json JSONRows', JSONRows);
+          getM_list(JSONRows);
+        });
       });
     } else {
       console.log('Please Select a excel file before reading it');
