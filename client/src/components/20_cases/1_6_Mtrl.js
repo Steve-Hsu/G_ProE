@@ -45,6 +45,8 @@ const Mtrl = ({ mtrl }) => {
     left: '100%',
     transform: 'translate(-2rem, -1rem)',
   };
+  // Expand Panel class
+  const expandPanelClass = 'grid-1-5 bg-cp-bg-light pt-1 round-card bd-light';
 
   const unitList = [
     'Select a Unit',
@@ -70,11 +72,15 @@ const Mtrl = ({ mtrl }) => {
   // Ajust the color of dropdown btn when the attached table is expaneded.
   const dropDownStyle = (subject) => {
     const styleObj = {
-      color: 'white',
-      background: 'var(--primary-color)',
+      // color: 'white',
+      // background: 'var(--primary-color)',
       transition: 'all 0.5s',
-      border: '0',
-      borderBottom: '1px solid var(--primary - color)',
+      // border: '0',
+      // borderBottom: '1px solid var(--primary - color)',
+      background: 'var(--cp-1_2)',
+      color: 'var(--cp-1_4)',
+      border: '2px solid var(--cp - 1_3)',
+      opacity: '1',
     };
     switch (subject) {
       case 'mtrlColor':
@@ -232,17 +238,19 @@ const Mtrl = ({ mtrl }) => {
   };
 
   return (
-    <div className='mb-1 p-1 card' id='isEditingMtrl' onClick={onClick}>
+    <div
+      className='mb-1 p-1 round-card bg-cp-elem bd-light'
+      style={{ width: '100%' }}
+      id='isEditingMtrl'
+      onClick={onClick}
+    >
       {/* Title area */}
-      <div className='grid-6 mb-1'>
+      <div className='h-scatter-content mb-1'>
         {/* The positon of the btn  should be reranged*/}
-        <div onClick={goBack}>
-          <i className='fas fa-chevron-left'></i>
+        <div key={`${item_titles[0]}${mtrl.id}`}>
+          {inputItemObj(item_titles[0])}
         </div>
-        <div className='lead'>{Number(mtrls.indexOf(mtrl) + 1)}</div>
-        <></>
-        <></>
-        <></>
+
         {/* Row_1 - Delete Btn */}
         <div>
           {cNo === null ? null : (
@@ -261,13 +269,18 @@ const Mtrl = ({ mtrl }) => {
       {/* Row_1  */}
       <div className='grid-6'>
         {/* Row_1 - Item */}
-        <div key={`${item_titles[0]}${mtrl.id}`}>
-          {inputItemObj(item_titles[0])}
+        <div className='flexBox ml-1'>
+          <div onClick={goBack} className='go-back-arrow'>
+            <i className='fas fa-angle-down'></i>
+          </div>
+          <div className='ml-1'>No.{Number(mtrls.indexOf(mtrl) + 1)}</div>
         </div>
+
         {/* Row_1 - Supplier */}
         <div
           key={`${item_titles[1]}${mtrl.id}`}
           style={{ gridColumn: '2 / 4' }}
+          className='pr-1'
         >
           {inputItemObj(item_titles[1])}
         </div>
@@ -310,7 +323,7 @@ const Mtrl = ({ mtrl }) => {
       <div className='grid-6'>
         {/* Row_4 - Icon Space */}
         <div></div>
-        <div>
+        <div className='mr-1'>
           <div className='tiny text-primary transition'>
             {mtrl.multipleColor == true ? 'Multiple' : 'Single'}
           </div>
@@ -324,7 +337,7 @@ const Mtrl = ({ mtrl }) => {
             Color
           </button>
         </div>
-        <div>
+        <div className='mr-1'>
           <div className='tiny text-primary transition'>
             {mtrl.multipleSPEC == true ? 'Multiple' : 'Single'}
           </div>
@@ -338,7 +351,7 @@ const Mtrl = ({ mtrl }) => {
             SPEC
           </button>
         </div>
-        <div>
+        <div className='mr-1'>
           <div className='tiny text-primary transition'>
             {mtrl.multipleCSPT == true ? 'Multiple' : 'Single'}
           </div>
@@ -346,7 +359,7 @@ const Mtrl = ({ mtrl }) => {
             value={mtrl.id}
             name='cspt'
             onClick={expandExtraPanels}
-            className='btn btn-dropdown lead'
+            className='btn btn-dropdown lead '
             style={dropDownStyle('cspt')}
           >
             Consumption
@@ -362,7 +375,7 @@ const Mtrl = ({ mtrl }) => {
             placeholder='Unit'
             onChange={addMtrlValue}
             default='yd'
-            className='select-primary-sub'
+            className='select-primary-sub bd-light'
             required
           >
             {unitList.map((s) => {
@@ -375,13 +388,13 @@ const Mtrl = ({ mtrl }) => {
           </select>
         </div>
       </div>
-      {/* {Row_3} */}
+      {/* {Row_5} */}
       {/* Color expand panel  */}
       {mtrl.expandColor && cWays.length > 0 ? (
-        <div className='grid-1-5'>
+        <div className={expandPanelClass}>
           {/* The toggle switch for material Color */}
           <div
-            style={{ height: '68px', display: 'grid', placeItems: 'center' }}
+            style={{ height: '100%', display: 'grid', placeItems: 'center' }}
           >
             {toggleSwitchObj('multipleColor')}
           </div>
@@ -406,10 +419,10 @@ const Mtrl = ({ mtrl }) => {
       ) : null}
       {/* SizeSPEC expand panel  */}
       {mtrl.expandSizeSPEC && sizes.length > 0 ? (
-        <div className='grid-1-5'>
+        <div className={expandPanelClass}>
           {/* The toggle switch for material SPEC */}
           <div
-            style={{ height: '68px', display: 'grid', placeItems: 'center' }}
+            style={{ height: '100%', display: 'grid', placeItems: 'center' }}
           >
             {toggleSwitchObj('multipleSPEC')}
           </div>
@@ -434,10 +447,10 @@ const Mtrl = ({ mtrl }) => {
       ) : null}
       {/* cspt expand panel  */}
       {mtrl.expandCspt && mtrl.cspts.length > 0 ? (
-        <div className='grid-1-5'>
+        <div className={expandPanelClass}>
           {/* The toggle switch for material SPEC */}
           <div
-            style={{ height: '68px', display: 'grid', placeItems: 'center' }}
+            style={{ height: '100%', display: 'grid', placeItems: 'center' }}
           >
             {toggleSwitchObj('multipleCSPT')}
           </div>

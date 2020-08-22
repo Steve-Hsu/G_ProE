@@ -15,7 +15,8 @@ const MtrlClr = ({ mtrlColor, mtrlId }) => {
   const mColorLength = maxWdsLength;
 
   return (
-    <div style={{ height: '68px' }}>
+    // <div style={{ height: '68px' }}>
+    <div className='mr-1'>
       <input
         name={mtrlId}
         id={mtrlColor.id}

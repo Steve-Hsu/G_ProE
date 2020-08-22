@@ -25,8 +25,11 @@ const MtrlBoard = ({ mtrl }) => {
       {isEditingMtrl == true ? (
         <Mtrl key={mtrl.id} mtrl={mtrl} />
       ) : (
-        <div className='boardChild card' onClick={onClick}>
-          <div>{mtrls.findIndex(({ id }) => id === mtrl.id) + 1}</div>
+        <div
+          className='boardChild round-card bg-cp-elem bd-light'
+          onClick={onClick}
+        >
+          <div>No.{mtrls.findIndex(({ id }) => id === mtrl.id) + 1}</div>
           <div>{mtrl.item}</div>
           <div>{mtrl.supplier}</div>
           <div>{mtrl.ref_no}</div>

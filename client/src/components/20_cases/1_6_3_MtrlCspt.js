@@ -16,7 +16,7 @@ const MtrlCspt = ({ size, mtrl }) => {
   return (
     // <Fragment>
     //   {cspt ? (
-    <div style={{ height: '68px' }} key={`${sizeId}${mtrl.id}`}>
+    <div>
       <input
         name={mtrl.id}
         id={cspt.id}

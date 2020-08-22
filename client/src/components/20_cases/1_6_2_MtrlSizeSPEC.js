@@ -15,7 +15,7 @@ const MtrlSizeSPEC = ({ sizeSPEC, mtrlId }) => {
   const SizeSPECLength = maxWdsLength;
 
   return (
-    <div style={{ height: '68px' }}>
+    <div>
       <input
         name={mtrlId}
         id={sizeSPEC.id}

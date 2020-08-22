@@ -166,7 +166,7 @@ const CaseForm = () => {
           <form id='caseForm' onSubmit={onSubmitCase}>
             {/* Case Information */}
             <div className='lead'>Case Information</div>
-            <div className='grid-1-5 row-gap-md round-card bg-white mb-2'>
+            <div className='grid-1-5 row-gap-md round-card bg-cp-elem mb-2 bd-light'>
               <div className='v-center-content'>CaseNo.</div>
               <div>{cNo === null ? 'New Case' : cNo}</div>
 
@@ -306,66 +306,70 @@ const CaseForm = () => {
 
             <div>
               {isBoardMode === true ? (
-                <Fragment>
+                <div>
                   {mtrlItems('result').map((mtrlItem, idx) => (
-                    <div key={`boardOf${mtrlItem}`} className='mt-1'>
-                      <div className='grid-4'>
-                        <div>{mtrlItem.toUpperCase()}</div>
-                        <div>
+                    <div
+                      key={`boardOf${mtrlItem}`}
+                      className='mt-1 bg-cp-bg boardArea'
+                    >
+                      <div className='grid-4 p-1'>
+                        <div className='text-cp-2'>
+                          {mtrlItem.toUpperCase()}
+                        </div>
+                        <div className='text-cp-1'>
                           The number of this material is{' '}
                           {mtrlItems('lengthOfItems')[idx]}
                         </div>
                       </div>
-
-                      <div className='flexBox' key={`flexBoxOf${mtrlItem}`}>
-                        {mtrls.map((mtrl) => {
-                          var re = new RegExp(mtrl.item, 'i');
-                          switch (mtrl.item) {
-                            case undefined:
-                              if (mtrlItem === 'empty') {
-                                return (
-                                  <MtrlBoard
-                                    key={`empty${mtrl.id}`}
-                                    mtrl={mtrl}
-                                  ></MtrlBoard>
-                                );
-                              } else {
-                                return null;
-                              }
-                            case '':
-                              if (mtrlItem === 'undefined') {
-                                return (
-                                  <MtrlBoard
-                                    key={`undefined${mtrl.id}`}
-                                    mtrl={mtrl}
-                                  ></MtrlBoard>
-                                );
-                              } else {
-                                return null;
-                              }
-                            default:
-                              if (re.test(mtrlItems('unique')[idx])) {
-                                return (
-                                  <MtrlBoard
-                                    key={`unique${mtrl.id}`}
-                                    mtrl={mtrl}
-                                  ></MtrlBoard>
-                                );
-                              } else {
-                                return null;
-                              }
-                          }
-                        })}
+                      <div className='center-content'>
+                        <div
+                          className='boardParent'
+                          key={`flexBoxOf${mtrlItem}`}
+                        >
+                          {mtrls.map((mtrl) => {
+                            var re = new RegExp(mtrl.item, 'i');
+                            switch (mtrl.item) {
+                              case undefined:
+                                if (mtrlItem === 'empty') {
+                                  return (
+                                    <MtrlBoard
+                                      key={`empty${mtrl.id}`}
+                                      mtrl={mtrl}
+                                    ></MtrlBoard>
+                                  );
+                                } else {
+                                  return null;
+                                }
+                              case '':
+                                if (mtrlItem === 'undefined') {
+                                  return (
+                                    <MtrlBoard
+                                      key={`undefined${mtrl.id}`}
+                                      mtrl={mtrl}
+                                    ></MtrlBoard>
+                                  );
+                                } else {
+                                  return null;
+                                }
+                              default:
+                                if (re.test(mtrlItems('unique')[idx])) {
+                                  return (
+                                    <MtrlBoard
+                                      key={`unique${mtrl.id}`}
+                                      mtrl={mtrl}
+                                    ></MtrlBoard>
+                                  );
+                                } else {
+                                  return null;
+                                }
+                            }
+                          })}
+                        </div>
                       </div>
                     </div>
                   ))}
-                </Fragment>
+                </div>
               ) : (
-                // <div className='flexBox'>
-                //   {mtrls.map((mtrl) => (
-                //     <MtrlBoard key={mtrl.id} mtrl={mtrl} />
-                //   ))}
-                // </div>
                 <div>
                   {mtrls.map((mtrl) => (
                     <MtrlTable key={mtrl.id} mtrl={mtrl} />

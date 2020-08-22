@@ -7,15 +7,32 @@
 
 /* Global Styles */
 :root {
+  /* Color plate */
+  /* Applying the _1 as the background Color or opposite the _4 as the background Color */
+  --cp-1_1: #f6f4e6;
+  --cp-1_2: #fddb3a;
+  --cp-1_3: #52575d;
+  --cp-1_4: #41444b;
+
+  /* color family */
+  --cp-1_2-light: #ffef9f;
+  /* Opposite color */
+  /* You have findout by browsers with the color code */
+  --cp-1_2-opposite: #3a5cfd;
   /* The theme */
-  --primary-color: #ffab0f;
-  --primary-text: #474643;
+
+  --primary-color: var(--cp-1_2);
+  --primary-text: var(--cp-1_4);
   /* Others */
   --dark-color: #333333;
   --light-color: #fff5bd;
   --danger-color: #dc3545;
-  --success-color: #28a745;
-  --fade-color: #c7c7c7;
+  --success-color: var(--cp-1_2-opposite);
+
+  /* The color for fade element such as thin border */
+  /* This color should be able to apply to any color wihout dismatch.  */
+  --fade-color: rgba(0, 0, 0, 0.08);
+
   /* Space */
   --gap: 0;
   --tiny: 0.2rem;
@@ -61,7 +78,7 @@ body {
   font-size: 1rem;
   line-height: 1.6;
   background-color: #fff;
-  color: #333;
+  color: var(--cp-1_4);
 }
 
 a {
@@ -101,14 +118,14 @@ img {
 /* @Cards */
 .card {
   padding: 1rem;
-  border: var(--fade-color) 1px dotted;
+  /* border: var(--fade-color) 1px dotted; */
   margin: 0.7rem 0;
 }
 
 .round-card {
   padding: 1rem;
   border-radius: 5px;
-  border: rgba(185, 39, 39, 1);
+
   margin: 0.7rem 0;
 }
 
@@ -296,14 +313,17 @@ img {
 .btn {
   display: inline-block;
   position: relative;
-  /* background: var(--light-color); */
-  color: #333;
   padding: 0.4rem 1.3rem;
   font-size: 1rem;
-  border: none;
   cursor: pointer;
   transition: opacity 0.2s ease-in;
   outline: none;
+  justify-content: center;
+  align-content: center;
+}
+
+.btn:hover {
+  opacity: 0.7;
 }
 
 .btn-square {
@@ -315,12 +335,20 @@ img {
 }
 
 .btn-dropdown {
-  height: 2.3rem;
+  height: 3rem;
   width: 100%;
-  border: none;
-  /* border-bottom: 1px solid rgba(255, 255, 255, 0); */
-  background: none;
+  color: var(--cp-1_2);
+  border-radius: 5px;
+  border: 2px solid var(--cp-1_4);
+  background: var(--cp-1_3);
   transition: all 0.5s;
+}
+
+.btn-dropdown:hover {
+  background: var(--cp-1_2);
+  color: var(--cp-1_4);
+  border: 2px solid var(--cp-1_3);
+  opacity: 1;
 }
 
 .btn-link {
@@ -338,6 +366,12 @@ img {
   font-size: 0.8rem;
   padding: 0.3rem 1rem;
   margin-right: 0.2rem;
+}
+
+.go-back-arrow:hover {
+  cursor: pointer;
+  transform: rotate(90deg);
+  transition: all 0.3s;
 }
 
 .badge {
@@ -358,66 +392,8 @@ img {
   color: #333;
 }
 
-.btn-primary,
-.bg-primary,
-.badge-primary,
-.alert-primary {
-  background: var(--primary-color);
-  color: #fff;
-}
-
-.btn-light,
-.bg-light,
-.badge-light,
-.alert-light {
-  background: var(--light-color);
-  color: #333;
-}
-
-.btn-dark,
-.bg-dark,
-.badge-dark,
-.alert-dark {
-  background: var(--dark-color);
-  color: #fff;
-}
-
-.btn-danger,
-.bg-danger,
-.badge-danger,
-.alert-danger {
-  background: var(--danger-color);
-  color: #fff;
-}
-
-.btn-success,
-.bg-success,
-.badge-success,
-.alert-success {
-  background: var(--success-color);
-  color: #fff;
-}
-
-.btn-white,
-.badge-white,
-.alert-white {
-  background: #fff;
-  color: #333;
-}
-
-.btn-fade,
-.bg-fade,
-.badge-fade,
-.alert-fade {
-  background: var(--primary-text);
-  color: var(--fade-color);
-  border-radius: 0;
-  transition: all 0.5s;
-}
-
-.bg-light,
 .badge-light {
-  border: var(--fade-color) solid 1px;
+  border: var(--fade-s) solid 1px;
 }
 
 .round-img {
@@ -426,10 +402,6 @@ img {
 
 .round-square-img {
   border-radius: 5px;
-}
-
-.btn:hover {
-  opacity: 0.7;
 }
 
 .btn-fade:hover {
@@ -469,7 +441,9 @@ img {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
+  /* The background color when the toggole is off, at the right side */
+  /* border: 2px solid var(--cp-1_4); */
+  background-color: var(--cp-1_3);
   -webkit-transition: 0.4s;
   transition: 0.4s;
 }
@@ -482,13 +456,13 @@ img {
   width: 23px;
   left: 2px;
   bottom: 2px;
-  background-color: white;
+  background-color: var(--cp-1_1);
   -webkit-transition: 0.4s;
   transition: 0.4s;
 }
 
 .switchInput:checked + .slider {
-  background-color: #2196f3;
+  background-color: var(--success-color);
 }
 
 /* input:focus + .slider {
@@ -538,7 +512,7 @@ img {
   right: 0;
   bottom: 0;
   height: 40px;
-  background-color: #ccc;
+  background-color: var(--cp-1_3);
   -webkit-transition: 0.4s;
   transition: 0.4s;
 }
@@ -556,7 +530,7 @@ img {
   width: 96px;
   left: 2px;
   bottom: 2px;
-  background-color: white;
+  background-color: var(--cp-1_2);
   -webkit-transition: 0.4s;
   transition: 0.4s;
 }
@@ -631,24 +605,20 @@ textarea {
   padding: 0.4rem;
   font-size: 1rem;
   border-radius: 5px;
-  border: 1px solid rgba(255, 255, 255, 0);
   transition: all 0.5s;
-  /* border-bottom: 1px solid rgba(255, 255, 255, 0); */
+  border: 1px solid var(--fade-color);
 }
 
 input[type='number'] {
   width: 76%;
 }
 
-input[type='submit'],
-button {
+input[type='submit'] {
   font: inherit;
 }
 
 .select-primary {
-  /* color: var(--primary-color); */
   transition: all 0.5s;
-  border: 1px solid rgba(255, 255, 255, 0);
 }
 input[type='number']:hover,
 input[type='text']:hover,
@@ -657,11 +627,7 @@ input[type='password']:hover,
 input[type='date']:hover,
 select:hover,
 textarea:hover {
-  /* box-shadow: none;
-  outline: none;
-  border: 1px solid var(--primary-color);
-  transition: all 0.6s; */
-  color: white;
+  color: var(--primary-text);
   background: var(--primary-color);
   transition: all 0.5s;
 }
@@ -675,31 +641,27 @@ select:focus,
 textarea:focus {
   box-shadow: none;
   outline: none;
-  border: 1px solid var(--primary-color);
   transition: all 0.5s;
 }
 
-.btn-dropdown:hover,
 .select-primary:focus,
 .select-primary:hover {
   color: white;
   background: var(--primary-color);
   transition: all 0.5s;
-  /* border: 0; */
-  /* border-bottom: 1px solid var(--primary-color); */
 }
 
 .select-primary-sub {
   transition: all 0.5s;
+  height: 3rem;
 }
 
 .select-primary-sub:focus,
 .select-primary-sub:hover {
   /* color: white; */
+
   background: var(--primary-color);
   transition: all 0.5s;
-  border: 0;
-  border-bottom: 1px solid var(--primary-color);
 }
 
 /* input - Moveing place holder input */
@@ -709,20 +671,23 @@ textarea:focus {
   font-size: 1rem;
   display: block;
   opacity: 1;
-  transform: translateY(-1.8rem);
+  transform: translateY(-1.8rem) translateX(0.5rem);
   transform-origin: 0 0;
   transition: all 0.3s;
   animation: labelDown 0.7s ease;
+  color: var(--cp-1_2);
 }
 
 .MPH-input {
   box-shadow: none;
   transition: all 0.5s;
   z-index: 2;
+  color: var(--cp-1_4);
+  border: 1px solid var(--fade-color);
 }
 
 .MPH-input::placeholder {
-  color: rgba(255, 255, 255, 1);
+  color: rgba(255, 255, 255, 0);
 }
 
 .MPH-input:hover,
@@ -734,7 +699,7 @@ textarea:focus {
 }
 
 .MPH-input:hover + .MPH-input-label {
-  color: var(--primary-color);
+  color: var(--cp-1_3);
   transition: all 0.5s;
 }
 
@@ -744,22 +709,23 @@ textarea:focus {
 
 .MPH-input:focus + .MPH-input-label,
 .MPH-input:not(:placeholder-shown) + .MPH-input-label {
-  transform: translateY(-3rem) scale(0.7);
+  transform: translateY(-3.1rem) scale(0.7);
   animation: labelUp 0.7s ease;
-  color: var(--primary-color);
+  color: var(--cp-1_3);
 }
 
 /* customised input */
 .item-input[type='text'] {
   background: rgba(255, 255, 255, 0);
-  height: 3rem;
+  height: 3.5rem;
   position: relative;
   font-size: 3rem;
   z-index: 2;
+  border: 1px solid rgba(255, 255, 255, 0);
 }
 .item-input::placeholder {
   position: relative;
-  color: #333;
+  color: var();
   font-size: 3rem;
   z-index: 3;
 }
@@ -774,7 +740,7 @@ textarea:focus {
 
 @keyframes labelUp {
   0% {
-    color: var(--primary-color);
+    color: var(--cp-1_2);
   }
   25% {
     color: rgba(255, 255, 255, 0);
@@ -783,28 +749,28 @@ textarea:focus {
     color: rgba(255, 255, 255, 0);
   }
   75% {
-    color: var(--primary-color);
+    color: var(--cp-1_3);
   }
   100% {
-    color: var(--primary-color);
+    color: var(--cp-1_3);
   }
 }
 
 @keyframes labelDown {
   0% {
-    color: var(--primary-color);
+    color: var(--cp-1_3);
   }
   25% {
     color: rgba(255, 255, 255, 0);
   }
   50% {
-    color: rgba(255, 255, 255, 0);
+    color: var(--cp-1_2);
   }
   75% {
-    color: #333;
+    color: var(--cp-1_2);
   }
   100% {
-    color: #333;
+    color: var(--cp-1_2);
   }
 }
 /* Usage : Use a div with class .MPH-input-group to warp a input and babel, the input will transform it size when focused. */
@@ -929,11 +895,28 @@ textarea:focus {
   align-content: flex-start;
 }
 /* BoardParent */
+.boardArea {
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.boardParent {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  width: 70vw;
+}
+
 /* BoardElement */
 .boardChild {
-  flex: 1 1 150px;
-  flex: 0 1 150px;
-  margin: 5px;
+  /* flex: 0 1 150px; */
+  /* width: clamp(150px, 18%, 600px); */
+  width: 13vw;
+  height: 13vw;
+  /* height: clamp(150px, 18%, 200px); */
+  /* flex: 0 1 clamp(150px, 18%, 200px); */
+  margin: 0.5vw;
+  /* padding: 5px; */
 }
 
 /* @Cursor */
@@ -959,16 +942,20 @@ textarea:focus {
 }
 
 /* Font-color */
-.text-primary-text {
-  color: var(--primary-text);
+.text-cp-1 {
+  color: var(--cp-1_1);
 }
 
-.text-dark {
-  color: var(--dark-color);
+.text-cp-2 {
+  color: var(--cp-1_2);
 }
 
-.text-primary {
-  color: var(--primary-color);
+.text-cp-3 {
+  color: var(--cp-1_3);
+}
+
+.text-cp-4 {
+  color: var(--cp-1_4);
 }
 
 /* Font positoin */
@@ -1073,6 +1060,7 @@ textarea:focus {
 .p-3 {
   padding: 3rem;
 }
+/* Padding - y axis */
 .py {
   padding: var(--gap) 0;
 }
@@ -1085,6 +1073,22 @@ textarea:focus {
 .py-3 {
   padding: 3rem 0;
 }
+
+/* Padding - top */
+.pt {
+  padding-top: var(--gap);
+}
+.pt-1 {
+  padding-top: 1rem;
+}
+.pt-2 {
+  padding-top: 2rem;
+}
+.pt-3 {
+  padding-top: 3rem;
+}
+
+/* Padding - bottom */
 .pb {
   padding-bottom: var(--gap);
 }
@@ -1096,6 +1100,34 @@ textarea:focus {
 }
 .pb-3 {
   padding-bottom: 3rem;
+}
+
+/* Padding - left */
+.pl {
+  padding-left: var(--gap);
+}
+.pl-1 {
+  padding-left: 1rem;
+}
+.pl-2 {
+  padding-left: 2rem;
+}
+.pl-3 {
+  padding-left: 3rem;
+}
+
+/* Padding - right */
+.pr {
+  padding-right: var(--gap);
+}
+.pr-1 {
+  padding-right: 1rem;
+}
+.pr-2 {
+  padding-right: 2rem;
+}
+.pr-3 {
+  padding-right: 3rem;
 }
 
 /* @Margin */
@@ -1153,21 +1185,50 @@ textarea:focus {
 .mb-3 {
   margin-bottom: 3rem;
 }
+/* Margin - left */
+.ml {
+  margin-left: var(--gap);
+}
+.ml-1 {
+  margin-left: 1rem;
+}
+.ml-2 {
+  margin-left: 2rem;
+}
+.ml-3 {
+  margin-left: 3rem;
+}
+
+/* Margin - right */
+.mr {
+  margin-right: var(--gap);
+}
+.mr-1 {
+  margin-right: 1rem;
+}
+.mr-2 {
+  margin-right: 2rem;
+}
+.mr-3 {
+  margin-right: 3rem;
+}
 
 /* @background */
-.bg-fade {
-  background: var(--fade-color);
-}
-.bg-light-orange {
-  background: rgb(255, 235, 191);
+
+.bg-cp-elem {
+  background: var(--cp-1_1);
 }
 
-.bg-light-gray {
-  background: rgb(233, 233, 233);
+.bg-cp-bg {
+  background: var(--cp-1_3);
+}
+.bg-cp-bg-light {
+  background: var(--cp-1_2-light);
 }
 
-.bg-white {
-  background: rgb(255, 255, 255);
+/* border */
+.bd-light {
+  border: 1px solid var(--fade-color);
 }
 
 /* @test */

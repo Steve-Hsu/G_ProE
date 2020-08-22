@@ -616,8 +616,9 @@ const CasesState = (props) => {
     //There is something chainning the materials to the sub array material
     let materials = mtrls;
     let material = materials.find(({ id }) => id === mtrlId);
-    material.mtrlColors.find(({ id }) => id === mtrlColorId).mColor =
-      e.target.value;
+    material.mtrlColors.find(
+      ({ id }) => id === mtrlColorId
+    ).mColor = e.target.value.toLowerCase();
 
     updateMaterials(materials);
     //Update the mColor in cspt of the mtrl
@@ -632,8 +633,9 @@ const CasesState = (props) => {
     //There is something chainning the materials to the sub array material
     let materials = mtrls;
     let material = materials.find(({ id }) => id === mtrlId);
-    material.sizeSPECs.find(({ id }) => id === mtrlSizeSPECId).mSizeSPEC =
-      e.target.value;
+    material.sizeSPECs.find(
+      ({ id }) => id === mtrlSizeSPECId
+    ).mSizeSPEC = e.target.value.toLowerCase();
 
     updateMaterials(materials);
     //Update the mSizeSPCE in cspt of the mtrl
@@ -671,16 +673,22 @@ const CasesState = (props) => {
     let materials = mtrls;
     switch (e.target.id) {
       case 'Item' + String(mtrlId):
-        materials.find(({ id }) => id === mtrlId).item = e.target.value;
+        materials.find(
+          ({ id }) => id === mtrlId
+        ).item = e.target.value.toLowerCase();
         break;
       // case 'SPEC' + String(mtrlId):
       //   materials.find(({ id }) => id === mtrlId).spec = e.target.value;
       //   break;
       case 'Supplier' + String(mtrlId):
-        materials.find(({ id }) => id === mtrlId).supplier = e.target.value;
+        materials.find(
+          ({ id }) => id === mtrlId
+        ).supplier = e.target.value.toLowerCase();
         break;
       case 'Ref_no' + String(mtrlId):
-        materials.find(({ id }) => id === mtrlId).ref_no = e.target.value;
+        materials.find(
+          ({ id }) => id === mtrlId
+        ).ref_no = e.target.value.toLowerCase();
         break;
       case 'Position' + String(mtrlId):
         materials.find(({ id }) => id === mtrlId).position = e.target.value;
@@ -718,10 +726,13 @@ const CasesState = (props) => {
     // e.preventDefault();
     switch (e.target.name) {
       case 'style':
-        dispatch({ type: STYLE_UPDATE, payload: e.target.value });
+        dispatch({ type: STYLE_UPDATE, payload: e.target.value.toLowerCase() });
         break;
       case 'client':
-        dispatch({ type: CLIENT_UPDATE, payload: e.target.value });
+        dispatch({
+          type: CLIENT_UPDATE,
+          payload: e.target.value.toLowerCase(),
+        });
         break;
       case 'caseType':
         dispatch({ type: CASETYPE_UPDATE, payload: e.target.value });
