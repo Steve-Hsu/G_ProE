@@ -410,7 +410,7 @@ const CasesState = (props) => {
     e.preventDefault();
     // Add the new Size to each material
 
-    if (sizes.length < 15) {
+    if (sizes.length < 12) {
       addQtyBySize(newSize.id);
       addMtrlSizeSPEC(newSize.id);
       dispatch({ type: SIZE_ADD, payload: newSize });

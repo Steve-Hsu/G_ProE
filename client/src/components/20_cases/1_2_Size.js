@@ -25,6 +25,8 @@ const Size = ({ size }) => {
     '5XL',
   ];
 
+  const lengthOfSizeList = sizeList.length;
+
   useEffect(() => {
     //If sizes is changed, then update the value of gSize"
     //I set this is because I want value update to gSize in state as we create a new select tag, since the user will see the value, it looks like the value is entered into the state, so I must set this way. All about UX.
@@ -71,12 +73,16 @@ const Size = ({ size }) => {
     //Find the index of sizeList that value matched to value of previous gSize
     let previousSize = sizes[sizeLength - 2].gSize;
     if (previousSize) {
-      let x = sizeList.findIndex((size) => size === previousSize);
-      x = x + 1;
-      console.log(sizeList[x]);
-      return document
-        .getElementById(`${sizeList[x]}${size.id}`)
-        .setAttribute('selected', 'selected');
+      console.log('The sizes.length', sizes.length);
+      console.log('lengthOfSizeList', lengthOfSizeList);
+      if (sizes.length <= lengthOfSizeList) {
+        let x = sizeList.findIndex((size) => size === previousSize);
+        x = x + 1;
+        console.log(sizeList[x]);
+        return document
+          .getElementById(`${sizeList[x]}${size.id}`)
+          .setAttribute('selected', 'selected');
+      }
     }
   };
 
