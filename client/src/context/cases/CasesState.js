@@ -476,7 +476,7 @@ const CasesState = (props) => {
           let mColor = '';
           if (mtrlObj !== null) {
             let index = Number(idx + 1);
-            mColor = mtrlObj[`color_way_${index}`];
+            mColor = mtrlObj[`colorway_${index}`];
           }
           return {
             ...newMtrlColor,
@@ -551,22 +551,55 @@ const CasesState = (props) => {
             unit,
             CATEGORY,
           } = mtrlObj;
-          dispatch({
-            type: MTRL_ADD,
-            payload: {
-              ...newMtrl,
-              item: CATEGORY,
-              ref_no,
-              position,
-              description,
-              unit,
-              id: newMtrlId,
-              mtrlColors: mtrlColors,
-              sizeSPECs: sizeSPECs,
-              cspts: cspts,
-              multipleColor: multipleColor,
-            },
-          });
+          if (mtrlObj.undefined_1) {
+            const lengthOfMtrlObj = Object.keys(mtrlObj).length;
+            let undefineds = [];
+            console.log(typeof mtrlObj);
+            console.log('the length of mtrlObj', lengthOfMtrlObj);
+
+            Object.keys(mtrlObj).map((key, idx) => {
+              console.log('in the map', key);
+              if (key.includes('undefined')) {
+                undefineds.push(mtrlObj[key]);
+              }
+              if (idx + 1 == lengthOfMtrlObj) {
+                dispatch({
+                  type: MTRL_ADD,
+                  payload: {
+                    ...newMtrl,
+                    item: CATEGORY,
+                    ref_no,
+                    position,
+                    description,
+                    unit,
+                    id: newMtrlId,
+                    mtrlColors: mtrlColors,
+                    sizeSPECs: sizeSPECs,
+                    cspts: cspts,
+                    multipleColor: multipleColor,
+                    undefineds: undefineds,
+                  },
+                });
+              }
+            });
+          } else {
+            dispatch({
+              type: MTRL_ADD,
+              payload: {
+                ...newMtrl,
+                item: CATEGORY,
+                ref_no,
+                position,
+                description,
+                unit,
+                id: newMtrlId,
+                mtrlColors: mtrlColors,
+                sizeSPECs: sizeSPECs,
+                cspts: cspts,
+                multipleColor: multipleColor,
+              },
+            });
+          }
         }
       }
     }
