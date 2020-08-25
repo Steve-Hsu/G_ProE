@@ -37,6 +37,8 @@ const CaseForm = () => {
     uploadCase,
     error,
     isBoardMode,
+    expandUndefined,
+    displayTitles,
   } = casesContext;
   const { comName, comSymbol } = authUserContext;
   const { updateSrMtrlByMtrl } = srMtrlContext;
@@ -61,6 +63,82 @@ const CaseForm = () => {
   const maxWdsLength = '50';
   const styleLength = maxWdsLength;
   const clientLength = maxWdsLength;
+
+  const cellStyle = (keyWord, switcher = 4) => {
+    let width = '';
+
+    switch (keyWord) {
+      case 'no':
+        width = '5%';
+        break;
+      case 'supplier':
+      case 'item':
+        width = '15%';
+        break;
+      case 'ref_no':
+        switch (switcher) {
+          case 4:
+          case 3:
+          case 2:
+            width = '15%';
+            break;
+          case 1:
+            width = '80%';
+          default:
+        }
+        break;
+      case 'position':
+      case 'descriptions':
+        switch (switcher) {
+          case 4:
+            width = '25%';
+            break;
+          case 3:
+          case 2:
+            width = '32%';
+            break;
+          case 1:
+            width = '80%';
+          default:
+        }
+      default:
+      // width = '15%';
+    }
+    let style = {
+      width,
+      overflowX: 'auto',
+      paddingLeft: '0.5rem',
+      border: '1px solid black',
+    };
+
+    return style;
+  };
+
+  const aCellWidth = {
+    width: '5%',
+    overflowX: 'auto',
+    paddingLeft: '0.5rem',
+  };
+  const bCellWidth = {
+    width: '15%',
+    overflowX: 'auto',
+    paddingLeft: '0.5rem',
+  };
+  const cCellWidth = {
+    width: '25%',
+    overflowX: 'auto',
+    paddingLeft: '0.5rem',
+  };
+  const singleCellWidth = {
+    width: '80%',
+    overflowX: 'auto',
+    paddingLeft: '0.5rem',
+  };
+  const twoCellWidth = {
+    width: '80%',
+    overflowX: 'auto',
+    paddingLeft: '0.5rem',
+  };
 
   useEffect(() => {
     if (caseType === null) {
@@ -154,6 +232,21 @@ const CaseForm = () => {
         return uniques;
       default:
     }
+  };
+
+  const undefinedTietles = () => {
+    let arr = [];
+    const getLengthOfudefineds = () => {
+      return Math.max(0, ...mtrls.map((mtrl) => mtrl.undefineds.length));
+    };
+
+    let num = getLengthOfudefineds();
+
+    for (let i = 0; i < num; i++) {
+      let countNum = i + 1;
+      arr.push(`Undefined_${countNum}`);
+    }
+    return arr;
   };
 
   return (
@@ -310,7 +403,7 @@ const CaseForm = () => {
                   {mtrlItems('result').map((mtrlItem, idx) => (
                     <div
                       key={`boardOf${mtrlItem}`}
-                      className='mt-1 bg-cp-bg boardArea'
+                      className='mt-1 bg-cp-bg round-area'
                     >
                       <div className='grid-4 p-1'>
                         <div className='text-cp-2'>
@@ -370,13 +463,29 @@ const CaseForm = () => {
                   ))}
                 </div>
               ) : (
-                <div>
+                <div className='mt-1 bg-cp-bg round-area'>
                   {/* Tabole Header */}
-                  <div></div>
+                  <div className='flexBox text-cp-1 pb-05 test-3'>
+                    <div style={cellStyle('no')}>No.</div>
+                    <div style={cellStyle('item')}>Item</div>
+
+                    {displayTitles.map((title) => (
+                      <div style={cellStyle(title, displayTitles.length)}>
+                        {title}
+                      </div>
+                    ))}
+                  </div>
                   {/* Table body */}
-                  {mtrls.map((mtrl) => (
-                    <MtrlTable key={mtrl.id} mtrl={mtrl} />
-                  ))}
+                  <div className='overflow-auto-y' style={{ height: '70vh' }}>
+                    {mtrls.map((mtrl, idx) => (
+                      <MtrlTable
+                        key={mtrl.id}
+                        mtrl={mtrl}
+                        idx={idx}
+                        cellStyle={cellStyle}
+                      />
+                    ))}
+                  </div>
                 </div>
               )}
             </div>

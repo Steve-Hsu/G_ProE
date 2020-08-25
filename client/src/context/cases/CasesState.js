@@ -44,6 +44,8 @@ const CasesState = (props) => {
     gQtys: [],
     mtrls: [],
     deletedMtrls: [],
+    displayTitles: ['supplier', 'ref_no', 'position', 'descriptions'],
+    // displayTitles: ['supplier', 'ref_no', 'position'],
     formIsHalfFilledOut: true,
     error: null,
     isUpdated: null,
@@ -83,7 +85,7 @@ const CasesState = (props) => {
     supplier: '',
     ref_no: '',
     position: '',
-    description: '',
+    descriptions: [],
     unit: '',
     mtrlColors: [],
     sizeSPECs: [],
@@ -543,24 +545,17 @@ const CasesState = (props) => {
           });
         } else {
           // Create new mtrl by input a csv, the mtrlObj is the item in the csv sheet
-          const {
-            item,
-            ref_no,
-            position,
-            description,
-            unit,
-            CATEGORY,
-          } = mtrlObj;
+          const { ref_no, position, CATEGORY } = mtrlObj;
           if (mtrlObj.undefined_1) {
             const lengthOfMtrlObj = Object.keys(mtrlObj).length;
-            let undefineds = [];
+            let descriptions = [];
             console.log(typeof mtrlObj);
             console.log('the length of mtrlObj', lengthOfMtrlObj);
 
             Object.keys(mtrlObj).map((key, idx) => {
               console.log('in the map', key);
               if (key.includes('undefined')) {
-                undefineds.push(mtrlObj[key]);
+                descriptions.push(mtrlObj[key]);
               }
               if (idx + 1 == lengthOfMtrlObj) {
                 dispatch({
@@ -570,14 +565,12 @@ const CasesState = (props) => {
                     item: CATEGORY,
                     ref_no,
                     position,
-                    description,
-                    unit,
+                    descriptions: descriptions,
                     id: newMtrlId,
                     mtrlColors: mtrlColors,
                     sizeSPECs: sizeSPECs,
                     cspts: cspts,
                     multipleColor: multipleColor,
-                    undefineds: undefineds,
                   },
                 });
               }
@@ -590,8 +583,6 @@ const CasesState = (props) => {
                 item: CATEGORY,
                 ref_no,
                 position,
-                description,
-                unit,
                 id: newMtrlId,
                 mtrlColors: mtrlColors,
                 sizeSPECs: sizeSPECs,
@@ -726,9 +717,9 @@ const CasesState = (props) => {
       case 'Position' + String(mtrlId):
         materials.find(({ id }) => id === mtrlId).position = e.target.value;
         break;
-      case 'Description' + String(mtrlId):
-        materials.find(({ id }) => id === mtrlId).description = e.target.value;
-        break;
+      // case 'Description' + String(mtrlId):
+      //   materials.find(({ id }) => id === mtrlId).description = e.target.value;
+      //   break;
       case 'Unit' + String(mtrlId):
         let material = materials.find(({ id }) => id === mtrlId);
         material.unit = e.target.value;
@@ -980,6 +971,7 @@ const CasesState = (props) => {
         formIsHalfFilledOut: state.formIsHalfFilledOut,
         isUpdated: state.isUpdated,
         isBoardMode: state.isBoardMode,
+        displayTitles: state.displayTitles,
         addCaseValue,
         addcWay,
         updatecWay,

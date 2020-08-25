@@ -170,6 +170,12 @@ const Mtrl = ({ mtrl }) => {
   const inputItemObj = (subject) => {
     if (subject === 'Item') {
       //Prevent update when user enter the value for item, espacially in board mode, if don't, it will cause alot of delay
+      let placeholder = 'Item';
+      if (mtrlAttribute(subject)) {
+        placeholder =
+          mtrlAttribute(subject).charAt(0).toUpperCase() +
+          mtrlAttribute(subject).slice(1);
+      }
       return (
         <>
           {/* <div className='tiny text-primary transition'>{subject}</div> */}
@@ -177,10 +183,7 @@ const Mtrl = ({ mtrl }) => {
             type='text'
             id={`${subject}${mtrl.id}`}
             name={mtrl.id}
-            placeholder={
-              mtrlAttribute(subject).charAt(0).toUpperCase() +
-              mtrlAttribute(subject).slice(1)
-            }
+            placeholder={placeholder}
             onChange={onChange2}
             className='item-input'
             maxLength={maxWdsLength}

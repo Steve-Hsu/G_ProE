@@ -5,11 +5,11 @@ import PopoverContext from '../../context/popover/popoverContext';
 
 import Mtrl from './1_6_Mtrl';
 
-const MtrlTable = ({ mtrl }) => {
+const MtrlTable = ({ mtrl, idx, cellStyle }) => {
   const casesContext = useContext(CasesContext);
   const popoverContext = useContext(PopoverContext);
 
-  const { mtrls, addMtrlValue } = casesContext;
+  const { mtrls, addMtrlValue, displayTitles } = casesContext;
   const isEditingMtrl = mtrl.isEditingMtrl;
 
   const { togglePopover } = popoverContext;
@@ -25,12 +25,17 @@ const MtrlTable = ({ mtrl }) => {
       {isEditingMtrl == true ? (
         <Mtrl key={mtrl.id} mtrl={mtrl} />
       ) : (
-        <div className='grid-05-1-1-1-3 bd-light' onClick={onClick}>
-          <div>{mtrls.findIndex(({ id }) => id === mtrl.id) + 1}</div>
-          <div>{mtrl.item}</div>
-          <div>{mtrl.supplier}</div>
-          <div>{mtrl.ref_no}</div>
-          <div>{mtrl.position}</div>
+        <div className='flexBox bd-light bd-no-t bg-cp-elem' onClick={onClick}>
+          <div style={cellStyle('no')}>{idx + 1}</div>
+          <div style={cellStyle('item')}>{mtrl.item}</div>
+          {displayTitles.map((title) => (
+            <div
+              style={cellStyle(title, displayTitles.length)}
+              key={`${title}${mtrl.id}`}
+            >
+              {mtrl[title]}
+            </div>
+          ))}
         </div>
       )}
     </Fragment>

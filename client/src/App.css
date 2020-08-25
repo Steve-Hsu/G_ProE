@@ -35,10 +35,10 @@
 
   /* Space */
   --gap: 0;
-  --tiny: 0.2rem;
-  --small: 0.3rem;
-  --middle: 1.2rem;
-  --large: 2rem;
+  --tiny: 3px;
+  --small: 5px;
+  --middle: 10px;
+  --large: 16px;
 
   /* .grid-gap-row-ti {
   row-gap: 0.2rem; 
@@ -124,7 +124,7 @@ img {
 
 .round-card {
   padding: 1rem;
-  border-radius: 5px;
+  border-radius: var(--small);
 
   margin: 0.7rem 0;
 }
@@ -338,7 +338,7 @@ img {
   height: 3rem;
   width: 100%;
   color: var(--cp-1_2);
-  border-radius: 5px;
+  border-radius: var(--small);
   border: 2px solid var(--cp-1_4);
   background: var(--cp-1_3);
   transition: all 0.5s;
@@ -381,7 +381,7 @@ img {
   margin: 0.3rem;
   background: var(--light-color);
   color: #333;
-  border-radius: 5px;
+  border-radius: var(--small);
 }
 
 .alert {
@@ -401,7 +401,7 @@ img {
 }
 
 .round-square-img {
-  border-radius: 5px;
+  border-radius: var(--small);
 }
 
 .btn-fade:hover {
@@ -542,10 +542,10 @@ img {
 }
 
 .sq-slider {
-  border-radius: 5px;
+  border-radius: var(--small);
 }
 .sq-slider:before {
-  border-radius: 5px;
+  border-radius: 4px;
 }
 
 /* @Forms */
@@ -588,10 +588,16 @@ table th {
   background: var(--light-color);
 }
 
+/* Custom Table */
+.tableItem:last-of-type {
+  border-bottom-right-radius: var(--small);
+  border-bottom-left-radius: var(--small);
+}
+
 /* @input */
 input {
   margin: 0;
-  /* border-radius: 5px; */
+  /* border-radius: var(--small); */
 }
 input[type='number'],
 input[type='text'],
@@ -604,7 +610,7 @@ textarea {
   width: 100%;
   padding: 0.4rem;
   font-size: 1rem;
-  border-radius: 5px;
+  border-radius: var(--small);
   transition: all 0.5s;
   border: 1px solid var(--fade-color);
 }
@@ -894,12 +900,14 @@ textarea:focus {
   flex-wrap: wrap;
   align-content: flex-start;
 }
-/* BoardParent */
-.boardArea {
-  border-radius: 5px;
+
+/* Block a area with radious  */
+.round-area {
+  border-radius: var(--small);
   padding: 10px;
 }
 
+/* Board Parent */
 .boardParent {
   display: flex;
   flex-wrap: wrap;
@@ -1017,6 +1025,17 @@ textarea:focus {
 }
 
 /* @Forced important style --------  */
+/* @OverFlow */
+.overflow-auto {
+  overflow: auto;
+}
+.overflow-auto-x {
+  overflow-x: auto;
+}
+.overflow-auto-y {
+  overflow-y: auto;
+}
+
 /* @Position */
 .center {
   position: absolute;
@@ -1051,6 +1070,11 @@ textarea:focus {
 .p {
   padding: var(--gap);
 }
+
+.p-05 {
+  padding: 0.5rem;
+}
+
 .p-1 {
   padding: 1rem;
 }
@@ -1064,6 +1088,11 @@ textarea:focus {
 .py {
   padding: var(--gap) 0;
 }
+
+.py-05 {
+  padding: 0.5rem 0;
+}
+
 .py-1 {
   padding: 1rem 0;
 }
@@ -1077,6 +1106,9 @@ textarea:focus {
 /* Padding - top */
 .pt {
   padding-top: var(--gap);
+}
+.pt-05 {
+  padding-top: 0.5rem;
 }
 .pt-1 {
   padding-top: 1rem;
@@ -1092,6 +1124,9 @@ textarea:focus {
 .pb {
   padding-bottom: var(--gap);
 }
+.pb-05 {
+  padding-bottom: 0.5rem;
+}
 .pb-1 {
   padding-bottom: 1rem;
 }
@@ -1105,6 +1140,9 @@ textarea:focus {
 /* Padding - left */
 .pl {
   padding-left: var(--gap);
+}
+.pl-05 {
+  padding-left: 0.5rem;
 }
 .pl-1 {
   padding-left: 1rem;
@@ -1120,6 +1158,9 @@ textarea:focus {
 .pr {
   padding-right: var(--gap);
 }
+.pr-05 {
+  padding-right: 0.5rem;
+}
 .pr-1 {
   padding-right: 1rem;
 }
@@ -1133,6 +1174,9 @@ textarea:focus {
 /* @Margin */
 .m {
   margin: var(--gap);
+}
+.m-05 {
+  margin: 0.5rem;
 }
 .m-1 {
   margin: 1rem;
@@ -1148,6 +1192,9 @@ textarea:focus {
 .my {
   margin: var(--gap) 0;
 }
+.my-05 {
+  margin: 0.5rem 0;
+}
 .my-1 {
   margin: 1rem 0;
 }
@@ -1161,6 +1208,9 @@ textarea:focus {
 /* Margin - top */
 .mt {
   margin-top: var(--gap);
+}
+.mt-05 {
+  margin-top: 0.5rem;
 }
 .mt-1 {
   margin-top: 1rem;
@@ -1176,6 +1226,9 @@ textarea:focus {
 .mb {
   margin-bottom: var(--gap);
 }
+.mb-05 {
+  margin-bottom: 0.5rem;
+}
 .mb-1 {
   margin-bottom: 1rem;
 }
@@ -1188,6 +1241,9 @@ textarea:focus {
 /* Margin - left */
 .ml {
   margin-left: var(--gap);
+}
+.ml-05 {
+  margin-left: 0.5rem;
 }
 .ml-1 {
   margin-left: 1rem;
@@ -1202,6 +1258,9 @@ textarea:focus {
 /* Margin - right */
 .mr {
   margin-right: var(--gap);
+}
+.mr-05 {
+  margin-right: 0.5rem;
 }
 .mr-1 {
   margin-right: 1rem;
@@ -1226,9 +1285,48 @@ textarea:focus {
   background: var(--cp-1_2-light);
 }
 
-/* border */
+/* @border */
 .bd-light {
   border: 1px solid var(--fade-color);
+}
+
+/* radious border */
+.bd-radius {
+  border-radius: var(--small);
+}
+
+.bd-radius-top {
+  border-top-left-radius: var(--small);
+  border-top-right-radius: var(--small);
+}
+
+/* transparent specific border */
+.bd-no-t {
+  border-top: 1px solid rgba(255, 255, 255, 0);
+}
+
+.bd-no-l {
+  border-left: 1px solid rgba(255, 255, 255, 0);
+}
+
+.bd-no-b {
+  border-bottom: 1px solid rgba(255, 255, 255, 0);
+}
+
+.bd-no-r {
+  border-right: 1px solid rgba(255, 255, 255, 0);
+}
+
+.bd-no-y,
+.bd-no-v {
+  border-top: 1px solid rgba(255, 255, 255, 0);
+  border-bottom: 1px solid rgba(255, 255, 255, 0);
+}
+
+.bd-no-x,
+.bd-no-h {
+  border-left: 1px solid rgba(255, 255, 255, 0);
+  border-right: 1px solid rgba(255, 255, 255, 0);
 }
 
 /* @test */
