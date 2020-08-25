@@ -28,14 +28,32 @@ const MtrlTable = ({ mtrl, idx, cellStyle }) => {
         <div className='flexBox bd-light bd-no-t bg-cp-elem' onClick={onClick}>
           <div style={cellStyle('no')}>{idx + 1}</div>
           <div style={cellStyle('item')}>{mtrl.item}</div>
-          {displayTitles.map((title) => (
-            <div
-              style={cellStyle(title, displayTitles.length)}
-              key={`${title}${mtrl.id}`}
-            >
-              {mtrl[title]}
-            </div>
-          ))}
+          {displayTitles.map((title) => {
+            if (title == 'descriptions') {
+              return (
+                <div
+                  // className='flexBox overflow-auto-x'
+                  style={cellStyle(title, displayTitles.length)}
+                  key={`${title}${mtrl.id}`}
+                >
+                  {mtrl[title].map((des, idx) => (
+                    <div key={`${des}OfNum${idx}Of${mtrl.id}`} className='mr-1'>
+                      {des}
+                    </div>
+                  ))}
+                </div>
+              );
+            } else {
+              return (
+                <div
+                  style={cellStyle(title, displayTitles.length)}
+                  key={`${title}${mtrl.id}`}
+                >
+                  {mtrl[title]}
+                </div>
+              );
+            }
+          })}
         </div>
       )}
     </Fragment>

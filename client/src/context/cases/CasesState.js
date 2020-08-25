@@ -45,7 +45,6 @@ const CasesState = (props) => {
     mtrls: [],
     deletedMtrls: [],
     displayTitles: ['supplier', 'ref_no', 'position', 'descriptions'],
-    // displayTitles: ['supplier', 'ref_no', 'position'],
     formIsHalfFilledOut: true,
     error: null,
     isUpdated: null,

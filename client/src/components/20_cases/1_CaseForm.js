@@ -65,8 +65,7 @@ const CaseForm = () => {
   const clientLength = maxWdsLength;
 
   const cellStyle = (keyWord, switcher = 4) => {
-    let width = '';
-
+    let width = '15%';
     switch (keyWord) {
       case 'no':
         width = '5%';
@@ -77,67 +76,63 @@ const CaseForm = () => {
         break;
       case 'ref_no':
         switch (switcher) {
-          case 4:
-          case 3:
+          // case 3:
+          // case 4:
+          //   width = '15%';
+          //   break;
           case 2:
-            width = '15%';
+            if (displayTitles.includes('supplier')) {
+              width = '65%';
+            }
             break;
           case 1:
             width = '80%';
           default:
+            width = '15%';
         }
         break;
-      case 'position':
       case 'descriptions':
+      case 'position':
         switch (switcher) {
           case 4:
             width = '25%';
             break;
           case 3:
+            if (
+              !displayTitles.includes('descriptions') ||
+              !displayTitles.includes('position')
+            ) {
+              width = '50%';
+            } else {
+              width = '32%';
+            }
+            break;
           case 2:
-            width = '32%';
+            if (
+              !displayTitles.includes('descriptions') ||
+              !displayTitles.includes('position')
+            ) {
+              width = '65%';
+            } else {
+              width = '40%';
+            }
             break;
           case 1:
             width = '80%';
+            break;
           default:
+            width = '25%';
         }
       default:
-      // width = '15%';
     }
     let style = {
       width,
-      overflowX: 'auto',
+      display: 'flex',
+      overflowY: 'scroll',
       paddingLeft: '0.5rem',
-      border: '1px solid black',
+      border: '1px solid black', // Test Code
     };
-
     return style;
-  };
-
-  const aCellWidth = {
-    width: '5%',
-    overflowX: 'auto',
-    paddingLeft: '0.5rem',
-  };
-  const bCellWidth = {
-    width: '15%',
-    overflowX: 'auto',
-    paddingLeft: '0.5rem',
-  };
-  const cCellWidth = {
-    width: '25%',
-    overflowX: 'auto',
-    paddingLeft: '0.5rem',
-  };
-  const singleCellWidth = {
-    width: '80%',
-    overflowX: 'auto',
-    paddingLeft: '0.5rem',
-  };
-  const twoCellWidth = {
-    width: '80%',
-    overflowX: 'auto',
-    paddingLeft: '0.5rem',
   };
 
   useEffect(() => {
@@ -234,20 +229,20 @@ const CaseForm = () => {
     }
   };
 
-  const undefinedTietles = () => {
-    let arr = [];
-    const getLengthOfudefineds = () => {
-      return Math.max(0, ...mtrls.map((mtrl) => mtrl.undefineds.length));
-    };
+  // const undefinedTietles = () => {
+  //   let arr = [];
+  //   const getLengthOfudefineds = () => {
+  //     return Math.max(0, ...mtrls.map((mtrl) => mtrl.undefineds.length));
+  //   };
 
-    let num = getLengthOfudefineds();
+  //   let num = getLengthOfudefineds();
 
-    for (let i = 0; i < num; i++) {
-      let countNum = i + 1;
-      arr.push(`Undefined_${countNum}`);
-    }
-    return arr;
-  };
+  //   for (let i = 0; i < num; i++) {
+  //     let countNum = i + 1;
+  //     arr.push(`Undefined_${countNum}`);
+  //   }
+  //   return arr;
+  // };
 
   return (
     <Fragment>
@@ -468,9 +463,11 @@ const CaseForm = () => {
                   <div className='flexBox text-cp-1 pb-05 test-3'>
                     <div style={cellStyle('no')}>No.</div>
                     <div style={cellStyle('item')}>Item</div>
-
                     {displayTitles.map((title) => (
-                      <div style={cellStyle(title, displayTitles.length)}>
+                      <div
+                        key={`headerCellOf${title}`}
+                        style={cellStyle(title, displayTitles.length)}
+                      >
                         {title}
                       </div>
                     ))}
