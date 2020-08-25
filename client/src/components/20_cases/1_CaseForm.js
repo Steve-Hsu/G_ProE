@@ -371,6 +371,9 @@ const CaseForm = () => {
                 </div>
               ) : (
                 <div>
+                  {/* Tabole Header */}
+                  <div></div>
+                  {/* Table body */}
                   {mtrls.map((mtrl) => (
                     <MtrlTable key={mtrl.id} mtrl={mtrl} />
                   ))}

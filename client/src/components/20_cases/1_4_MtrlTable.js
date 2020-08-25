@@ -25,7 +25,7 @@ const MtrlTable = ({ mtrl }) => {
       {isEditingMtrl == true ? (
         <Mtrl key={mtrl.id} mtrl={mtrl} />
       ) : (
-        <div className='grid-05-1-1-1-3' onClick={onClick}>
+        <div className='grid-05-1-1-1-3 bd-light' onClick={onClick}>
           <div>{mtrls.findIndex(({ id }) => id === mtrl.id) + 1}</div>
           <div>{mtrl.item}</div>
           <div>{mtrl.supplier}</div>
