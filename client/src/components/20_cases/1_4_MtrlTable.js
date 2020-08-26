@@ -32,13 +32,18 @@ const MtrlTable = ({ mtrl, idx, cellStyle }) => {
             if (title == 'descriptions') {
               return (
                 <div
-                  // className='flexBox overflow-auto-x'
                   style={cellStyle(title, displayTitles.length)}
                   key={`${title}${mtrl.id}`}
                 >
                   {mtrl[title].map((des, idx) => (
-                    <div key={`${des}OfNum${idx}Of${mtrl.id}`} className='mr-1'>
-                      {des}
+                    <div
+                      key={`${des}OfNum${idx}Of${mtrl.id}`}
+                      className='mr-1'
+                      style={{
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      <div> {des}</div>
                     </div>
                   ))}
                 </div>
@@ -65,4 +70,6 @@ export default MtrlTable;
 // PropTyeps
 MtrlTable.propTypes = {
   mtrl: PropTypes.object.isRequired,
+  cellStyle: PropTypes.func.isRequired,
+  idx: PropTypes.number.isRequired,
 };

@@ -65,46 +65,42 @@ const CaseForm = () => {
   const clientLength = maxWdsLength;
 
   const cellStyle = (keyWord, switcher = 4) => {
-    let width = '15%';
+    let width = '13%';
     switch (keyWord) {
       case 'no':
-        width = '5%';
+        width = '3%';
         break;
       case 'supplier':
       case 'item':
-        width = '15%';
+        width = '13%';
         break;
       case 'ref_no':
         switch (switcher) {
-          // case 3:
-          // case 4:
-          //   width = '15%';
-          //   break;
           case 2:
             if (displayTitles.includes('supplier')) {
-              width = '65%';
+              width = '63%';
             }
             break;
           case 1:
-            width = '80%';
+            width = '78%';
           default:
-            width = '15%';
+            width = '13%';
         }
         break;
       case 'descriptions':
       case 'position':
         switch (switcher) {
           case 4:
-            width = '25%';
+            width = '23%';
             break;
           case 3:
             if (
               !displayTitles.includes('descriptions') ||
               !displayTitles.includes('position')
             ) {
-              width = '50%';
+              width = '48%';
             } else {
-              width = '32%';
+              width = '30%';
             }
             break;
           case 2:
@@ -112,25 +108,27 @@ const CaseForm = () => {
               !displayTitles.includes('descriptions') ||
               !displayTitles.includes('position')
             ) {
-              width = '65%';
+              width = '63%';
             } else {
-              width = '40%';
+              width = '38%';
             }
             break;
           case 1:
-            width = '80%';
+            width = '78%';
             break;
           default:
-            width = '25%';
+            width = '23%';
         }
       default:
     }
     let style = {
       width,
+      height: '2.5rem',
       display: 'flex',
-      overflowY: 'scroll',
-      paddingLeft: '0.5rem',
-      border: '1px solid black', // Test Code
+      whiteSpace: 'nowrap',
+      overflowY: 'auto',
+      margin: '0 1%',
+      padding: '0.5rem 0',
     };
     return style;
   };
@@ -461,14 +459,14 @@ const CaseForm = () => {
                 <div className='mt-1 bg-cp-bg round-area'>
                   {/* Tabole Header */}
                   <div className='flexBox text-cp-1 pb-05 test-3'>
-                    <div style={cellStyle('no')}>No.</div>
-                    <div style={cellStyle('item')}>Item</div>
+                    <div style={cellStyle('no')}>NO.</div>
+                    <div style={cellStyle('item')}>ITEM</div>
                     {displayTitles.map((title) => (
                       <div
                         key={`headerCellOf${title}`}
                         style={cellStyle(title, displayTitles.length)}
                       >
-                        {title}
+                        {title.toUpperCase()}
                       </div>
                     ))}
                   </div>

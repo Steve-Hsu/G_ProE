@@ -3,6 +3,7 @@ import React, { useContext } from 'react';
 import CasesContext from '../../context/cases/casesContext';
 import SrMtrlContext from '../../context/srMtrl/srMtrlContext';
 import MPrice from './30_01_01_01_mPrice';
+import PropTypes from 'prop-types';
 
 const SrMtrl = ({ srMtrl, currentPath }) => {
   const casesContext = useContext(CasesContext);
@@ -58,3 +59,10 @@ const SrMtrl = ({ srMtrl, currentPath }) => {
 };
 
 export default SrMtrl;
+
+// PropTyeps
+SrMtrl.propTypes = {
+  mPrice: PropTypes.object.isRequired,
+  srMtrl: PropTypes.object.isRequired,
+  currentPath: PropTypes.string.isRequired,
+};

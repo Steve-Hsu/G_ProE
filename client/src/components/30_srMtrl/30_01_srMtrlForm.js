@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import SrMtrlContext from '../../context/srMtrl/srMtrlContext';
 //@ Child component
 import SrMtrl from './30_01_01_srMtrl';
+import PropTypes from 'prop-types';
 
 const MPriceForm = ({ currentPath }) => {
   const srMtrlContext = useContext(SrMtrlContext);
@@ -47,3 +48,7 @@ const MPriceForm = ({ currentPath }) => {
 };
 
 export default MPriceForm;
+// PropTyeps
+MPriceForm.propTypes = {
+  currentPath: PropTypes.string.isRequired,
+};

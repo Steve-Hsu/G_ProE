@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import SrMtrlContext from '../../context/srMtrl/srMtrlContext';
+import PropTypes from 'prop-types';
 
 const MPrice = ({ mPrice, srMtrl, currentPath }) => {
   const srMtrlContext = useContext(SrMtrlContext);
@@ -262,3 +263,10 @@ const MPrice = ({ mPrice, srMtrl, currentPath }) => {
   );
 };
 export default MPrice;
+
+// PropTyeps
+MPrice.propTypes = {
+  mPrice: PropTypes.object.isRequired,
+  srMtrl: PropTypes.object.isRequired,
+  currentPath: PropTypes.string.isRequired,
+};
