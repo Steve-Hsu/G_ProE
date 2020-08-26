@@ -37,8 +37,8 @@ const CaseForm = () => {
     uploadCase,
     error,
     isBoardMode,
-    expandUndefined,
     displayTitles,
+    addMtrl,
   } = casesContext;
   const { comName, comSymbol } = authUserContext;
   const { updateSrMtrlByMtrl } = srMtrlContext;
@@ -64,6 +64,42 @@ const CaseForm = () => {
   const styleLength = maxWdsLength;
   const clientLength = maxWdsLength;
 
+  useEffect(() => {
+    if (caseType === null) {
+    } else {
+      loadCaseSelectCaseTypeTagIndex(caseType);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [caseType]);
+
+  let supplier,
+    ref_no,
+    position,
+    descriptions = null;
+
+  const trueInDisplayTitles = displayTitles.filter((obj) => {
+    return Object.values(obj)[0] == true;
+  }).length;
+
+  displayTitles.filter((obj) => {
+    switch (Object.keys(obj)[0]) {
+      case 'supplier':
+        supplier = obj['supplier'];
+        break;
+      case 'ref_no':
+        ref_no = obj['ref_no'];
+        break;
+      case 'position':
+        position = obj['position'];
+        break;
+      case 'descriptions':
+        descriptions = obj['descriptions'];
+        break;
+      default:
+    }
+  });
+
   const cellStyle = (keyWord, switcher = 4) => {
     let width = '13%';
     switch (keyWord) {
@@ -77,7 +113,7 @@ const CaseForm = () => {
       case 'ref_no':
         switch (switcher) {
           case 2:
-            if (displayTitles.includes('supplier')) {
+            if (supplier) {
               width = '63%';
             }
             break;
@@ -92,32 +128,33 @@ const CaseForm = () => {
         switch (switcher) {
           case 4:
             width = '23%';
+            // console.log('Now', keyWord, ' applying width', width); // Test Code
             break;
           case 3:
-            if (
-              !displayTitles.includes('descriptions') ||
-              !displayTitles.includes('position')
-            ) {
+            if (!position || !descriptions) {
               width = '48%';
+              // console.log('Now', keyWord, ' applying width', width); // Test Code
             } else {
-              width = '30%';
+              width = '30.5%';
+              // console.log('Now', keyWord, ' applying width', width); // Test Code
             }
             break;
           case 2:
-            if (
-              !displayTitles.includes('descriptions') ||
-              !displayTitles.includes('position')
-            ) {
+            if (!position || !descriptions) {
               width = '63%';
+              // console.log('Now', keyWord, ' applying width 63%'); // Test Code
             } else {
               width = '38%';
+              // console.log('Now', keyWord, ' applying width', width); // Test Code
             }
             break;
           case 1:
             width = '78%';
+            // console.log('Now', keyWord, ' applying width', width); // Test Code
             break;
           default:
             width = '23%';
+          // console.log('Now', keyWord, ' applying width', width); // Test Code
         }
       default:
     }
@@ -133,14 +170,19 @@ const CaseForm = () => {
     return style;
   };
 
-  useEffect(() => {
-    if (caseType === null) {
-    } else {
-      loadCaseSelectCaseTypeTagIndex(caseType);
+  //@ Style for toggleTitle btn --------
+  const titleBtn = (subject) => {
+    console.log('the subject', subject);
+    if (subject) {
+      if (Object.values(subject)[0] == true) {
+        console.log('hhh');
+        return {
+          background: 'var(--cp-1_2)',
+          color: 'var(--cp-1_3)',
+        };
+      }
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [caseType]);
+  };
 
   //@ Style for breakdown Table --------
   const SizesColumnSize = () => {
@@ -162,7 +204,7 @@ const CaseForm = () => {
     let updatedCases = {};
     if (cNo === null) {
       // update the state of mPrice
-      console.log('uploadNewCase is called'); // Test Code
+      // console.log('uploadNewCase is called'); // Test Code
       updatedCases = await uploadNewCase(cases);
     } else {
       //Delete the refs of srMtrls from database, that deleted in UI by user
@@ -187,10 +229,6 @@ const CaseForm = () => {
     document
       .getElementById(`${type}-caseType`)
       .setAttribute('selected', 'selected');
-  };
-
-  const onChange = (e) => {
-    addCaseValue(e);
   };
 
   const mtrlItems = (switcher) => {
@@ -226,21 +264,6 @@ const CaseForm = () => {
       default:
     }
   };
-
-  // const undefinedTietles = () => {
-  //   let arr = [];
-  //   const getLengthOfudefineds = () => {
-  //     return Math.max(0, ...mtrls.map((mtrl) => mtrl.undefineds.length));
-  //   };
-
-  //   let num = getLengthOfudefineds();
-
-  //   for (let i = 0; i < num; i++) {
-  //     let countNum = i + 1;
-  //     arr.push(`Undefined_${countNum}`);
-  //   }
-  //   return arr;
-  // };
 
   return (
     <Fragment>
@@ -365,9 +388,14 @@ const CaseForm = () => {
 
             {/* Material -------------------------- */}
             <div className='grid-6'>
+              {/* elem-1 */}
               <div className='lead'>
-                Materials<br></br>
+                Materials
+                <button className='btn btn-sq ml-1' onClick={addMtrl}>
+                  <i className='fas fa-plus'></i>
+                </button>
               </div>
+              {/* elem-2 */}
               <div className='sq-toggleSwitch '>
                 <label className='sq-switch'>
                   <input
@@ -375,7 +403,7 @@ const CaseForm = () => {
                     name='isBoardMode'
                     type='checkbox'
                     checked={isBoardMode == true}
-                    onChange={onChange}
+                    onChange={addCaseValue}
                   />
                   <div className='sq-slider h-scatter-content v-center-content'>
                     <div className='sq-block center-content '>
@@ -387,6 +415,27 @@ const CaseForm = () => {
                   </div>
                 </label>
                 <span></span>
+              </div>
+              {/* elem-3 */}
+              <div
+                className='grid-4 btn-toggleTitle-containter'
+                style={{ gridColumn: '3 / 6' }}
+              >
+                {displayTitles.map((obj, idx) => {
+                  return (
+                    <button
+                      id={Object.keys(obj)[0]}
+                      name='displayTitles'
+                      className='btn btn-sq btn-toggleTitle'
+                      key={`btnToggle${Object.keys(obj)[0]}`}
+                      onClick={addCaseValue}
+                      style={titleBtn(obj)}
+                    >
+                      {Object.keys(obj)[0].charAt(0).toUpperCase() +
+                        Object.keys(obj)[0].slice(1)}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
@@ -458,20 +507,29 @@ const CaseForm = () => {
               ) : (
                 <div className='mt-1 bg-cp-bg round-area'>
                   {/* Tabole Header */}
-                  <div className='flexBox text-cp-1 pb-05 test-3'>
+                  <div className='flexBox text-cp-1 pb-05'>
                     <div style={cellStyle('no')}>NO.</div>
                     <div style={cellStyle('item')}>ITEM</div>
-                    {displayTitles.map((title) => (
-                      <div
-                        key={`headerCellOf${title}`}
-                        style={cellStyle(title, displayTitles.length)}
-                      >
-                        {title.toUpperCase()}
-                      </div>
-                    ))}
+                    {displayTitles.map((obj) => {
+                      if (obj[Object.keys(obj)[0]]) {
+                        return (
+                          <div
+                            key={`headerCellOf${Object.keys(obj)[0]}`}
+                            style={cellStyle(
+                              Object.keys(obj)[0],
+                              trueInDisplayTitles
+                            )}
+                          >
+                            {Object.keys(obj)[0].toUpperCase()}
+                          </div>
+                        );
+                      } else {
+                        return null;
+                      }
+                    })}
                   </div>
                   {/* Table body */}
-                  <div className='overflow-auto-y' style={{ height: '70vh' }}>
+                  <div className='overflow-auto-y' style={{ height: '74vh' }}>
                     {mtrls.map((mtrl, idx) => (
                       <MtrlTable
                         key={mtrl.id}

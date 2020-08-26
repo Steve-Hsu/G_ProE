@@ -20,6 +20,7 @@ import {
   CASE_CLEAR,
   CASENO_CLEAR,
   TOGGLE_CASE,
+  TOGGLE_DISPALYTITALES,
 } from '../types';
 
 export default (state, action) => {
@@ -156,6 +157,17 @@ export default (state, action) => {
       return {
         ...state,
         [action.payload]: !state[action.payload],
+      };
+    case TOGGLE_DISPALYTITALES:
+      return {
+        ...state,
+        displayTitles: state.displayTitles.map((title) => {
+          if (Object.keys(title)[0] == action.payload) {
+            console.log(title);
+            title[action.payload] = !title[action.payload];
+          }
+          return title;
+        }),
       };
     default:
   }

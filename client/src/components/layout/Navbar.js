@@ -102,7 +102,7 @@ const Navbar = ({ title, icon }) => {
   };
 
   return (
-    <div className='navbar bg-primary'>
+    <div className='navbar bg-cp-2 shadow-b'>
       <h1>
         <Link to='/'>
           <i className={icon} /> {title}

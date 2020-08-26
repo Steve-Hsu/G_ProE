@@ -27,6 +27,7 @@ import {
   CASENO_CLEAR,
   TOGGLE_ISUPDATE,
   TOGGLE_CASE,
+  TOGGLE_DISPALYTITALES,
 } from '../types';
 
 const CasesState = (props) => {
@@ -44,7 +45,21 @@ const CasesState = (props) => {
     gQtys: [],
     mtrls: [],
     deletedMtrls: [],
-    displayTitles: ['supplier', 'ref_no', 'position', 'descriptions'],
+    displayTitles: [
+      {
+        supplier: true,
+      },
+      {
+        ref_no: true,
+      },
+      {
+        position: true,
+      },
+      {
+        descriptions: true,
+      },
+    ],
+
     formIsHalfFilledOut: true,
     error: null,
     isUpdated: null,
@@ -716,8 +731,10 @@ const CasesState = (props) => {
       case 'Position' + String(mtrlId):
         materials.find(({ id }) => id === mtrlId).position = e.target.value;
         break;
-      // case 'Description' + String(mtrlId):
-      //   materials.find(({ id }) => id === mtrlId).description = e.target.value;
+      // case Number():
+      //   // case e.target.id.includes('Description'):
+      //   console.log("yes i'm triggred ");
+      //   // materials.find(({ id }) => id === mtrlId).description = e.target.value;
       //   break;
       case 'Unit' + String(mtrlId):
         let material = materials.find(({ id }) => id === mtrlId);
@@ -745,6 +762,15 @@ const CasesState = (props) => {
     updateMaterials(materials);
   };
 
+  const addMtrlValueDescription = (e) => {
+    const mtrlId = e.target.name;
+    let materials = mtrls;
+    const index = e.target.id;
+    materials.find(({ id }) => id === mtrlId).descriptions[index] =
+      e.target.value;
+    updateMaterials(materials);
+  };
+
   const addCaseValue = (e) => {
     // e.preventDefault();
     switch (e.target.name) {
@@ -769,9 +795,13 @@ const CasesState = (props) => {
         mtrls.map((mtrl) => updateCsptRequiredMQty(mtrl.id, Qty.id));
         break;
       case 'isBoardMode':
-      case 'isEditingMtrl':
-        console.log('is triggered -----too');
+        console.log('Yes here is toggled');
         dispatch({ type: TOGGLE_CASE, payload: e.target.name });
+        break;
+      case 'displayTitles':
+        e.preventDefault();
+        console.log(e.target.id); // Test code
+        dispatch({ type: TOGGLE_DISPALYTITALES, payload: e.target.id });
         break;
       default:
     }
@@ -985,6 +1015,7 @@ const CasesState = (props) => {
         addValueMtrlSizeSPEC,
         addValueMtrlCspt,
         addMtrlValue,
+        addMtrlValueDescription,
         uploadNewCase,
         uploadCase,
         downloadCase,

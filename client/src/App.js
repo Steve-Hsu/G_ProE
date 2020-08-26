@@ -94,7 +94,7 @@ const App = () => {
                                     path='/api/case/director'
                                     component={Director}
                                   />
-                                  <Route
+                                  <PrivateUserRoute
                                     exact
                                     path='/api/case/merchandiser'
                                     component={CaseMerchandiser}

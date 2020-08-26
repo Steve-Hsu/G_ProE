@@ -14,6 +14,10 @@ const MtrlTable = ({ mtrl, idx, cellStyle }) => {
 
   const { togglePopover } = popoverContext;
 
+  const trueInDisplayTitles = displayTitles.filter((obj) => {
+    return Object.values(obj)[0] == true;
+  }).length;
+
   const onClick = (e) => {
     e.target.name = mtrl.id;
     e.target.id = 'isEditingMtrl';
@@ -29,34 +33,45 @@ const MtrlTable = ({ mtrl, idx, cellStyle }) => {
           <div style={cellStyle('no')}>{idx + 1}</div>
           <div style={cellStyle('item')}>{mtrl.item}</div>
           {displayTitles.map((title) => {
-            if (title == 'descriptions') {
-              return (
-                <div
-                  style={cellStyle(title, displayTitles.length)}
-                  key={`${title}${mtrl.id}`}
-                >
-                  {mtrl[title].map((des, idx) => (
-                    <div
-                      key={`${des}OfNum${idx}Of${mtrl.id}`}
-                      className='mr-1'
-                      style={{
-                        whiteSpace: 'nowrap',
-                      }}
-                    >
-                      <div> {des}</div>
-                    </div>
-                  ))}
-                </div>
-              );
+            if (title[Object.keys(title)[0]]) {
+              console.log('the length of dispalytitles', trueInDisplayTitles); // Test Code
+              if (Object.keys(title)[0] == 'descriptions') {
+                return (
+                  <div
+                    style={cellStyle(
+                      Object.keys(title)[0],
+                      trueInDisplayTitles
+                    )}
+                    key={`${Object.keys(title)[0]}${mtrl.id}`}
+                  >
+                    {mtrl[Object.keys(title)[0]].map((des, idx) => (
+                      <div
+                        key={`${des}OfNum${idx}Of${mtrl.id}`}
+                        className='mr-1'
+                        style={{
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
+                        <div> {des}</div>
+                      </div>
+                    ))}
+                  </div>
+                );
+              } else {
+                return (
+                  <div
+                    style={cellStyle(
+                      Object.keys(title)[0],
+                      trueInDisplayTitles
+                    )}
+                    key={`${Object.keys(title)[0]}${mtrl.id}`}
+                  >
+                    {mtrl[Object.keys(title)[0]]}
+                  </div>
+                );
+              }
             } else {
-              return (
-                <div
-                  style={cellStyle(title, displayTitles.length)}
-                  key={`${title}${mtrl.id}`}
-                >
-                  {mtrl[title]}
-                </div>
-              );
+              return null;
             }
           })}
         </div>

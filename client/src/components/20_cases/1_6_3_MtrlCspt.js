@@ -16,7 +16,7 @@ const MtrlCspt = ({ size, mtrl }) => {
   return (
     // <Fragment>
     //   {cspt ? (
-    <div>
+    <div className='mr-1'>
       <input
         name={mtrl.id}
         id={cspt.id}

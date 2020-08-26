@@ -16,9 +16,11 @@
 
   /* color family */
   --cp-1_2-light: #ffef9f;
-  /* Opposite color */
+
+  /* Complementary color */
   /* You have findout by browsers with the color code */
-  --cp-1_2-opposite: #3a5cfd;
+  --cp-1_2-c: #3a5cfd;
+  --cp-1_2-light-c: #9fafff;
   /* The theme */
 
   --primary-color: var(--cp-1_2);
@@ -27,7 +29,7 @@
   --dark-color: #333333;
   --light-color: #fff5bd;
   --danger-color: #dc3545;
-  --success-color: var(--cp-1_2-opposite);
+  --success-color: var(--cp-1_2-c);
 
   /* The color for fade element such as thin border */
   /* This color should be able to apply to any color wihout dismatch.  */
@@ -39,6 +41,11 @@
   --small: 5px;
   --middle: 10px;
   --large: 16px;
+
+  /* btn height Height */
+  --btn-h-s: 25px;
+  --btn-h-m: 40px;
+  --btn-h-l: 65px;
 
   /* .grid-gap-row-ti {
   row-gap: 0.2rem; 
@@ -108,7 +115,7 @@ img {
 }
 
 .container-with-navbar {
-  margin-top: 5rem;
+  margin-top: 50px;
 }
 
 .transition {
@@ -310,7 +317,7 @@ img {
 }
 
 /* @button */
-.btn {
+/* .btn {
   display: inline-block;
   position: relative;
   padding: 0.4rem 1.3rem;
@@ -320,18 +327,39 @@ img {
   outline: none;
   justify-content: center;
   align-content: center;
+} */
+
+.btn {
+  display: inline-block;
+  position: relative;
+  padding: 0.4rem 1.3rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: opacity 0.2s ease-in;
+  outline: none;
+  place-items: center;
 }
 
 .btn:hover {
   opacity: 0.7;
 }
 
-.btn-square {
-  height: 2rem;
-  width: 2rem;
+.btn-sq {
+  height: var(--btn-h-m);
+  border-radius: var(--small);
+  width: var(--btn-h-m);
+  background: var(--cp-1_3);
+  color: var(--cp-1_2);
+  border: 2px solid var(--cp-1_4);
   margin: 0;
   padding: 0;
   text-align: center;
+}
+
+.btn-sq:hover {
+  background: var(--cp-1_2);
+  color: var(--cp-1_3);
+  opacity: 1;
 }
 
 .btn-dropdown {
@@ -372,6 +400,30 @@ img {
   cursor: pointer;
   transform: rotate(90deg);
   transition: all 0.3s;
+}
+
+/* custom Btn */
+.btn-toggleTitle-containter {
+  border-radius: var(--small);
+  background: var(--cp-1_4);
+  height: var(--btn-h-m);
+  width: 400px;
+  margin-left: 100px;
+}
+
+.btn-toggleTitle {
+  display: grid;
+  background: var(--cp-1_3);
+  border-radius: var(--small);
+  color: var(--cp-1_4);
+  width: 100px;
+  place-items: center;
+  padding: 0.5rem;
+}
+
+.btn-toggleTitle:hover {
+  color: var(--cp-1_1);
+  opacity: 0.6;
 }
 
 .badge {
@@ -456,13 +508,13 @@ img {
   width: 23px;
   left: 2px;
   bottom: 2px;
-  background-color: var(--cp-1_1);
+  background-color: var(--cp-1_2-light);
   -webkit-transition: 0.4s;
   transition: 0.4s;
 }
 
 .switchInput:checked + .slider {
-  background-color: var(--success-color);
+  background-color: var(--cp-1_2-c);
 }
 
 /* input:focus + .slider {
@@ -493,7 +545,7 @@ img {
   position: relative;
   display: inline-block;
   width: 200px;
-  height: 40px;
+  height: var(--btn-h-m);
 }
 
 /* The checkBox */
@@ -511,13 +563,13 @@ img {
   left: 0;
   right: 0;
   bottom: 0;
-  height: 40px;
+  height: var(--btn-h-m);
   background-color: var(--cp-1_3);
   -webkit-transition: 0.4s;
   transition: 0.4s;
 }
 .sq-block {
-  height: 40px;
+  height: var(--btn-h-m);
   width: 100px;
   z-index: 2;
 }
@@ -682,6 +734,7 @@ textarea:focus {
   transition: all 0.3s;
   animation: labelDown 0.7s ease;
   color: var(--cp-1_2);
+  white-space: nowrap;
 }
 
 .MPH-input {
@@ -797,9 +850,10 @@ textarea:focus {
   align-items: center;
   padding: 0.7rem 2rem;
   z-index: 10;
+  height: 50px;
   width: 100%;
   border-bottom: solid 1px var(--primary-color);
-  opacity: 0.9;
+  opacity: 1;
   margin-bottom: 1rem;
   color: var(--primary-text);
 }
@@ -1274,13 +1328,19 @@ textarea:focus {
 
 /* @background */
 
+.bg-cp-1,
 .bg-cp-elem {
   background: var(--cp-1_1);
 }
+.bg-cp-2 {
+  background: var(--cp-1_2);
+}
 
+.bg-cp-3,
 .bg-cp-bg {
   background: var(--cp-1_3);
 }
+
 .bg-cp-bg-light {
   background: var(--cp-1_2-light);
 }
@@ -1291,8 +1351,11 @@ textarea:focus {
 }
 
 /* radious border */
-.bd-radius {
+.bd-radius-s {
   border-radius: var(--small);
+}
+.bd-round {
+  border-radius: 50%;
 }
 
 .bd-radius-top {
@@ -1327,6 +1390,16 @@ textarea:focus {
 .bd-no-h {
   border-left: 1px solid rgba(255, 255, 255, 0);
   border-right: 1px solid rgba(255, 255, 255, 0);
+}
+
+/* @Shadow */
+/* box-shadow: h-offset v-offset blur spread color */
+.shadow-b {
+  box-shadow: 0px 5px 10px 0px var(--fade-color);
+}
+
+.shadow-inset-b {
+  box-shadow: inset 10px 10px 10px 10px red;
 }
 
 /* @test */

@@ -30,6 +30,7 @@ const Mtrl = ({ mtrl }) => {
     expandExtraPanels,
     addMtrlValue,
     addCaseValue,
+    addMtrlValueDescription,
   } = casesContext;
 
   const { togglePopover } = popoverContext;
@@ -149,7 +150,7 @@ const Mtrl = ({ mtrl }) => {
       case 'Position':
         return mtrl.position;
       case 'Description':
-        return mtrl.description;
+        return mtrl.descriptions;
       default:
     }
   };
@@ -188,6 +189,41 @@ const Mtrl = ({ mtrl }) => {
             className='item-input'
             maxLength={maxWdsLength}
           />
+        </>
+      );
+    } else if (subject === 'Description') {
+      return (
+        <>
+          <div className='tiny'>Description</div>
+          {mtrl.descriptions.length == 0 ? (
+            <div key={`${subject}${0}${mtrl.id}`} className='mb-05'>
+              <input
+                type='text'
+                id={0}
+                name={mtrl.id}
+                placeholder='.'
+                onChange={addMtrlValueDescription}
+                className='MPH-input'
+                value={mtrlAttribute(subject)[0] || ''}
+                maxLength={maxWdsLength}
+              />
+            </div>
+          ) : (
+            mtrl.descriptions.map((des, idx) => (
+              <div key={`${subject}${idx}${mtrl.id}`} className='mb-05'>
+                <input
+                  type='text'
+                  id={idx}
+                  name={mtrl.id}
+                  placeholder='.'
+                  onChange={addMtrlValueDescription}
+                  className='MPH-input'
+                  value={mtrlAttribute(subject)[idx] || ''}
+                  maxLength={maxWdsLength}
+                />
+              </div>
+            ))
+          )}
         </>
       );
     } else {
@@ -323,7 +359,7 @@ const Mtrl = ({ mtrl }) => {
       </div>
 
       {/* Row_4  */}
-      <div className='grid-6'>
+      <div className='grid-6 mt-1'>
         {/* Row_4 - Icon Space */}
         <div></div>
         <div className='mr-1'>
