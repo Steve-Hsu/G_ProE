@@ -74,10 +74,10 @@ router.post(
     //@ Delete the white space from strings of array items in the body, the cWays, sizes, and mtrls
     let trimedStyle = '';
     let trimedClient = '';
-    if (style !== null || style !== '') {
+    if (style) {
       trimedStyle = style.toLowerCase().trim();
     }
-    if (client !== null || client !== '') {
+    if (client) {
       trimedClient = client.toLowerCase().trim();
     }
     const trimedcWays = new Promise((resolve) => {
@@ -194,94 +194,116 @@ router.post(
 
           const mtrlColorPromise = new Promise((resolve) => {
             console.log('Promise start- mtrlColorPromise'); // Test Code
-            let num = 0;
-            mtrl.mtrlColors.map((mtrlColor) => {
-              if (mtrl.multipleColor == true) {
-                if (mtrlColor.mColor) {
-                  mtrlColor.mColor = mtrlColor.mColor.toLowerCase().trim();
+            if (mtrl.mtrlColors.length > 0) {
+              let num = 0;
+              mtrl.mtrlColors.map((mtrlColor) => {
+                if (mtrl.multipleColor == true) {
+                  if (mtrlColor.mColor) {
+                    mtrlColor.mColor = mtrlColor.mColor.toLowerCase().trim();
+                  }
+                } else {
+                  if (mtrl.mtrlColors[0].mColor) {
+                    mtrlColor.mColor = mtrl.mtrlColors[0].mColor
+                      .toLowerCase()
+                      .trim();
+                  }
                 }
-              } else {
-                if (mtrl.mtrlColors[0].mColor) {
-                  mtrlColor.mColor = mtrl.mtrlColors[0].mColor
-                    .toLowerCase()
-                    .trim();
-                }
-              }
 
-              num = num + 1;
-              if (num === mtrl.mtrlColors.length) {
-                console.log('Promise resolve- mtrlColorPromise'); // Test Code
-                return resolve();
-              }
-            });
+                num = num + 1;
+                if (num === mtrl.mtrlColors.length) {
+                  console.log('Promise resolve- mtrlColorPromise'); // Test Code
+                  return resolve();
+                }
+              });
+            } else {
+              console.log(
+                "Promise resolve- mtrlColorPromise, the mtrl dosen't have mtrlColors"
+              ); // Test Code
+              return resolve();
+            }
           });
 
           const mtrlSPECPromise = new Promise((resolve) => {
-            console.log('Promise start- mtrlSPECPromise'); // Test Code
-            let num = 0;
-            mtrl.sizeSPECs.map((sizeSPEC) => {
-              if (mtrl.multipleSPEC == true) {
-                sizeSPEC.mSizeSPEC = sizeSPEC.mSizeSPEC.toLowerCase().trim();
-              } else {
-                sizeSPEC.mSizeSPEC = mtrl.sizeSPECs[0].mSizeSPEC
-                  .toLowerCase()
-                  .trim();
-              }
+            if (mtrl.sizeSPECs.length > 0) {
+              console.log('Promise start- mtrlSPECPromise'); // Test Code
+              let num = 0;
+              mtrl.sizeSPECs.map((sizeSPEC) => {
+                if (mtrl.multipleSPEC == true) {
+                  sizeSPEC.mSizeSPEC = sizeSPEC.mSizeSPEC.toLowerCase().trim();
+                } else {
+                  sizeSPEC.mSizeSPEC = mtrl.sizeSPECs[0].mSizeSPEC
+                    .toLowerCase()
+                    .trim();
+                }
 
-              num = num + 1;
-              if (num === mtrl.sizeSPECs.length) {
-                console.log('Promise resolve- mtrlSPECPromise'); // Test Code
-                return resolve();
-              }
-            });
+                num = num + 1;
+                if (num === mtrl.sizeSPECs.length) {
+                  console.log('Promise resolve- mtrlSPECPromise'); // Test Code
+                  return resolve();
+                }
+              });
+            } else {
+              console.log(
+                "Promise resolve- mtrlSPECPromise, the mtrl dosen't have mtrlSPECs"
+              ); // Test Code
+              return resolve();
+            }
           });
 
           const mtrlCsptPromise = new Promise((resolve) => {
             console.log('Promise start- mtrlCsptPromise'); // Test Code
             let num = 0;
-            mtrl.cspts.map((cspt) => {
-              if (mtrl.multipleColor == true) {
-                if (cspt.mColor) {
-                  cspt.mColor = cspt.mColor.toLowerCase().trim();
+            if (mtrl.cspts.length > 0) {
+              mtrl.cspts.map((cspt) => {
+                if (mtrl.multipleColor == true) {
+                  if (cspt.mColor) {
+                    cspt.mColor = cspt.mColor.toLowerCase().trim();
+                  }
+                } else {
+                  if (mtrl.mtrlColors[0].mColor) {
+                    cspt.mColor = mtrl.mtrlColors[0].mColor
+                      .toLowerCase()
+                      .trim();
+                  }
                 }
-              } else {
-                if (mtrl.mtrlColors[0].mColor) {
-                  cspt.mColor = mtrl.mtrlColors[0].mColor.toLowerCase().trim();
-                }
-              }
 
-              if (mtrl.multipleSPEC == true) {
-                if (cspt.mSizeSPEC) {
-                  cspt.mSizeSPEC = cspt.mSizeSPEC.toLowerCase().trim();
+                if (mtrl.multipleSPEC == true) {
+                  if (cspt.mSizeSPEC) {
+                    cspt.mSizeSPEC = cspt.mSizeSPEC.toLowerCase().trim();
+                  }
+                } else {
+                  if (mtrl.sizeSPECs[0].mSizeSPEC) {
+                    cspt.mSizeSPEC = mtrl.sizeSPECs[0].mSizeSPEC
+                      .toLowerCase()
+                      .trim();
+                  }
                 }
-              } else {
-                if (mtrl.sizeSPECs[0].mSizeSPEC) {
-                  cspt.mSizeSPEC = mtrl.sizeSPECs[0].mSizeSPEC
-                    .toLowerCase()
-                    .trim();
-                }
-              }
 
-              if (mtrl.multipleCSPT == true) {
-                if (cspt.cspt) {
-                  cspt.cspt = Number(cspt.cspt);
+                if (mtrl.multipleCSPT == true) {
+                  if (cspt.cspt) {
+                    cspt.cspt = Number(cspt.cspt);
+                  }
+                } else {
+                  if (mtrl.cspts[0].cspt) {
+                    cspt.cspt = Number(mtrl.cspts[0].cspt);
+                  }
                 }
-              } else {
-                if (mtrl.cspts[0].cspt) {
-                  cspt.cspt = Number(mtrl.cspts[0].cspt);
+
+                if (gQtys.length > 0) {
+                  cspt.requiredMQty =
+                    cspt.cspt * gQtys.find(({ id }) => id === cspt.gQty).gQty;
                 }
-              }
 
-              cspt.requiredMQty =
-                cspt.cspt * gQtys.find(({ id }) => id === cspt.gQty).gQty;
-
-              cspt.unit = cspt.unit.toLowerCase().trim();
-              num = num + 1;
-              if (num === mtrl.cspts.length) {
-                console.log('Promise resolve- mtrlCsptPromise'); // Test Code
-                return resolve();
-              }
-            });
+                cspt.unit = cspt.unit.toLowerCase().trim();
+                num = num + 1;
+                if (num === mtrl.cspts.length) {
+                  console.log('Promise resolve- mtrlCsptPromise'); // Test Code
+                  return resolve();
+                }
+              });
+            } else {
+              return resolve();
+            }
           });
 
           Promise.all([
@@ -336,7 +358,7 @@ router.post(
     caseNumber.push(caseQty);
 
     //Define caseType
-    let caseTypeSymbol = '';
+    let caseTypeSymbol = 'T';
     switch (caseType) {
       case 'Bulk':
         caseTypeSymbol = 'B';
@@ -506,23 +528,27 @@ router.put('/:id', authUser, async (req, res) => {
             'item',
             'supplier',
             'ref_no',
-            'position',
-            'description',
+            // We don't need to lowerCase the position and descriptions
+            // 'position',
+            // 'description',
           ];
           mtrlList.map((x) => {
-            if (mtrl[x] !== '' || mtrl[x] !== null) {
+            if (mtrl[x]) {
               mtrl[x] = mtrl[x].toLowerCase().trim();
             }
           });
 
           const mtrlColorPromise = new Promise((resolve) => {
+            console.log('Promise start- mtrlColorPromise'); // Test Code
             if (mtrl.mtrlColors.length > 0) {
               let num = 0;
               mtrl.mtrlColors.map((mtrlColor) => {
-                if (mtrl.mColor !== '' || mtrl.mColor !== null) {
-                  if (mtrl.multipleColor == true) {
+                if (mtrl.multipleColor == true) {
+                  if (mtrlColor.mColor) {
                     mtrlColor.mColor = mtrlColor.mColor.toLowerCase().trim();
-                  } else {
+                  }
+                } else {
+                  if (mtrl.mtrlColors[0].mColor) {
                     mtrlColor.mColor = mtrl.mtrlColors[0].mColor
                       .toLowerCase()
                       .trim();
@@ -531,11 +557,14 @@ router.put('/:id', authUser, async (req, res) => {
 
                 num = num + 1;
                 if (num === mtrl.mtrlColors.length) {
-                  console.log('Promise mtrlColorPromise');
+                  console.log('Promise resolve- mtrlColorPromise'); // Test Code
                   return resolve();
                 }
               });
             } else {
+              console.log(
+                "Promise resolve- mtrlColorPromise, the mtrl dosen't have mtrlColors"
+              ); // Test Code
               return resolve();
             }
           });
@@ -563,6 +592,9 @@ router.put('/:id', authUser, async (req, res) => {
                 }
               });
             } else {
+              console.log(
+                "Promise mtrlSPECPromise, the mtrl dosen't have mtrlSPECs"
+              );
               return resolve();
             }
           });
@@ -570,37 +602,57 @@ router.put('/:id', authUser, async (req, res) => {
           const mtrlCsptPromise = new Promise((resolve) => {
             console.log('Promise start- mtrlCsptPromise'); // Test Code
             let num = 0;
-            mtrl.cspts.map((cspt) => {
-              if (mtrl.multipleColor == true) {
-                cspt.mColor = cspt.mColor.toLowerCase().trim();
-              } else {
-                cspt.mColor = mtrl.mtrlColors[0].mColor.toLowerCase().trim();
-              }
+            if (mtrl.cspts.length > 0) {
+              mtrl.cspts.map((cspt) => {
+                if (mtrl.multipleColor == true) {
+                  if (cspt.mColor) {
+                    cspt.mColor = cspt.mColor.toLowerCase().trim();
+                  }
+                } else {
+                  if (mtrl.mtrlColors[0].mColor) {
+                    cspt.mColor = mtrl.mtrlColors[0].mColor
+                      .toLowerCase()
+                      .trim();
+                  }
+                }
 
-              if (mtrl.multipleSPEC == true) {
-                cspt.mSizeSPEC = cspt.mSizeSPEC.toLowerCase().trim();
-              } else {
-                cspt.mSizeSPEC = mtrl.sizeSPECs[0].mSizeSPEC
-                  .toLowerCase()
-                  .trim();
-              }
+                if (mtrl.multipleSPEC == true) {
+                  if (cspt.mSizeSPEC) {
+                    cspt.mSizeSPEC = cspt.mSizeSPEC.toLowerCase().trim();
+                  }
+                } else {
+                  if (mtrl.sizeSPECs[0].mSizeSPEC) {
+                    cspt.mSizeSPEC = mtrl.sizeSPECs[0].mSizeSPEC
+                      .toLowerCase()
+                      .trim();
+                  }
+                }
 
-              if (mtrl.multipleCSPT == true) {
-                cspt.cspt = Number(cspt.cspt);
-              } else {
-                cspt.cspt = Number(mtrl.cspts[0].cspt);
-              }
+                if (mtrl.multipleCSPT == true) {
+                  if (cspt.cspt) {
+                    cspt.cspt = Number(cspt.cspt);
+                  }
+                } else {
+                  if (mtrl.cspts[0].cspt) {
+                    cspt.cspt = Number(mtrl.cspts[0].cspt);
+                  }
+                }
 
-              cspt.requiredMQty =
-                cspt.cspt * gQtys.find(({ id }) => id === cspt.gQty).gQty;
+                if (gQtys.length > 0) {
+                  cspt.requiredMQty =
+                    cspt.cspt * gQtys.find(({ id }) => id === cspt.gQty).gQty;
+                }
 
-              cspt.unit = cspt.unit.toLowerCase().trim();
-              num = num + 1;
-              if (num === mtrl.cspts.length) {
-                console.log('Promise resolve- mtrlCsptPromise'); // Test Code
-                return resolve();
-              }
-            });
+                cspt.unit = cspt.unit.toLowerCase().trim();
+                num = num + 1;
+                if (num === mtrl.cspts.length) {
+                  console.log('Promise resolve- mtrlCsptPromise'); // Test Code
+                  return resolve();
+                }
+              });
+            } else {
+              return resolve();
+            }
           });
 
           Promise.all([
