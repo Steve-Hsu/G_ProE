@@ -181,11 +181,13 @@ router.post(
             'item',
             'supplier',
             'ref_no',
-            'position',
-            'description',
+            // We don't need to transform the position and description into lowerCase.
+            // 'position',
+            // 'descriptions',
           ];
           mtrlList.map((x) => {
-            if (mtrl[x] !== '' || mtrl[x] !== null) {
+            // if (mtrl[x] !== '' || mtrl[x] !== null) {
+            if (mtrl[x]) {
               mtrl[x] = mtrl[x].toLowerCase().trim();
             }
           });
@@ -195,11 +197,15 @@ router.post(
             let num = 0;
             mtrl.mtrlColors.map((mtrlColor) => {
               if (mtrl.multipleColor == true) {
-                mtrlColor.mColor = mtrlColor.mColor.toLowerCase().trim();
+                if (mtrlColor.mColor) {
+                  mtrlColor.mColor = mtrlColor.mColor.toLowerCase().trim();
+                }
               } else {
-                mtrlColor.mColor = mtrl.mtrlColors[0].mColor
-                  .toLowerCase()
-                  .trim();
+                if (mtrl.mtrlColors[0].mColor) {
+                  mtrlColor.mColor = mtrl.mtrlColors[0].mColor
+                    .toLowerCase()
+                    .trim();
+                }
               }
 
               num = num + 1;
@@ -235,23 +241,35 @@ router.post(
             let num = 0;
             mtrl.cspts.map((cspt) => {
               if (mtrl.multipleColor == true) {
-                cspt.mColor = cspt.mColor.toLowerCase().trim();
+                if (cspt.mColor) {
+                  cspt.mColor = cspt.mColor.toLowerCase().trim();
+                }
               } else {
-                cspt.mColor = mtrl.mtrlColors[0].mColor.toLowerCase().trim();
+                if (mtrl.mtrlColors[0].mColor) {
+                  cspt.mColor = mtrl.mtrlColors[0].mColor.toLowerCase().trim();
+                }
               }
 
               if (mtrl.multipleSPEC == true) {
-                cspt.mSizeSPEC = cspt.mSizeSPEC.toLowerCase().trim();
+                if (cspt.mSizeSPEC) {
+                  cspt.mSizeSPEC = cspt.mSizeSPEC.toLowerCase().trim();
+                }
               } else {
-                cspt.mSizeSPEC = mtrl.sizeSPECs[0].mSizeSPEC
-                  .toLowerCase()
-                  .trim();
+                if (mtrl.sizeSPECs[0].mSizeSPEC) {
+                  cspt.mSizeSPEC = mtrl.sizeSPECs[0].mSizeSPEC
+                    .toLowerCase()
+                    .trim();
+                }
               }
 
               if (mtrl.multipleCSPT == true) {
-                cspt.cspt = Number(cspt.cspt);
+                if (cspt.cspt) {
+                  cspt.cspt = Number(cspt.cspt);
+                }
               } else {
-                cspt.cspt = Number(mtrl.cspts[0].cspt);
+                if (mtrl.cspts[0].cspt) {
+                  cspt.cspt = Number(mtrl.cspts[0].cspt);
+                }
               }
 
               cspt.requiredMQty =

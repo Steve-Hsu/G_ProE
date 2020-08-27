@@ -119,6 +119,20 @@ export default (state, action) => {
         sizes: [],
         gQtys: [],
         mtrls: [],
+        displayTitles: [
+          {
+            supplier: true,
+          },
+          {
+            ref_no: true,
+          },
+          {
+            position: true,
+          },
+          {
+            descriptions: true,
+          },
+        ],
         formIsHalfFilledOut: true,
         error: null,
         isUpdated: null,
@@ -143,6 +157,20 @@ export default (state, action) => {
         sizes: [],
         gQtys: [],
         mtrls: [],
+        displayTitles: [
+          {
+            supplier: true,
+          },
+          {
+            ref_no: true,
+          },
+          {
+            position: true,
+          },
+          {
+            descriptions: true,
+          },
+        ],
         formIsHalfFilledOut: true,
         error: action.payload,
         isUpdated: null,

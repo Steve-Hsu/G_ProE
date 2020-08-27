@@ -62,7 +62,7 @@ export default SrMtrl;
 
 // PropTyeps
 SrMtrl.propTypes = {
-  mPrice: PropTypes.object.isRequired,
+  // mPrice: PropTypes.object.isRequired,
   srMtrl: PropTypes.object.isRequired,
   currentPath: PropTypes.string.isRequired,
 };

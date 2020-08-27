@@ -44,7 +44,7 @@ const CasesState = (props) => {
     sizes: [],
     gQtys: [],
     mtrls: [],
-    deletedMtrls: [],
+    // deletedMtrls: [],
     displayTitles: [
       {
         supplier: true,
@@ -958,7 +958,8 @@ const CasesState = (props) => {
       },
     };
 
-    const url = 'http://127.0.0.1:5000/m-list';
+    // const url = 'http://127.0.0.1:5000/m-list'; // This original port will conflcit so I change it
+    const url = 'http://localhost:8000/m-list';
     const res = await axios.post(`${url}`, JSONBOM, config);
     const csv = res.data;
 

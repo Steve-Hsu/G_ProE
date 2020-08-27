@@ -76,7 +76,7 @@ const CaseForm = () => {
   let supplier,
     ref_no,
     position,
-    descriptions = null;
+    descriptions = false;
 
   const trueInDisplayTitles = displayTitles.filter((obj) => {
     return Object.values(obj)[0] == true;
