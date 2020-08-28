@@ -25,9 +25,26 @@ const QuoMtrl = ({ mtrl }) => {
   const mQuo = mQuos.find(({ mtrlId }) => mtrlId === mtrl.id);
   const { mQuoAddvised, csptAddvised, materialFinalQuotation } = mQuo;
 
-  const onChange = (e) => {
+  const addNumber = (e) => {
     e.preventDefault();
-    updateCurrentQuoForm(e);
+    const num = e.target.value;
+    const Max = 0;
+    switch (e.target.name) {
+      case 'cspt':
+        Max = 999;
+        break;
+      case 'unitprice':
+        Max = 9999999;
+        break;
+      default:
+    }
+
+    if (String(num).length > String(Max).length) {
+      e.target.value = Max;
+      updateCurrentQuoForm(e);
+    } else {
+      updateCurrentQuoForm(e);
+    }
   };
 
   return (
@@ -53,7 +70,7 @@ const QuoMtrl = ({ mtrl }) => {
           max='999'
           step='.01'
           value={csptAddvised || ''}
-          onChange={onChange}
+          onChange={addNumber}
         />
       </div>
       <div>
@@ -66,7 +83,7 @@ const QuoMtrl = ({ mtrl }) => {
           max='9999999'
           step='.01'
           value={mQuoAddvised || ''}
-          onChange={onChange}
+          onChange={addNumber}
         />
       </div>
 

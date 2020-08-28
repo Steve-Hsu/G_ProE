@@ -42,9 +42,9 @@ const Mtrl = ({ mtrl }) => {
   //For sparete the postion of btn, here use an inline style.
   //deleteBtn in mtrl.
   const deleteBtnPosition = {
-    top: '1rem',
-    left: '100%',
-    transform: 'translate(-2rem, -1rem)',
+    // top: '2%',
+    // right: '5%',
+    transform: 'translate(-0.2rem, -0.7rem)',
   };
   // Expand Panel class
   const expandPanelClass = 'grid-1-5 bg-cp-bg-light pt-1 round-card bd-light';
@@ -286,9 +286,13 @@ const Mtrl = ({ mtrl }) => {
       {/* Title area */}
       <div className='h-scatter-content mb-1'>
         {/* The positon of the btn  should be reranged*/}
-        <div key={`${item_titles[0]}${mtrl.id}`}>
+        <div key={`${item_titles[0]}${mtrl.id}`} style={{ flex: '1 1 1' }}>
           {inputItemObj(item_titles[0])}
         </div>
+        <div
+          onClick={goBack}
+          style={{ flex: '1 1 50%', height: '3.5rem', opacity: 0 }}
+        ></div>
 
         {/* Row_1 - Delete Btn */}
         <div>
@@ -297,7 +301,7 @@ const Mtrl = ({ mtrl }) => {
               value={mtrl.id}
               name='mtrl'
               onClick={togglePopover}
-              className='btn btn-fade btn-square'
+              className='btn btn-warning btn-sq btn-sq-small'
               style={deleteBtnPosition}
             >
               x

@@ -8,13 +8,26 @@ const Qty = ({ size, gQty }) => {
 
   //@ Value for input
   //words length limit
-  const maxWdsLength = '7';
-  const gQtyLength = maxWdsLength;
+  const Max = 99999;
+
+  const addNumber = (e) => {
+    const num = e.target.value;
+    if (String(num).length > String(Max).length) {
+      e.target.value = Max;
+      addCaseValue(e);
+    } else {
+      addCaseValue(e);
+    }
+  };
 
   return (
     <Fragment>
       {gQty.size === size.id ? (
-        <div key={gQty.id} style={{ height: '68px' }}>
+        <div
+          key={gQty.id}
+          style={{ height: 'var(--btn-h-m)' }}
+          className='bg-cp-1 mb-1 bd-cp-2-b'
+        >
           <input
             name='gQty'
             id={gQty.id}
@@ -22,11 +35,10 @@ const Qty = ({ size, gQty }) => {
             type='number'
             // Add ||'' to the value to prevent error as uncontrolled to controled.
             value={gQty.gQty || ''}
-            onChange={addCaseValue}
-            maxLength={gQtyLength}
+            onChange={addNumber}
             min='0'
-            max='9999999'
-            className='MPH-input'
+            max={Max}
+            className='MPH-input bg-cp-1 bd-no lead h-100 w-100'
           />
           <label htmlFor={gQty.id} className='MPH-input-label'>
             {cWays.find(({ id }) => id === gQty.cWay) == true

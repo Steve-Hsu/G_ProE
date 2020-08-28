@@ -102,7 +102,7 @@ const Size = ({ size }) => {
         onChange={onChange}
         autoFocus
         default='XS'
-        className='select-primary'
+        className='select-primary bg-cp-1 text-cp-3 bd-no lead'
       >
         {sizeList.map((s) => {
           return (

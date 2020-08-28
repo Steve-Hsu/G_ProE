@@ -83,6 +83,18 @@ const QuoForm = () => {
     }
   };
 
+  const addNumber = (e) => {
+    e.preventDefault();
+    const num = e.target.value;
+    const Max = 99999;
+    if (String(num).length > String(Max).length) {
+      e.target.value = Max;
+      updateCurrentQuoForm(e);
+    } else {
+      updateCurrentQuoForm(e);
+    }
+  };
+
   return (
     <Fragment>
       <div className='p-1 container container-with-navbar'>
@@ -117,7 +129,7 @@ const QuoForm = () => {
               type='number'
               step='.01'
               name='cm'
-              onChange={onChange}
+              onChange={addNumber}
               id={`cm${_id}`}
               min='0'
               max='99999'

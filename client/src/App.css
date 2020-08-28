@@ -28,8 +28,8 @@
   /* Others */
   --dark-color: #333333;
   --light-color: #fff5bd;
-  --danger-color: #dc3545;
-  --success-color: var(--cp-1_2-c);
+  --danger-color: #cc3300;
+  --success-color: #339900;
 
   /* The color for fade element such as thin border */
   /* This color should be able to apply to any color wihout dismatch.  */
@@ -356,6 +356,11 @@ img {
   text-align: center;
 }
 
+.btn-sq-small {
+  height: var(--btn-h-s);
+  width: var(--btn-h-s);
+}
+
 .btn-sq:hover {
   background: var(--cp-1_2);
   color: var(--cp-1_3);
@@ -456,12 +461,13 @@ img {
   border-radius: var(--small);
 }
 
-.btn-fade:hover {
+.btn-warning:hover {
   background: var(--danger-color);
   color: white;
   transition: all 0.5s;
   opacity: 1;
   border-radius: 50%;
+  border: 0;
 }
 
 /* @Check Box */
@@ -538,6 +544,7 @@ img {
 /* Toggle Switch - 2 - squire switch with words -----*/
 .sq-toggleSwitch {
   width: 200px;
+  height: var(--btn-h-m);
   display: flex;
   justify-content: space-between;
 }
@@ -651,11 +658,8 @@ input {
   margin: 0;
   /* border-radius: var(--small); */
 }
-input[type='number'],
-input[type='text'],
-input[type='email'],
-input[type='password'],
-input[type='date'],
+
+input,
 select,
 textarea {
   display: inline-block;
@@ -678,11 +682,8 @@ input[type='submit'] {
 .select-primary {
   transition: all 0.5s;
 }
-input[type='number']:hover,
-input[type='text']:hover,
-input[type='email']:hover,
-input[type='password']:hover,
-input[type='date']:hover,
+
+input:hover,
 select:hover,
 textarea:hover {
   color: var(--primary-text);
@@ -690,11 +691,7 @@ textarea:hover {
   transition: all 0.5s;
 }
 
-input[type='number']:focus,
-input[type='text']:focus,
-input[type='email']:focus,
-input[type='password']:focus,
-input[type='date']:focus,
+input:focus,
 select:focus,
 textarea:focus {
   box-shadow: none;
@@ -917,23 +914,22 @@ textarea:focus {
 }
 .popup-inner {
   position: absolute;
-  left: 25%;
-  right: 25%;
-  top: 25%;
-  bottom: 25%;
+  left: 30%;
+  right: 30%;
+  top: 20%;
+  bottom: 35%;
   margin: auto;
-  background: white;
+  background: rgba(255, 255, 255, 0);
   z-index: 11;
   font-size: large;
 }
 
 .popup-container {
-  position: absolute;
+  /* position: absolute; */
   top: 0;
   left: 0;
   right: 0;
-  height: 70%;
-  padding: 6rem;
+  height: 100%;
 }
 
 .popup-btn-holder {
@@ -1091,13 +1087,13 @@ textarea:focus {
 }
 
 /* @Position */
-.center {
+/* .center {
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
   width: 100px;
-}
+} */
 
 /* @Position the content */
 /* Apply to container */
@@ -1161,6 +1157,9 @@ textarea:focus {
 .pt {
   padding-top: var(--gap);
 }
+.pt-0 {
+  padding-top: 0;
+}
 .pt-05 {
   padding-top: 0.5rem;
 }
@@ -1177,6 +1176,9 @@ textarea:focus {
 /* Padding - bottom */
 .pb {
   padding-bottom: var(--gap);
+}
+.pb-0 {
+  padding-bottom: 0;
 }
 .pb-05 {
   padding-bottom: 0.5rem;
@@ -1195,6 +1197,9 @@ textarea:focus {
 .pl {
   padding-left: var(--gap);
 }
+.pl-0 {
+  padding-left: 0;
+}
 .pl-05 {
   padding-left: 0.5rem;
 }
@@ -1211,6 +1216,9 @@ textarea:focus {
 /* Padding - right */
 .pr {
   padding-right: var(--gap);
+}
+.pr-0 {
+  padding-right: 0;
 }
 .pr-05 {
   padding-right: 0.5rem;
@@ -1246,6 +1254,9 @@ textarea:focus {
 .my {
   margin: var(--gap) 0;
 }
+.my-0 {
+  margin: 0;
+}
 .my-05 {
   margin: 0.5rem 0;
 }
@@ -1262,6 +1273,9 @@ textarea:focus {
 /* Margin - top */
 .mt {
   margin-top: var(--gap);
+}
+.mt-0 {
+  margin-top: 0;
 }
 .mt-05 {
   margin-top: 0.5rem;
@@ -1280,6 +1294,9 @@ textarea:focus {
 .mb {
   margin-bottom: var(--gap);
 }
+.mb-0 {
+  margin-bottom: 0;
+}
 .mb-05 {
   margin-bottom: 0.5rem;
 }
@@ -1295,6 +1312,9 @@ textarea:focus {
 /* Margin - left */
 .ml {
   margin-left: var(--gap);
+}
+.ml-0 {
+  margin-left: 0;
 }
 .ml-05 {
   margin-left: 0.5rem;
@@ -1313,6 +1333,9 @@ textarea:focus {
 .mr {
   margin-right: var(--gap);
 }
+.mr-0 {
+  margin-right: 0;
+}
 .mr-05 {
   margin-right: 0.5rem;
 }
@@ -1326,8 +1349,78 @@ textarea:focus {
   margin-right: 3rem;
 }
 
-/* @background */
+/* @Size of the element */
+/* Height */
+.h-5 {
+  height: 5%;
+}
+.h-10 {
+  height: 10%;
+}
+.h-20 {
+  height: 20%;
+}
+.h-30 {
+  height: 30%;
+}
+.h-40 {
+  height: 40%;
+}
+.h-50 {
+  height: 50%;
+}
+.h-60 {
+  height: 60%;
+}
+.h-70 {
+  height: 70%;
+}
+.h-80 {
+  height: 80%;
+}
+.h-90 {
+  height: 90%;
+}
+.h-100 {
+  height: 100%;
+}
 
+/* width */
+.w-5 {
+  width: 5%;
+}
+.w-10 {
+  width: 10%;
+}
+.w-20 {
+  width: 20%;
+}
+.w-30 {
+  width: 30%;
+}
+.w-40 {
+  width: 40%;
+}
+.w-50 {
+  width: 50%;
+}
+.w-60 {
+  width: 60%;
+}
+.w-70 {
+  width: 70%;
+}
+.w-80 {
+  width: 80%;
+}
+.w-90 {
+  width: 90%;
+}
+.w-100 {
+  width: 100%;
+}
+
+/* @background */
 .bg-cp-1,
 .bg-cp-elem {
   background: var(--cp-1_1);
@@ -1340,14 +1433,38 @@ textarea:focus {
 .bg-cp-bg {
   background: var(--cp-1_3);
 }
+.bg-cp-4 {
+  background: var(--cp-1_4);
+}
 
 .bg-cp-bg-light {
   background: var(--cp-1_2-light);
 }
 
+.bg-warning,
+.bg-danger {
+  background: var(--danger-color);
+}
+
+.bg-safe,
+.bg-success {
+  background: var(--success-color);
+}
+
 /* @border */
 .bd-light {
   border: 1px solid var(--fade-color);
+}
+.bd-light-b {
+  border-bottom: 1px solid var(--fade-color);
+}
+
+.bd-cp-2 {
+  border: 1px solid var(--cp-1_2);
+}
+
+.bd-cp-2-b {
+  border-bottom: 2px solid var(--fade-color);
 }
 
 /* radious border */
@@ -1364,6 +1481,10 @@ textarea:focus {
 }
 
 /* transparent specific border */
+.bd-no {
+  border: 0;
+}
+
 .bd-no-t {
   border-top: 1px solid rgba(255, 255, 255, 0);
 }

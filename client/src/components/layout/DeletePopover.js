@@ -103,25 +103,31 @@ const DeletePopover = () => {
 
   return (
     <div className='popup'>
-      <div className='popup-inner'>
+      <div className='popup-inner bd-radius-s'>
         {isLoading === false ? (
-          <div>
-            <div className='popup-container'>
-              <div>You will delete this {`${words()}`}</div>
-              <h3>Are you sure?</h3>
+          <div className='popup-container bd-light bd-radius-s bg-cp-2'>
+            <div className='h-80'>
+              <div className='p-2 h-30'>
+                You will delete this {`${words()}`}
+              </div>
+              <div className='center-content h-70'>
+                {' '}
+                <h3>Are you sure?</h3>
+              </div>
             </div>
-            <div className='popup-btn-holder'>
-              <div>
+
+            <div className='h-scatter-content p-1 h-20'>
+              <div className='center-content w-50'>
                 <button
-                  className='btn btn-danger btn-block center'
+                  className='btn btn-sq btn-block sq-block bg-warning'
                   onClick={onChangeDelete}
                 >
                   Delete
                 </button>
               </div>
-              <div>
+              <div className='center-content w-50'>
                 <button
-                  className='btn btn-primary btn-block center'
+                  className='btn btn-sq btn-block sq-block bg-safe'
                   onClick={togglePopover}
                 >
                   Back
@@ -130,7 +136,9 @@ const DeletePopover = () => {
             </div>
           </div>
         ) : (
-          <Spinner />
+          <div className='popup-container bd-light bd-radius-s bg-cp-2'>
+            <Spinner />
+          </div>
         )}
       </div>
     </div>

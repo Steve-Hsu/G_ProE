@@ -32,14 +32,24 @@ const QuoOtherEx = ({ otherExpense }) => {
     updateCurrentQuoForm(e);
   };
 
+  const addNumber = (e) => {
+    e.preventDefault();
+    const num = e.target.value;
+    const Max = 9999999;
+    if (String(num).length > String(Max).length) {
+      e.target.value = Max;
+      updateCurrentQuoForm(e);
+    } else {
+      updateCurrentQuoForm(e);
+    }
+  };
+
   //@ Style
   const deleteBtnPosition = {
     top: ' 70%',
     left: '100%',
     transform: 'translate(-2rem, -1rem)',
   };
-  //words length limit
-  const maxWdsLength = '100';
 
   return (
     // <div className='mb-1 p-1 card'>
@@ -76,7 +86,7 @@ const QuoOtherEx = ({ otherExpense }) => {
           max='9999999'
           step='.01'
           value={otherExpense.cost || ''}
-          onChange={onChange}
+          onChange={addNumber}
         />
       </div>
       <button

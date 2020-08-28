@@ -693,7 +693,14 @@ const CasesState = (props) => {
 
     material.cspts.map((cspt) => {
       if (String(cspt.size) === sizeId) {
-        cspt.cspt = e.target.value;
+        // Prevent the value of number too big
+        if (String(e.target.value).length > 5) {
+          e.target.value = 99999;
+          cspt.cspt = e.target.value;
+        } else {
+          cspt.cspt = e.target.value;
+        }
+
         // let gQtyId = material.cspts.find(({ id }) => id === cspt.id).gQty;
         let gQtyId = cspt.gQty;
         updateCsptRequiredMQty(mtrlId, gQtyId);
@@ -789,7 +796,13 @@ const CasesState = (props) => {
       case 'gQty':
         let Qtys = gQtys;
         let Qty = Qtys.find(({ id }) => id === e.target.id);
-        Qty.gQty = e.target.value;
+        // Prevent the number too big
+        if (String(e.target.value).length > 5) {
+          e.target.value = 99999;
+          Qty.gQty = e.target.value;
+        } else {
+          Qty.gQty = e.target.value;
+        }
 
         dispatch({ type: CASE_QTY_UPDATE, payload: Qtys });
         mtrls.map((mtrl) => updateCsptRequiredMQty(mtrl.id, Qty.id));

@@ -78,6 +78,19 @@ const MPrice = ({ mPrice, srMtrl, currentPath }) => {
     addSrMtrlValue(e, srMtrlId, list);
   };
 
+  const addNumber = (e) => {
+    e.preventDefault();
+    const num = e.target.value;
+    const list = mPriceList();
+    const Max = 9999;
+    if (String(num).length > String(Max).length) {
+      e.target.value = Max;
+      addSrMtrlValue(e, srMtrlId, list);
+    } else {
+      addSrMtrlValue(e, srMtrlId, list);
+    }
+  };
+
   const selectList = (x) => {
     let arr = [];
     switch (x) {
@@ -146,7 +159,7 @@ const MPrice = ({ mPrice, srMtrl, currentPath }) => {
                       id={`${m}${mPrice.id}`}
                       name={mPrice.id}
                       placeholder='.'
-                      onChange={onChange}
+                      onChange={addNumber}
                       className='MPH-input'
                       value={mPrice[`${m}`] || ''}
                     />
@@ -229,7 +242,7 @@ const MPrice = ({ mPrice, srMtrl, currentPath }) => {
                       id={`${m}${mPrice.id}`}
                       name={mPrice.id}
                       placeholder='.'
-                      onChange={onChange}
+                      onChange={addNumber}
                       className='MPH-input'
                       value={mPrice[`${m}`] || ''}
                     />

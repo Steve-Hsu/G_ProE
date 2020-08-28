@@ -3,9 +3,11 @@ import spinner from './spinner.gif';
 
 export default () => (
   <Fragment>
+    Downloading...
     <img
       src={spinner}
-      style={{ width: '200px', margin: 'auto', dispaly: 'block' }}
+      className='bg-cp-2'
+      style={{ width: '50px', height: '50px' }}
       alt='Loading...'
     />
   </Fragment>

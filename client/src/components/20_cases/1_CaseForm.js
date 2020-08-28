@@ -38,6 +38,8 @@ const CaseForm = () => {
     error,
     isBoardMode,
     displayTitles,
+    addSize,
+    addcWay,
     addMtrl,
   } = casesContext;
   const { comName, comSymbol } = authUserContext;
@@ -275,7 +277,7 @@ const CaseForm = () => {
           <form id='caseForm' onSubmit={onSubmitCase}>
             {/* Case Information */}
             <div className='lead'>Case Information</div>
-            <div className='grid-1-5 row-gap-md round-card bg-cp-elem mb-2 bd-light'>
+            <div className='grid-1-5 row-gap-md round-card bg-cp-elem mb-3 bd-light'>
               <div className='v-center-content'>CaseNo.</div>
               <div>{cNo === null ? 'New Case' : cNo}</div>
 
@@ -287,7 +289,7 @@ const CaseForm = () => {
                 onChange={addCaseValue}
                 maxLength={styleLength}
                 placeholder='Enter the name of style'
-                // className='MPH-input'
+                className='bd-light'
                 value={style || ''}
                 required
               />
@@ -300,7 +302,7 @@ const CaseForm = () => {
                 onChange={addCaseValue}
                 maxLength={clientLength}
                 placeholder='.'
-                // className='MPH-input'
+                className='bd-light'
                 value={client || ''}
                 required
               />
@@ -311,7 +313,7 @@ const CaseForm = () => {
                 name='caseType'
                 list='caseTypeList'
                 onChange={addCaseValue}
-                className='select-primary'
+                className='select-primary bd-light'
                 required
               >
                 {caseTypeList.map((t) => {
@@ -330,8 +332,37 @@ const CaseForm = () => {
 
             {/* CS-Breakdown table */}
             {/* Color -------------------------- */}
-            <div className='lead'>Color-Size-Breakdown</div>
-            <div className='row-gap-md round-card bg-white mb-2'>
+            <div className='grid-6 mb-1'>
+              <div
+                className='lead v-center-content'
+                style={{ gridColumn: '1/2' }}
+              >
+                Size-Breakdown
+              </div>
+              <button
+                className='btn btn-sq sq-block center-content'
+                onClick={addcWay}
+              >
+                <i className='fas fa-swatchbook'> Color ＋</i>
+              </button>
+              <button
+                className='btn btn-sq sq-block center-content'
+                onClick={addSize}
+              >
+                <i className='fas fa-ruler'> Size ＋</i>
+              </button>
+              <div className='flexBox' style={{ gridColumn: '5/7' }}>
+                <div className='lead text-primary'>Total Qty : </div>
+                <div className='lead'>
+                  {gQtys.reduce(
+                    (partial_sum, gQty) => partial_sum + Number(gQty.gQty),
+                    0
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className='row-gap-md round-card bg-cp-1 bd-light mb-3 pb-0'>
               <div className='grid-1-6-1 mb-2'>
                 <div></div>
                 <div style={breakDownTable}>
@@ -367,21 +398,15 @@ const CaseForm = () => {
                     });
                     return (
                       <div
-                        style={{ height: '68px' }}
                         key={`subtotalOf${cWay.id}`}
+                        style={{ height: 'var(--btn-h-m)' }}
+                        className='mb-1 center-content'
                       >
-                        <div className='tiny text-primary'>{cWay.gClr}</div>
+                        {/* <div className='tiny text-primary'>{cWay.gClr}</div> */}
                         <div className='lead'>{subtotal}</div>
                       </div>
                     );
                   })}
-                  <div className='lead text-primary'>Total Qantity</div>
-                  <div className='large'>
-                    {gQtys.reduce(
-                      (partial_sum, gQty) => partial_sum + Number(gQty.gQty),
-                      0
-                    )}
-                  </div>
                 </div>
               </div>
             </div>
@@ -414,7 +439,6 @@ const CaseForm = () => {
                     </div>
                   </div>
                 </label>
-                <span></span>
               </div>
               {/* elem-3 */}
               <div

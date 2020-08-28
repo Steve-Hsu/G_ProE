@@ -12,8 +12,8 @@ const ColorWay = ({ cWay }) => {
   //deleteBtn in ColorWay.
 
   const deleteBtnPosition = {
-    top: ' 50%',
-    left: '50%',
+    // top: ' 50%',
+    // left: '50%',
     transform: 'translate(-1rem, -1rem)',
   };
 
@@ -31,23 +31,26 @@ const ColorWay = ({ cWay }) => {
     if (
       cWay.gClr.match('empty colorway') ||
       cWay.gClr.match('duplicated_colorway') ||
+      cWays.filter((i) => {
+        return i.gClr === cWay.gClr;
+      }).length > 1 ||
       cWay.gClr === ''
     ) {
       obj = {
         color: 'white',
-        background: 'red',
+        background: 'var(--danger-color)',
       };
     } else {
       obj = {
-        color: 'orange',
+        color: 'var(--cp-3)',
       };
     }
     return obj;
   };
 
   return (
-    <div className='grid-3-1' style={{ height: '68px' }}>
-      <div>
+    <div className='grid-3-1 mb-1' style={{ height: 'var(--btn-h-m)' }}>
+      <div style={{ height: 'var(--btn-h-m)' }}>
         <input
           id={cWay.id}
           type='text'
@@ -56,7 +59,7 @@ const ColorWay = ({ cWay }) => {
           onChange={updatecWay}
           maxLength={colorWayLength}
           autoFocus
-          className='MPH-input'
+          className='MPH-input bd-no bg-cp-1 lead w-100 h-100'
           style={warningTextBoxStyle()}
           value={cWay.gClr || ''}
         />
@@ -65,13 +68,13 @@ const ColorWay = ({ cWay }) => {
           {`${Number(cWays.findIndex((e) => e.id === cWay.id)) + 1}`}
         </label>
       </div>
-      <div style={{ height: '68px' }}>
+      <div style={{ height: 'var(--btn-h-m)' }}>
         {cNo === null ? null : (
           <button
             value={cWay.id}
             name='cWay'
             onClick={togglePopover}
-            className='btn btn-fade btn-square'
+            className='btn btn-warning btn-sq btn-sq-small'
             style={deleteBtnPosition}
           >
             x
