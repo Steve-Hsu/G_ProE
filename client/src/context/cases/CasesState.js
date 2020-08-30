@@ -740,9 +740,7 @@ const CasesState = (props) => {
     let materials = mtrls;
     switch (e.target.id) {
       case 'Item' + String(mtrlId):
-        materials.find(
-          ({ id }) => id === mtrlId
-        ).item = e.target.value.toLowerCase();
+        materials.find(({ id }) => id === mtrlId).item = e.target.value;
         break;
       // case 'SPEC' + String(mtrlId):
       //   materials.find(({ id }) => id === mtrlId).spec = e.target.value;
@@ -750,12 +748,12 @@ const CasesState = (props) => {
       case 'Supplier' + String(mtrlId):
         materials.find(
           ({ id }) => id === mtrlId
-        ).supplier = e.target.value.toLowerCase();
+        ).supplier = e.target.value.toUpperCase();
         break;
       case 'Ref_no' + String(mtrlId):
         materials.find(
           ({ id }) => id === mtrlId
-        ).ref_no = e.target.value.toLowerCase();
+        ).ref_no = e.target.value.toUpperCase();
         break;
       case 'Position' + String(mtrlId):
         materials.find(({ id }) => id === mtrlId).position = e.target.value;

@@ -200,8 +200,12 @@ router.post(
       if (mtrls.length > 0) {
         let trimCounter = 0;
         mtrls.map((mtrl) => {
+          if (mtrl['item']) {
+            mtrl['item'] =
+              mtrl['item'].charAt(0).toUpperCase() +
+              mtrl['item'].slice(1).toLowerCase();
+          }
           const mtrlList = [
-            'item',
             'supplier',
             'ref_no',
             // We don't need to transform the position and description into lowerCase.
@@ -211,7 +215,7 @@ router.post(
           mtrlList.map((x) => {
             // if (mtrl[x] !== '' || mtrl[x] !== null) {
             if (mtrl[x]) {
-              mtrl[x] = mtrl[x].toLowerCase().trim();
+              mtrl[x] = mtrl[x].toUpperCase().trim();
             }
           });
 
