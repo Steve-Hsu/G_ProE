@@ -365,32 +365,23 @@ const CaseForm = () => {
               </div>
             </div>
 
-            <div className='row-gap-md round-card bg-cp-1 bd-light mb-3 pb-0'>
-              <div className='grid-1-6-1 mb-2'>
+            <div className='row-gap-md round-card bg-cp-1 bd-light mb-3'>
+              <div className='grid-1-07-6'>
+                <div></div>
                 <div></div>
                 <div style={breakDownTable}>
                   {sizes.map((size) => (
                     <Size key={size.id} size={size} />
                   ))}
                 </div>
-                <div className='lead text-primary'>SubTotal</div>
               </div>
-              <div className='grid-1-6-1'>
+              <div className='grid-1-07-6 '>
                 <div>
                   {cWays.map((cWay) => (
                     <ColorWay key={cWay.id} cWay={cWay} />
                   ))}
                 </div>
-                <div style={breakDownTable}>
-                  {sizes.map((size) => (
-                    <div key={`Qty${size.id}`}>
-                      {gQtys.map((gQty) => (
-                        <Qty key={gQty.id} size={size} gQty={gQty} />
-                      ))}
-                    </div>
-                  ))}
-                </div>
-                <div>
+                <div className='bd-cp-2-r-2px-dotted'>
                   {cWays.map((cWay) => {
                     let subtotal = 0;
                     gQtys.map((gQty) => {
@@ -402,14 +393,30 @@ const CaseForm = () => {
                     return (
                       <div
                         key={`subtotalOf${cWay.id}`}
-                        style={{ height: 'var(--btn-h-m)' }}
-                        className='mb-1 center-content'
+                        style={{
+                          height: 'var(--btn-h-m)',
+                        }}
+                        className='mt-1 bd-cp-2-b-2px tiny text-cp-2-c'
                       >
-                        {/* <div className='tiny text-primary'>{cWay.gClr}</div> */}
-                        <div className='lead'>{subtotal}</div>
+                        <div
+                          style={{ textAlign: 'right' }}
+                          className='pr-1 pt-07'
+                        >
+                          {' '}
+                          {subtotal.toLocaleString()}
+                        </div>
                       </div>
                     );
                   })}
+                </div>
+                <div style={breakDownTable}>
+                  {sizes.map((size) => (
+                    <div key={`Qty${size.id}`} className='bd-cp-2-r-2px-dotted'>
+                      {gQtys.map((gQty) => (
+                        <Qty key={gQty.id} size={size} gQty={gQty} />
+                      ))}
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>

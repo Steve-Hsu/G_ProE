@@ -26,7 +26,7 @@ const Qty = ({ size, gQty }) => {
         <div
           key={gQty.id}
           style={{ height: 'var(--btn-h-m)' }}
-          className='bg-cp-1 mb-1 bd-cp-2-b'
+          className='bg-cp-1 mt-1 bd-cp-2-b-2px'
         >
           <input
             name='gQty'
@@ -38,9 +38,12 @@ const Qty = ({ size, gQty }) => {
             onChange={addNumber}
             min='0'
             max={Max}
-            className='MPH-input bg-cp-1 bd-no lead h-100 w-100'
+            className='MPH-input bg-cp-1 bd-no lead h-100 pl-05'
           />
-          <label htmlFor={gQty.id} className='MPH-input-label'>
+          <label
+            htmlFor={gQty.id}
+            className='MPH-input-label MPH-input-label-gQty'
+          >
             {cWays.find(({ id }) => id === gQty.cWay) == true
               ? cWays.find(({ id }) => id === gQty.cWay).gClr
               : null}

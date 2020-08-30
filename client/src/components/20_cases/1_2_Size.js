@@ -6,7 +6,7 @@ import PopoverContext from '../../context/popover/popoverContext';
 const Size = ({ size }) => {
   const casesContext = useContext(CasesContext);
   const popoverContext = useContext(PopoverContext);
-  const { _id, cNo, sizes, updateSize } = casesContext;
+  const { _id, cNo, sizes, gQtys, updateSize } = casesContext;
   const { togglePopover } = popoverContext;
   const event = new Event('change');
   //@ Array for generate <option> tags for s<elect> tag.
@@ -49,9 +49,9 @@ const Size = ({ size }) => {
   //For spareting the postion of btn, here use an inline style.
   //deleteBtn in Size.
   const deleteBtnPosition = {
-    top: ' 50%',
-    left: '30%',
-    transform: 'translate(-1rem, -1rem)',
+    // top: ' 50%',
+    // left: '30%',
+    // transform: 'translate(-1rem, -1rem)',
   };
 
   const update = () => {
@@ -93,8 +93,18 @@ const Size = ({ size }) => {
       .setAttribute('selected', 'selected');
   };
 
+  const sumNumOfSize = () => {
+    let subtotal = 0;
+    gQtys.map((gQty) => {
+      if (gQty.size === size.id) {
+        subtotal = subtotal + Number(gQty.gQty);
+      }
+    });
+    return subtotal.toLocaleString();
+  };
+
   return (
-    <div className='grid-3-1 grid-gap-sm '>
+    <div className='bd-cp-2-b-2px pb-05'>
       <select
         id={size.id}
         list='garmentSize'
@@ -112,17 +122,29 @@ const Size = ({ size }) => {
           );
         })}
       </select>
-      {cNo === null ? null : (
-        <button
-          name='size'
-          value={size.id}
-          onClick={togglePopover}
-          className='btn btn-fade btn-square'
-          style={deleteBtnPosition}
+      {/* {cNo === null ? null : ( */}
+      <div className='v-center-content'>
+        <div className='pl-05'>
+          <button
+            name='size'
+            value={size.id}
+            onClick={togglePopover}
+            className='btn btn-warning btn-sq btn-sq-small mt-05'
+            // style={deleteBtnPosition}
+          >
+            x
+          </button>
+        </div>
+        <div
+          key={`subtotalOf${size.id}`}
+          style={{ height: 'var(--btn-h-m)' }}
+          className='pt-1d3 pl-07 '
         >
-          x
-        </button>
-      )}
+          {/* <div className='tiny text-primary'>{cWay.gClr}</div> */}
+          <div className='tiny text-cp-2-c'>{sumNumOfSize()}</div>
+        </div>
+      </div>
+      {/* )} */}
     </div>
   );
 };

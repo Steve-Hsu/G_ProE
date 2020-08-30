@@ -14,7 +14,7 @@ const ColorWay = ({ cWay }) => {
   const deleteBtnPosition = {
     // top: ' 50%',
     // left: '50%',
-    transform: 'translate(-1rem, -1rem)',
+    // transform: 'translate(0rem, -0.5rem)',
   };
 
   //@ Value for input
@@ -50,8 +50,33 @@ const ColorWay = ({ cWay }) => {
     return obj;
   };
 
+  let showDeleteBtn = false;
+
+  const setShowDeleteBtn = () => {
+    console.log('hovered', showDeleteBtn);
+    showDeleteBtn = !showDeleteBtn;
+  };
+
   return (
-    <div className='grid-3-1 mb-1' style={{ height: 'var(--btn-h-m)' }}>
+    <div
+      className='h-scatter-content mt-1  pl-1 bd-cp-2-b-2px'
+      style={{ height: 'var(--btn-h-m)' }}
+      onMouseEnter={setShowDeleteBtn}
+      onMouseLeave={setShowDeleteBtn}
+    >
+      <div style={{ height: 'var(--btn-h-m)' }}>
+        {/* {cNo !== null ? ( */}
+        <button
+          value={cWay.id}
+          name='cWay'
+          onClick={togglePopover}
+          className='btn btn-warning btn-sq btn-sq-small mr-05'
+          style={deleteBtnPosition}
+        >
+          x
+        </button>
+        {/* // ) : null} */}
+      </div>
       <div style={{ height: 'var(--btn-h-m)' }}>
         <input
           id={cWay.id}
@@ -61,7 +86,7 @@ const ColorWay = ({ cWay }) => {
           onChange={updatecWay}
           maxLength={colorWayLength}
           autoFocus
-          className='MPH-input bd-no bg-cp-1 lead w-100 h-100'
+          className='MPH-input bd-no bg-cp-1 lead w-100 h-100 bg-no'
           style={warningTextBoxStyle()}
           value={cWay.gClr || ''}
         />
@@ -69,19 +94,6 @@ const ColorWay = ({ cWay }) => {
           Color Way -{' '}
           {`${Number(cWays.findIndex((e) => e.id === cWay.id)) + 1}`}
         </label>
-      </div>
-      <div style={{ height: 'var(--btn-h-m)' }}>
-        {cNo === null ? null : (
-          <button
-            value={cWay.id}
-            name='cWay'
-            onClick={togglePopover}
-            className='btn btn-warning btn-sq btn-sq-small'
-            style={deleteBtnPosition}
-          >
-            x
-          </button>
-        )}
       </div>
     </div>
   );
