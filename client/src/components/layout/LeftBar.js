@@ -9,6 +9,7 @@ const LeftBar = ({ currentPath }) => {
   const casesContext = useContext(CasesContext);
   const quoContext = useContext(QuoContext);
   const {
+    addCaseValue,
     mtrls,
     cNo,
     addcWay,
@@ -16,6 +17,7 @@ const LeftBar = ({ currentPath }) => {
     addMtrl,
     clearcNo,
     getM_list,
+    isImportedExcel,
   } = casesContext;
   const { isQuotating, quotateFor, openQuoForm } = quoContext;
   const SHEET_NAME_LIST = [
@@ -128,8 +130,28 @@ const LeftBar = ({ currentPath }) => {
   // Parse Excel by http request
   const readExcel = () => {
     const excel = document.getElementById('upload-excel').files[0];
-    console.log('The excel', excel);
-    console.log('The type of the excel itself', typeof excel);
+    // console.log('The excel', excel); // Test code
+    // console.log('The type of the excel itself', typeof excel); // Test Code
+    // Default the input, preventing double input the same bom
+    const inputValue = document.getElementById('upload-excel').value; // Test Code
+    console.log('the inputValue', inputValue);
+
+    if (inputValue) {
+      const styleName = inputValue
+        .slice(12)
+        .replace('.xlsx', '')
+        .replace('.xls', '');
+      addCaseValue({
+        target: {
+          name: 'style',
+          value: styleName,
+        },
+      });
+      addCaseValue({ target: { name: 'isImportedExcel' } });
+    }
+
+    document.getElementById('upload-excel').value = null;
+
     if (excel) {
       const regex = new RegExp(SHEET_NAME_LIST.join('|'), 'i');
       let resultSheet = new Array();
@@ -181,14 +203,18 @@ const LeftBar = ({ currentPath }) => {
     <div className='container-with-navbar leftbar p-1 test-2'>
       <div className='leftbar-component test-4'>
         {' '}
-        {'Import style from Excel'}
         {/* Read CSV */}
         {currentPage === 'case' ? (
-          <div>
-            <input type='file' id='upload-excel' accept='.xls, .xlsx' />
+          isImportedExcel ? (
+            <div>Have imported Style from Excel</div>
+          ) : (
+            <div>
+              {'Import style from Excel'}
+              <input type='file' id='upload-excel' accept='.xls, .xlsx' />
 
-            <button onClick={readExcel}>Read Excel</button>
-          </div>
+              <button onClick={readExcel}>Read Excel</button>
+            </div>
+          )
         ) : null}
         {'Submit'}
         <input

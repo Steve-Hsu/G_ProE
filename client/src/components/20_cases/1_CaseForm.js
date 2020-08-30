@@ -32,6 +32,7 @@ const CaseForm = () => {
     sizes,
     gQtys,
     mtrls,
+    isImportedExcel,
     addCaseValue,
     uploadNewCase,
     uploadCase,
@@ -55,6 +56,7 @@ const CaseForm = () => {
     sizes: sizes,
     gQtys: gQtys,
     mtrls: mtrls,
+    isImportedExcel: isImportedExcel,
   };
 
   //@ Case Types, the type has nothing to do with code's "type"

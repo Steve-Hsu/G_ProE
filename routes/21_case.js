@@ -70,15 +70,29 @@ router.post(
     }
     console.log('The upload newcase is called in backend'); // Test Code
 
-    const { caseType, style, client, cWays, sizes, gQtys, mtrls } = req.body;
+    const {
+      caseType,
+      style,
+      client,
+      cWays,
+      sizes,
+      gQtys,
+      mtrls,
+      isImportedExcel,
+    } = req.body;
     //@ Delete the white space from strings of array items in the body, the cWays, sizes, and mtrls
     let trimedStyle = '';
     let trimedClient = '';
+    // For limit the maxium of the number passed in
+    const MaxNum = 99999;
+
     if (style) {
-      trimedStyle = style.toLowerCase().trim();
+      //Only trim the string, later in search user regex with flag "i", the case insensitive flag.
+      trimedStyle = style.trim();
     }
     if (client) {
-      trimedClient = client.toLowerCase().trim();
+      //Only trim the string, later in search user regex with flag "i", the case insensitive flag.
+      trimedClient = client.trim();
     }
     const trimedcWays = new Promise((resolve) => {
       console.log('Promise start- trimedcWays'); // Test Code
@@ -136,23 +150,23 @@ router.post(
       }
     });
 
-    const trimedSizes = new Promise((resolve) => {
-      console.log('Promise start- trimedSizes'); // Test Code
-      if (sizes.length > 0) {
-        let sizeCounter = 0;
-        sizes.map((size) => {
-          size.gSize = size.gSize.toUpperCase().trim();
-          sizeCounter = sizeCounter + 1;
-          if (sizeCounter === sizes.length) {
-            console.log('Promise resolve- trimedSizes'); // Test Code
-            return resolve();
-          }
-        });
-      } else {
-        console.log('Promise resolve- not built sizes yet - trimedSizes'); // Test Code
-        return resolve();
-      }
-    });
+    // const trimedSizes = new Promise((resolve) => {
+    //   console.log('Promise start- trimedSizes'); // Test Code
+    //   if (sizes.length > 0) {
+    //     let sizeCounter = 0;
+    //     sizes.map((size) => {
+    //       size.gSize = size.gSize.toUpperCase().trim();
+    //       sizeCounter = sizeCounter + 1;
+    //       if (sizeCounter === sizes.length) {
+    //         console.log('Promise resolve- trimedSizes'); // Test Code
+    //         return resolve();
+    //       }
+    //     });
+    //   } else {
+    //     console.log('Promise resolve- not built sizes yet - trimedSizes'); // Test Code
+    //     return resolve();
+    //   }
+    // });
 
     //@Steve:  I can set schema to prevent this sring or number problem, however it is a hole for how still code form frontEnd
     const numberThegQty = new Promise((resolve) => {
@@ -160,6 +174,10 @@ router.post(
         let num = 0;
         gQtys.map((gQty) => {
           gQty.gQty = Number(gQty.gQty);
+          //Limit the length of the number in cspt
+          if (String(gQty.gQty).length > String(MaxNum).length) {
+            gQty.gQty = MaxNum;
+          }
           num = num + 1;
           if (num === gQtys.length) {
             console.log('Promise resolve- numberThegQty'); // Test Code
@@ -289,6 +307,11 @@ router.post(
                   }
                 }
 
+                //Limit the length of the number in cspt
+                if (String(cspt.cspt).length > String(MaxNum).length) {
+                  cspt.cspt = MaxNum;
+                }
+
                 if (gQtys.length > 0) {
                   cspt.requiredMQty =
                     cspt.cspt * gQtys.find(({ id }) => id === cspt.gQty).gQty;
@@ -382,7 +405,8 @@ router.post(
       '_' +
       caseTypeSymbol;
 
-    Promise.all([trimedcWays, numberThegQty, trimedSizes, trimedMtrls])
+    // Promise.all([trimedcWays, numberThegQty, trimedSizes, trimedMtrls])
+    Promise.all([trimedcWays, numberThegQty, trimedMtrls])
       .then(async () => {
         const newCase = new Case({
           user: req.user.id,
@@ -395,6 +419,7 @@ router.post(
           sizes,
           gQtys,
           mtrls,
+          isImportedExcel,
         });
         // name variable "case" will cause problem, so here name it "nCase"
         const nCase = await newCase.save();
@@ -423,7 +448,8 @@ router.put('/:id', authUser, async (req, res) => {
       msg: 'Out of authority',
     });
   }
-
+  // For limit the number that passed in
+  const MaxNum = 99999;
   // Check if the user have the authority to update the case -------------------
   let cases = await Case.findById(caseId);
   // If the user is case creator, pass !
@@ -508,6 +534,10 @@ router.put('/:id', authUser, async (req, res) => {
         let num = 0;
         gQtys.map((gQty) => {
           gQty.gQty = Number(gQty.gQty);
+          //Limit the length of the number in cspt
+          if (String(gQty.gQty).length > String(MaxNum)) {
+            gQty.gQty = MaxNum;
+          }
           num = num + 1;
           if (num === gQtys.length) {
             console.log('Promise resolve- numberThegQty'); // Test Code
@@ -636,6 +666,11 @@ router.put('/:id', authUser, async (req, res) => {
                   if (mtrl.cspts[0].cspt) {
                     cspt.cspt = Number(mtrl.cspts[0].cspt);
                   }
+                }
+
+                //Limit the length of the number in cspt
+                if (String(cspt.cspt).length > String(MaxNum).length) {
+                  cspt.cspt = MaxNum;
                 }
 
                 if (gQtys.length > 0) {

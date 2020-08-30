@@ -41,6 +41,9 @@ const CaseSchema = mongoose.Schema({
   mtrls: {
     type: Array,
   },
+  isImportedExcel: {
+    type: Boolean,
+  },
   date: {
     // The date, this "case" established on the date base, it can be the register date of the case,
     type: Date,
