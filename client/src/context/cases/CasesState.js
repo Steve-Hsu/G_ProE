@@ -845,8 +845,12 @@ const CasesState = (props) => {
 
   // @Other functions ----------------------------------------------------------------------------------------------------------
 
-  // Add NewCase to database - Submit form
-  const uploadNewCase = async (cases) => {
+  // add newcase or upload case to database - Submit form
+  const uploadCase = async (
+    cases,
+    caseId = 'newCase',
+    isDownLoadCase = true
+  ) => {
     console.log('uploadNewCase is called in state'); // Test Code
     const config = {
       headers: {
@@ -855,12 +859,13 @@ const CasesState = (props) => {
     };
 
     try {
-      const res = await axios.post('/api/case/user/newcase', cases, config);
+      const res = await axios.post(`/api/case/upload/${caseId}`, cases, config);
       console.log('Upload succeed!');
-
-      //This dispatch is nothing related to the upload, just after upload we need to take back the cases to feed to the state for the UI is updated to inform the user, so here use CASE_DOWNLOAD
-      dispatch({ type: CASE_DOWNLOAD, payload: res.data });
-      dispatch({ type: TOGGLE_ISUPDATE, payload: true });
+      if (isDownLoadCase) {
+        //This dispatch is nothing related to the upload, just after upload we need to take back the cases to feed to the state for the UI is updated to inform the user, so here use CASE_DOWNLOAD
+        dispatch({ type: CASE_DOWNLOAD, payload: res.data });
+        dispatch({ type: TOGGLE_ISUPDATE, payload: true });
+      }
       return res.data;
     } catch (err) {
       dispatch({
@@ -873,36 +878,36 @@ const CasesState = (props) => {
     }
   };
 
-  // Upload existing case- Submit form
-  const uploadCase = async (cases, caseId, isDownLoadCase = true) => {
-    console.log('UploadCase is triggered');
-    console.log(caseId);
-    console.log(cases);
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+  // // Upload existing case- Submit form
+  // const uploadCase = async (cases, caseId, isDownLoadCase = true) => {
+  //   console.log('UploadCase is triggered');
+  //   console.log(caseId);
+  //   console.log(cases);
+  //   const config = {
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //   };
 
-    try {
-      const res = await axios.put(`/api/case/${caseId}`, cases, config);
-      console.log('Update succeed!');
-      if (isDownLoadCase) {
-        //This dispatch is nothing related to the upload, just after upload we need to take back the cases to feed to the state for the UI is updated to inform the user, so here use CASE_DOWNLOAD
-        dispatch({ type: CASE_DOWNLOAD, payload: res.data });
-        dispatch({ type: TOGGLE_ISUPDATE, payload: true });
-      }
-      return res.data;
-    } catch (err) {
-      dispatch({
-        type: CASE_USER_NOT_AUTHORIZED,
-        payload: 'You are not authorized to Update the case',
-      });
-      console.log(
-        'Update case faild, The user not authorized to update this case'
-      );
-    }
-  };
+  //   try {
+  //     const res = await axios.post(`/api/case/upload/${caseId}`, cases, config);
+  //     console.log('Update succeed!');
+  //     if (isDownLoadCase) {
+  //       //This dispatch is nothing related to the upload, just after upload we need to take back the cases to feed to the state for the UI is updated to inform the user, so here use CASE_DOWNLOAD
+  //       dispatch({ type: CASE_DOWNLOAD, payload: res.data });
+  //       dispatch({ type: TOGGLE_ISUPDATE, payload: true });
+  //     }
+  //     return res.data;
+  //   } catch (err) {
+  //     dispatch({
+  //       type: CASE_USER_NOT_AUTHORIZED,
+  //       payload: 'You are not authorized to Update the case',
+  //     });
+  //     console.log(
+  //       'Update case faild, The user not authorized to update this case'
+  //     );
+  //   }
+  // };
 
   //Download Existing Case
   const downloadCase = async (id) => {
@@ -1055,7 +1060,6 @@ const CasesState = (props) => {
         addValueMtrlCspt,
         addMtrlValue,
         addMtrlValueDescription,
-        uploadNewCase,
         uploadCase,
         downloadCase,
         defaultCase,

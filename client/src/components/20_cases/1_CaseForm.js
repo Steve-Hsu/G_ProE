@@ -34,7 +34,6 @@ const CaseForm = () => {
     mtrls,
     isImportedExcel,
     addCaseValue,
-    uploadNewCase,
     uploadCase,
     error,
     isBoardMode,
@@ -49,6 +48,7 @@ const CaseForm = () => {
 
   //@ Make a body to submit
   const cases = {
+    cNo: cNo,
     caseType: caseType,
     style: style,
     client: client,
@@ -209,11 +209,12 @@ const CaseForm = () => {
     if (cNo === null) {
       // update the state of mPrice
       // console.log('uploadNewCase is called'); // Test Code
-      updatedCases = await uploadNewCase(cases);
+      updatedCases = await uploadCase(cases);
     } else {
       //Delete the refs of srMtrls from database, that deleted in UI by user
       updatedCases = await uploadCase(cases, _id);
     }
+    // updatedCases = await uploadCase(cases, _id);
 
     // If error is null it will be false, else it will be true. null equals false
     if (error) {

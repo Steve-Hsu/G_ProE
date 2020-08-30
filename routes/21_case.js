@@ -50,11 +50,11 @@ router.get('/existingcase/:id', authUser, async (req, res) => {
   }
 });
 
-// @route   POST api/case/user/newcase
-// @desc    Add a new case to database
+// @route   POST api/case/user/case/:caseId
+// @desc    Add a new case or update the existing case to dataBase
 // @access  Private
 router.post(
-  '/user/newcase',
+  '/upload/:caseId',
   [authUser, [check('style', 'Style is required')]],
   async (req, res) => {
     // Check if the user has authority to add a new case --------------------------
@@ -71,6 +71,7 @@ router.post(
     console.log('The upload newcase is called in backend'); // Test Code
 
     const {
+      cNo,
       caseType,
       style,
       client,
@@ -80,6 +81,8 @@ router.post(
       mtrls,
       isImportedExcel,
     } = req.body;
+
+    const caseId = req.params.caseId;
     //@ Delete the white space from strings of array items in the body, the cWays, sizes, and mtrls
     let trimedStyle = '';
     let trimedClient = '';
@@ -102,10 +105,10 @@ router.post(
           const trimTheCWay = new Promise((resolve) => {
             //Trim the gClr
             if (cWay.gClr === '' || cWay.gClr === null) {
-              cWay.gClr = 'empty colorway';
+              cWay.gClr = 'Empty-ColorWay';
               resolve();
             } else {
-              cWay.gClr = cWay.gClr.toLowerCase().trim();
+              cWay.gClr = cWay.gClr.toUpperCase().trim();
               resolve();
             }
           });
@@ -114,9 +117,10 @@ router.post(
           const preventDuplicatedCWay = new Promise((resolve) => {
             Promise.all([trimTheCWay]).then(() => {
               const currentcWay = cWay.gClr;
-              const numOfThecWay = cWays.filter((el) => el.gClr === currentcWay)
-                .length;
-              if (numOfThecWay > 1) {
+              const numOfDuplicatedThecWay = cWays.filter(
+                (el) => el.gClr === currentcWay
+              ).length;
+              if (numOfDuplicatedThecWay > 1) {
                 let count = 0;
                 let num = 0;
                 cWays.map((cWay) => {
@@ -124,7 +128,7 @@ router.post(
                   if (cWay.gClr === currentcWay) {
                     count++;
                     cWay.gClr =
-                      currentcWay + ' - duplicated_colorway_' + String(count);
+                      currentcWay + '_Duplicated-ColorWay-' + String(count);
                   }
 
                   if (num === cWays.length) {
@@ -150,6 +154,7 @@ router.post(
       }
     });
 
+    // Since Size is selected by built-in selector, the string dosen't need to be trimed or change the format
     // const trimedSizes = new Promise((resolve) => {
     //   console.log('Promise start- trimedSizes'); // Test Code
     //   if (sizes.length > 0) {
@@ -351,395 +356,149 @@ router.post(
     const comSymbol = user.comSymbol;
 
     //Generator newCaseNumber
+    // Notice in here !!
+    // In the front end, if it is a new case, the caseId will be default as string 'newCase'.
+    // Whereas it is a existing case, the caseId will hold the _id of the case
+    if (caseId !== 'newCase') {
+      Promise.all([trimedcWays, numberThegQty, trimedMtrls])
+        .then(async () => {
+          let updatedcNo = '';
+          if (cNo) {
+            // If the cNo, it imply that the case is not the existing one
+            let caseTypeSymbol = cNo.slice(-1);
+            switch (caseType) {
+              case 'Bulk':
+                caseTypeSymbol = 'B';
+                break;
+              case 'Salesman Sample':
+                caseTypeSymbol = 'S';
+                break;
+              case 'Test Sample':
+                caseTypeSymbol = 'T';
+                break;
+              default:
+            }
+            updatedcNo = cNo.slice(0, -1) + caseTypeSymbol;
 
-    //Get last 2 digits of year
-    let strDate = new Date(); // By default Date empty constructor give you Date.now
-    let shortYear = strDate.getFullYear();
-    let twoDigitYear = shortYear.toString().substr(-2); // Add this line
+            const caseFields = {
+              cNo: updatedcNo,
+              style: trimedStyle,
+              client: trimedClient,
+              cWays,
+              sizes,
+              gQtys,
+              mtrls,
+              isImportedExcel,
+            };
+            console.log('The Finall PromiseAll');
+            // if (!cases){}
+            //   return res.status(404).json({
+            //     msg: 'Case not found',
+            //   });
 
-    const cases = await Case.find({
-      $and: [
-        { company: req.user.company },
-        { cNo: { $regex: comSymbol + twoDigitYear + 'C', $options: 'i' } }, // Query the same cases in same year by cNo, It promises return cases of same company in same year
-      ],
-    }).sort({
-      date: -1,
-    });
-    let caseQty = 1;
-    if (cases.length < 1) {
-    } else {
-      caseQty = Number(caseQty + cases.length);
-    }
-
-    const digits = 5 - caseQty.toString().length;
-
-    const caseNumber = [];
-    for (let i = 1; i <= digits; i++) {
-      caseNumber.push('0');
-    }
-
-    caseNumber.push(caseQty);
-
-    //Define caseType
-    let caseTypeSymbol = 'T';
-    switch (caseType) {
-      case 'Bulk':
-        caseTypeSymbol = 'B';
-        break;
-      case 'Salesman Sample':
-        caseTypeSymbol = 'S';
-        break;
-      case 'Test Sample':
-        caseTypeSymbol = 'T';
-        break;
-      default:
-    }
-
-    let newCaseNumber = caseNumber.toString().split(',').join('');
-    let newCNO =
-      comSymbol +
-      twoDigitYear +
-      'C' +
-      '_' +
-      newCaseNumber +
-      '_' +
-      caseTypeSymbol;
-
-    // Promise.all([trimedcWays, numberThegQty, trimedSizes, trimedMtrls])
-    Promise.all([trimedcWays, numberThegQty, trimedMtrls])
-      .then(async () => {
-        const newCase = new Case({
-          user: req.user.id,
-          company: req.user.company,
-          cNo: newCNO,
-          caseType,
-          style: trimedStyle,
-          client: trimedClient,
-          cWays,
-          sizes,
-          gQtys,
-          mtrls,
-          isImportedExcel,
+            const updatedCase = await Case.findOneAndUpdate(
+              { _id: caseId },
+              {
+                $set: caseFields,
+              },
+              { new: true }
+            );
+            return updatedCase;
+          }
+          // method .updateOne() will not return the case it self, so here make a one, named "updateCases" and return to the fronend client.
+        })
+        .then((result) => {
+          console.log('The existing Case is updated'); // Test Code
+          return res.json(result);
+        })
+        .catch((err) => {
+          console.error(err.message);
+          res.status(500).send('Server Error');
         });
-        // name variable "case" will cause problem, so here name it "nCase"
-        const nCase = await newCase.save();
+    } else {
+      // Get the id of case from URL by params
+      //Get last 2 digits of year
+      let strDate = new Date(); // By default Date empty constructor give you Date.now
+      let shortYear = strDate.getFullYear();
+      let twoDigitYear = shortYear.toString().substr(-2); // Add this line
 
-        res.json(nCase);
-      })
-      .catch((err) => {
-        console.error(err.message);
-        res.status(500).send('Server Errors');
+      const cases = await Case.find({
+        $and: [
+          { company: req.user.company },
+          { cNo: { $regex: comSymbol + twoDigitYear + 'C', $options: 'i' } }, // Query the same cases in same year by cNo, It promises return cases of same company in same year
+        ],
+      }).sort({
+        date: -1,
       });
+      let caseQty = 1;
+      if (cases.length < 1) {
+      } else {
+        caseQty = Number(caseQty + cases.length);
+      }
+
+      const digits = 5 - caseQty.toString().length;
+
+      const caseNumber = [];
+      for (let i = 1; i <= digits; i++) {
+        caseNumber.push('0');
+      }
+
+      caseNumber.push(caseQty);
+
+      //Define caseType
+      let caseTypeSymbol = 'T';
+      switch (caseType) {
+        case 'Bulk':
+          caseTypeSymbol = 'B';
+          break;
+        case 'Salesman Sample':
+          caseTypeSymbol = 'S';
+          break;
+        case 'Test Sample':
+          caseTypeSymbol = 'T';
+          break;
+        default:
+      }
+
+      let newCaseNumber = caseNumber.toString().split(',').join('');
+      let newCNO =
+        comSymbol +
+        twoDigitYear +
+        'C' +
+        '_' +
+        newCaseNumber +
+        '_' +
+        caseTypeSymbol;
+
+      // Promise.all([trimedcWays, numberThegQty, trimedSizes, trimedMtrls])
+      Promise.all([trimedcWays, numberThegQty, trimedMtrls])
+        .then(async () => {
+          const newCase = new Case({
+            user: req.user.id,
+            company: req.user.company,
+            cNo: newCNO,
+            caseType,
+            style: trimedStyle,
+            client: trimedClient,
+            cWays,
+            sizes,
+            gQtys,
+            mtrls,
+            isImportedExcel,
+          });
+          // name variable "case" will cause problem, so here name it "nCase"
+          const nCase = await newCase.save();
+          console.log('The new Case is created'); // Test Code
+          console.log('The caseId', caseId);
+          res.json(nCase);
+        })
+        .catch((err) => {
+          console.error(err.message);
+          res.status(500).send('Server Errors');
+        });
+    }
   }
 );
-
-// @route   PUT api/case/:_id
-// @desc    Update case
-// @Steve   Don't allow to change the cNo. Prevent messing up the jobs of user.
-// @access  Private
-router.put('/:id', authUser, async (req, res) => {
-  // Check if the user has authority to update case ---------------------------
-  const caseId = req.params.id;
-  console.log('update case caseId', caseId);
-  console.log('update case is triggered in backend');
-  let user = await User.findById(req.user.id);
-  if (!user.cases) {
-    return res.status(400).json({
-      msg: 'Out of authority',
-    });
-  }
-  // For limit the number that passed in
-  const MaxNum = 99999;
-  // Check if the user have the authority to update the case -------------------
-  let cases = await Case.findById(caseId);
-  // If the user is case creator, pass !
-  if (cases.user.toString() === req.user.id) {
-    // if the user's id is added to authorizedUser of this case, pass !
-  } else if (cases.authorizedUser.includes(req.user.id)) {
-  } else {
-    return res.status(400).json({ msg: 'Not an authorized user.' });
-  }
-
-  if (cases) {
-    // Update case ---------------------------------------------------------------
-    const caseFields = req.body;
-    const { cWays, gQtys, mtrls } = caseFields;
-    //@ Delete the white space from strings of array items in the body, the cWays, and mtrls
-    if (caseFields.style !== '' || caseFields.style !== null) {
-      caseFields.style = caseFields.style.toLowerCase().trim();
-    }
-
-    if (caseFields.client !== '' || caseFields.client !== null) {
-      caseFields.client = caseFields.client.toLowerCase().trim();
-    }
-
-    const trimedcWays = new Promise((resolve) => {
-      if (cWays.length > 0) {
-        let num = 0;
-        cWays.map((cWay) => {
-          const trimTheCWay = new Promise((resolve) => {
-            //Trim the gClr
-            if (cWay.gClr === '' || cWay.gClr === null) {
-              cWay.gClr = 'empty colorway';
-              resolve();
-            } else {
-              cWay.gClr = cWay.gClr.toLowerCase().trim();
-              resolve();
-            }
-          });
-
-          // Prevent duplicated empty colorWay
-          const preventDuplicatedCWay = new Promise((resolve) => {
-            Promise.all([trimTheCWay]).then(() => {
-              const currentcWay = cWay.gClr;
-              const numOfThecWay = cWays.filter((el) => el.gClr === currentcWay)
-                .length;
-              if (numOfThecWay > 1) {
-                let count = 0;
-                let num = 0;
-                cWays.map((cWay) => {
-                  num++;
-                  if (cWay.gClr === currentcWay) {
-                    count++;
-                    cWay.gClr =
-                      currentcWay + ' - duplicated_colorway_' + String(count);
-                  }
-
-                  if (num === cWays.length) {
-                    resolve();
-                  }
-                });
-              } else {
-                resolve();
-              }
-            });
-          });
-
-          Promise.all([preventDuplicatedCWay]).then(() => {
-            num = num + 1;
-            if (num === cWays.length) {
-              console.log('Promise trimedcWays');
-              return resolve();
-            }
-          });
-        });
-      } else {
-        return resolve();
-      }
-    });
-
-    //@Steve:  I can set schema to prevent this sring or number problem, however it is a hole for how still code form frontEnd
-    const numberThegQty = new Promise((resolve) => {
-      if (gQtys.length > 0) {
-        let num = 0;
-        gQtys.map((gQty) => {
-          gQty.gQty = Number(gQty.gQty);
-          //Limit the length of the number in cspt
-          if (String(gQty.gQty).length > String(MaxNum)) {
-            gQty.gQty = MaxNum;
-          }
-          num = num + 1;
-          if (num === gQtys.length) {
-            console.log('Promise resolve- numberThegQty'); // Test Code
-            return resolve();
-          }
-        });
-      } else {
-        console.log('Promise resolve- not built gQty yet - numberThegQty'); // Test Code
-        return resolve();
-      }
-    });
-
-    const trimedMtrls = new Promise((resolve, reject) => {
-      if (mtrls.length > 0) {
-        let trimCounter = 0;
-        mtrls.map((mtrl) => {
-          const mtrlList = [
-            'item',
-            'supplier',
-            'ref_no',
-            // We don't need to lowerCase the position and descriptions
-            // 'position',
-            // 'description',
-          ];
-          mtrlList.map((x) => {
-            if (mtrl[x]) {
-              mtrl[x] = mtrl[x].toLowerCase().trim();
-            }
-          });
-
-          const mtrlColorPromise = new Promise((resolve) => {
-            console.log('Promise start- mtrlColorPromise'); // Test Code
-            if (mtrl.mtrlColors.length > 0) {
-              let num = 0;
-              mtrl.mtrlColors.map((mtrlColor) => {
-                if (mtrl.multipleColor == true) {
-                  if (mtrlColor.mColor) {
-                    mtrlColor.mColor = mtrlColor.mColor.toLowerCase().trim();
-                  }
-                } else {
-                  if (mtrl.mtrlColors[0].mColor) {
-                    mtrlColor.mColor = mtrl.mtrlColors[0].mColor
-                      .toLowerCase()
-                      .trim();
-                  }
-                }
-
-                num = num + 1;
-                if (num === mtrl.mtrlColors.length) {
-                  console.log('Promise resolve- mtrlColorPromise'); // Test Code
-                  return resolve();
-                }
-              });
-            } else {
-              console.log(
-                "Promise resolve- mtrlColorPromise, the mtrl dosen't have mtrlColors"
-              ); // Test Code
-              return resolve();
-            }
-          });
-
-          const mtrlSPECPromise = new Promise((resolve) => {
-            if (mtrl.sizeSPECs.length > 0) {
-              let num = 0;
-              mtrl.sizeSPECs.map((sizeSPEC) => {
-                if (sizeSPEC.mSizeSPEC !== '' || sizeSPEC.mSizeSPEC !== null) {
-                  if (mtrl.multipleSPEC == true) {
-                    sizeSPEC.mSizeSPEC = sizeSPEC.mSizeSPEC
-                      .toLowerCase()
-                      .trim();
-                  } else {
-                    sizeSPEC.mSizeSPEC = mtrl.sizeSPECs[0].mSizeSPEC
-                      .toLowerCase()
-                      .trim();
-                  }
-                }
-
-                num = num + 1;
-                if (num === mtrl.sizeSPECs.length) {
-                  console.log('Promise mtrlSPECPromise');
-                  return resolve();
-                }
-              });
-            } else {
-              console.log(
-                "Promise mtrlSPECPromise, the mtrl dosen't have mtrlSPECs"
-              );
-              return resolve();
-            }
-          });
-
-          const mtrlCsptPromise = new Promise((resolve) => {
-            console.log('Promise start- mtrlCsptPromise'); // Test Code
-            let num = 0;
-            if (mtrl.cspts.length > 0) {
-              mtrl.cspts.map((cspt) => {
-                if (mtrl.multipleColor == true) {
-                  if (cspt.mColor) {
-                    cspt.mColor = cspt.mColor.toLowerCase().trim();
-                  }
-                } else {
-                  if (mtrl.mtrlColors[0].mColor) {
-                    cspt.mColor = mtrl.mtrlColors[0].mColor
-                      .toLowerCase()
-                      .trim();
-                  }
-                }
-
-                if (mtrl.multipleSPEC == true) {
-                  if (cspt.mSizeSPEC) {
-                    cspt.mSizeSPEC = cspt.mSizeSPEC.toLowerCase().trim();
-                  }
-                } else {
-                  if (mtrl.sizeSPECs[0].mSizeSPEC) {
-                    cspt.mSizeSPEC = mtrl.sizeSPECs[0].mSizeSPEC
-                      .toLowerCase()
-                      .trim();
-                  }
-                }
-
-                if (mtrl.multipleCSPT == true) {
-                  if (cspt.cspt) {
-                    cspt.cspt = Number(cspt.cspt);
-                  }
-                } else {
-                  if (mtrl.cspts[0].cspt) {
-                    cspt.cspt = Number(mtrl.cspts[0].cspt);
-                  }
-                }
-
-                //Limit the length of the number in cspt
-                if (String(cspt.cspt).length > String(MaxNum).length) {
-                  cspt.cspt = MaxNum;
-                }
-
-                if (gQtys.length > 0) {
-                  cspt.requiredMQty =
-                    cspt.cspt * gQtys.find(({ id }) => id === cspt.gQty).gQty;
-                }
-
-                cspt.unit = cspt.unit.toLowerCase().trim();
-                num = num + 1;
-                if (num === mtrl.cspts.length) {
-                  console.log('Promise resolve- mtrlCsptPromise'); // Test Code
-                  return resolve();
-                }
-              });
-            } else {
-              return resolve();
-            }
-          });
-
-          Promise.all([
-            mtrlColorPromise,
-            mtrlSPECPromise,
-            mtrlCsptPromise,
-          ]).then(() => {
-            trimCounter = trimCounter + 1;
-            if (trimCounter === mtrls.length) {
-              console.log('Promise mtrlPromiseAll');
-              return resolve();
-            }
-          });
-        });
-      } else {
-        return resolve();
-      }
-    });
-
-    // Get the id of case from URL by params
-    Promise.all([trimedcWays, numberThegQty, trimedMtrls])
-      .then(async () => {
-        console.log('The Finall PromiseAll');
-        // if (!cases){}
-        //   return res.status(404).json({
-        //     msg: 'Case not found',
-        //   });
-
-        const updatedCase = await Case.findOneAndUpdate(
-          { _id: caseId },
-          {
-            $set: caseFields,
-          },
-          { new: true }
-        );
-        return updatedCase;
-        // method .updateOne() will not return the case it self, so here make a one, named "updateCases" and return to the fronend client.
-      })
-      .then((result) => {
-        console.log('The case is updated');
-        return res.json(result);
-      })
-      .catch((err) => {
-        console.error(err.message);
-        res.status(500).send('Server Error');
-      });
-  } else {
-    return console.log(
-      "No such case, therefore can't update the case, may be caseId got problem"
-    );
-  }
-});
 
 // @route   DELETE api/case/:id
 // @desc    Delete case

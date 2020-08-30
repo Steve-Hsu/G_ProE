@@ -28,9 +28,11 @@ const ColorWay = ({ cWay }) => {
 
   const warningTextBoxStyle = () => {
     let obj = {};
+    let emptyWar = new RegExp('empty-', 'i');
+    let duplicatedWar = new RegExp('duplicated-', 'i');
     if (
-      cWay.gClr.match('empty colorway') ||
-      cWay.gClr.match('duplicated_colorway') ||
+      emptyWar.test(cWay.gClr) ||
+      duplicatedWar.test(cWay.gClr) ||
       cWays.filter((i) => {
         return i.gClr === cWay.gClr;
       }).length > 1 ||
