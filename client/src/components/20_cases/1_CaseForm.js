@@ -9,11 +9,11 @@ import PopoverContext from '../../context/popover/popoverContext';
 import ColorWay from './1_1_ColorWay';
 import Size from './1_2_Size';
 import Qty from './1_3_Qty';
-import MtrlTable from './1_4_MtrlTable';
+// import MtrlTable from './1_4_MtrlTable';
 import MtrlBoard from './1_5_MtrlBoard';
 import DeletePopover from '../layout/DeletePopover';
-import SqBtnLarge from '../littleElements/SqBtnLarge';
-import Table from '../table/Table';
+import SqBtnLarge from '../elements/btns/SqBtnLarge';
+import Table from '../elements/table/Table';
 
 const CaseForm = () => {
   //@ Init Context

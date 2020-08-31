@@ -1,8 +1,8 @@
 import React, { useContext, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import PopoverContext from '../../context/popover/popoverContext';
+import PopoverContext from '../../../context/popover/popoverContext';
 
-import Mtrl from '../20_cases/1_6_Mtrl';
+import Mtrl from '../../20_cases/1_6_Mtrl';
 
 const TableItem = ({
   subject,

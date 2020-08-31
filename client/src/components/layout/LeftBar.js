@@ -4,7 +4,7 @@ import QuoContext from '../../context/quo/quoContext';
 import SearchBar from './SearchBar';
 // import Papa from 'papaparse';
 import readXlsxFile from 'read-excel-file';
-import SqBtnLarge from '../littleElements/SqBtnLarge';
+import SqBtnLarge from '../elements/btns/SqBtnLarge';
 
 const LeftBar = ({ currentPath }) => {
   const casesContext = useContext(CasesContext);
