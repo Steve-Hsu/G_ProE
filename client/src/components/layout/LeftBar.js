@@ -4,7 +4,7 @@ import QuoContext from '../../context/quo/quoContext';
 import SearchBar from './SearchBar';
 // import Papa from 'papaparse';
 import readXlsxFile from 'read-excel-file';
-import SqBtnLarge from '../littleElements/sqBtnLarge';
+import SqBtnLarge from '../littleElements/SqBtnLarge';
 
 const LeftBar = ({ currentPath }) => {
   const casesContext = useContext(CasesContext);
@@ -214,7 +214,7 @@ const LeftBar = ({ currentPath }) => {
   };
 
   return (
-    <div className='container-with-navbar leftbar p-1 bg-cp-1 bd-light bd-no-t h-100'>
+    <div className='container-with-navbar leftbar p-1 bg-cp-1 bd-light bd-no-t h-100vh'>
       <div className='leftbar-component'>
         {' '}
         {/* Read CSV */}

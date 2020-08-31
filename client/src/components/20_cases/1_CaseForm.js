@@ -12,7 +12,8 @@ import Qty from './1_3_Qty';
 import MtrlTable from './1_4_MtrlTable';
 import MtrlBoard from './1_5_MtrlBoard';
 import DeletePopover from '../layout/DeletePopover';
-import SqBtnLarge from '../littleElements/sqBtnLarge';
+import SqBtnLarge from '../littleElements/SqBtnLarge';
+import Table from '../table/Table';
 
 const CaseForm = () => {
   //@ Init Context
@@ -42,6 +43,7 @@ const CaseForm = () => {
     addSize,
     addcWay,
     addMtrl,
+    addMtrlValue,
   } = casesContext;
   const { comName, comSymbol } = authUserContext;
   const { updateSrMtrlByMtrl } = srMtrlContext;
@@ -105,75 +107,75 @@ const CaseForm = () => {
     }
   });
 
-  const cellStyle = (keyWord, switcher = 4) => {
-    let width = '13%';
-    switch (keyWord) {
-      case 'no':
-        width = '3%';
-        break;
-      case 'supplier':
-      case 'item':
-        width = '13%';
-        break;
-      case 'ref_no':
-        switch (switcher) {
-          case 2:
-            if (supplier) {
-              width = '63%';
-            }
-            break;
-          case 1:
-            width = '78%';
-          default:
-            width = '13%';
-        }
-        break;
-      case 'descriptions':
-      case 'position':
-        switch (switcher) {
-          case 4:
-            width = '23%';
-            // console.log('Now', keyWord, ' applying width', width); // Test Code
-            break;
-          case 3:
-            if (!position || !descriptions) {
-              width = '48%';
-              // console.log('Now', keyWord, ' applying width', width); // Test Code
-            } else {
-              width = '30.5%';
-              // console.log('Now', keyWord, ' applying width', width); // Test Code
-            }
-            break;
-          case 2:
-            if (!position || !descriptions) {
-              width = '63%';
-              // console.log('Now', keyWord, ' applying width 63%'); // Test Code
-            } else {
-              width = '38%';
-              // console.log('Now', keyWord, ' applying width', width); // Test Code
-            }
-            break;
-          case 1:
-            width = '78%';
-            // console.log('Now', keyWord, ' applying width', width); // Test Code
-            break;
-          default:
-            width = '23%';
-          // console.log('Now', keyWord, ' applying width', width); // Test Code
-        }
-      default:
-    }
-    let style = {
-      width,
-      height: '2.5rem',
-      display: 'flex',
-      whiteSpace: 'nowrap',
-      overflowY: 'auto',
-      margin: '0 1%',
-      padding: '0.5rem 0',
-    };
-    return style;
-  };
+  // const cellStyle = (keyWord, switcher = 4) => {
+  //   let width = '13%';
+  //   switch (keyWord) {
+  //     case 'no':
+  //       width = '3%';
+  //       break;
+  //     case 'supplier':
+  //     case 'item':
+  //       width = '13%';
+  //       break;
+  //     case 'ref_no':
+  //       switch (switcher) {
+  //         case 2:
+  //           if (supplier) {
+  //             width = '63%';
+  //           }
+  //           break;
+  //         case 1:
+  //           width = '78%';
+  //         default:
+  //           width = '13%';
+  //       }
+  //       break;
+  //     case 'descriptions':
+  //     case 'position':
+  //       switch (switcher) {
+  //         case 4:
+  //           width = '23%';
+  //           // console.log('Now', keyWord, ' applying width', width); // Test Code
+  //           break;
+  //         case 3:
+  //           if (!position || !descriptions) {
+  //             width = '48%';
+  //             // console.log('Now', keyWord, ' applying width', width); // Test Code
+  //           } else {
+  //             width = '30.5%';
+  //             // console.log('Now', keyWord, ' applying width', width); // Test Code
+  //           }
+  //           break;
+  //         case 2:
+  //           if (!position || !descriptions) {
+  //             width = '63%';
+  //             // console.log('Now', keyWord, ' applying width 63%'); // Test Code
+  //           } else {
+  //             width = '38%';
+  //             // console.log('Now', keyWord, ' applying width', width); // Test Code
+  //           }
+  //           break;
+  //         case 1:
+  //           width = '78%';
+  //           // console.log('Now', keyWord, ' applying width', width); // Test Code
+  //           break;
+  //         default:
+  //           width = '23%';
+  //         // console.log('Now', keyWord, ' applying width', width); // Test Code
+  //       }
+  //     default:
+  //   }
+  //   let style = {
+  //     width,
+  //     height: '2.5rem',
+  //     display: 'flex',
+  //     whiteSpace: 'nowrap',
+  //     overflowY: 'auto',
+  //     margin: '0 1%',
+  //     padding: '0.5rem 0',
+  //   };
+  //   return style;
+  // };
 
   //@ Style for toggleTitle btn --------
   const titleBtn = (subject) => {
@@ -546,41 +548,11 @@ const CaseForm = () => {
                   ))}
                 </div>
               ) : (
-                <div className='mt-1 bg-cp-bg round-area'>
-                  {/* Taggole Header */}
-                  <div className='flexBox fc-cp-1 pb-05'>
-                    <div style={cellStyle('no')}>NO.</div>
-                    <div style={cellStyle('item')}>ITEM</div>
-                    {displayTitles.map((obj) => {
-                      if (obj[Object.keys(obj)[0]]) {
-                        return (
-                          <div
-                            key={`headerCellOf${Object.keys(obj)[0]}`}
-                            style={cellStyle(
-                              Object.keys(obj)[0],
-                              trueInDisplayTitles
-                            )}
-                          >
-                            {Object.keys(obj)[0].toUpperCase()}
-                          </div>
-                        );
-                      } else {
-                        return null;
-                      }
-                    })}
-                  </div>
-                  {/* Table body */}
-                  <div className='overflow-auto-y' style={{ height: '74vh' }}>
-                    {mtrls.map((mtrl, idx) => (
-                      <MtrlTable
-                        key={mtrl.id}
-                        mtrl={mtrl}
-                        idx={idx}
-                        cellStyle={cellStyle}
-                      />
-                    ))}
-                  </div>
-                </div>
+                <Table
+                  subjects={mtrls}
+                  displayTitles={displayTitles}
+                  toggleItemFunc={addMtrlValue}
+                />
               )}
             </div>
           </form>

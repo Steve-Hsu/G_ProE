@@ -103,7 +103,8 @@ const App = () => {
                                     path='/api/case/mprice'
                                     component={MPrice}
                                   />
-                                  <PrivateUserRoute
+                                  {/* <PrivateUserRoute */}
+                                  <Route
                                     path='/api/quogarment'
                                     component={Quotation}
                                   />

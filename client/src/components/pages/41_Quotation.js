@@ -9,6 +9,7 @@ import QuoFormSelector from '../../components/40_quo/40_02_quoFormSelector';
 import QuoForm from '../../components/40_quo/40_03_quoForm';
 import SrMtrlForm from '../../components/30_srMtrl/30_01_srMtrlForm';
 import DeletePopover from '../../components/layout/DeletePopover';
+import GoBackBtn from '../littleElements/GoBackBtn';
 // quoForm
 
 const Quotation = (props) => {
@@ -52,7 +53,7 @@ const Quotation = (props) => {
           </div>
         ) : quotateFor === 'material' ? (
           <div className='p-1 container container-with-navbar'>
-            <button onClick={onClick}>go back</button>
+            <GoBackBtn onClick={onClick} />
             <SrMtrlForm currentPath={currentPath} />
           </div>
         ) : quotateFor === 'garment' ? (
@@ -60,7 +61,7 @@ const Quotation = (props) => {
             {isQuotating === null ? (
               <div className='p-1 container container-with-navbar'>
                 {' '}
-                <button onClick={onClick}>go back</button>
+                <GoBackBtn onClick={onClick} />
                 <QuoCaseSelector />
               </div>
             ) : (
