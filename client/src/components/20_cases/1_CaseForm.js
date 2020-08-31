@@ -13,6 +13,7 @@ import Qty from './1_3_Qty';
 import MtrlBoard from './1_5_MtrlBoard';
 import DeletePopover from '../layout/DeletePopover';
 import SqBtnLarge from '../elements/btns/SqBtnLarge';
+import Board from '../elements/board/Board';
 import Table from '../elements/table/Table';
 
 const CaseForm = () => {
@@ -80,103 +81,6 @@ const CaseForm = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [caseType]);
 
-  let supplier,
-    ref_no,
-    position,
-    descriptions = false;
-
-  const trueInDisplayTitles = displayTitles.filter((obj) => {
-    return Object.values(obj)[0] == true;
-  }).length;
-
-  displayTitles.filter((obj) => {
-    switch (Object.keys(obj)[0]) {
-      case 'supplier':
-        supplier = obj['supplier'];
-        break;
-      case 'ref_no':
-        ref_no = obj['ref_no'];
-        break;
-      case 'position':
-        position = obj['position'];
-        break;
-      case 'descriptions':
-        descriptions = obj['descriptions'];
-        break;
-      default:
-    }
-  });
-
-  // const cellStyle = (keyWord, switcher = 4) => {
-  //   let width = '13%';
-  //   switch (keyWord) {
-  //     case 'no':
-  //       width = '3%';
-  //       break;
-  //     case 'supplier':
-  //     case 'item':
-  //       width = '13%';
-  //       break;
-  //     case 'ref_no':
-  //       switch (switcher) {
-  //         case 2:
-  //           if (supplier) {
-  //             width = '63%';
-  //           }
-  //           break;
-  //         case 1:
-  //           width = '78%';
-  //         default:
-  //           width = '13%';
-  //       }
-  //       break;
-  //     case 'descriptions':
-  //     case 'position':
-  //       switch (switcher) {
-  //         case 4:
-  //           width = '23%';
-  //           // console.log('Now', keyWord, ' applying width', width); // Test Code
-  //           break;
-  //         case 3:
-  //           if (!position || !descriptions) {
-  //             width = '48%';
-  //             // console.log('Now', keyWord, ' applying width', width); // Test Code
-  //           } else {
-  //             width = '30.5%';
-  //             // console.log('Now', keyWord, ' applying width', width); // Test Code
-  //           }
-  //           break;
-  //         case 2:
-  //           if (!position || !descriptions) {
-  //             width = '63%';
-  //             // console.log('Now', keyWord, ' applying width 63%'); // Test Code
-  //           } else {
-  //             width = '38%';
-  //             // console.log('Now', keyWord, ' applying width', width); // Test Code
-  //           }
-  //           break;
-  //         case 1:
-  //           width = '78%';
-  //           // console.log('Now', keyWord, ' applying width', width); // Test Code
-  //           break;
-  //         default:
-  //           width = '23%';
-  //         // console.log('Now', keyWord, ' applying width', width); // Test Code
-  //       }
-  //     default:
-  //   }
-  //   let style = {
-  //     width,
-  //     height: '2.5rem',
-  //     display: 'flex',
-  //     whiteSpace: 'nowrap',
-  //     overflowY: 'auto',
-  //     margin: '0 1%',
-  //     padding: '0.5rem 0',
-  //   };
-  //   return style;
-  // };
-
   //@ Style for toggleTitle btn --------
   const titleBtn = (subject) => {
     console.log('the subject', subject);
@@ -237,40 +141,6 @@ const CaseForm = () => {
     document
       .getElementById(`${type}-caseType`)
       .setAttribute('selected', 'selected');
-  };
-
-  const mtrlItems = (switcher) => {
-    const valueOfItems = mtrls.map((mtrl) => {
-      return mtrl.item;
-    });
-    const uniques = valueOfItems.filter((item, idx) => {
-      return valueOfItems.indexOf(item) == idx;
-    });
-
-    const lengthOfItems = uniques.map((uni) => {
-      return mtrls.filter((mtrl) => mtrl.item === uni).length;
-    });
-
-    const result = uniques.map((uni) => {
-      if (uni == '') {
-        return 'undefined';
-      } else if (uni) {
-        return uni;
-      } else {
-        return 'empty';
-      }
-    });
-    switch (switcher) {
-      case 'result':
-        return result;
-
-      case 'lengthOfItems':
-        return lengthOfItems;
-
-      case 'unique':
-        return uniques;
-      default:
-    }
   };
 
   return (
@@ -486,67 +356,7 @@ const CaseForm = () => {
 
             <div>
               {isBoardMode === true ? (
-                <div>
-                  {mtrlItems('result').map((mtrlItem, idx) => (
-                    <div
-                      key={`boardOf${mtrlItem}`}
-                      className='mt-1 bg-cp-bg round-area'
-                    >
-                      <div className='grid-4 p-1'>
-                        <div className='fc-cp-2'>{mtrlItem.toUpperCase()}</div>
-                        <div className='fc-cp-1'>
-                          The number of this material is{' '}
-                          {mtrlItems('lengthOfItems')[idx]}
-                        </div>
-                      </div>
-                      <div className='center-content'>
-                        <div
-                          className='boardParent'
-                          key={`flexBoxOf${mtrlItem}`}
-                        >
-                          {mtrls.map((mtrl) => {
-                            var re = new RegExp(mtrl.item, 'i');
-                            switch (mtrl.item) {
-                              case undefined:
-                                if (mtrlItem === 'empty') {
-                                  return (
-                                    <MtrlBoard
-                                      key={`empty${mtrl.id}`}
-                                      mtrl={mtrl}
-                                    ></MtrlBoard>
-                                  );
-                                } else {
-                                  return null;
-                                }
-                              case '':
-                                if (mtrlItem === 'undefined') {
-                                  return (
-                                    <MtrlBoard
-                                      key={`undefined${mtrl.id}`}
-                                      mtrl={mtrl}
-                                    ></MtrlBoard>
-                                  );
-                                } else {
-                                  return null;
-                                }
-                              default:
-                                if (re.test(mtrlItems('unique')[idx])) {
-                                  return (
-                                    <MtrlBoard
-                                      key={`unique${mtrl.id}`}
-                                      mtrl={mtrl}
-                                    ></MtrlBoard>
-                                  );
-                                } else {
-                                  return null;
-                                }
-                            }
-                          })}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <Board subjects={mtrls} toggleItemFunc={addMtrlValue} />
               ) : (
                 <Table
                   subjects={mtrls}

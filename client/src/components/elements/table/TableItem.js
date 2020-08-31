@@ -88,7 +88,7 @@ export default TableItem;
 
 // PropTyeps
 TableItem.propTypes = {
-  mtrl: PropTypes.object.isRequired,
+  subject: PropTypes.object.isRequired,
   cellStyle: PropTypes.func.isRequired,
   displayTitles: PropTypes.array.isRequired,
   idx: PropTypes.number.isRequired,
