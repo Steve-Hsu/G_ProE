@@ -179,7 +179,7 @@ const Mtrl = ({ mtrl }) => {
       }
       return (
         <>
-          {/* <div className='tiny text-primary transition'>{subject}</div> */}
+          {/* <div className='fs-tiny  transition'>{subject}</div> */}
           <input
             type='text'
             id={`${subject}${mtrl.id}`}
@@ -194,7 +194,7 @@ const Mtrl = ({ mtrl }) => {
     } else if (subject === 'Description') {
       return (
         <>
-          <div className='tiny'>Description</div>
+          <div className='fs-tiny'>Description</div>
           {mtrl.descriptions.length == 0 ? (
             <div key={`${subject}${0}${mtrl.id}`} className='mb-05'>
               <input
@@ -367,7 +367,7 @@ const Mtrl = ({ mtrl }) => {
         {/* Row_4 - Icon Space */}
         <div></div>
         <div className='mr-1'>
-          <div className='tiny text-primary transition'>
+          <div className='fs-tiny transition'>
             {mtrl.multipleColor == true ? 'Multiple' : 'Single'}
           </div>
           <button
@@ -381,7 +381,7 @@ const Mtrl = ({ mtrl }) => {
           </button>
         </div>
         <div className='mr-1'>
-          <div className='tiny text-primary transition'>
+          <div className='fs-tiny  transition'>
             {mtrl.multipleSPEC == true ? 'Multiple' : 'Single'}
           </div>
           <button
@@ -395,7 +395,7 @@ const Mtrl = ({ mtrl }) => {
           </button>
         </div>
         <div className='mr-1'>
-          <div className='tiny text-primary transition'>
+          <div className='fs-tiny  transition'>
             {mtrl.multipleCSPT == true ? 'Multiple' : 'Single'}
           </div>
           <button
@@ -410,7 +410,7 @@ const Mtrl = ({ mtrl }) => {
         </div>
         {/* Row_4 - Unit Selector */}
         <div>
-          <div className='tiny text-primary transition'>Unit</div>
+          <div className='fs-tiny  transition'>Unit</div>
           <select
             id={`Unit${mtrl.id}`}
             name={mtrl.id}

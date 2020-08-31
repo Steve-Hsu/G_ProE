@@ -4,6 +4,7 @@ import QuoContext from '../../context/quo/quoContext';
 import SearchBar from './SearchBar';
 // import Papa from 'papaparse';
 import readXlsxFile from 'read-excel-file';
+import SqBtnLarge from '../littleElements/sqBtnLarge';
 
 const LeftBar = ({ currentPath }) => {
   const casesContext = useContext(CasesContext);
@@ -18,6 +19,7 @@ const LeftBar = ({ currentPath }) => {
     clearcNo,
     getM_list,
     isImportedExcel,
+    inputFileName,
   } = casesContext;
   const { isQuotating, quotateFor, openQuoForm } = quoContext;
   const SHEET_NAME_LIST = [
@@ -108,6 +110,18 @@ const LeftBar = ({ currentPath }) => {
   };
 
   let btnSwitcher = updateBtnlabel();
+  let excelName = '';
+  const labelOfReadExcel = (e) => {
+    if (document.getElementById('upload-excel').value) {
+      excelName = document.getElementById('upload-excel').value;
+      console.log('The e.target.value', e.target.value);
+      addCaseValue(e);
+
+      console.log(excelName);
+      console.log(typeof excelName);
+    }
+    // let excelName = document.getElementById('upload-excel').value; // Test Code
+  };
 
   // Parse CSV locally----,
   // const readCsv = (csv) => {
@@ -133,7 +147,7 @@ const LeftBar = ({ currentPath }) => {
     // console.log('The excel', excel); // Test code
     // console.log('The type of the excel itself', typeof excel); // Test Code
     // Default the input, preventing double input the same bom
-    const inputValue = document.getElementById('upload-excel').value; // Test Code
+    const inputValue = document.getElementById('upload-excel').value;
     console.log('the inputValue', inputValue);
 
     if (inputValue) {
@@ -200,65 +214,75 @@ const LeftBar = ({ currentPath }) => {
   };
 
   return (
-    <div className='container-with-navbar leftbar p-1 test-2'>
-      <div className='leftbar-component test-4'>
+    <div className='container-with-navbar leftbar p-1 bg-cp-1 bd-light bd-no-t h-100'>
+      <div className='leftbar-component'>
         {' '}
         {/* Read CSV */}
         {currentPage === 'case' ? (
           isImportedExcel ? (
             <div>Have imported Style from Excel</div>
           ) : (
-            <div>
-              {'Import style from Excel'}
-              <input type='file' id='upload-excel' accept='.xls, .xlsx' />
-
-              <button onClick={readExcel}>Read Excel</button>
+            <div className='round-area bg-cp-3'>
+              <i className='fas fa-table fc-cp-1'> Read Bom from Excel</i>
+              <label className='btn btn-block mt-05 bd-radius-s bd-light bg-cp-1 fs-small'>
+                <input
+                  type='file'
+                  id='upload-excel'
+                  name='inputFileName'
+                  accept='.xls, .xlsx'
+                  style={{ position: 'fixed', right: '100%', bottom: '100%' }}
+                  onChange={labelOfReadExcel}
+                />
+                {excelName.length > 0 ? String(excelName) : null}
+                {inputFileName}
+              </label>
+              {inputFileName == 'Select a File...' ? null : (
+                <button
+                  className='btn btn-block mt-05 h-100 bd-radius-s bd-light bg-cp-2'
+                  onClick={readExcel}
+                >
+                  Read
+                </button>
+              )}
             </div>
           )
         ) : null}
-        {'Submit'}
-        <input
-          type='submit'
-          form={btnSwitcher.form}
-          className='btn btn-primary btn-block'
-          value={btnSwitcher.label || ''}
-        />
+        {/* Upper load btn */}
+        <div className='round-area bg-cp-3 mt-1'>
+          <i className='fas fa-cloud-upload-alt fc-cp-1 mb-05'> Save</i>
+          <input
+            type='submit'
+            form={btnSwitcher.form}
+            className='btn bg-cp-2 btn-block'
+            value={btnSwitcher.label || ''}
+          />
+        </div>
         {/* Submit
         </input> */}
-        <SearchBar currentPage={currentPage} />
-        <div>
-          {'Color Way'}
-          <button
-            name='cWayBtn'
-            className='btn btn-sm btn-primary btn-rounded-square'
+        {/* SearchBar */}
+        {/* <SearchBar currentPage={currentPage} /> */}
+        <div className='h-scatter-content mt-1'>
+          <div> Color Way</div>
+          <SqBtnLarge
+            label={<i className='fas fa-swatchbook'> Color ＋</i>}
             onClick={addcWay}
-          >
-            +
-          </button>
+          />
         </div>
-        <div>
-          {'    '}
-          {'Size'}
-          <button
-            name='sizeBtn'
-            className='btn btn-sm btn-primary'
+        <div className='h-scatter-content mt-05'>
+          <div>Size </div>
+          <SqBtnLarge
+            label={<i className='fas fa-ruler'> Size ＋</i>}
             onClick={addSize}
-          >
-            +
-          </button>
+          />
         </div>
-        <div>
-          {'Material'}
-          <button
-            name='mtrlBtn'
-            className='btn btn-sm btn-primary'
+        <div className='h-scatter-content mt-05'>
+          <div>Material</div>
+          <SqBtnLarge
+            label={<i className='fab fa-buffer '> Item ＋</i>}
             onClick={addMtrl}
-          >
-            +
-          </button>
+          />
         </div>
         <div>
-          ye{' '}
           {cNo === null ? null : (
             <input
               type='submit'

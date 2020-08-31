@@ -28,6 +28,7 @@ import {
   TOGGLE_ISUPDATE,
   TOGGLE_CASE,
   TOGGLE_DISPALYTITALES,
+  INPUTTAG_FILE_NAME,
 } from '../types';
 
 const CasesState = (props) => {
@@ -65,6 +66,7 @@ const CasesState = (props) => {
     isUpdated: null,
     isBoardMode: false,
     isImportedExcel: false,
+    inputFileName: 'Select a File...',
   };
 
   const generateId = () => {
@@ -829,13 +831,23 @@ const CasesState = (props) => {
         break;
       case 'isBoardMode':
       case 'isImportedExcel':
-        console.log('Yes here is toggled');
+        // console.log('Yes here is toggled'); // TestCode
         dispatch({ type: TOGGLE_CASE, payload: e.target.name });
         break;
       case 'displayTitles':
         e.preventDefault();
-        console.log(e.target.id); // Test code
+        // console.log(e.target.id); // Test code
         dispatch({ type: TOGGLE_DISPALYTITALES, payload: e.target.id });
+        break;
+      case 'inputFileName':
+        e.preventDefault();
+
+        let fileName = e.target.value.slice(12, -1);
+        dispatch({
+          type: INPUTTAG_FILE_NAME,
+          payload: fileName,
+        });
+
         break;
       default:
     }
@@ -1043,6 +1055,7 @@ const CasesState = (props) => {
         isBoardMode: state.isBoardMode,
         displayTitles: state.displayTitles,
         isImportedExcel: state.isImportedExcel,
+        inputFileName: state.inputFileName,
         addCaseValue,
         addcWay,
         updatecWay,

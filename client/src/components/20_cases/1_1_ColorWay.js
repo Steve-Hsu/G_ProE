@@ -86,7 +86,7 @@ const ColorWay = ({ cWay }) => {
           onChange={updatecWay}
           maxLength={colorWayLength}
           autoFocus
-          className='MPH-input bd-no bg-cp-1 lead w-100 h-100 bg-no'
+          className='MPH-input bd-no bg-cp-1 fs-lead w-100 h-100 bg-no'
           style={warningTextBoxStyle()}
           value={cWay.gClr || ''}
         />

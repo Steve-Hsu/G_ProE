@@ -12,6 +12,7 @@ import Qty from './1_3_Qty';
 import MtrlTable from './1_4_MtrlTable';
 import MtrlBoard from './1_5_MtrlBoard';
 import DeletePopover from '../layout/DeletePopover';
+import SqBtnLarge from '../littleElements/sqBtnLarge';
 
 const CaseForm = () => {
   //@ Init Context
@@ -279,7 +280,7 @@ const CaseForm = () => {
         <div>
           <form id='caseForm' onSubmit={onSubmitCase}>
             {/* Case Information */}
-            <div className='lead'>Case Information</div>
+            <div className='fs-lead'>Case Information</div>
             <div className='grid-1-5 row-gap-md round-card bg-cp-elem mb-3 bd-light'>
               <div className='v-center-content'>CaseNo.</div>
               <div>{cNo === null ? 'New Case' : cNo}</div>
@@ -304,7 +305,7 @@ const CaseForm = () => {
                 name='client'
                 onChange={addCaseValue}
                 maxLength={clientLength}
-                placeholder='.'
+                // placeholder='.'
                 className='bd-light'
                 value={client || ''}
                 required
@@ -337,31 +338,29 @@ const CaseForm = () => {
             {/* Color -------------------------- */}
             <div className='grid-6 mb-1'>
               <div
-                className='lead v-center-content'
+                className='fs-lead v-center-content'
                 style={{ gridColumn: '1/2' }}
               >
                 Size-Breakdown
               </div>
-              <button
-                className='btn btn-sq sq-block center-content'
+              <SqBtnLarge
+                label={<i className='fas fa-swatchbook'> Color ＋</i>}
                 onClick={addcWay}
-              >
-                <i className='fas fa-swatchbook'> Color ＋</i>
-              </button>
-              <button
-                className='btn btn-sq sq-block center-content'
+              />
+
+              <SqBtnLarge
+                label={<i className='fas fa-ruler'> Size ＋</i>}
                 onClick={addSize}
-              >
-                <i className='fas fa-ruler'> Size ＋</i>
-              </button>
+              />
+
               <div className='flexBox' style={{ gridColumn: '5/7' }}>
-                <div className='lead text-primary'>Total Qty : </div>
+                {/* <div className='lead text-primary'>Total Qty : </div>
                 <div className='lead'>
                   {gQtys.reduce(
                     (partial_sum, gQty) => partial_sum + Number(gQty.gQty),
                     0
                   )}
-                </div>
+                </div> */}
               </div>
             </div>
 
@@ -396,7 +395,7 @@ const CaseForm = () => {
                         style={{
                           height: 'var(--btn-h-m)',
                         }}
-                        className='mt-1 bd-cp-2-b-2px tiny text-cp-2-c'
+                        className='mt-1 bd-cp-2-b-2px fs-tiny fc-cp-2-c'
                       >
                         <div
                           style={{ textAlign: 'right' }}
@@ -424,14 +423,24 @@ const CaseForm = () => {
             {/* Material -------------------------- */}
             <div className='grid-6'>
               {/* elem-1 */}
-              <div className='lead'>
+              <div className='fs-lead' style={{ gridColumn: '1/2' }}>
                 Materials
-                <button className='btn btn-sq ml-1' onClick={addMtrl}>
+                {/* <button className='btn btn-sq ml-1' onClick={addMtrl}>
                   <i className='fas fa-plus'></i>
-                </button>
+                </button> */}
               </div>
+              <div className='ml-05'>
+                <SqBtnLarge
+                  label={<i className='fab fa-buffer '> Item ＋</i>}
+                  onClick={addMtrl}
+                />
+              </div>
+
               {/* elem-2 */}
-              <div className='sq-toggleSwitch '>
+              <div
+                className='sq-toggleSwitch ml-1 '
+                style={{ gridColumn: '3/4' }}
+              >
                 <label className='sq-switch'>
                   <input
                     className='sq-switchInput'
@@ -452,15 +461,15 @@ const CaseForm = () => {
               </div>
               {/* elem-3 */}
               <div
-                className='grid-4 btn-toggleTitle-containter'
-                style={{ gridColumn: '3 / 6' }}
+                className='grid-4 btn-toggleTitle-containter '
+                style={{ gridColumn: '4 / 7' }}
               >
                 {displayTitles.map((obj, idx) => {
                   return (
                     <button
                       id={Object.keys(obj)[0]}
                       name='displayTitles'
-                      className='btn btn-sq btn-toggleTitle'
+                      className='btn btn-sq btn-toggleTitle fs-small'
                       key={`btnToggle${Object.keys(obj)[0]}`}
                       onClick={addCaseValue}
                       style={titleBtn(obj)}
@@ -482,10 +491,8 @@ const CaseForm = () => {
                       className='mt-1 bg-cp-bg round-area'
                     >
                       <div className='grid-4 p-1'>
-                        <div className='text-cp-2'>
-                          {mtrlItem.toUpperCase()}
-                        </div>
-                        <div className='text-cp-1'>
+                        <div className='fc-cp-2'>{mtrlItem.toUpperCase()}</div>
+                        <div className='fc-cp-1'>
                           The number of this material is{' '}
                           {mtrlItems('lengthOfItems')[idx]}
                         </div>
@@ -540,8 +547,8 @@ const CaseForm = () => {
                 </div>
               ) : (
                 <div className='mt-1 bg-cp-bg round-area'>
-                  {/* Tabole Header */}
-                  <div className='flexBox text-cp-1 pb-05'>
+                  {/* Taggole Header */}
+                  <div className='flexBox fc-cp-1 pb-05'>
                     <div style={cellStyle('no')}>NO.</div>
                     <div style={cellStyle('item')}>ITEM</div>
                     {displayTitles.map((obj) => {

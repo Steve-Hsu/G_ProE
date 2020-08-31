@@ -21,6 +21,7 @@ import {
   CASENO_CLEAR,
   TOGGLE_CASE,
   TOGGLE_DISPALYTITALES,
+  INPUTTAG_FILE_NAME,
 } from '../types';
 
 export default (state, action) => {
@@ -137,6 +138,7 @@ export default (state, action) => {
         error: null,
         isUpdated: null,
         isBoardMode: false,
+        inputFileName: 'Select a File...',
       };
     case CASENO_CLEAR:
       return {
@@ -175,6 +177,7 @@ export default (state, action) => {
         error: action.payload,
         isUpdated: null,
         isBoardMode: false,
+        inputFileName: 'Select a File...',
       };
     case TOGGLE_ISUPDATE:
       return {
@@ -196,6 +199,11 @@ export default (state, action) => {
           }
           return title;
         }),
+      };
+    case INPUTTAG_FILE_NAME:
+      return {
+        ...state,
+        inputFileName: action.payload,
       };
     default:
   }

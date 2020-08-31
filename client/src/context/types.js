@@ -72,6 +72,7 @@ export const CASE_CLEAR = 'CASE_CLEAR';
 export const CASENO_CLEAR = 'CASENO_CLEAR';
 export const TOGGLE_CASE = 'TOGGLE_CASE';
 export const TOGGLE_DISPALYTITALES = 'TOGGLE_DISPALYTITALES';
+export const INPUTTAG_FILE_NAME = 'INPUTTAG_FILE_NAME';
 
 //@ may not need this one --------------------------------------------
 export const CLEAR_USERS_STATE = 'CLEAR_USERS_STATE';

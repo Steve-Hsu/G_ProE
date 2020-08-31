@@ -422,7 +422,7 @@ img {
   border-radius: var(--small);
   background: var(--cp-1_4);
   height: var(--btn-h-m);
-  width: 400px;
+  width: 392px;
   margin-left: 100px;
 }
 
@@ -431,7 +431,7 @@ img {
   background: var(--cp-1_3);
   border-radius: var(--small);
   color: var(--cp-1_4);
-  width: 100px;
+  width: 98px;
   place-items: center;
   padding: 0.5rem;
 }
@@ -679,10 +679,6 @@ textarea {
   border-radius: var(--small);
   transition: all 0.5s;
   border: 1px solid var(--fade-color);
-}
-
-input[type='submit'] {
-  font: inherit;
 }
 
 .select-primary {
@@ -993,61 +989,6 @@ textarea:focus {
   cursor: pointer;
 }
 
-/* @Font */
-/* Font-size */
-.large {
-  font-size: 2rem;
-  line-height: 1.2;
-  margin-bottom: 1rem;
-}
-
-.lead {
-  font-size: 1.2rem;
-  /* margin-bottom: 1rem; */
-}
-
-.tiny {
-  font-size: 0.6rem;
-}
-
-/* Font-color */
-.text-cp-1 {
-  color: var(--cp-1_1);
-}
-
-.text-cp-2 {
-  color: var(--cp-1_2);
-}
-
-.text-cp-2-c {
-  color: var(--cp-1_2-c);
-}
-
-.text-cp-3 {
-  color: var(--cp-1_3);
-}
-
-.text-cp-4 {
-  color: var(--cp-1_4);
-}
-
-/* Font positoin */
-.text-center {
-  text-align: center;
-}
-
-.text-right {
-  text-align: right;
-}
-
-.text-left {
-  text-align: left;
-}
-/* Font weight */
-.text-light {
-  font-weight: 800;
-}
-
 /* @Mobile Styles  -------------------------------- */
 @media (max-width: 700px) {
   .hide-sm {
@@ -1058,19 +999,6 @@ textarea:focus {
   .grid-3,
   .grid-4 {
     grid-template-columns: 1fr;
-  }
-
-  /* Text Styles */
-  .x-large {
-    font-size: 3rem;
-  }
-
-  .large {
-    font-size: 2rem;
-  }
-
-  .lead {
-    font-size: 1.2rem;
   }
 
   /* Navbar */
@@ -1089,7 +1017,70 @@ textarea:focus {
   }
 }
 
-/* @Forced important style --------  */
+/* @Like Forced important style ----------------  */
+/* @Text */
+/* Font-size */
+.fs-large {
+  font-size: 2rem;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.fs-lead {
+  font-size: 1.2rem;
+  /* margin-bottom: 1rem; */
+}
+
+.fs-small {
+  font-size: 0.8rem;
+}
+
+.fs-tiny {
+  font-size: 0.6rem;
+}
+
+/* Font-color */
+.fc-cp-1 {
+  color: var(--cp-1_1);
+}
+
+.fc-cp-2 {
+  color: var(--cp-1_2);
+}
+
+.fc-cp-2-c {
+  color: var(--cp-1_2-c);
+}
+
+.fc-cp-3 {
+  color: var(--cp-1_3);
+}
+
+.fc-cp-4 {
+  color: var(--cp-1_4);
+}
+
+/* Text positoin */
+/* Font position */
+.tp-center,
+.fp-center {
+  text-align: center;
+}
+
+.tp-right,
+.fp-right {
+  text-align: right;
+}
+
+.tp-left,
+.fp-left {
+  text-align: left;
+}
+/* Font weight */
+.fw-lighter {
+  /* font-weight: 100; */
+  font-weight: lighter;
+}
 /* @OverFlow */
 .overflow-auto {
   overflow: auto;
@@ -1565,6 +1556,10 @@ textarea:focus {
 
 .shadow-inset-b {
   box-shadow: inset 10px 10px 10px 10px red;
+}
+
+.opacity {
+  opacity: 0;
 }
 
 /* @test */

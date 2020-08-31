@@ -112,7 +112,7 @@ const Size = ({ size }) => {
         onChange={onChange}
         autoFocus
         default='XS'
-        className='select-primary bg-cp-1 text-cp-3 bd-no lead'
+        className='select-primary bg-cp-1 fc-cp-3 bd-no fs-lead'
       >
         {sizeList.map((s) => {
           return (
@@ -129,7 +129,7 @@ const Size = ({ size }) => {
             name='size'
             value={size.id}
             onClick={togglePopover}
-            className='btn btn-warning btn-sq btn-sq-small mt-05'
+            className='btn btn-warning btn-sq btn-sq-small mt-05 '
             // style={deleteBtnPosition}
           >
             x
@@ -141,7 +141,7 @@ const Size = ({ size }) => {
           className='pt-1d3 pl-07 '
         >
           {/* <div className='tiny text-primary'>{cWay.gClr}</div> */}
-          <div className='tiny text-cp-2-c'>{sumNumOfSize()}</div>
+          <div className='fs-tiny fc-cp-2-c'>{sumNumOfSize()}</div>
         </div>
       </div>
       {/* )} */}
