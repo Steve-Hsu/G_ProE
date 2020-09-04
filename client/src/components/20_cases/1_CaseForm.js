@@ -47,6 +47,8 @@ const CaseForm = ({ props }) => {
     addcWay,
     addMtrl,
     addMtrlValue,
+    poDate,
+    osNo,
   } = casesContext;
   const { comName, comSymbol } = authUserContext;
   const { updateSrMtrlByMtrl } = srMtrlContext;
@@ -75,13 +77,21 @@ const CaseForm = ({ props }) => {
   const clientLength = maxWdsLength;
 
   useEffect(() => {
-    if (caseType === null) {
+    if (caseType === '') {
     } else {
       loadCaseSelectCaseTypeTagIndex(caseType);
     }
-
+    if (osNo) {
+      const inputs = document.querySelectorAll('input');
+      console.log(inputs);
+      const length = inputs.length;
+      console.log('the length', length);
+      for (let i = 0; i < length; i++) {
+        inputs[i].setAttribute('readonly', true);
+      }
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [caseType]);
+  }, [cNo]);
 
   //@ Style for toggleTitle btn --------
   const titleBtn = (subject) => {
@@ -141,7 +151,7 @@ const CaseForm = ({ props }) => {
 
   const loadCaseSelectCaseTypeTagIndex = (type) => {
     if (document.getElementById(`${type}-caseType`)) {
-      document
+      return document
         .getElementById(`${type}-caseType`)
         .setAttribute('selected', 'selected');
     }
@@ -164,57 +174,67 @@ const CaseForm = ({ props }) => {
             <form id='caseForm' onSubmit={onSubmitCase}>
               {/* Case Information */}
               <div className='fs-lead'>Case Information</div>
-              <div className='grid-1-5 row-gap-md round-card bg-cp-elem mb-3 bd-light'>
-                <div className='v-center-content'>CaseNo.</div>
-                <div>{cNo === null ? 'New Case' : cNo}</div>
+              <div className='round-card bg-cp-elem mb-3 bd-light'>
+                <div className='grid-1-5 row-gap-md'>
+                  <div className='v-center-content'>CaseNo.</div>
+                  <div>{cNo === null ? 'New Case' : cNo}</div>
 
-                <div className='v-center-content'>Style</div>
-                <input
-                  id='caseStyle'
-                  type='text'
-                  name='style'
-                  onChange={addCaseValue}
-                  maxLength={styleLength}
-                  placeholder='Enter the name of style'
-                  className='bd-light'
-                  value={style || ''}
-                  required
-                />
+                  <div className='v-center-content'>Style</div>
+                  <input
+                    id='caseStyle'
+                    type='text'
+                    name='style'
+                    onChange={addCaseValue}
+                    maxLength={styleLength}
+                    placeholder='Enter the name of style'
+                    className='bd-light'
+                    value={style || ''}
+                    required
+                  />
 
-                <div className='v-center-content'>Client</div>
-                <input
-                  id='caseClient'
-                  type='text'
-                  name='client'
-                  onChange={addCaseValue}
-                  maxLength={clientLength}
-                  // placeholder='.'
-                  className='bd-light'
-                  value={client || ''}
-                  required
-                />
+                  <div className='v-center-content'>Client</div>
+                  <input
+                    id='caseClient'
+                    type='text'
+                    name='client'
+                    onChange={addCaseValue}
+                    maxLength={clientLength}
+                    // placeholder='.'
+                    className='bd-light'
+                    value={client || ''}
+                    required
+                  />
 
-                <div className='v-center-content'>Case Type</div>
-                <select
-                  id='caseType'
-                  name='caseType'
-                  list='caseTypeList'
-                  onChange={addCaseValue}
-                  className='select-primary bd-light'
-                  required
-                >
-                  {caseTypeList.map((t) => {
-                    return (
-                      <option
-                        key={`${t}-caseType`}
-                        id={`${t}-caseType`}
-                        value={t}
-                      >
-                        {t}
-                      </option>
-                    );
-                  })}
-                </select>
+                  <div className='v-center-content'>Case Type</div>
+                  <select
+                    id='caseType'
+                    name='caseType'
+                    list='caseTypeList'
+                    onChange={addCaseValue}
+                    className='select-primary bd-light'
+                    required
+                  >
+                    {caseTypeList.map((t) => {
+                      return (
+                        <option
+                          key={`${t}-caseType`}
+                          id={`${t}-caseType`}
+                          value={t}
+                        >
+                          {t}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </div>
+                {osNo ? (
+                  <div className='grid-4 mt-md round-card bg-cp-bg-light-c mb-0'>
+                    <div className='v-center-content'>Order Summary.</div>
+                    <div className='v-center-content'>{osNo}</div>
+                    <div className='v-center-content'>Date.</div>
+                    <div className='v-center-content'>{poDate}</div>
+                  </div>
+                ) : null}
               </div>
 
               {/* CS-Breakdown table */}
@@ -226,15 +246,23 @@ const CaseForm = ({ props }) => {
                 >
                   Size-Breakdown
                 </div>
-                <SqBtnLarge
-                  label={<i className='fas fa-swatchbook'> Color ＋</i>}
-                  onClick={addcWay}
-                />
+                {cNo !== null || osNo ? (
+                  <div></div>
+                ) : (
+                  <SqBtnLarge
+                    label={<i className='fas fa-swatchbook'> Color ＋</i>}
+                    onClick={addcWay}
+                  />
+                )}
 
-                <SqBtnLarge
-                  label={<i className='fas fa-ruler'> Size ＋</i>}
-                  onClick={addSize}
-                />
+                {cNo !== null || osNo ? (
+                  <div></div>
+                ) : (
+                  <SqBtnLarge
+                    label={<i className='fas fa-ruler'> Size ＋</i>}
+                    onClick={addSize}
+                  />
+                )}
 
                 <div className='flexBox' style={{ gridColumn: '5/7' }}>
                   {/* <div className='lead text-primary'>Total Qty : </div>
@@ -316,10 +344,12 @@ const CaseForm = ({ props }) => {
                 </button> */}
                 </div>
                 <div className='ml-05'>
-                  <SqBtnLarge
-                    label={<i className='fab fa-buffer '> Item ＋</i>}
-                    onClick={addMtrl}
-                  />
+                  {cNo === null || osNo ? null : (
+                    <SqBtnLarge
+                      label={<i className='fab fa-buffer '> Item ＋</i>}
+                      onClick={addMtrl}
+                    />
+                  )}
                 </div>
 
                 {/* elem-2 */}

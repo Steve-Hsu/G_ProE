@@ -27,6 +27,7 @@ router.get('/', authUser, async (req, res) => {
         caseType: 1,
         style: 1,
         client: 1,
+        poDate: 1,
         merchandiser: '',
         quoNo: '',
       },
@@ -428,7 +429,7 @@ router.post(
         .then(async () => {
           let updatedcNo = '';
           if (cNo) {
-            // If the cNo, it imply that the case is not the existing one
+            // If the cNo is true, it imply that the case is the existing one
             let caseTypeSymbol = cNo.slice(-1);
             switch (caseType) {
               case 'Bulk':
@@ -446,6 +447,7 @@ router.post(
 
             const caseFields = {
               cNo: updatedcNo,
+              caseType: caseType,
               style: trimedStyle,
               client: trimedClient,
               cWays,
@@ -461,7 +463,8 @@ router.post(
             //   });
 
             const updatedCase = await Case.findOneAndUpdate(
-              { _id: caseId },
+              // poDate must be null, it means the Case is not being made a PO, so it allows to be updated
+              { _id: caseId, poDate: null },
               {
                 $set: caseFields,
               },

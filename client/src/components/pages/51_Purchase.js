@@ -1,19 +1,26 @@
 import React, { useContext, Fragment } from 'react';
 // Components
 import LeftBar from '../layout/LeftBar';
-import CaseSelector from '../50_po/50_01_caseSelector';
+// import CaseSelector from '../50_po/50_01_caseSelector';
+import ItemSelector from '../itemSelector/ItemSelector';
 import OsSelector from '../50_po/50_02_osSelector';
 import OrderSummary from '../50_po/50_03_orderSummary';
 import PurchaseOrder from '../50_po/50_04_purchaseOrder';
-import PopoverContext from '../../context/popover/popoverContext';
+import GoBackBtn from '../elements/btns/GoBackBtn';
 
 // Context
 import PurContext from '../../context/pur/purContext';
 import DeletePopover from '../../components/layout/DeletePopover';
+import PopoverContext from '../../context/popover/popoverContext';
 
 const Purchase = (props) => {
   const purContext = useContext(PurContext);
-  const { openPage, switchPage } = purContext;
+  const {
+    openPage,
+    switchPage,
+    selectedCases,
+    createOrderSummary,
+  } = purContext;
   const currentPath = props.location.pathname;
 
   const popoverContext = useContext(PopoverContext);
@@ -24,12 +31,23 @@ const Purchase = (props) => {
     switchPage(e.target.value);
   };
 
+  const onSubmit = (e) => {
+    e.preventDefault();
+    console.log('order summary is triggered');
+    createOrderSummary(selectedCases);
+  };
+
   return (
     <Fragment>
       {popover ? <DeletePopover key={current._id} current={current} /> : null}
       {/* Grid-1 */}
       {openPage === null ? (
         <div className='p-1 container container-with-navbar'>
+          <GoBackBtn
+            onClick={() => {
+              props.history.push('/api/case/director');
+            }}
+          />
           <button value='caseSelector' onClick={onClick}>
             CaseSelector
           </button>
@@ -40,10 +58,14 @@ const Purchase = (props) => {
       ) : openPage === 'caseSelector' ? (
         <div className='grid-1-4'>
           <LeftBar currentPath={currentPath} />
-          <div className='p-1 container container-with-navbar'>
+          <form id='purchase' onSubmit={onSubmit}>
+            <ItemSelector props={props} purpose='purCaseSelector' />
+          </form>
+
+          {/* <div className='p-1 container container-with-navbar'>
             <button onClick={onClick}>go back</button>
             <CaseSelector />
-          </div>
+          </div> */}
         </div>
       ) : openPage === 'osSelector' ? (
         <div className='grid-1-4'>

@@ -19,7 +19,6 @@ import {
 const PurState = (props) => {
   const initialState = {
     osList: [],
-    caseList: [],
     selectedCases: [],
     openPage: null,
     currentOrderSummary: null,
@@ -29,11 +28,6 @@ const PurState = (props) => {
   const [state, dispatch] = useReducer(PurReducer, initialState);
   const { caseList, openPage, currentOrderSummary } = state;
   //@_action
-  const getCaseList = async () => {
-    const res = await axios.get('/api/purchase');
-    console.log('download succeed!');
-    dispatch({ type: CASE_LIST_DOWNLOAD, payload: res.data });
-  };
 
   //@ Use searchbar to find the cases
   const searchCaseList = async (body) => {
@@ -73,17 +67,19 @@ const PurState = (props) => {
   };
 
   const createOrderSummary = async (selectedCases) => {
+    console.log('createOrderSummary is triggered'); // test Code
     const config = {
       headers: {
         'Content-Type': 'application/json',
       },
     };
     try {
-      const res = await axios.post('/api/purchase', selectedCases, config);
+      // const res = await axios.post('/api/purchase', selectedCases, config);
+      await axios.post('/api/purchase', selectedCases, config);
       console.log('Upload Order Summary');
       // dispatch({ type: CASE_LIST_DOWNLOAD, payload: res.data });
     } catch (err) {
-      console.log(err.msg, 'Order Summary failed');
+      console.log(err, 'Order Summary failed');
     }
   };
 
@@ -176,7 +172,6 @@ const PurState = (props) => {
         currentOrderSummary: state.currentOrderSummary,
         currentPo: state.currentPo,
         currentPoPriceList: state.currentPoPriceList,
-        getCaseList,
         searchCaseList,
         selectCase,
         createOrderSummary,

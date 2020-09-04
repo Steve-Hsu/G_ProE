@@ -3,8 +3,9 @@ import SrMtrlContext from '../../context/srMtrl/srMtrlContext';
 //@ Child component
 import SrMtrl from './30_01_01_srMtrl';
 import PropTypes from 'prop-types';
+import GoBackBtn from '../elements/btns/GoBackBtn';
 
-const MPriceForm = ({ currentPath }) => {
+const MPriceForm = ({ props, currentPath }) => {
   const srMtrlContext = useContext(SrMtrlContext);
   const {
     srMtrls,
@@ -35,6 +36,11 @@ const MPriceForm = ({ currentPath }) => {
   //@ return
   return (
     <div className='p-1 container container-with-navbar'>
+      <GoBackBtn
+        onClick={() => {
+          props.history.push('/api/case/director');
+        }}
+      />
       {/* // Ask the user when they want to jump to another page wihout saving datas */}
       {/* <Prompt when={formIsHalfFilledOut} message='Hey' />
     {popover ? <DeletePopover key={current.id} current={current} /> : null} */}

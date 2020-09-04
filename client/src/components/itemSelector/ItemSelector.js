@@ -3,6 +3,7 @@ import React, { useContext, useEffect, Fragment } from 'react';
 // Context
 import CaseContext from '../../context/cases/casesContext';
 import QuoContext from '../../context/quo/quoContext';
+import PurContext from '../../context/pur/purContext';
 // Components
 import Table from '../elements/table/Table';
 import Board from '../elements/board/Board';
@@ -12,6 +13,7 @@ import SqToggleSwitchL from '../elements/btns/SqToggleSwitchL';
 export const ItemSelector = ({ props, purpose }) => {
   const caseContext = useContext(CaseContext);
   const quoContext = useContext(QuoContext);
+  const purContext = useContext(PurContext);
   const {
     getCaseList,
     downloadCase,
@@ -21,6 +23,7 @@ export const ItemSelector = ({ props, purpose }) => {
     isBoardMode,
   } = caseContext;
   const { switchQuoFormSelector, quotation, switchQuoForm } = quoContext;
+  const { selectCase, selectedCases, switchPage } = purContext;
 
   useEffect(() => {
     if (purpose != 'quoFormSelector') {
@@ -39,11 +42,15 @@ export const ItemSelector = ({ props, purpose }) => {
   switch (purpose) {
     case 'CaseSelector':
     case 'quoCaseSelector':
+    case 'purCaseSelector':
       getList = getCaseList;
       subjects = caseList;
       goBack = () => {
-        console.log('the props', props); // Test Code
-        props.history.push('/api/case/director');
+        if (purpose === 'purCaseSelector') {
+          switchPage(null);
+        } else {
+          props.history.push('/api/case/director');
+        }
       };
       displayTitles = [
         { cNo: true },
@@ -58,6 +65,9 @@ export const ItemSelector = ({ props, purpose }) => {
           break;
         case 'quoCaseSelector':
           funcs = switchQuoFormSelector;
+          break;
+        case 'purCaseSelector':
+          funcs = [selectCase, selectedCases];
           break;
         default:
       }

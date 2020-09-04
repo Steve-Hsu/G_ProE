@@ -6,7 +6,7 @@ import PopoverContext from '../../context/popover/popoverContext';
 const Size = ({ size }) => {
   const casesContext = useContext(CasesContext);
   const popoverContext = useContext(PopoverContext);
-  const { _id, cNo, sizes, gQtys, updateSize } = casesContext;
+  const { _id, cNo, osNo, sizes, gQtys, updateSize } = casesContext;
   const { togglePopover } = popoverContext;
   const event = new Event('change');
   //@ Array for generate <option> tags for s<elect> tag.
@@ -125,15 +125,17 @@ const Size = ({ size }) => {
       {/* {cNo === null ? null : ( */}
       <div className='v-center-content'>
         <div className='pl-05'>
-          <button
-            name='size'
-            value={size.id}
-            onClick={togglePopover}
-            className='btn btn-warning btn-sq btn-sq-small mt-05 '
-            // style={deleteBtnPosition}
-          >
-            x
-          </button>
+          {cNo === null || osNo ? null : (
+            <button
+              name='size'
+              value={size.id}
+              onClick={togglePopover}
+              className='btn btn-warning btn-sq btn-sq-small mt-05 '
+              // style={deleteBtnPosition}
+            >
+              x
+            </button>
+          )}
         </div>
         <div
           key={`subtotalOf${size.id}`}

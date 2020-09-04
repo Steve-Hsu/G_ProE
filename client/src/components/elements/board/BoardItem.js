@@ -40,8 +40,23 @@ const BoardItem = ({
         break;
       case 'quoFormSelector':
         toggleItemFunc(subject._id);
+        break;
+      case 'purCaseSelector':
+        toggleItemFunc[0](subject._id);
+        break;
       default:
     }
+  };
+
+  const selectedBackGround = (id) => {
+    let style = { overflow: 'auto' };
+    if (purpose === 'purCaseSelector') {
+      let check = toggleItemFunc[1].includes(id);
+      if (check) {
+        style = { background: 'var(--cp-1_2)', overflow: 'auto' };
+      }
+    }
+    return style;
   };
 
   return (
@@ -51,7 +66,7 @@ const BoardItem = ({
       ) : (
         <div
           className='boardChild round-card bg-cp-elem bd-light'
-          style={{ overflow: 'auto' }}
+          style={selectedBackGround(id)}
           onClick={onClick}
         >
           <div>

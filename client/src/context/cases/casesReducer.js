@@ -144,6 +144,8 @@ export default (state, action) => {
         isUpdated: null,
         isBoardMode: false,
         inputFileName: 'Select a File...',
+        osNo: null,
+        poDate: null,
       };
     case CASENO_CLEAR:
       return {

@@ -44,16 +44,36 @@ const TableItem = ({
         break;
       case 'quoFormSelector':
         toggleItemFunc(subject._id);
+        break;
+      case 'purCaseSelector':
+        toggleItemFunc[0](subject._id);
+        break;
       default:
     }
+  };
+
+  const selectedBackGround = (id) => {
+    let style = { overflow: 'auto' };
+    if (purpose === 'purCaseSelector') {
+      let check = toggleItemFunc[1].includes(id);
+      if (check) {
+        style = { background: 'var(--cp-1_2)', overflow: 'auto' };
+      }
+    }
+    return style;
   };
 
   return (
     <Fragment>
       {isEditingMtrl == true ? (
         <Mtrl key={subject.id} mtrl={subject} />
-      ) : (
-        <div className='flexBox bd-light bd-no-t bg-cp-elem' onClick={onClick}>
+      ) : purpose === 'purCaseSelector' && subject.poDate !== null ? null : (
+        <div
+          className='flexBox bd-light bd-no-t bg-cp-elem'
+          onClick={onClick}
+          style={selectedBackGround(id)}
+          // style={{ background: 'red' }}
+        >
           <div style={cellStyle('no')}>{idx + 1}</div>
           {purpose === '1_CaseForm' ? (
             <div style={cellStyle('item')}>{subject.item}</div>

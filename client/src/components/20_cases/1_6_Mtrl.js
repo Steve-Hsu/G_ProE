@@ -15,14 +15,24 @@ const Mtrl = ({ mtrl }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mtrl.unit]);
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   // if (osNo) {
+  //   //   const inputs = document.querySelectorAll('input');
+  //   //   console.log(inputs);
+  //   //   const length = inputs.length;
+  //   //   console.log('the length', length);
+  //   //   for (let i = 0; i < length; i++) {
+  //   //     inputs[i].setAttribute('readonly', true);
+  //   //   }
+  //   // }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   const casesContext = useContext(CasesContext);
   const popoverContext = useContext(PopoverContext);
 
   const {
+    osNo,
     cNo,
     cWays,
     sizes,
@@ -188,6 +198,7 @@ const Mtrl = ({ mtrl }) => {
             onChange={onChange2}
             className='item-input'
             maxLength={maxWdsLength}
+            readOnly={osNo ? true : false}
           />
         </>
       );
@@ -206,6 +217,7 @@ const Mtrl = ({ mtrl }) => {
                 className='MPH-input'
                 value={mtrlAttribute(subject)[0] || ''}
                 maxLength={maxWdsLength}
+                readOnly={osNo ? true : false}
               />
             </div>
           ) : (
@@ -220,6 +232,7 @@ const Mtrl = ({ mtrl }) => {
                   className='MPH-input'
                   value={mtrlAttribute(subject)[idx] || ''}
                   maxLength={maxWdsLength}
+                  readOnly={osNo ? true : false}
                 />
               </div>
             ))
@@ -238,6 +251,7 @@ const Mtrl = ({ mtrl }) => {
             className='MPH-input'
             value={mtrlAttribute(subject) || ''}
             maxLength={maxWdsLength}
+            readOnly={osNo ? true : false}
           />
           <label htmlFor={`${subject}${mtrl.id}`} className='MPH-input-label'>
             {subject}
@@ -258,6 +272,7 @@ const Mtrl = ({ mtrl }) => {
             name={mtrl.id}
             checked={mtrl[subject] == true}
             onChange={onChange}
+            readOnly={osNo ? true : false}
           />
           <span className='slider round'></span>
         </label>
@@ -296,7 +311,7 @@ const Mtrl = ({ mtrl }) => {
 
         {/* Row_1 - Delete Btn */}
         <div>
-          {cNo === null ? null : (
+          {cNo === null || osNo ? null : (
             <button
               value={mtrl.id}
               name='mtrl'
@@ -439,7 +454,7 @@ const Mtrl = ({ mtrl }) => {
           <div
             style={{ height: '100%', display: 'grid', placeItems: 'center' }}
           >
-            {toggleSwitchObj('multipleColor')}
+            {osNo ? null : toggleSwitchObj('multipleColor')}
           </div>
           <div style={attachedTable('cWay')} className='mt-1'>
             {mtrl.multipleColor == true ? (
@@ -467,7 +482,7 @@ const Mtrl = ({ mtrl }) => {
           <div
             style={{ height: '100%', display: 'grid', placeItems: 'center' }}
           >
-            {toggleSwitchObj('multipleSPEC')}
+            {osNo ? null : toggleSwitchObj('multipleSPEC')}
           </div>
           <div style={attachedTable('size')} className='mt-1'>
             {mtrl.multipleSPEC == true ? (
@@ -495,7 +510,7 @@ const Mtrl = ({ mtrl }) => {
           <div
             style={{ height: '100%', display: 'grid', placeItems: 'center' }}
           >
-            {toggleSwitchObj('multipleCSPT')}
+            {osNo ? null : toggleSwitchObj('multipleCSPT')}
           </div>
           <div style={attachedTable('cspt')} className='mt-1'>
             {mtrl.multipleCSPT == true ? (

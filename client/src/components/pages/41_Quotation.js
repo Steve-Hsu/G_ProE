@@ -44,6 +44,11 @@ const Quotation = (props) => {
         {/* Grid-2 */}
         {quotateFor === null ? (
           <div className='p-1 container container-with-navbar'>
+            <GoBackBtn
+              onClick={() => {
+                props.history.push('/api/case/director');
+              }}
+            />
             <button value='material' onClick={onClick}>
               Quotation for materials
             </button>

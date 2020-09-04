@@ -16,62 +16,6 @@ const OS = require('../models/50_OS');
 // @route   GET api/purchase
 // @desc    Read the compnay's case with cNo, style, client,
 // @access  Private
-router.get('/', authUser, async (req, res) => {
-  let user = await User.findById(req.user.id);
-  if (!user.po) {
-    return res.status(400).json({ msg: 'Out of authority' });
-  }
-  let caseList = await Case.aggregate([
-    {
-      $match: {
-        company: mongoose.Types.ObjectId(req.user.company),
-        poDate: null,
-      },
-    },
-    {
-      $project: {
-        user: 1,
-        cNo: 1,
-        style: 1,
-        client: 1,
-        merchandiser: '',
-      },
-    },
-  ]).sort({ date: -1 });
-
-  let insertList = await new Promise((resolve, reject) => {
-    let n = 0;
-
-    caseList.map(async (c) => {
-      await User.findOne(
-        { company: req.user.company, _id: c.user },
-        { _id: 0, name: 1 }
-      )
-        .then(async (result) => {
-          if (result) {
-            c.merchandiser = await result.name;
-          }
-          n = n + 1;
-          return n;
-        })
-        .then((n) => {
-          if (n === caseList.length) {
-            resolve();
-          }
-        });
-    });
-  });
-
-  try {
-    Promise.all([caseList, insertList]).then(async () => {
-      console.log('caseList is sent out', caseList);
-      return res.json(caseList);
-    });
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send('Server Error');
-  }
-});
 
 // @route   GET api/purchase/ordersummary
 // @desc    Read the compnay's all of order Summary from database
@@ -94,6 +38,7 @@ router.get('/ordersummary', authUser, async (req, res) => {
 // @desc    generate order summary by the list of case's Id, then generate purchases orders seperated by suppliers.
 // @access  Private
 router.post('/', authUser, async (req, res) => {
+  console.log('The router api/purchase is triggered');
   const user = await User.findById(req.user.id);
   if (!user.po) {
     return res.status(400).json({ msg: 'Out of authority' });
@@ -146,7 +91,8 @@ router.post('/', authUser, async (req, res) => {
 
   // @ create object for caseMtrls -------------------------------------------------
   // Loop through cases
-  const insertCaseMtrls = new Promise(async (resolve) => {
+  const insertCaseMtrls = new Promise(async (resolve, reject) => {
+    console.log('Start the promise, inserCaseMtrls');
     let caseNum = 0;
     caseIds.map(async (item) => {
       let mtrlNum = 0;
@@ -167,91 +113,100 @@ router.post('/', authUser, async (req, res) => {
       }
 
       const mtrls = theCase.mtrls;
-      if (mtrls.length === 0 || !mtrls) {
-        console.log("The case dosen't have mtrls");
-        return res.status(404).json({
-          msg: "The case dosen't have mtrls",
-        });
-      }
+      const gQtys = theCase.gQtys;
 
-      cNoList.push(theCase.cNo);
-      clientList.push(theCase.clients);
-      mtrls.map((mtrl) => {
-        let csptNum = 0;
-        const mtrlId = mtrl.id;
-        const cspts = mtrl.cspts;
-        const supplier = mtrl.supplier;
-        const ref_no = mtrl.ref_no;
-        // console.log('mtrl start ', caseId, mtrlId); // Test Code
-        cspts.map((cspt) => {
-          //Check the Existing caseMtrls object
-          //The condition
-          // console.log('cspt start ', caseId, mtrlId, cspt.id); // Test Code
-          const currentCsptMtrl = {
-            supplier: supplier,
-            ref_no: ref_no,
-            mColor: cspt.mColor,
-            mSizeSPEC: cspt.mSizeSPEC,
-          };
-
-          const existCaseMtrl = caseMtrls.filter((i) => {
-            for (var key in currentCsptMtrl) {
-              if (i[key] === undefined || i[key] != currentCsptMtrl[key]) {
-                return false;
-              }
-            }
-            return true;
-          });
-
-          // console.log('The existingCaseMtrl', existCaseMtrl); // Test Code
-
-          if (existCaseMtrl.length === 0) {
-            if (!supplierList.includes(supplier)) {
-              supplierList.push(supplier);
-            }
-
-            caseMtrls.push({
-              id: uuidv4() + myModule.generateId(),
-              cases: [theCase.cNo],
+      if (mtrls.length === 0 || !mtrls || gQtys.length === 0 || !gQtys) {
+        //If the case don't have mtrls or gQtys, which means no cspt can be calculated, then it will skip the case
+        caseNum = caseNum + 1;
+        if (caseNum === caseIds.length) {
+          return resolve();
+        }
+      } else {
+        cNoList.push(theCase.cNo);
+        clientList.push(theCase.clients);
+        mtrls.map((mtrl) => {
+          let csptNum = 0;
+          const mtrlId = mtrl.id;
+          const cspts = mtrl.cspts;
+          const supplier = mtrl.supplier;
+          const ref_no = mtrl.ref_no;
+          // console.log('mtrl start ', caseId, mtrlId); // Test Code
+          cspts.map((cspt) => {
+            //Check the Existing caseMtrls object
+            //The condition
+            // console.log('cspt start ', caseId, mtrlId, cspt.id); // Test Code
+            const currentCsptMtrl = {
               supplier: supplier,
               ref_no: ref_no,
               mColor: cspt.mColor,
               mSizeSPEC: cspt.mSizeSPEC,
-              purchaseQtySumUp: cspt.requiredMQty,
-            });
-          } else {
-            // existCaseMtrl.purchaseQtySumUp += cspt.requiredMQty;
-            const currentCaseMtrlId = existCaseMtrl[0].id;
-            caseMtrls.map((caseMtrl) => {
-              if (caseMtrl.id === currentCaseMtrlId) {
-                if (!caseMtrl.cases.includes(theCase.cNo)) {
-                  caseMtrl.cases.push(theCase.cNo);
+            };
+
+            const existCaseMtrl = caseMtrls.filter((i) => {
+              for (var key in currentCsptMtrl) {
+                if (i[key] === undefined || i[key] != currentCsptMtrl[key]) {
+                  return false;
                 }
-                caseMtrl.purchaseQtySumUp += cspt.requiredMQty;
               }
+              return true;
             });
-          }
 
-          csptNum = csptNum + 1;
-          if (csptNum === cspts.length) {
-            mtrlNum = mtrlNum + 1;
-          }
+            // console.log('The existingCaseMtrl', existCaseMtrl); // Test Code
 
-          if (mtrlNum === mtrls.length) {
-            caseNum = caseNum + 1;
-          }
+            if (existCaseMtrl.length === 0) {
+              if (!supplierList.includes(supplier)) {
+                supplierList.push(supplier);
+              }
 
-          if (caseNum === caseIds.length) {
-            return resolve();
-          }
+              caseMtrls.push({
+                id: uuidv4() + myModule.generateId(),
+                cases: [theCase.cNo],
+                supplier: supplier,
+                ref_no: ref_no,
+                mColor: cspt.mColor,
+                mSizeSPEC: cspt.mSizeSPEC,
+                purchaseQtySumUp: cspt.requiredMQty,
+              });
+            } else {
+              // existCaseMtrl.purchaseQtySumUp += cspt.requiredMQty;
+              const currentCaseMtrlId = existCaseMtrl[0].id;
+              caseMtrls.map((caseMtrl) => {
+                if (caseMtrl.id === currentCaseMtrlId) {
+                  if (!caseMtrl.cases.includes(theCase.cNo)) {
+                    caseMtrl.cases.push(theCase.cNo);
+                  }
+                  caseMtrl.purchaseQtySumUp += cspt.requiredMQty;
+                }
+              });
+            }
+
+            csptNum = csptNum + 1;
+
+            if (csptNum === cspts.length) {
+              mtrlNum = mtrlNum + 1;
+            }
+            if (mtrlNum === mtrls.length) {
+              caseNum = caseNum + 1;
+            }
+            if (caseNum === caseIds.length) {
+              return resolve();
+            }
+
+            console.log('csptNum', csptNum, 'csptLength', cspts.length);
+            console.log('mtrlNum', mtrlNum, 'mtrlsLength', mtrls.length);
+            console.log('caseNum', caseNum, 'caseLength', caseIds.length);
+          });
         });
-      });
+      }
     });
+  }).catch((err) => {
+    return reject(err);
   });
 
   //@ Create an Order Summary to OS collection -------------------------------------------------
   Promise.all([insertCaseMtrls])
     .then(() => {
+      console.log('The promise all start');
       const orderSummary = new OS({
         company: comId,
         osNo: newOsNO,
@@ -269,7 +224,7 @@ router.post('/', authUser, async (req, res) => {
       caseIds.map(async (caseId) => {
         await Case.updateOne(
           { company: comId, _id: caseId },
-          { $currentDate: { poDate: Date } }
+          { $currentDate: { poDate: Date }, $set: { osNo: newOsNO } }
         );
       });
     })
@@ -293,6 +248,7 @@ router.post('/', authUser, async (req, res) => {
 // @access  Private
 // Result   Return an array named "materialPriceList"
 router.post('/materialprice', authUser, async (req, res) => {
+  console.log('Start making order summary'); // Test Code
   let user = await User.findById(req.user.id);
   if (!user.po) {
     return res.status(400).json({ msg: 'Out of authority' });

@@ -14,7 +14,7 @@ export const MPrice = (props) => {
       <LeftBar currentPath={currentPath} />
 
       {/* Grid-2 */}
-      <MPriceForm currentPath={currentPath} />
+      <MPriceForm props={props} currentPath={currentPath} />
     </div>
   );
 };

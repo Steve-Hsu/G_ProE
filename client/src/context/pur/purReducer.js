@@ -1,5 +1,5 @@
 import {
-  CASE_LIST_DOWNLOAD,
+  // CASE_LIST_DOWNLOAD,
   SELECTEDCASES_UPDATE,
   DEFAULT,
   PURPAGE_SWITCH,
@@ -12,11 +12,11 @@ import {
 
 export default (state, action) => {
   switch (action.type) {
-    case CASE_LIST_DOWNLOAD:
-      return {
-        ...state,
-        caseList: action.payload,
-      };
+    // case CASE_LIST_DOWNLOAD:
+    //   return {
+    //     ...state,
+    //     caseList: action.payload,
+    //   };
     case SELECTEDCASES_UPDATE:
       return {
         ...state,

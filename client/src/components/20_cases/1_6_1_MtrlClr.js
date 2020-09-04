@@ -4,7 +4,7 @@ import CasesContext from '../../context/cases/casesContext';
 
 const MtrlClr = ({ mtrlColor, mtrlId }) => {
   const casesContext = useContext(CasesContext);
-  const { addValueMtrlColor, cWays, mtrls } = casesContext;
+  const { addValueMtrlColor, cWays, mtrls, osNo } = casesContext;
   const { mColor } = mtrlColor;
   const cWayLable = cWays.find(({ id }) => id === mtrlColor.cWay).gClr;
   const multipleColor = mtrls.find(({ id }) => id === mtrlId).multipleColor;
@@ -26,6 +26,7 @@ const MtrlClr = ({ mtrlColor, mtrlId }) => {
         onChange={addValueMtrlColor}
         maxLength={mColorLength}
         className='MPH-input'
+        readOnly={osNo ? true : false}
       />
       <label htmlFor={mtrlColor.id} className='MPH-input-label'>
         {multipleColor == true ? `For ${cWayLable}` : 'For all ColorWay'}

@@ -1305,6 +1305,13 @@ textarea:focus {
   margin-top: 3rem;
 }
 
+.mt-sm {
+  margin-top: var(--small);
+}
+.mt-md {
+  margin-top: var(--middle);
+}
+
 /* Margin - bottom */
 .mb {
   margin-bottom: var(--gap);
@@ -1457,6 +1464,10 @@ textarea:focus {
 
 .bg-cp-bg-light {
   background: var(--cp-1_2-light);
+}
+
+.bg-cp-bg-light-c {
+  background: var(--cp-1_2-light-c);
 }
 
 .bg-warning,

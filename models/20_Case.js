@@ -73,6 +73,11 @@ const CaseSchema = mongoose.Schema({
     type: Date,
     default: null,
   },
+  osNo: {
+    // Case number C + company symbol + year + _ + 00000
+    type: String,
+    default: null,
+  },
 });
 
 module.exports = mongoose.model('case', CaseSchema);
