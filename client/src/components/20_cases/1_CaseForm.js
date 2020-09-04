@@ -15,6 +15,7 @@ import Board from '../elements/board/Board';
 import Table from '../elements/table/Table';
 import ItemSelector from '../itemSelector/ItemSelector';
 import GoBackBtn from '../elements/btns/GoBackBtn';
+import SqToggleSwitchL from '../elements/btns/SqToggleSwitchL';
 
 const CaseForm = ({ props }) => {
   //@ Init Context
@@ -84,10 +85,10 @@ const CaseForm = ({ props }) => {
 
   //@ Style for toggleTitle btn --------
   const titleBtn = (subject) => {
-    console.log('the subject', subject);
+    // console.log('the subject', subject); // Test Code
     if (subject) {
       if (Object.values(subject)[0] == true) {
-        console.log('hhh');
+        // console.log('hhh');
         return {
           background: 'var(--cp-1_2)',
           color: 'var(--cp-1_3)',
@@ -322,29 +323,13 @@ const CaseForm = ({ props }) => {
                 </div>
 
                 {/* elem-2 */}
-                <div
-                  className='sq-toggleSwitch ml-1 '
-                  style={{ gridColumn: '3/4' }}
-                >
-                  <label className='sq-switch'>
-                    <input
-                      className='sq-switchInput'
-                      name='isBoardMode'
-                      type='checkbox'
-                      checked={isBoardMode == true}
-                      onChange={addCaseValue}
-                    />
-                    <div className='sq-slider h-scatter-content v-center-content'>
-                      <div className='sq-block center-content '>
-                        <i className='fas fa-list-ul'> Table</i>
-                      </div>
-                      <div className='sq-block center-content '>
-                        <i className='fas fa-table'> Board</i>
-                      </div>
-                    </div>
-                  </label>
-                </div>
-                {/* elem-3 */}
+                <SqToggleSwitchL
+                  name='isBoardMode'
+                  checked={isBoardMode}
+                  onChange={addCaseValue}
+                  label_1={<i className='fas fa-list-ul'> Table</i>}
+                  label_2={<i className='fas fa-table'> Board</i>}
+                />
                 <div
                   className='grid-4 btn-toggleTitle-containter '
                   style={{ gridColumn: '4 / 7' }}
@@ -369,13 +354,18 @@ const CaseForm = ({ props }) => {
 
               <div>
                 {isBoardMode === true ? (
-                  <Board subjects={mtrls} toggleItemFunc={addMtrlValue} />
-                ) : (
-                  <Table
+                  <Board
+                    purpose='1_CaseForm'
                     subjects={mtrls}
                     displayTitles={displayTitles}
                     toggleItemFunc={addMtrlValue}
+                  />
+                ) : (
+                  <Table
                     purpose='1_CaseForm'
+                    subjects={mtrls}
+                    displayTitles={displayTitles}
+                    toggleItemFunc={addMtrlValue}
                   />
                 )}
               </div>

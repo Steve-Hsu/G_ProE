@@ -5,7 +5,9 @@ import CaseContext from '../../context/cases/casesContext';
 import QuoContext from '../../context/quo/quoContext';
 // Components
 import Table from '../elements/table/Table';
+import Board from '../elements/board/Board';
 import GoBackBtn from '../elements/btns/GoBackBtn';
+import SqToggleSwitchL from '../elements/btns/SqToggleSwitchL';
 
 export const ItemSelector = ({ props, purpose }) => {
   const caseContext = useContext(CaseContext);
@@ -16,6 +18,7 @@ export const ItemSelector = ({ props, purpose }) => {
     addCaseValue,
     caseList,
     defaultCase,
+    isBoardMode,
   } = caseContext;
   const { switchQuoFormSelector, quotation, switchQuoForm } = quoContext;
 
@@ -97,13 +100,31 @@ export const ItemSelector = ({ props, purpose }) => {
   return (
     <Fragment>
       <div className='p-1 container container-with-navbar'>
-        <GoBackBtn onClick={goBack} />
-        <Table
-          subjects={subjects}
-          displayTitles={displayTitles}
-          toggleItemFunc={funcs}
-          purpose={purpose}
-        />
+        <div className='grid-6'>
+          <GoBackBtn onClick={goBack} />
+          <SqToggleSwitchL
+            name='isBoardMode'
+            checked={isBoardMode}
+            onChange={addCaseValue}
+            label_1={<i className='fas fa-list-ul'> Table</i>}
+            label_2={<i className='fas fa-table'> Board</i>}
+          />
+        </div>
+        {isBoardMode === true ? (
+          <Board
+            purpose={purpose}
+            subjects={subjects}
+            displayTitles={displayTitles}
+            toggleItemFunc={funcs}
+          />
+        ) : (
+          <Table
+            purpose={purpose}
+            subjects={subjects}
+            displayTitles={displayTitles}
+            toggleItemFunc={funcs}
+          />
+        )}
       </div>
     </Fragment>
   );
