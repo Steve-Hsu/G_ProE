@@ -73,6 +73,7 @@ export const CASENO_CLEAR = 'CASENO_CLEAR';
 export const TOGGLE_CASE = 'TOGGLE_CASE';
 export const TOGGLE_DISPALYTITALES = 'TOGGLE_DISPALYTITALES';
 export const INPUTTAG_FILE_NAME = 'INPUTTAG_FILE_NAME';
+export const CASE_LIST_DOWNLOAD = 'CASE_LIST_DOWNLOAD';
 
 //@ may not need this one --------------------------------------------
 export const CLEAR_USERS_STATE = 'CLEAR_USERS_STATE';
@@ -90,7 +91,6 @@ export const TOGGLE_ISUPDATE = 'TOGGLE_ISUPDATE';
 export const TOGGLE_EXPANDPRICE = 'TOGGLE_EXPANDPRICE';
 
 //@ quo
-export const CASE_LIST_DOWNLOAD = 'CASE_LIST_DOWNLOAD';
 export const QUOFORM_SELECTOR_SWITCH = 'QUOFORM_SELECTOR_SWITCH';
 export const QUOFORM_SWITCH = 'QUOFORM_SWITCH';
 export const QUOFORM_DOWNLOAD = 'QUOFORM_DOWNLOAD';

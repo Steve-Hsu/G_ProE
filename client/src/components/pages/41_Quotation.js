@@ -59,11 +59,7 @@ const Quotation = (props) => {
         ) : quotateFor === 'garment' ? (
           <div>
             {isQuotating === null ? (
-              <div className='p-1 container container-with-navbar'>
-                {' '}
-                <GoBackBtn onClick={onClick} />
-                <QuoCaseSelector />
-              </div>
+              <QuoCaseSelector props={props} />
             ) : (
               <div>
                 {openQuoForm === null ? <QuoFormSelector /> : <QuoForm />}

@@ -1,5 +1,5 @@
 import {
-  CASE_LIST_DOWNLOAD,
+  // CASE_LIST_DOWNLOAD,
   QUOFORM_SWITCH,
   QUOFORM_SELECTOR_SWITCH,
   QUOFORM_DOWNLOAD,
@@ -12,8 +12,8 @@ import {
 
 export default (state, action) => {
   switch (action.type) {
-    case CASE_LIST_DOWNLOAD:
-      return { ...state, caseList: action.payload };
+    // case CASE_LIST_DOWNLOAD:
+    //   return { ...state, caseList: action.payload };
     case QUOFORM_SELECTOR_SWITCH:
       return { ...state, isQuotating: action.payload };
     case QUOFORM_SWITCH:

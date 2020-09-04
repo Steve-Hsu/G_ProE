@@ -5,11 +5,13 @@ import PopoverContext from '../../../context/popover/popoverContext';
 import Mtrl from '../../20_cases/1_6_Mtrl';
 
 const TableItem = ({
+  id,
   subject,
   idx,
   displayTitles,
   cellStyle,
   toggleItemFunc,
+  purpose,
 }) => {
   const popoverContext = useContext(PopoverContext);
 
@@ -23,9 +25,27 @@ const TableItem = ({
   }).length;
 
   const onClick = (e) => {
-    e.target.name = subject.id;
-    e.target.id = 'isEditingMtrl';
-    toggleItemFunc(e);
+    switch (purpose) {
+      case 'CaseSelector':
+        e.target.name = 'isEditingCase';
+        //in here the toggleItemFunc is an array containing 2 functions
+        toggleItemFunc[0](id);
+        toggleItemFunc[1](e);
+        break;
+      case '1_CaseForm':
+        e.target.name = subject.id;
+        e.target.id = 'isEditingMtrl';
+        toggleItemFunc(e);
+        break;
+      case 'quoCaseSelector':
+        if (subject.cNo) {
+          toggleItemFunc(subject.cNo);
+        }
+        break;
+      case 'quoFormSelector':
+        toggleItemFunc(subject._id);
+      default:
+    }
   };
 
   return (
@@ -35,7 +55,9 @@ const TableItem = ({
       ) : (
         <div className='flexBox bd-light bd-no-t bg-cp-elem' onClick={onClick}>
           <div style={cellStyle('no')}>{idx + 1}</div>
-          <div style={cellStyle('item')}>{subject.item}</div>
+          {purpose === '1_CaseForm' ? (
+            <div style={cellStyle('item')}>{subject.item}</div>
+          ) : null}
           {displayTitles.map((title) => {
             if (title[Object.keys(title)[0]]) {
               //   console.log('the length of dispalytitles', trueInDisplayTitles); // Test Code

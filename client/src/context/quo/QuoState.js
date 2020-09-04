@@ -5,7 +5,7 @@ import QuoContext from './quoContext';
 import QuoReducer from './quoReducer';
 
 import {
-  CASE_LIST_DOWNLOAD,
+  // CASE_LIST_DOWNLOAD,
   QUOFORM_SELECTOR_SWITCH,
   QUOFORM_SWITCH,
   QUOFORM_DOWNLOAD,
@@ -18,7 +18,7 @@ import {
 
 const QuoState = (props) => {
   const initialState = {
-    caseList: [],
+    // caseList: [],
     quotateFor: null,
     isQuotating: null,
     openQuoForm: null,
@@ -58,16 +58,16 @@ const QuoState = (props) => {
   };
 
   //@_action
-  const getCaseList = async () => {
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-    const res = await axios.get('/api/quogarment', config);
-    console.log('download succeed!');
-    dispatch({ type: CASE_LIST_DOWNLOAD, payload: res.data });
-  };
+  // const getCaseList = async () => {
+  //   const config = {
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //   };
+  //   const res = await axios.get('/api/quogarment', config);
+  //   console.log('download succeed!');
+  //   dispatch({ type: CASE_LIST_DOWNLOAD, payload: res.data });
+  // };
 
   const switchPage = (value) => {
     if (quotateFor === null) {
@@ -80,10 +80,12 @@ const QuoState = (props) => {
   const switchQuoFormSelector = (cNo) => {
     if (isQuotating === null) {
       dispatch({ type: QUOFORM_SELECTOR_SWITCH, payload: cNo });
-      return cNo;
+      downLoadQuoHead(cNo);
+      // return cNo;
     } else {
       dispatch({ type: QUOFORM_SELECTOR_SWITCH, payload: null });
-      return null;
+      downLoadQuoHead(null);
+      // return null;
     }
   };
 
@@ -121,6 +123,7 @@ const QuoState = (props) => {
   };
 
   const downLoadQuoHead = async (check) => {
+    console.log('downLoadQuoHead is called, the check', check); // Test Code
     if (check !== null) {
       const res = await axios.get(`/api/quogarment/quohead/${check}`);
       dispatch({ type: QUOTATION_DOWNLOAD, payload: res.data });
@@ -287,7 +290,7 @@ const QuoState = (props) => {
         openQuoForm: state.openQuoForm,
         quotation: state.quotation,
         currentQuoForm: state.currentQuoForm,
-        getCaseList,
+        // getCaseList,
         switchPage,
         switchQuoFormSelector,
         switchQuoForm,

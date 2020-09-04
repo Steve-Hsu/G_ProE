@@ -6,7 +6,7 @@ const GoBackBtn = ({ onClick }) => {
       className='btn btn-sq center-content bd-round bd-no'
       onClick={onClick}
     >
-      <i class='fas fa-chevron-left'></i>
+      <i className='fas fa-chevron-left'></i>
     </button>
   );
 };

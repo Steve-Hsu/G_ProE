@@ -1,7 +1,7 @@
 import React from 'react';
 import TableItem from './TableItem';
 
-const Table = ({ subjects, displayTitles, toggleItemFunc }) => {
+const Table = ({ subjects, displayTitles, toggleItemFunc, purpose }) => {
   let supplier,
     ref_no,
     position,
@@ -104,7 +104,9 @@ const Table = ({ subjects, displayTitles, toggleItemFunc }) => {
       {/* Taggole Header */}
       <div className='flexBox fc-cp-1 pb-05'>
         <div style={cellStyle('no')}>NO.</div>
-        <div style={cellStyle('item')}>ITEM</div>
+        {purpose === '1_CaseForm' ? (
+          <div style={cellStyle('item')}>ITEM</div>
+        ) : null}
         {displayTitles.map((obj) => {
           if (obj[Object.keys(obj)[0]]) {
             return (
@@ -124,12 +126,14 @@ const Table = ({ subjects, displayTitles, toggleItemFunc }) => {
       <div className='overflow-auto-y' style={{ height: '74vh' }}>
         {subjects.map((subject, idx) => (
           <TableItem
-            key={subject.id}
+            key={subject.id ? subject.id : subject._id}
+            id={subject.id ? subject.id : subject._id}
             subject={subject}
             idx={idx}
             displayTitles={displayTitles}
             cellStyle={cellStyle}
             toggleItemFunc={toggleItemFunc}
+            purpose={purpose}
           />
         ))}
       </div>

@@ -1,4 +1,5 @@
 import {
+  CASE_LIST_DOWNLOAD,
   CASETYPE_UPDATE,
   STYLE_UPDATE,
   CLIENT_UPDATE,
@@ -26,6 +27,8 @@ import {
 
 export default (state, action) => {
   switch (action.type) {
+    case CASE_LIST_DOWNLOAD:
+      return { ...state, caseList: action.payload };
     case CASE_DOWNLOAD:
       return {
         ...state,
@@ -107,8 +110,10 @@ export default (state, action) => {
         ...state,
         mtrls: state.mtrls.filter((mtrl) => mtrl.id !== action.payload),
       };
+    case CASE_USER_NOT_AUTHORIZED:
     case CASE_CLEAR:
       return {
+        caseList: [],
         _id: null,
         user: null,
         company: null,
@@ -145,39 +150,6 @@ export default (state, action) => {
         ...state,
         mtrls: action.payload,
         cNo: null,
-      };
-    case CASE_USER_NOT_AUTHORIZED:
-      return {
-        _id: null,
-        user: null,
-        company: null,
-        cNo: null,
-        caseType: null,
-        style: null,
-        client: null,
-        cWays: [],
-        sizes: [],
-        gQtys: [],
-        mtrls: [],
-        displayTitles: [
-          {
-            supplier: true,
-          },
-          {
-            ref_no: true,
-          },
-          {
-            position: true,
-          },
-          {
-            descriptions: true,
-          },
-        ],
-        formIsHalfFilledOut: true,
-        error: action.payload,
-        isUpdated: null,
-        isBoardMode: false,
-        inputFileName: 'Select a File...',
       };
     case TOGGLE_ISUPDATE:
       return {

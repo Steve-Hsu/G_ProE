@@ -214,7 +214,7 @@ const LeftBar = ({ currentPath }) => {
   };
 
   return (
-    <div className='container-with-navbar leftbar p-1 bg-cp-1 bd-light bd-no-t h-100vh'>
+    <div className='container-with-navbar leftbar p-1 bg-cp-1 bd-light bd-no-t h-100'>
       <div className='leftbar-component'>
         {' '}
         {/* Read CSV */}

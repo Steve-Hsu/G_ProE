@@ -12,7 +12,7 @@ export const CaseMerchandiser = (props) => {
       <LeftBar currentPath={currentPath} />
 
       {/* Grid-2 */}
-      <CaseForm />
+      <CaseForm props={props} />
     </div>
   );
 };

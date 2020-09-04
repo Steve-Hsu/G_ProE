@@ -29,11 +29,13 @@ import {
   TOGGLE_CASE,
   TOGGLE_DISPALYTITALES,
   INPUTTAG_FILE_NAME,
+  CASE_LIST_DOWNLOAD,
 } from '../types';
 
 const CasesState = (props) => {
   // @State
   const initialState = {
+    caseList: [],
     _id: null, //It will generated automatically by mongoDB
     user: null,
     company: null,
@@ -45,7 +47,6 @@ const CasesState = (props) => {
     sizes: [],
     gQtys: [],
     mtrls: [],
-    // deletedMtrls: [],
     displayTitles: [
       {
         supplier: true,
@@ -63,6 +64,7 @@ const CasesState = (props) => {
 
     formIsHalfFilledOut: true,
     error: null,
+    isEditingCase: false,
     isUpdated: null,
     isBoardMode: false,
     isImportedExcel: false,
@@ -829,6 +831,7 @@ const CasesState = (props) => {
         dispatch({ type: CASE_QTY_UPDATE, payload: Qtys });
         mtrls.map((mtrl) => updateCsptRequiredMQty(mtrl.id, Qty.id));
         break;
+      case 'isEditingCase':
       case 'isBoardMode':
       case 'isImportedExcel':
         // console.log('Yes here is toggled'); // TestCode
@@ -1035,9 +1038,21 @@ const CasesState = (props) => {
     return null;
   };
 
+  const getCaseList = async () => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const res = await axios.get('/api/case/', config);
+    // console.log('download succeed!', res.data); // Test Code
+    dispatch({ type: CASE_LIST_DOWNLOAD, payload: res.data });
+  };
+
   return (
     <CasesContext.Provider
       value={{
+        caseList: state.caseList,
         _id: state._id,
         user: state.user,
         company: state.company,
@@ -1051,6 +1066,7 @@ const CasesState = (props) => {
         mtrls: state.mtrls,
         deletedMtrls: state.deletedMtrls,
         formIsHalfFilledOut: state.formIsHalfFilledOut,
+        isEditingCase: state.isEditingCase,
         isUpdated: state.isUpdated,
         isBoardMode: state.isBoardMode,
         displayTitles: state.displayTitles,
@@ -1079,6 +1095,7 @@ const CasesState = (props) => {
         deletecWayOrgSize,
         getStyleFromCSV,
         getM_list,
+        getCaseList,
       }}
     >
       {props.children}

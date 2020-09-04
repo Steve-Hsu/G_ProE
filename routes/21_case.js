@@ -1,11 +1,71 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 const authUser = require('../middleware/authUser');
 const { check, validationResult } = require('express-validator');
 
 const User = require('../models/10_User');
 const Case = require('../models/20_Case');
 const SRMtrl = require('../models/30_srMtrl');
+
+// @route   GET api/case/
+// @desc    Read the user's cases from database
+// @access  Private
+router.get('/', authUser, async (req, res) => {
+  // let user = await User.findById(req.user.id);
+  // if (!user.quo) {
+  //   return res.status(400).json({ msg: 'Out of authority' });
+  // }
+  let caseList = await Case.aggregate([
+    {
+      $match: { company: mongoose.Types.ObjectId(req.user.company) },
+    },
+    {
+      $project: {
+        user: 1,
+        cNo: 1,
+        caseType: 1,
+        style: 1,
+        client: 1,
+        merchandiser: '',
+        quoNo: '',
+      },
+    },
+  ]).sort({ date: -1 });
+
+  let insertList = await new Promise((resolve, reject) => {
+    let n = 0;
+
+    caseList.map(async (c) => {
+      await User.findOne(
+        { company: req.user.company, _id: c.user },
+        { _id: 0, name: 1 }
+      )
+        .then(async (result) => {
+          if (result) {
+            c.merchandiser = await result.name;
+          }
+          n = n + 1;
+          return n;
+        })
+        .then((n) => {
+          if (n === caseList.length) {
+            resolve();
+          }
+        });
+    });
+  });
+
+  try {
+    Promise.all([caseList, insertList]).then(async () => {
+      console.log('caseList is sent out', caseList);
+      return res.json(caseList);
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
 
 // @route   GET api/case/user
 // @desc    Read the user's cases from database

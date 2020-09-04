@@ -13,8 +13,9 @@ const SRMtrl = require('../models/30_srMtrl');
 const QuoHead = require('../models/40_QuoHead');
 const QuoForm = require('../models/41_QuoForm');
 
+//##### This may move to 21_case.js
 // @route   GET api/quogarment/
-// @desc    Read the compnay's srMtrl from database
+// @desc    Read the compnay's case List from database
 // @access  Private
 router.get('/', authUser, async (req, res) => {
   let user = await User.findById(req.user.id);
