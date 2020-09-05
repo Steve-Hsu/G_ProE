@@ -99,196 +99,181 @@ router.put('/:caseId', authUser, async (req, res) => {
 
   mtrls.map(async (mtrl) => {
     //@ Check if the mtrl is alread have srMtrl, if have , it must be srMtrl with different supplier and ref_no, how ever have both same caseId and mtrlId in the refs in either mtrlColors and sizeSPECs
+    if (mtrl.supplier) {
+      //Only the mtrl with supplier need to be made srMtrl
+      const checkDuplicatedSrMtrl = new Promise(async (resolve) => {
+        let checkNum = 0;
+        // Delete the refs of mtrlColors in the duplicated SrMtrl
+        let SrMtrlId = '';
+        const existingMtrlColorRef = await SRMtrl.find({
+          supplier: { $ne: mtrl.supplier },
+          ref_no: { $ne: mtrl.ref_no },
+          'mtrlColors.refs': { caseId: caseId, mtrlId: mtrl.id },
+        });
 
-    const checkDuplicatedSrMtrl = new Promise(async (resolve) => {
-      let checkNum = 0;
-      // Delete the refs of mtrlColors in the duplicated SrMtrl
-      let SrMtrlId = '';
-      const existingMtrlColorRef = await SRMtrl.find({
-        supplier: { $ne: mtrl.supplier },
-        ref_no: { $ne: mtrl.ref_no },
-        'mtrlColors.refs': { caseId: caseId, mtrlId: mtrl.id },
-      });
-
-      if (existingMtrlColorRef.length > 0) {
-        // If the srMtrl only have one item in mtrlColors, then delete the item.
-        console.log('the existingRef', existingMtrlColorRef); // Test Code
-        await SRMtrl.findOneAndUpdate(
-          {
-            supplier: { $ne: mtrl.supplier },
-            ref_no: { $ne: mtrl.ref_no },
-            'mtrlColors.refs': { caseId: caseId, mtrlId: mtrl.id },
-          },
-          {
-            $pull: {
-              'mtrlColors.$.refs': { caseId: caseId, mtrlId: mtrl.id },
+        if (existingMtrlColorRef.length > 0) {
+          // If the srMtrl only have one item in mtrlColors, then delete the item.
+          console.log('the existingRef', existingMtrlColorRef); // Test Code
+          await SRMtrl.findOneAndUpdate(
+            {
+              supplier: { $ne: mtrl.supplier },
+              ref_no: { $ne: mtrl.ref_no },
+              'mtrlColors.refs': { caseId: caseId, mtrlId: mtrl.id },
             },
-          }
-        ).then(() => {
-          SrMtrlId = existingMtrlColorRef[0]._id;
-          checkNum = checkNum + 1;
-        });
-      } else {
-        checkNum = checkNum + 1;
-      }
-
-      // Delete the refs of sizeSPECs in the duplicated SrMtrl
-      const existingSizeSPECRef = await SRMtrl.find({
-        supplier: { $ne: mtrl.supplier },
-        ref_no: { $ne: mtrl.ref_no },
-        'sizeSPECs.refs': { caseId: caseId, mtrlId: mtrl.id },
-      });
-
-      if (existingSizeSPECRef.length > 0) {
-        console.log('the existingRef', existingSizeSPECRef); // Test Code
-        await SRMtrl.findOneAndUpdate(
-          {
-            supplier: { $ne: mtrl.supplier },
-            ref_no: { $ne: mtrl.ref_no },
-            'sizeSPECs.refs': { caseId: caseId, mtrlId: mtrl.id },
-          },
-          {
-            $pull: { 'sizeSPECs.$.refs': { caseId: caseId, mtrlId: mtrl.id } },
-          }
-        ).then(() => {
-          SrMtrlId = existingSizeSPECRef[0]._id;
-          checkNum = checkNum + 1;
-        });
-      } else {
-        checkNum = checkNum + 1;
-      }
-
-      if (checkNum >= 2) {
-        console.log(
-          'The promise checkDuplicatedSrMtrl is resolved',
-          'and it is the result the id ',
-          SrMtrlId
-        ); // Test Code
-        resolve(SrMtrlId);
-      }
-    });
-
-    Promise.all([checkDuplicatedSrMtrl]).then(async (result) => {
-      // console.log(
-      //   'The promise all of checkDuplicatedSrMtrl is called',
-      //   'and the result',
-      //   result
-      // ); // test Code
-      const targetId = result[0];
-      if (targetId !== '') {
-        // Delete the object in mtrlColors and sizeSPECs, which with refs.length === 0, in other words, no any case and mtrl ref to this object.
-        const targetSrMtrl = await SRMtrl.findOne({ _id: targetId });
-        const deleteTopObj = new Promise((resolve) => {
-          // console.log('The targetSrMtrl', targetSrMtrl); // Test Code
-          let num1 = 0;
-          let num2 = 0;
-          targetSrMtrl.mtrlColors.map(async (m) => {
-            if (m.refs.length === 0) {
-              // console.log('I got you, the mtrlColor !');  // Test Code
-              await SRMtrl.updateOne(
-                { _id: targetId },
-                { $pull: { mtrlColors: { id: m.id } } }
-              );
-            }
-            num1 = num1 + 1;
-            if (
-              num1 === targetSrMtrl.mtrlColors.length &&
-              num2 === targetSrMtrl.sizeSPECs.length
-            ) {
-              resolve(targetId);
-            }
-          });
-
-          targetSrMtrl.sizeSPECs.map(async (s) => {
-            if (s.refs.length === 0) {
-              // console.log('I got you, the sizeSPEC !'); // Test Code
-              await SRMtrl.updateOne(
-                { _id: targetId },
-                { $pull: { sizeSPECs: { id: s.id } } }
-              );
-            }
-            num2 = num2 + 1;
-            if (
-              num1 === targetSrMtrl.mtrlColors.length &&
-              num2 === targetSrMtrl.sizeSPECs.length
-            ) {
-              resolve(targetId);
-            }
-          });
-        });
-
-        Promise.all([deleteTopObj]).then(async (result) => {
-          // Delete the srMtrl that has both mtrlColors and sizeSPECs with length === 0. In other words, no any case and mtrl ref to this srMtrl
-          const targetId = result[0];
-          const finalTargetSrMtrl = await SRMtrl.findOne({ _id: targetId });
-          const mtrlColorLength = finalTargetSrMtrl.mtrlColors.length;
-          const sizeSPECLength = finalTargetSrMtrl.sizeSPECs.length;
-          const checkNum = mtrlColorLength + sizeSPECLength;
-          if (checkNum === 0) {
-            await SRMtrl.findByIdAndRemove({ _id: targetId });
-          }
-        });
-      }
-    });
-
-    //@ Start update refs
-    const newCSRIC = (comName + comSymbol + mtrl.supplier + mtrl.ref_no)
-      .toLowerCase()
-      .replace(/[^\da-z]/gi, '');
-    // console.log('comsymbo', comSymbol); // Test Code
-    // console.log('newCSRIC', newCSRIC); // Test Code
-    let existingSrMtrlObj = mLists.find(({ CSRIC }) => CSRIC === newCSRIC);
-    //If the srMtrl is not existing in the mLists then generete a new one
-    //This line makes sure the mList never contain duplicated srMtrl with same CSRIC
-    // console.log('this is existingSrMtrlObj', existingSrMtrlObj);
-
-    let mtrlObj = {};
-    // console.log('Check the if', !existingSrMtrlObj);
-    if (!existingSrMtrlObj) {
-      mtrlObj = {
-        supplier: mtrl.supplier,
-        ref_no: mtrl.ref_no,
-        CSRIC: newCSRIC,
-        mtrlColors: [],
-        sizeSPECs: [],
-        mPrices: [],
-        company: cases.company,
-        expandPrice: false,
-      };
-    } else {
-      mtrlObj = existingSrMtrlObj;
-    }
-
-    // Insert mtrlColors to newSrMtrlObj
-    mtrl.mtrlColors.map((mtrlColor, index) => {
-      const idx = mtrl.mtrlColors
-        .map((item) => {
-          return item.mColor;
-        })
-        .indexOf(mtrlColor.mColor);
-      if (idx !== index) {
-        // Here means the mColor is duplicated. It appears more than once.
-      } else {
-        //@ New CSRIC mtrl
-        if (!existingSrMtrlObj) {
-          mtrlObj.mtrlColors.push({
-            id: uuidv4() + myModule.generateId(),
-            mColor: mtrlColor.mColor,
-            refs: [
-              {
-                caseId: cases._id,
-                mtrlId: mtrl.id,
+            {
+              $pull: {
+                'mtrlColors.$.refs': { caseId: caseId, mtrlId: mtrl.id },
               },
-            ],
+            }
+          ).then(() => {
+            SrMtrlId = existingMtrlColorRef[0]._id;
+            checkNum = checkNum + 1;
           });
         } else {
-          //@ Old CSRIC
-          let mtrlObjHaveTheColor = mtrlObj.mtrlColors.find(
-            ({ mColor }) => mColor == mtrlColor.mColor
-          );
+          checkNum = checkNum + 1;
+        }
 
-          if (!mtrlObjHaveTheColor) {
-            //Old CSRIC don't have the mColor
+        // Delete the refs of sizeSPECs in the duplicated SrMtrl
+        const existingSizeSPECRef = await SRMtrl.find({
+          supplier: { $ne: mtrl.supplier },
+          ref_no: { $ne: mtrl.ref_no },
+          'sizeSPECs.refs': { caseId: caseId, mtrlId: mtrl.id },
+        });
+
+        if (existingSizeSPECRef.length > 0) {
+          console.log('the existingRef', existingSizeSPECRef); // Test Code
+          await SRMtrl.findOneAndUpdate(
+            {
+              supplier: { $ne: mtrl.supplier },
+              ref_no: { $ne: mtrl.ref_no },
+              'sizeSPECs.refs': { caseId: caseId, mtrlId: mtrl.id },
+            },
+            {
+              $pull: {
+                'sizeSPECs.$.refs': { caseId: caseId, mtrlId: mtrl.id },
+              },
+            }
+          ).then(() => {
+            SrMtrlId = existingSizeSPECRef[0]._id;
+            checkNum = checkNum + 1;
+          });
+        } else {
+          checkNum = checkNum + 1;
+        }
+
+        if (checkNum >= 2) {
+          console.log(
+            'The promise checkDuplicatedSrMtrl is resolved',
+            'and it is the result the id ',
+            SrMtrlId
+          ); // Test Code
+          resolve(SrMtrlId);
+        }
+      });
+
+      Promise.all([checkDuplicatedSrMtrl]).then(async (result) => {
+        // console.log(
+        //   'The promise all of checkDuplicatedSrMtrl is called',
+        //   'and the result',
+        //   result
+        // ); // test Code
+        const targetId = result[0];
+        if (targetId !== '') {
+          // Delete the object in mtrlColors and sizeSPECs, which with refs.length === 0, in other words, no any case and mtrl ref to this object.
+          const targetSrMtrl = await SRMtrl.findOne({ _id: targetId });
+          const deleteTopObj = new Promise((resolve) => {
+            // console.log('The targetSrMtrl', targetSrMtrl); // Test Code
+            let num1 = 0;
+            let num2 = 0;
+            targetSrMtrl.mtrlColors.map(async (m) => {
+              if (m.refs.length === 0) {
+                // console.log('I got you, the mtrlColor !');  // Test Code
+                await SRMtrl.updateOne(
+                  { _id: targetId },
+                  { $pull: { mtrlColors: { id: m.id } } }
+                );
+              }
+              num1 = num1 + 1;
+              if (
+                num1 === targetSrMtrl.mtrlColors.length &&
+                num2 === targetSrMtrl.sizeSPECs.length
+              ) {
+                resolve(targetId);
+              }
+            });
+
+            targetSrMtrl.sizeSPECs.map(async (s) => {
+              if (s.refs.length === 0) {
+                // console.log('I got you, the sizeSPEC !'); // Test Code
+                await SRMtrl.updateOne(
+                  { _id: targetId },
+                  { $pull: { sizeSPECs: { id: s.id } } }
+                );
+              }
+              num2 = num2 + 1;
+              if (
+                num1 === targetSrMtrl.mtrlColors.length &&
+                num2 === targetSrMtrl.sizeSPECs.length
+              ) {
+                resolve(targetId);
+              }
+            });
+          });
+
+          Promise.all([deleteTopObj]).then(async (result) => {
+            // Delete the srMtrl that has both mtrlColors and sizeSPECs with length === 0. In other words, no any case and mtrl ref to this srMtrl
+            const targetId = result[0];
+            const finalTargetSrMtrl = await SRMtrl.findOne({ _id: targetId });
+            const mtrlColorLength = finalTargetSrMtrl.mtrlColors.length;
+            const sizeSPECLength = finalTargetSrMtrl.sizeSPECs.length;
+            const checkNum = mtrlColorLength + sizeSPECLength;
+            if (checkNum === 0) {
+              await SRMtrl.findByIdAndRemove({ _id: targetId });
+            }
+          });
+        }
+      });
+
+      //@ Start update refs
+      const newCSRIC = (comName + comSymbol + mtrl.supplier + mtrl.ref_no)
+        .toLowerCase()
+        .replace(/[^\da-z]/gi, '');
+      // console.log('comsymbo', comSymbol); // Test Code
+      // console.log('newCSRIC', newCSRIC); // Test Code
+      let existingSrMtrlObj = mLists.find(({ CSRIC }) => CSRIC === newCSRIC);
+      //If the srMtrl is not existing in the mLists then generete a new one
+      //This line makes sure the mList never contain duplicated srMtrl with same CSRIC
+      // console.log('this is existingSrMtrlObj', existingSrMtrlObj);
+
+      let mtrlObj = {};
+      // console.log('Check the if', !existingSrMtrlObj);
+      if (!existingSrMtrlObj) {
+        mtrlObj = {
+          supplier: mtrl.supplier,
+          ref_no: mtrl.ref_no,
+          CSRIC: newCSRIC,
+          mtrlColors: [],
+          sizeSPECs: [],
+          mPrices: [],
+          company: cases.company,
+          expandPrice: false,
+        };
+      } else {
+        mtrlObj = existingSrMtrlObj;
+      }
+
+      // Insert mtrlColors to newSrMtrlObj
+      mtrl.mtrlColors.map((mtrlColor, index) => {
+        const idx = mtrl.mtrlColors
+          .map((item) => {
+            return item.mColor;
+          })
+          .indexOf(mtrlColor.mColor);
+        if (idx !== index) {
+          // Here means the mColor is duplicated. It appears more than once.
+        } else {
+          //@ New CSRIC mtrl
+          if (!existingSrMtrlObj) {
             mtrlObj.mtrlColors.push({
               id: uuidv4() + myModule.generateId(),
               mColor: mtrlColor.mColor,
@@ -300,54 +285,55 @@ router.put('/:caseId', authUser, async (req, res) => {
               ],
             });
           } else {
-            //Old CSRIC have the mColor
-            let sameMtrlInSameColor = mtrlObjHaveTheColor.refs.find(
-              ({ caseId, mtrlId }) => caseId === cases._id && mtrlId === mtrl.id
+            //@ Old CSRIC
+            let mtrlObjHaveTheColor = mtrlObj.mtrlColors.find(
+              ({ mColor }) => mColor == mtrlColor.mColor
             );
-            if (sameMtrlInSameColor) {
-              //Same case same mtrl with same mColor don't need to insert refs.
-            } else {
-              //Insert refs for new Case
-              mtrlObjHaveTheColor.refs.push({
-                caseId: cases._id,
-                mtrlId: mtrl.id,
+
+            if (!mtrlObjHaveTheColor) {
+              //Old CSRIC don't have the mColor
+              mtrlObj.mtrlColors.push({
+                id: uuidv4() + myModule.generateId(),
+                mColor: mtrlColor.mColor,
+                refs: [
+                  {
+                    caseId: cases._id,
+                    mtrlId: mtrl.id,
+                  },
+                ],
               });
+            } else {
+              //Old CSRIC have the mColor
+              let sameMtrlInSameColor = mtrlObjHaveTheColor.refs.find(
+                ({ caseId, mtrlId }) =>
+                  caseId === cases._id && mtrlId === mtrl.id
+              );
+              if (sameMtrlInSameColor) {
+                //Same case same mtrl with same mColor don't need to insert refs.
+              } else {
+                //Insert refs for new Case
+                mtrlObjHaveTheColor.refs.push({
+                  caseId: cases._id,
+                  mtrlId: mtrl.id,
+                });
+              }
             }
           }
         }
-      }
-    });
+      });
 
-    //Insert sizeSPEC to newSrMtrlObj
-    mtrl.sizeSPECs.map((sizeSPEC, index) => {
-      const idx = mtrl.sizeSPECs
-        .map((item) => {
-          return item.mSizeSPEC;
-        })
-        .indexOf(sizeSPEC.mSizeSPEC);
-      if (idx !== index) {
-        // Here means the mSizeSPEC is duplicated in the mtrl. It appears more than once.
-      } else {
-        //@ New CSRIC mtrl
-        if (!existingSrMtrlObj) {
-          mtrlObj.sizeSPECs.push({
-            id: uuidv4() + myModule.generateId(),
-            mSizeSPEC: sizeSPEC.mSizeSPEC,
-            refs: [
-              {
-                caseId: cases._id,
-                mtrlId: mtrl.id,
-              },
-            ],
-          });
+      //Insert sizeSPEC to newSrMtrlObj
+      mtrl.sizeSPECs.map((sizeSPEC, index) => {
+        const idx = mtrl.sizeSPECs
+          .map((item) => {
+            return item.mSizeSPEC;
+          })
+          .indexOf(sizeSPEC.mSizeSPEC);
+        if (idx !== index) {
+          // Here means the mSizeSPEC is duplicated in the mtrl. It appears more than once.
         } else {
-          //@ Old CSRIC
-          let existingsSPEC = mtrlObj.sizeSPECs.find(
-            ({ mSizeSPEC }) => mSizeSPEC === sizeSPEC.mSizeSPEC
-          );
-
-          if (!existingsSPEC) {
-            //Old CSRIC don't have this mSizeSPEC
+          //@ New CSRIC mtrl
+          if (!existingSrMtrlObj) {
             mtrlObj.sizeSPECs.push({
               id: uuidv4() + myModule.generateId(),
               mSizeSPEC: sizeSPEC.mSizeSPEC,
@@ -359,28 +345,48 @@ router.put('/:caseId', authUser, async (req, res) => {
               ],
             });
           } else {
-            //Old CSRIC have the mSizeSPEC
-            let sameSizeSPECInSameSPEC = existingsSPEC.refs.find(
-              ({ caseId, mtrlId }) => caseId === cases._id && mtrlId === mtrl.id
+            //@ Old CSRIC
+            let existingsSPEC = mtrlObj.sizeSPECs.find(
+              ({ mSizeSPEC }) => mSizeSPEC === sizeSPEC.mSizeSPEC
             );
-            if (sameSizeSPECInSameSPEC) {
-              //Same case same mtrl with same mSizeSPEC don't need to insert refs.
-            } else {
-              //Insert refs for new Case
-              existingsSPEC.refs.push({
-                caseId: cases._id,
-                mtrlId: mtrl.id,
+
+            if (!existingsSPEC) {
+              //Old CSRIC don't have this mSizeSPEC
+              mtrlObj.sizeSPECs.push({
+                id: uuidv4() + myModule.generateId(),
+                mSizeSPEC: sizeSPEC.mSizeSPEC,
+                refs: [
+                  {
+                    caseId: cases._id,
+                    mtrlId: mtrl.id,
+                  },
+                ],
               });
+            } else {
+              //Old CSRIC have the mSizeSPEC
+              let sameSizeSPECInSameSPEC = existingsSPEC.refs.find(
+                ({ caseId, mtrlId }) =>
+                  caseId === cases._id && mtrlId === mtrl.id
+              );
+              if (sameSizeSPECInSameSPEC) {
+                //Same case same mtrl with same mSizeSPEC don't need to insert refs.
+              } else {
+                //Insert refs for new Case
+                existingsSPEC.refs.push({
+                  caseId: cases._id,
+                  mtrlId: mtrl.id,
+                });
+              }
             }
           }
         }
+      });
+      if (!existingSrMtrlObj) {
+        //Only push when the mtrlObj is a new CSRIC mtrl,
+        return mLists.push(mtrlObj);
+      } else {
+        return null;
       }
-    });
-    if (!existingSrMtrlObj) {
-      //Only push when the mtrlObj is a new CSRIC mtrl,
-      return mLists.push(mtrlObj);
-    } else {
-      return null;
     }
   });
 

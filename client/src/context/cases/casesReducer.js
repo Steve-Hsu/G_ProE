@@ -142,6 +142,7 @@ export default (state, action) => {
         formIsHalfFilledOut: true,
         error: null,
         isUpdated: null,
+        isEditingCase: false,
         isBoardMode: false,
         inputFileName: 'Select a File...',
         osNo: null,
@@ -150,8 +151,14 @@ export default (state, action) => {
     case CASENO_CLEAR:
       return {
         ...state,
-        mtrls: action.payload,
+        cWays: action.payload.cWays,
+        sizes: action.payload.sizes,
+        gQtys: action.payload.gQtys,
+        mtrls: action.payload.mtrls,
         cNo: null,
+        osNo: null,
+        poData: null,
+        isImportedExcel: false,
       };
     case TOGGLE_ISUPDATE:
       return {

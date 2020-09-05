@@ -32,48 +32,53 @@ const DeletePopover = () => {
   const quoContext = useContext(QuoContext);
   const { deleteSRMtrlByMtrl } = srMtrlContext;
   const { comName, comSymbol } = authUserContext;
-  const { togglePopover, toggleLoading, current, isLoading } = popoverContext;
+  const {
+    togglePopover,
+    toggleLoading,
+    current,
+    isLoading,
+    doubleCheck,
+    addDoubleCheckValue,
+  } = popoverContext;
   const { deleteQuoForm, deletemQuo } = quoContext;
   const { deleteOs } = purContext;
 
   const onChangeDelete = (e) => {
     e.preventDefault();
-    const cases = {
-      caseType: caseType,
-      style: style,
-      client: client,
-      cWays: cWays,
-      sizes: sizes,
-      gQtys: gQtys,
-      mtrls: mtrls,
-    };
+    // const cases = {
+    //   caseType: caseType,s
+    //   style: style,
+    //   client: client,
+    //   cWays: cWays,
+    //   sizes: sizes,
+    //   gQtys: gQtys,
+    //   mtrls: mtrls,
+    // };
     const caseId = _id;
-    switch (Object.keys(current)[1]) {
-      case 'gClr':
-        // deletecWay(current.id);
+    switch (current.target) {
+      case 'cWay':
         deletecWayOrgSize('gClr', caseId, current.id);
         break;
-      case 'gSize':
-        // deleteSize(current.id);
+      case 'size':
         deletecWayOrgSize('gSize', caseId, current.id);
         break;
-      case 'item':
+      case 'mtrl':
         deleteSRMtrlByMtrl(comName, comSymbol, current, _id);
-        deletemQuo(cNo, current.id);
-        deleteMtrl(current.id);
-        cases.mtrls = mtrls.filter((mtrl) => {
-          return mtrl.id !== current.id;
-        });
-        uploadCase(cases, _id, false);
+        deleteMtrl(caseId, current.id);
         break;
-      case 'quocWays':
+      case 'case':
+        if (doubleCheck === cNo) {
+          console.log('Yes We can delete the case');
+        }
+        break;
+      case 'quoForm':
         const body = {
           quoNo: current.quoNo,
           quoFormId: current._id,
         };
         deleteQuoForm(body);
         break;
-      case 'cNos':
+      case 'deleteOs':
         deleteOs(current._id);
       default:
     }
@@ -86,18 +91,38 @@ const DeletePopover = () => {
   };
 
   const words = () => {
-    switch (Object.keys(current)[1]) {
-      case 'gClr':
+    switch (current.target) {
+      case 'cWay':
         return `Color : ${current.gClr}`;
-      case 'gSize':
+      case 'size':
         return `Size :  ${current.gSize}`;
-      case 'item':
-        return `Material :  ${current.item}`;
-      case 'quoNo':
+      case 'mtrl':
+        return `Material :  ${current.item}, Ref_no : ${current.ref_no}`;
+      case 'case':
+        return `This Case : ${current.cNo}`;
+      case 'quoForm':
         return `Quotation Form : ${current.quoNo}`;
-      case 'cNos':
+      case 'deleteOs':
         return `Order Summary : ${current.osNo}`;
       default:
+    }
+  };
+
+  const doubleCheckInput = () => {
+    if (current.target === 'case') {
+      return (
+        <div key='doubleCheckDiv' className='px-1'>
+          Enter the Case Number
+          <input
+            key='doubleCheckInput'
+            type='text'
+            value={doubleCheck || ''}
+            onChange={addDoubleCheckValue}
+          />
+        </div>
+      );
+    } else {
+      return null;
     }
   };
 
@@ -106,7 +131,7 @@ const DeletePopover = () => {
       <div className='popup-inner bd-radius-s'>
         {isLoading === false ? (
           <div className='popup-container bd-light bd-radius-s bg-cp-2'>
-            <div className='h-80'>
+            <div className='h-70'>
               <div className='p-2 h-30'>
                 You will delete this {`${words()}`}
               </div>
@@ -116,22 +141,25 @@ const DeletePopover = () => {
               </div>
             </div>
 
-            <div className='h-scatter-content p-1 h-20'>
-              <div className='center-content w-50'>
-                <button
-                  className='btn btn-sq btn-block sq-block bg-warning'
-                  onClick={onChangeDelete}
-                >
-                  Delete
-                </button>
-              </div>
-              <div className='center-content w-50'>
-                <button
-                  className='btn btn-sq btn-block sq-block bg-safe'
-                  onClick={togglePopover}
-                >
-                  Back
-                </button>
+            <div className='h-40'>
+              {doubleCheckInput()}
+              <div className='h-scatter-content p-1 h-50'>
+                <div className='center-content w-50'>
+                  <button
+                    className='btn btn-sq btn-block sq-block bg-safe'
+                    onClick={togglePopover}
+                  >
+                    Back
+                  </button>
+                </div>
+                <div className='center-content w-50'>
+                  <button
+                    className='btn btn-sq btn-block sq-block bg-warning'
+                    onClick={onChangeDelete}
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             </div>
           </div>

@@ -15,30 +15,18 @@ const Board = ({ purpose, subjects, displayTitles, toggleItemFunc }) => {
 
   const categories = (switcher) => {
     const valueOfCategories = subjects.map((subject) => {
-      return subject[target];
-      // switch (purpose) {
-      //   case '1_CaseForm':
-      //     return subject.item;
-      //   case 'CaseSelector':
-      //     return subject.client;
-      //   default:
-      // }
+      let str = '';
+      if (subject[target]) {
+        str = subject[target].toLowerCase();
+      }
+      return str;
     });
     const uniques = valueOfCategories.filter((vcate, idx) => {
       return valueOfCategories.indexOf(vcate) == idx;
     });
 
-    // console.log('The uniques', uniques); // Test Code
-
     const lengthOfCategories = uniques.map((uni) => {
       return subjects.filter((subject) => subject[target] === uni).length;
-      // switch (purpose) {
-      //   case '1_CaseForm':
-      //     return subjects.filter((subject) => subject.item === uni).length;
-      //   case 'CaseSelector':
-      //     return subjects.filter((subject) => subject.client === uni).length;
-      //   default:
-      // }
     });
 
     const result = uniques.map((uni) => {
@@ -50,6 +38,7 @@ const Board = ({ purpose, subjects, displayTitles, toggleItemFunc }) => {
         return 'empty';
       }
     });
+
     switch (switcher) {
       case 'result':
         return result;
@@ -115,6 +104,12 @@ const Board = ({ purpose, subjects, displayTitles, toggleItemFunc }) => {
                     }
                   default:
                     if (re.test(categories('unique')[idx])) {
+                      console.log(
+                        "categories('unique')[idx]",
+                        categories('unique')[idx]
+                      );
+                      console.log('the re', re);
+                      console.log('The cate', cate);
                       return (
                         <BoardItem
                           key={`empty${subject.id ? subject.id : subject._id}`}

@@ -16,6 +16,7 @@ import Table from '../elements/table/Table';
 import ItemSelector from '../itemSelector/ItemSelector';
 import GoBackBtn from '../elements/btns/GoBackBtn';
 import SqToggleSwitchL from '../elements/btns/SqToggleSwitchL';
+import DeleteBtnSmall from '../elements/btns/DeleteBtnSmall';
 
 const CaseForm = ({ props }) => {
   //@ Init Context
@@ -52,7 +53,7 @@ const CaseForm = ({ props }) => {
   } = casesContext;
   const { comName, comSymbol } = authUserContext;
   const { updateSrMtrlByMtrl } = srMtrlContext;
-  const { popover, current } = popoverContext;
+  const { popover, current, togglePopover } = popoverContext;
 
   //@ Make a body to submit
   const cases = {
@@ -83,7 +84,7 @@ const CaseForm = ({ props }) => {
     }
     if (osNo) {
       const inputs = document.querySelectorAll('input');
-      console.log(inputs);
+      // console.log(inputs); // Test Code
       const length = inputs.length;
       console.log('the length', length);
       for (let i = 0; i < length; i++) {
@@ -166,18 +167,32 @@ const CaseForm = ({ props }) => {
     <Fragment>
       {/* // Ask the user when they want to jump to another page wihout saving datas */}
       <Prompt when={formIsHalfFilledOut} message='Hey' />
-      {popover ? <DeletePopover key={current.id} current={current} /> : null}
+      {popover ? <DeletePopover key={current._id} /> : null}
       {isEditingCase ? (
         <div className='p-1 container container-with-navbar'>
-          <GoBackBtn onClick={goBack} />
-          <div>
+          <div className='h-scatter-content'>
+            <GoBackBtn onClick={goBack} />
+            {/* <GoBackBtn onClick={goBack} /> */}
+          </div>
+
+          <div className='mt-1'>
             <form id='caseForm' onSubmit={onSubmitCase}>
               {/* Case Information */}
               <div className='fs-lead'>Case Information</div>
               <div className='round-card bg-cp-elem mb-3 bd-light'>
                 <div className='grid-1-5 row-gap-md'>
                   <div className='v-center-content'>CaseNo.</div>
-                  <div>{cNo === null ? 'New Case' : cNo}</div>
+                  <div className='h-scatter-content'>
+                    {' '}
+                    <div>{cNo === null ? 'New Case' : cNo}</div>
+                    {osNo ? null : (
+                      <DeleteBtnSmall
+                        name='case'
+                        onClick={togglePopover}
+                        style={{ marginTop: '-0.4rem' }}
+                      />
+                    )}
+                  </div>
 
                   <div className='v-center-content'>Style</div>
                   <input
@@ -344,7 +359,7 @@ const CaseForm = ({ props }) => {
                 </button> */}
                 </div>
                 <div className='ml-05'>
-                  {cNo === null || osNo ? null : (
+                  {osNo ? null : (
                     <SqBtnLarge
                       label={<i className='fab fa-buffer '> Item ＋</i>}
                       onClick={addMtrl}

@@ -6,6 +6,7 @@ import PopoverContext from '../../context/popover/popoverContext';
 import MtrlClr from './1_6_1_MtrlClr';
 import MtrlSizeSPEC from './1_6_2_MtrlSizeSPEC';
 import MtrlCspt from './1_6_3_MtrlCspt';
+import DeleteBtnSmall from '../elements/btns/DeleteBtnSmall';
 
 const Mtrl = ({ mtrl }) => {
   useEffect(() => {
@@ -52,8 +53,6 @@ const Mtrl = ({ mtrl }) => {
   //For sparete the postion of btn, here use an inline style.
   //deleteBtn in mtrl.
   const deleteBtnPosition = {
-    // top: '2%',
-    // right: '5%',
     transform: 'translate(-0.2rem, -0.7rem)',
   };
   // Expand Panel class
@@ -312,15 +311,12 @@ const Mtrl = ({ mtrl }) => {
         {/* Row_1 - Delete Btn */}
         <div>
           {cNo === null || osNo ? null : (
-            <button
+            <DeleteBtnSmall
               value={mtrl.id}
               name='mtrl'
               onClick={togglePopover}
-              className='btn btn-warning btn-sq btn-sq-small'
               style={deleteBtnPosition}
-            >
-              x
-            </button>
+            />
           )}
         </div>
       </div>

@@ -7,6 +7,7 @@ import {
   CURRENT_ADD,
   CURRENT_DELETE,
   TOGGLE_LOADING,
+  ADD_DOUBLECHECK_VALUE,
 } from '../types';
 import CasesContext from '../../context/cases/casesContext';
 import QuoContext from '../../context/quo/quoContext';
@@ -18,12 +19,13 @@ const PopoverState = (props) => {
     current: null,
     popover: false,
     isLoading: false,
+    doubleCheck: null,
   };
   const [state, dispatch] = useReducer(popoverReducer, initialState);
   const casesContext = useContext(CasesContext);
   const quoContext = useContext(QuoContext);
   const purContext = useContext(PurContext);
-  const { cWays, sizes, mtrls } = casesContext;
+  const { _id, cNo, cWays, sizes, mtrls } = casesContext;
   const { quotation } = quoContext;
   const { osList } = purContext;
 
@@ -46,6 +48,9 @@ const PopoverState = (props) => {
         case 'mtrl':
           subject = mtrls.find(({ id }) => id === targetId);
           break;
+        case 'case':
+          subject = { caseId: _id, cNo: cNo };
+          break;
         case 'quoForm':
           subject = quotation.quoForms.find(({ _id }) => _id === targetId);
           break;
@@ -55,6 +60,7 @@ const PopoverState = (props) => {
         default:
           subject = { key: 'no target id' };
       }
+      subject.target = e.target.name;
 
       dispatch({ type: CURRENT_ADD, payload: subject });
     } else {
@@ -72,15 +78,21 @@ const PopoverState = (props) => {
     dispatch({ type: TOGGLE_LOADING });
   };
 
+  const addDoubleCheckValue = (e) => {
+    dispatch({ type: ADD_DOUBLECHECK_VALUE, payload: e.target.value });
+  };
+
   return (
     <PopoverContext.Provider
       value={{
         current: state.current,
         popover: state.popover,
         isLoading: state.isLoading,
+        doubleCheck: state.doubleCheck,
         togglePopover,
         defaultPopover,
         toggleLoading,
+        addDoubleCheckValue,
       }}
     >
       {props.children}

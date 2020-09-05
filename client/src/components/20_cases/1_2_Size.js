@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import CasesContext from '../../context/cases/casesContext';
 import PopoverContext from '../../context/popover/popoverContext';
+import DeleteBtnSmall from '../elements/btns/DeleteBtnSmall';
 
 const Size = ({ size }) => {
   const casesContext = useContext(CasesContext);
@@ -126,15 +127,11 @@ const Size = ({ size }) => {
       <div className='v-center-content'>
         <div className='pl-05'>
           {cNo === null || osNo ? null : (
-            <button
+            <DeleteBtnSmall
               name='size'
               value={size.id}
               onClick={togglePopover}
-              className='btn btn-warning btn-sq btn-sq-small mt-05 '
-              // style={deleteBtnPosition}
-            >
-              x
-            </button>
+            />
           )}
         </div>
         <div

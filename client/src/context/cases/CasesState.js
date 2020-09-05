@@ -635,7 +635,17 @@ const CasesState = (props) => {
     }
   };
 
-  const deleteMtrl = (mtrlId) => {
+  const deleteMtrl = async (caseId, mtrlId) => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const res = await axios.put(
+      `/api/case/deletemtrl/${caseId}/${mtrlId}`,
+      config
+    );
+
     dispatch({ type: MTRL_DELETE, payload: mtrlId });
   };
 
@@ -831,6 +841,12 @@ const CasesState = (props) => {
         mtrls.map((mtrl) => updateCsptRequiredMQty(mtrl.id, Qty.id));
         break;
       case 'isEditingCase':
+        if (state.isEditingCase) {
+          defaultCase();
+        } else {
+          dispatch({ type: TOGGLE_CASE, payload: e.target.name });
+        }
+        break;
       case 'isBoardMode':
       case 'isImportedExcel':
         // console.log('Yes here is toggled'); // TestCode
@@ -945,11 +961,148 @@ const CasesState = (props) => {
 
   //Clear case no of existing case for copying and  uploading it as new Case.
   const clearcNo = (mtrls) => {
-    mtrls.map((mtrl) => {
-      mtrl.id = uuidv4() + generateId();
-      return mtrls;
+    const cWayPart = new Promise(async (resolve) => {
+      let newColorWays = [];
+      let num = 0;
+      newColorWays = await cWays.map((cWay, idx) => {
+        cWay.id = uuidv4() + generateId();
+        num = idx;
+        return cWay;
+      });
+      if (num + 1 === cWays.length) {
+        resolve(newColorWays);
+
+        console.log(
+          'the resolve, the newColorWays',
+          newColorWays,
+          'the num',
+          num
+        );
+      }
     });
-    dispatch({ type: CASENO_CLEAR, payload: mtrls });
+
+    const sizePart = new Promise(async (resolve) => {
+      let newSizes = [];
+      let num = 0;
+      newSizes = await sizes.map((size, idx) => {
+        size.id = uuidv4() + generateId();
+        num = idx;
+        return size;
+      });
+      if (num + 1 === sizes.length) {
+        // console.log('the newSizes', newSizes);
+        resolve(newSizes);
+      }
+    });
+
+    const gQtyPart = new Promise(async (resolve) => {
+      Promise.all([cWayPart, sizePart]).then(async (result) => {
+        const newColorWays = result[0];
+        const newSizes = result[1];
+        console.log('newColorWays in gQtyPart', newColorWays);
+        console.log('newSizes in gQtyPart', newSizes);
+        let newgQtys = [];
+        let num = 0;
+        let gQtysLength = gQtys.length;
+        let cWayLength = cWays.length;
+        let sizeLength = sizes.length;
+        let cWayKey = gQtysLength / cWayLength;
+        let sizeKey = gQtysLength / sizeLength;
+        let cWayIdx = 0;
+        let sizeIdx = 0;
+        newgQtys = await gQtys.map((gQty, idx) => {
+          gQty.cWay = newColorWays[cWayIdx].id;
+          gQty.size = newSizes[sizeIdx].id;
+          gQty.id = uuidv4() + generateId();
+
+          let checkcWay = (idx + 1) % cWayKey;
+          let checkSize = (idx + 1) % sizeKey;
+          // console.log('checkcWay', checkcWay, 'the cwayIdx', cWayIdx); // Test code
+          // console.log('checkSize', checkSize); // Test Code
+
+          if (checkcWay) {
+          } else {
+            cWayIdx = cWayIdx + 1;
+          }
+          if (checkSize) {
+          } else {
+            sizeIdx = sizeIdx + 1;
+          }
+
+          num = idx;
+          return gQty;
+        });
+        if (num + 1 === gQtys.length) {
+          console.log('the newgQtys', newgQtys);
+          resolve(newgQtys);
+        }
+      });
+    });
+    Promise.all([cWayPart, sizePart, gQtyPart]).then(async (result) => {
+      const newColorWays = result[0];
+      const newSizes = result[1];
+      const newgQtys = result[2];
+
+      console.log('newColorWays,', newColorWays);
+      console.log('newSize', newSizes);
+      console.log('newgQtys', newgQtys);
+      const MtrlPart = new Promise((resolve) => {
+        mtrls.map((mtrl, mtrlIdx) => {
+          mtrl.id = uuidv4() + generateId();
+
+          const mtrlcWayPart = new Promise((resolve) => {
+            mtrl.mtrlColors.map((mtrlColor, idx) => {
+              mtrlColor.id = uuidv4() + generateId();
+              mtrlColor.mtrl = mtrl.id;
+              mtrlColor.cWay = newColorWays[idx].id;
+              if (idx + 1 === newColorWays.length) {
+                resolve();
+              }
+            });
+          });
+          const mtrlSizePart = new Promise((resolve) => {
+            mtrl.sizeSPECs.map((spec, idx) => {
+              spec.id = uuidv4() + generateId();
+              spec.mtrl = mtrl.id;
+              spec.size = newSizes[idx].id;
+              if (idx + 1 === newSizes.length) {
+                resolve();
+              }
+            });
+          });
+
+          const mtrlgQtyPart = new Promise((resolve) => {
+            mtrl.cspts.map((cspt, idx) => {
+              cspt.id = uuidv4() + generateId();
+              cspt.cWay = newgQtys[idx].cWay;
+              cspt.size = newgQtys[idx].size;
+              cspt.gQty = newgQtys[idx].id;
+              cspt.mtrl = mtrl.id;
+              if (idx + 1 === newgQtys.length) {
+                resolve();
+              }
+            });
+          });
+
+          Promise.all([mtrlcWayPart, mtrlSizePart, mtrlgQtyPart]).then(() => {
+            if (mtrlIdx + 1 === mtrls.length) {
+              return resolve(mtrls);
+            }
+          });
+        });
+      });
+
+      Promise.all([MtrlPart]).then((result) => {
+        const mtrls = result[0];
+        const body = {
+          cWays: newColorWays,
+          sizes: newSizes,
+          gQtys: newgQtys,
+          mtrls: mtrls,
+        };
+        dispatch({ type: CASENO_CLEAR, payload: body });
+      });
+    });
   };
 
   //@ turn isUpdated false

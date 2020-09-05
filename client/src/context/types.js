@@ -47,6 +47,7 @@ export const CASE_TOGGLE_POPOVER = 'CASE_TOGGLE_POPOVER';
 export const TOGGLE_POPOVER = 'TOGGLE_POPOVER';
 export const CURRENT_ADD = 'CURRENT_ADD';
 export const CURRENT_DELETE = 'CURRENT_DELETE';
+export const ADD_DOUBLECHECK_VALUE = 'ADD_DOUBLECHECK_VALUE';
 
 //@ Cases -----------------------------------------------------------
 export const CASETYPE_UPDATE = 'CASETYPE_UPDATE';

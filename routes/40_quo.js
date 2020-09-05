@@ -1021,58 +1021,58 @@ router.delete(
 // @route   DELETE api/quogarment/delete/mquosbymtrl/cNo/mtrlId
 // @desc    Delete the mQuos in the quoForms
 // @access  Private
-// router.delete(
-//   '/delete/mquosbymtrl/:cNo/:mtrlId',
-//   authUser,
-//   async (req, res) => {
-//     console.log('The delete mQuo is triggered in backend');
-//     const comId = req.user.company;
-//     const cNo = req.params.cNo;
-//     const mtrlId = req.params.mtrlId;
-//     console.log('the comId in deletemquo backEnd', comId);
-//     console.log('the cNo in deletemquo backEnd', cNo);
-//     console.log('the mtrlId in deletemquo backEnd', mtrlId);
+router.delete(
+  '/delete/mquosbymtrl/:cNo/:mtrlId',
+  authUser,
+  async (req, res) => {
+    console.log('The delete mQuo is triggered in backend');
+    const comId = req.user.company;
+    const cNo = req.params.cNo;
+    const mtrlId = req.params.mtrlId;
+    console.log('the comId in deletemquo backEnd', comId);
+    console.log('the cNo in deletemquo backEnd', cNo);
+    console.log('the mtrlId in deletemquo backEnd', mtrlId);
 
-//     const quo = await QUO.findOne({
-//       cNo: cNo,
-//       company: comId,
-//       'quoForms.mQuos.mtrlId': mtrlId,
-//     });
-//     if (quo) {
-//       const quoForms = quo.quoForms;
-//       const deleteQuo = new Promise((resolve) => {
-//         quoForms.map(async (quoForm) => {
-//           let num = 0;
-//           await QuoHead.updateOne(
-//             {
-//               cNo: cNo,
-//               company: comId,
-//               'quoForms.quoNo': quoForm.quoNo,
-//               'quoForms.mQuos.mtrlId': mtrlId,
-//             },
-//             { $pull: { 'quoForms.$.mQuos': { mtrlId: mtrlId } } }
-//           )
-//             .then((result) => {
-//               console.log('The mquo is deleted', result);
-//               num = num + 1;
-//               if (num === quoForms.length) {
-//                 return resolve();
-//               }
-//             })
-//             .catch((err) => {
-//               console.log('The delete mQuo is failed,', err);
-//             });
-//         });
-//       });
-//       Promise.all([deleteQuo]).then(() => {
-//         console.log('The quos is deleted by mtrl');
-//         return res.json({ msg: 'the quos is deleted by mtrl' });
-//       });
-//     } else {
-//       console.log('No such quotation data');
-//       return res.status(404).json({ msg: 'No such quotation data' });
-//     }
-//   }
-// );
+    const quo = await QUO.findOne({
+      cNo: cNo,
+      company: comId,
+      'quoForms.mQuos.mtrlId': mtrlId,
+    });
+    if (quo) {
+      const quoForms = quo.quoForms;
+      const deleteQuo = new Promise((resolve) => {
+        quoForms.map(async (quoForm) => {
+          let num = 0;
+          await QuoHead.updateOne(
+            {
+              cNo: cNo,
+              company: comId,
+              'quoForms.quoNo': quoForm.quoNo,
+              'quoForms.mQuos.mtrlId': mtrlId,
+            },
+            { $pull: { 'quoForms.$.mQuos': { mtrlId: mtrlId } } }
+          )
+            .then((result) => {
+              console.log('The mquo is deleted', result);
+              num = num + 1;
+              if (num === quoForms.length) {
+                return resolve();
+              }
+            })
+            .catch((err) => {
+              console.log('The delete mQuo is failed,', err);
+            });
+        });
+      });
+      Promise.all([deleteQuo]).then(() => {
+        console.log('The quos is deleted by mtrl');
+        return res.json({ msg: 'the quos is deleted by mtrl' });
+      });
+    } else {
+      console.log('No such quotation data');
+      return res.status(404).json({ msg: 'No such quotation data' });
+    }
+  }
+);
 
 module.exports = router;

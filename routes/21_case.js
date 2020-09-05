@@ -599,7 +599,7 @@ router.delete('/:id', authUser, async (req, res) => {
 });
 
 // @route   PUT api/case/delete/casId/subjectId
-// @desc    Delete gClr, gSize, or mtrl
+// @desc    Delete gClr, gSize,
 // @Steve
 // @access  Private
 router.put('/delete/:caseId/:subjectId', authUser, async (req, res) => {
@@ -802,6 +802,43 @@ router.put('/delete/:caseId/:subjectId', authUser, async (req, res) => {
     console.error(err.message);
     res.status(500).send('Server Error');
   }
+});
+
+// // @route   PUT api/case/deletemtrl/caseId/mtrlId
+// // @desc    Delete gClr, gSize, or mtrl
+// // @Steve
+// // @access  Private
+router.put('/deletemtrl/:caseId/:mtrlId', authUser, async (req, res) => {
+  // Check if the user has authority to update case ---------------------------
+  // console.log('The router triggered'); // Test Code
+  let user = await User.findById(req.user.id);
+  if (!user.cases) {
+    return res.status(400).json({
+      msg: 'Out of authority',
+    });
+  }
+
+  const caseId = req.params.caseId;
+  const comId = req.user.company;
+  const mtrlId = req.params.mtrlId;
+  console.log('the caseId', caseId); // Test Code
+  console.log('the subjectId', mtrlId); // Test Code
+
+  const theCase = await Case.findOne({ _id: caseId, company: comId });
+  if (theCase.length === 0) {
+    console.log('No such case');
+    return res.status(404).json({
+      msg: 'No such case',
+    });
+  }
+
+  await Case.findOneAndUpdate(
+    { _id: caseId, company: comId },
+    { $pull: { mtrls: { id: mtrlId } } }
+  ).then(() => {
+    console.log('The mtrl is deleted');
+    return res.json({ msg: 'The mtrl is deleted' });
+  });
 });
 
 module.exports = router;

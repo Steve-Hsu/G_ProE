@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import CasesContext from '../../context/cases/casesContext';
 import PopoverContext from '../../context/popover/popoverContext';
+import DeleteBtnSmall from '../elements/btns/DeleteBtnSmall';
 
 const ColorWay = ({ cWay }) => {
   const casesContext = useContext(CasesContext);
@@ -50,31 +51,14 @@ const ColorWay = ({ cWay }) => {
     return obj;
   };
 
-  let showDeleteBtn = false;
-
-  const setShowDeleteBtn = () => {
-    console.log('hovered', showDeleteBtn);
-    showDeleteBtn = !showDeleteBtn;
-  };
-
   return (
     <div
       className='h-scatter-content mt-1  pl-1 bd-cp-2-b-2px'
       style={{ height: 'var(--btn-h-m)' }}
-      onMouseEnter={setShowDeleteBtn}
-      onMouseLeave={setShowDeleteBtn}
     >
       <div style={{ height: 'var(--btn-h-m)' }}>
         {cNo === null || osNo ? null : (
-          <button
-            value={cWay.id}
-            name='cWay'
-            onClick={togglePopover}
-            className='btn btn-warning btn-sq btn-sq-small mr-05'
-            style={deleteBtnPosition}
-          >
-            x
-          </button>
+          <DeleteBtnSmall value={cWay.id} name='cWay' onClick={togglePopover} />
         )}
       </div>
       <div style={{ height: 'var(--btn-h-m)' }}>

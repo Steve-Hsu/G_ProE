@@ -13,6 +13,7 @@ const LeftBar = ({ currentPath }) => {
     addCaseValue,
     mtrls,
     cNo,
+    osNo,
     addcWay,
     addSize,
     addMtrl,
@@ -20,6 +21,7 @@ const LeftBar = ({ currentPath }) => {
     getM_list,
     isImportedExcel,
     inputFileName,
+    isEditingCase,
   } = casesContext;
   const { isQuotating, quotateFor, openQuoForm } = quoContext;
   const SHEET_NAME_LIST = [
@@ -59,18 +61,22 @@ const LeftBar = ({ currentPath }) => {
     let obj = {};
     switch (currentPath) {
       case '/api/case/merchandiser':
-        if (cNo === null) {
-          obj = {
-            label: 'Add new Case',
-            form: 'caseForm',
-          };
-          // return 'Add New Case';
-        } else {
-          obj = {
-            label: 'Update the Case',
-            form: 'caseForm',
-          };
-        }
+        obj = {
+          label: 'Save The Case',
+          form: 'caseForm',
+        };
+        // if (cNo === null) {
+        //   obj = {
+        //     label: 'Save new Case',
+        //     form: 'caseForm',
+        //   };
+        //   // return 'Add New Case';
+        // } else {
+        //   obj = {
+        //     label: 'Update the Case',
+        //     form: 'caseForm',
+        //   };
+        // }
         break;
       case '/api/case/mprice':
         obj = {
@@ -214,85 +220,132 @@ const LeftBar = ({ currentPath }) => {
   };
 
   return (
-    <div className='container-with-navbar leftbar p-1 bg-cp-1 bd-light bd-no-t h-100'>
+    <div
+      className='container-with-navbar leftbar p-1 bg-cp-1 bd-light bd-no-t h-100'
+      style={{ height: 'clamp(100%, 100vh, 100%)' }}
+    >
       <div className='leftbar-component'>
         {' '}
-        {/* Read CSV */}
-        {currentPage === 'case' ? (
-          isImportedExcel ? (
-            <div>Have imported Style from Excel</div>
-          ) : (
-            <div className='round-area bg-cp-3'>
-              <i className='fas fa-table fc-cp-1'> Read Bom from Excel</i>
-              <label className='btn btn-block mt-05 bd-radius-s bd-light bg-cp-1 fs-small'>
-                <input
-                  type='file'
-                  id='upload-excel'
-                  name='inputFileName'
-                  accept='.xls, .xlsx'
-                  style={{ position: 'fixed', right: '100%', bottom: '100%' }}
-                  onChange={labelOfReadExcel}
-                />
-                {excelName.length > 0 ? String(excelName) : null}
-                {inputFileName}
-              </label>
-              {inputFileName == 'Select a File...' ? null : (
-                <button
-                  className='btn btn-block mt-05 h-100 bd-radius-s bd-light bg-cp-2'
-                  onClick={readExcel}
-                >
-                  Read
-                </button>
-              )}
-            </div>
-          )
-        ) : null}
         {/* Upper load btn */}
-        <div className='round-area bg-cp-3 mt-1'>
-          <i className='fas fa-cloud-upload-alt fc-cp-1 mb-05'> Save</i>
-          <input
-            type='submit'
-            form={btnSwitcher.form}
-            className='btn bg-cp-2 btn-block'
-            value={btnSwitcher.label || ''}
-          />
-        </div>
+        {osNo ? null : (
+          <>
+            {isEditingCase === false &&
+            cNo === null &&
+            currentPage === 'case' ? (
+              <div className='round-area bg-cp-3'>
+                <i className='fas fa-folder-plus fc-cp-1 mb-05'> New Case</i>
+                <button
+                  className='btn bg-cp-2 btn-block bd-radius-s bd-light'
+                  name='isEditingCase'
+                  onClick={addCaseValue}
+                >
+                  Case ＋
+                </button>
+              </div>
+            ) : (
+              <div className='round-area bg-cp-3'>
+                <i className='fas fa-cloud-upload-alt fc-cp-1 mb-05'> Save</i>
+                <input
+                  type='submit'
+                  form={btnSwitcher.form}
+                  className='btn bg-cp-2 btn-block'
+                  value={btnSwitcher.label || ''}
+                  style={{ height: '37px' }}
+                />
+              </div>
+            )}
+          </>
+        )}
         {/* Submit
         </input> */}
         {/* SearchBar */}
         {/* <SearchBar currentPage={currentPage} /> */}
-        <div className='h-scatter-content mt-1'>
-          <div> Color Way</div>
+        {/* <div className='h-scatter-content mt-1'>
+          <div>New Case</div>
           <SqBtnLarge
-            label={<i className='fas fa-swatchbook'> Color ＋</i>}
-            onClick={addcWay}
+            label={<i className='fas fa-swatchbook'> Case ＋</i>}
+            name='isEditingCase'
+            onClick={addCaseValue}
           />
-        </div>
-        <div className='h-scatter-content mt-05'>
-          <div>Size </div>
-          <SqBtnLarge
-            label={<i className='fas fa-ruler'> Size ＋</i>}
-            onClick={addSize}
-          />
-        </div>
-        <div className='h-scatter-content mt-05'>
-          <div>Material</div>
-          <SqBtnLarge
-            label={<i className='fab fa-buffer '> Item ＋</i>}
-            onClick={addMtrl}
-          />
-        </div>
-        <div>
-          {cNo === null ? null : (
-            <input
-              type='submit'
-              // form='caseForm'
-              className='btn btn-primary btn-block'
-              value='Copy this case as a new Case'
-              onClick={onClick}
-            />
-          )}
-        </div>
+        </div> */}
+        {/* Case Sets */}
+        {isEditingCase && currentPage === 'case' ? (
+          <>
+            {/* Read CSV */}
+            {osNo ? null : (
+              <div>
+                {currentPage === 'case' ? (
+                  isImportedExcel ? (
+                    <div>Have imported Style from Excel</div>
+                  ) : (
+                    <div className='round-area bg-cp-3 mt-1'>
+                      <i className='fas fa-table fc-cp-1'>
+                        {' '}
+                        Read Bom from Excel
+                      </i>
+                      <label className='btn btn-block mt-05 bd-radius-s bd-light bg-cp-1 fs-small'>
+                        <input
+                          type='file'
+                          id='upload-excel'
+                          name='inputFileName'
+                          accept='.xls, .xlsx'
+                          style={{
+                            position: 'fixed',
+                            right: '100%',
+                            bottom: '100%',
+                          }}
+                          onChange={labelOfReadExcel}
+                        />
+                        {excelName.length > 0 ? String(excelName) : null}
+                        {inputFileName}
+                      </label>
+                      {inputFileName == 'Select a File...' ? null : (
+                        <button
+                          className='btn btn-block mt-05 h-100 bd-radius-s bd-light bg-cp-2'
+                          onClick={readExcel}
+                        >
+                          Read
+                        </button>
+                      )}
+                    </div>
+                  )
+                ) : null}
+                <div className='h-scatter-content mt-1'>
+                  <div> Color Way</div>
+                  <SqBtnLarge
+                    label={<i className='fas fa-swatchbook'> Color ＋</i>}
+                    onClick={addcWay}
+                  />
+                </div>
+                <div className='h-scatter-content mt-05'>
+                  <div>Size </div>
+                  <SqBtnLarge
+                    label={<i className='fas fa-ruler'> Size ＋</i>}
+                    onClick={addSize}
+                  />
+                </div>
+                <div className='h-scatter-content mt-05'>
+                  <div>Material</div>
+                  <SqBtnLarge
+                    label={<i className='fab fa-buffer '> Item ＋</i>}
+                    onClick={addMtrl}
+                  />
+                </div>
+              </div>
+            )}
+            <div>
+              {cNo === null ? null : (
+                <input
+                  type='submit'
+                  // form='caseForm'
+                  className='btn btn-block bg-cp-1 mt-1'
+                  value='Copy this case as a new Case'
+                  onClick={onClick}
+                />
+              )}
+            </div>
+          </>
+        ) : null}
       </div>
     </div>
   );
