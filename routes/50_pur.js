@@ -369,7 +369,7 @@ router.delete('/deleteos/:osId', authUser, async (req, res) => {
   // Don't need return any of this result immediately, so don't make any promise here.
   const caseList = theOS.cNos;
   caseList.map(async (c) => {
-    await Case.updateOne({ cNo: c }, { poDate: null });
+    await Case.updateOne({ cNo: c }, { poDate: null, osNo: null });
   });
 
   await OS.findOneAndDelete({ company: comId, _id: osId }).then(() => {

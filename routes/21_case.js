@@ -572,22 +572,56 @@ router.post(
 // @Steve   Only the creator of the case have the right to delete the case.
 // @access  Private
 router.delete('/:id', authUser, async (req, res) => {
+  let user = await User.findById(req.user.id);
+  if (!user.cases) {
+    return res.status(400).json({
+      msg: 'Out of authority',
+    });
+  }
+  // Get the id of the case from URL by params
+  const comId = req.user.company;
+  const caseId = req.params.id;
+  const cases = await Case.findById(req.params.id);
+  const mtrls = cases.mtrls;
+  // Make sure user owns contact
+  if (cases.user.toString() !== req.user.id) {
+    return res.status(401).json({ msg: 'Not authorized to delete this case' });
+  }
   try {
-    // Get the id of the case from URL by params
-    let cases = await Case.findById(req.params.id);
-
-    if (!cases) return res.status(404).json({ msg: 'Contact not found' });
-
-    // Make sure user owns contact
-    if (cases.user.toString() !== req.user.id) {
-      return res
-        .status(401)
-        .json({ msg: 'Not authorized to delete this case' });
-    }
-
-    await Case.findByIdAndRemove(req.params.id);
+    await Case.findByIdAndRemove(caseId);
     // Delete the caseMaterials belong to the case
     // await CaseMtrl.deleteMany({ caseId: req.params.id });
+
+    // mtrls.map(async (mtrl) => {
+    //   if (mtrl.supplier) {
+    // Steve / 2020/09/05 : This part sametimes works well, sometimes don't.
+    await SRMtrl.updateMany(
+      {
+        company: comId,
+      },
+      {
+        $pull: {
+          'mtrlColors.$[].refs': { caseId: caseId },
+          'sizeSPECs.$[].refs': { caseId: caseId },
+        },
+      }
+    );
+
+    await SRMtrl.updateMany(
+      { company: comId },
+      {
+        $pull: {
+          mtrlColors: { refs: { $size: 0 } },
+          sizeSPECs: { refs: { $size: 0 } },
+        },
+      }
+    );
+
+    await SRMtrl.deleteMany({
+      company: comId,
+      mtrlColors: { $size: 0 },
+      sizeSPECs: { $size: 0 },
+    });
 
     res.json({
       msg: 'Case removed',

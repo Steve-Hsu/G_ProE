@@ -13,22 +13,7 @@ const DeletePopover = () => {
   const srMtrlContext = useContext(SrMtrlContext);
   const popoverContext = useContext(PopoverContext);
   const purContext = useContext(PurContext);
-  const {
-    _id,
-    cNo,
-    caseType,
-    style,
-    client,
-    cWays,
-    sizes,
-    gQtys,
-    mtrls,
-    // deletecWay,
-    // deleteSize,
-    deleteMtrl,
-    uploadCase,
-    deletecWayOrgSize,
-  } = casesContext;
+  const { _id, cNo, deleteMtrl, deletecWayOrgSize, deleteCase } = casesContext;
   const quoContext = useContext(QuoContext);
   const { deleteSRMtrlByMtrl } = srMtrlContext;
   const { comName, comSymbol } = authUserContext;
@@ -45,15 +30,6 @@ const DeletePopover = () => {
 
   const onChangeDelete = (e) => {
     e.preventDefault();
-    // const cases = {
-    //   caseType: caseType,s
-    //   style: style,
-    //   client: client,
-    //   cWays: cWays,
-    //   sizes: sizes,
-    //   gQtys: gQtys,
-    //   mtrls: mtrls,
-    // };
     const caseId = _id;
     switch (current.target) {
       case 'cWay':
@@ -68,6 +44,7 @@ const DeletePopover = () => {
         break;
       case 'case':
         if (doubleCheck === cNo) {
+          deleteCase(current.caseId);
           console.log('Yes We can delete the case');
         }
         break;

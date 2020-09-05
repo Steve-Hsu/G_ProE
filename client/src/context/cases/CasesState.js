@@ -1201,6 +1201,16 @@ const CasesState = (props) => {
     dispatch({ type: CASE_LIST_DOWNLOAD, payload: res.data });
   };
 
+  const deleteCase = async (caseId) => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    await axios.delete(`/api/case/${caseId}`, config);
+    defaultCase();
+  };
+
   return (
     <CasesContext.Provider
       value={{
@@ -1250,6 +1260,7 @@ const CasesState = (props) => {
         getStyleFromCSV,
         getM_list,
         getCaseList,
+        deleteCase,
       }}
     >
       {props.children}
