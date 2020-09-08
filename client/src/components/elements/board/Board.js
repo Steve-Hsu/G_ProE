@@ -25,28 +25,52 @@ const Board = ({ purpose, subjects, displayTitles, toggleItemFunc }) => {
       return valueOfCategories.indexOf(vcate) == idx;
     });
 
-    const lengthOfCategories = uniques.map((uni) => {
-      return subjects.filter((subject) => subject[target] === uni).length;
-    });
-
-    const result = uniques.map((uni) => {
-      if (uni == '') {
-        return 'undefined';
-      } else if (uni) {
-        return uni;
-      } else {
-        return 'empty';
-      }
-    });
-
     switch (switcher) {
       case 'result':
+        let result = [];
+        uniques.map((uni) => {
+          let re = '';
+          let lengthOftheUni = 0;
+          if (uni) {
+            re = new RegExp(uni, 'i');
+            lengthOftheUni = subjects.filter((subject) =>
+              re.test(subject[target])
+            ).length;
+          } else {
+            lengthOftheUni = subjects.filter((subject) => {
+              return subject === '';
+            }).length;
+          }
+          // console.log('thelengthOfTheUni', lengthOftheUni); // Test Code
+
+          if (lengthOftheUni) {
+            if (uni == '') {
+              result.push('undefined');
+            } else if (uni) {
+              result.push(uni);
+            } else {
+              result.push('empty');
+            }
+          }
+        });
+        // console.log('The result', result);// Test Code
         return result;
 
       case 'lengthOfItems':
+        const lengthOfCategories = uniques.map((uni) => {
+          if (uni) {
+            let re = new RegExp(uni, 'i');
+            return subjects.filter((subject) => re.test(subject[target]))
+              .length;
+          } else {
+            return 0;
+          }
+        });
+        // console.log('The lengthOfCategories', lengthOfCategories); // Test Code
         return lengthOfCategories;
 
       case 'unique':
+        // console.log('the uniques', uniques); // Test Code
         return uniques;
       default:
     }

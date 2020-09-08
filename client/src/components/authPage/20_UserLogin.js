@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import AlertContext from '../../context/alert/alertContext';
 import AuthUserContext from '../../context/authUser/authUserContext';
+import TestCodeBtn from '../elements/btns/TestCodeBtn';
 
 //Alert
 import Alerts from '../layout/Alerts';
@@ -95,6 +96,7 @@ const UserLogin = (props) => {
           value='Login'
           className='btn btn-primary btn-block'
         />
+        {/* <TestCodeBtn /> */}
         <Alerts />
       </form>
     </div>

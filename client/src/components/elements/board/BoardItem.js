@@ -65,7 +65,7 @@ const BoardItem = ({
         <Mtrl key={subject.id} mtrl={subject} />
       ) : (
         <div
-          className='boardChild round-card bg-cp-elem bd-light'
+          className='boardChild round-card bg-cp-elem bd-light hover-cp-2'
           style={selectedBackGround(id)}
           onClick={onClick}
         >

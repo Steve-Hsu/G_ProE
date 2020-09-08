@@ -27,10 +27,11 @@ const DeletePopover = () => {
   } = popoverContext;
   const { deleteQuoForm, deletemQuo } = quoContext;
   const { deleteOs } = purContext;
-
+  // }
   const onChangeDelete = (e) => {
     e.preventDefault();
     const caseId = _id;
+
     switch (current.target) {
       case 'cWay':
         deletecWayOrgSize('gClr', caseId, current.id);
@@ -59,7 +60,6 @@ const DeletePopover = () => {
         deleteOs(current._id);
       default:
     }
-
     toggleLoading(e);
     setTimeout(() => {
       toggleLoading();
@@ -89,12 +89,13 @@ const DeletePopover = () => {
     if (current.target === 'case') {
       return (
         <div key='doubleCheckDiv' className='px-1'>
-          Enter the Case Number
+          <div className='fs-tiny'>Enter the Case Number for deleting</div>
           <input
             key='doubleCheckInput'
             type='text'
             value={doubleCheck || ''}
             onChange={addDoubleCheckValue}
+            placeholder={cNo}
           />
         </div>
       );
@@ -108,35 +109,35 @@ const DeletePopover = () => {
       <div className='popup-inner bd-radius-s'>
         {isLoading === false ? (
           <div className='popup-container bd-light bd-radius-s bg-cp-2'>
-            <div className='h-70'>
-              <div className='p-2 h-30'>
-                You will delete this {`${words()}`}
-              </div>
-              <div className='center-content h-70'>
-                {' '}
-                <h3>Are you sure?</h3>
-              </div>
+            <div className='p-2 h-20'>You will delete this {`${words()}`}</div>
+            <div className='center-content h-40'>
+              {' '}
+              <h3>Are you sure?</h3>
             </div>
 
-            <div className='h-40'>
-              {doubleCheckInput()}
-              <div className='h-scatter-content p-1 h-50'>
-                <div className='center-content w-50'>
-                  <button
-                    className='btn btn-sq btn-block sq-block bg-safe'
-                    onClick={togglePopover}
-                  >
-                    Back
-                  </button>
-                </div>
-                <div className='center-content w-50'>
+            <div className='h-20 px-2'>{doubleCheckInput()}</div>
+            <div className='h-scatter-content p-1 h-20'>
+              <div className='center-content w-50'>
+                <button
+                  className='btn btn-sq btn-block sq-block bg-safe'
+                  onClick={togglePopover}
+                >
+                  Back
+                </button>
+              </div>
+              <div className='center-content w-50'>
+                {current.target === 'case' && doubleCheck != cNo ? (
+                  <div className='btn btn-sq btn-block sq-block bg-cp-2 fc-cp-3 center-content'>
+                    Delete
+                  </div>
+                ) : (
                   <button
                     className='btn btn-sq btn-block sq-block bg-warning'
                     onClick={onChangeDelete}
                   >
                     Delete
                   </button>
-                </div>
+                )}
               </div>
             </div>
           </div>

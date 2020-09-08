@@ -1159,6 +1159,25 @@ textarea:focus {
   padding: 3rem 0;
 }
 
+/* Padding - x axis */
+.px {
+  padding: 0 var(--gap);
+}
+
+.px-05 {
+  padding: 0 0.5rem;
+}
+
+.px-1 {
+  padding: 0 1rem;
+}
+.px-2 {
+  padding: 0 2rem;
+}
+.px-3 {
+  padding: 0 3rem;
+}
+
 /* Padding - top */
 .pt {
   padding-top: var(--gap);
@@ -1574,6 +1593,12 @@ textarea:focus {
 
 .opacity {
   opacity: 0;
+}
+
+/* @ Hover React */
+.hover-cp-2:hover {
+  background: var(--cp-1_2);
+  transition: ease-out 0.3s;
 }
 
 /* @test */
