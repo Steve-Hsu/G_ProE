@@ -749,6 +749,7 @@ const CasesState = (props) => {
   const addMtrlValue = (e) => {
     // e.preventDefault(); // I face problem with checkbox, after removing this function, everything works fine, even other input tag too.
     // For label tag need to target the Id, so here we save the id in the e.target.name
+    console.log('the name of the addMtrlValue', e.target.name); // Test Code
     const mtrlId = e.target.name;
     let materials = mtrls;
     switch (e.target.id) {
@@ -776,7 +777,7 @@ const CasesState = (props) => {
       //   console.log("yes i'm triggred ");
       //   // materials.find(({ id }) => id === mtrlId).description = e.target.value;
       //   break;
-      case 'Unit' + String(mtrlId):
+      case 'unit' + String(mtrlId):
         let material = materials.find(({ id }) => id === mtrlId);
         material.unit = e.target.value;
         material.cspts.map((cspt) => {

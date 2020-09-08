@@ -1,6 +1,7 @@
 import React, { useContext, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import PopoverContext from '../../../context/popover/popoverContext';
+import SrMtrl from '../../30_srMtrl/30_01_srMtrl';
 
 import Mtrl from '../../20_cases/1_6_Mtrl';
 
@@ -10,7 +11,7 @@ const BoardItem = ({
   displayTitles,
   // subjects,
   subject,
-  toggleItemFunc,
+  toggleItemAttributes,
   idx,
 }) => {
   const popoverContext = useContext(PopoverContext);
@@ -20,29 +21,30 @@ const BoardItem = ({
   const { togglePopover } = popoverContext;
 
   const onClick = (e) => {
-    console.log('Hit onClick'); // test Code
+    // console.log('Hit onClick'); // test Codes
     switch (purpose) {
       case 'CaseSelector':
         e.target.name = 'isEditingCase';
-        //in here the toggleItemFunc is an array containing 2 functions
-        toggleItemFunc[0](id);
-        toggleItemFunc[1](e);
+        //in here the toggleItemAttributes is an array containing 2 functions
+        toggleItemAttributes[0](id);
+        toggleItemAttributes[1](e);
         break;
       case '1_CaseForm':
         e.target.name = subject.id;
         e.target.id = 'isEditingMtrl';
-        toggleItemFunc(e);
+        toggleItemAttributes(e);
         break;
       case 'quoCaseSelector':
         if (subject.cNo) {
-          toggleItemFunc(subject.cNo);
+          toggleItemAttributes(subject.cNo);
         }
         break;
       case 'quoFormSelector':
-        toggleItemFunc(subject._id);
+        toggleItemAttributes(subject._id);
         break;
+      case 'srMtrlSelector':
       case 'purCaseSelector':
-        toggleItemFunc[0](subject._id);
+        toggleItemAttributes[0](subject._id);
         break;
       default:
     }
@@ -51,7 +53,7 @@ const BoardItem = ({
   const selectedBackGround = (id) => {
     let style = { overflow: 'auto' };
     if (purpose === 'purCaseSelector') {
-      let check = toggleItemFunc[1].includes(id);
+      let check = toggleItemAttributes[1].includes(id);
       if (check) {
         style = { background: 'var(--cp-1_2)', overflow: 'auto' };
       }
@@ -61,8 +63,11 @@ const BoardItem = ({
 
   return (
     <Fragment>
-      {isEditingMtrl == true ? (
+      {purpose === '1_CaseForm' && isEditingMtrl == true ? (
         <Mtrl key={subject.id} mtrl={subject} />
+      ) : purpose === 'srMtrlSelector' &&
+        toggleItemAttributes[1].includes(id) ? (
+        <SrMtrl srMtrl={subject} />
       ) : (
         <div
           className='boardChild round-card bg-cp-elem bd-light hover-cp-2'

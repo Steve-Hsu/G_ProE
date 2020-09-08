@@ -8,6 +8,7 @@ import {
   TOGGLE_ISUPDATE,
   SRMTRL_UPDATE,
   SRMTRL_CLEAR,
+  UPDATE_EDITING_LIST,
 } from '../types';
 
 const SrMtrlState = (props) => {
@@ -15,6 +16,7 @@ const SrMtrlState = (props) => {
   const initialState = {
     srMtrls: [],
     isUpdated: false,
+    editingList: [],
   };
 
   const [state, dispatch] = useReducer(SrMtrlReducer, initialState);
@@ -274,6 +276,21 @@ const SrMtrlState = (props) => {
     dispatch({ type: SRMTRL_CLEAR });
   };
 
+  const openSrMtrl = (srMtrlId) => {
+    let list = state.editingList;
+    const check = state.editingList.includes(srMtrlId);
+    if (check) {
+      list = state.editingList.filter((i) => {
+        return i !== srMtrlId;
+      });
+      dispatch({ type: UPDATE_EDITING_LIST, payload: list });
+    } else {
+      console.log('The push is triggered');
+      list.push(srMtrlId);
+      dispatch({ type: UPDATE_EDITING_LIST, payload: list });
+    }
+  };
+
   //@ Returns------------------------------------------------------
 
   return (
@@ -281,6 +298,7 @@ const SrMtrlState = (props) => {
       value={{
         srMtrls: state.srMtrls,
         isUpdated: state.isUpdated,
+        editingList: state.editingList,
         getSrMtrls,
         updateSrMtrlByMtrl,
         deleteSRMtrlByMtrl,
@@ -292,6 +310,7 @@ const SrMtrlState = (props) => {
         updateMPricesQuotation,
         getSpecificSrMtrl,
         clearSrMtrl,
+        openSrMtrl,
       }}
     >
       {props.children}

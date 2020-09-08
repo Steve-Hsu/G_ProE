@@ -403,14 +403,14 @@ const CaseForm = ({ props }) => {
                     purpose='1_CaseForm'
                     subjects={mtrls}
                     displayTitles={displayTitles}
-                    toggleItemFunc={addMtrlValue}
+                    toggleItemAttributes={addMtrlValue}
                   />
                 ) : (
                   <Table
                     purpose='1_CaseForm'
                     subjects={mtrls}
                     displayTitles={displayTitles}
-                    toggleItemFunc={addMtrlValue}
+                    toggleItemAttributes={addMtrlValue}
                   />
                 )}
               </div>

@@ -1,12 +1,27 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 // Components
 import LeftBar from '../layout/LeftBar';
-// srMtrl
-import MPriceForm from '../../components/30_srMtrl/30_01_srMtrlForm';
+// ItemSelector
+import ItemSelector from '../itemSelector/ItemSelector';
+import SrMtrlContext from '../../context/srMtrl/srMtrlContext';
 
 export const MPrice = (props) => {
+  const srMtrlContext = useContext(SrMtrlContext);
   const currentPath = props.location.pathname;
+  const { srMtrls, updateMPrices } = srMtrlContext;
+
+  const onSubmitSrMtrl = async (e) => {
+    e.preventDefault();
+    const body = [];
+    await srMtrls.map((srMtrl) => {
+      body.push({
+        id: srMtrl._id,
+        mPrices: srMtrl.mPrices,
+      });
+    });
+    updateMPrices(body);
+  };
 
   return (
     <div className='grid-1-4'>
@@ -14,7 +29,10 @@ export const MPrice = (props) => {
       <LeftBar currentPath={currentPath} />
 
       {/* Grid-2 */}
-      <MPriceForm props={props} currentPath={currentPath} />
+      <form id='srMtrlForm' onSubmit={onSubmitSrMtrl}>
+        {' '}
+        <ItemSelector purpose='srMtrlSelector' props={props} />
+      </form>
     </div>
   );
 };

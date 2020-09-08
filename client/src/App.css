@@ -176,6 +176,10 @@ img {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
 }
+.grid-7 {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
 
 .grid-15 {
   display: grid;
@@ -409,12 +413,6 @@ img {
   font-size: 0.8rem;
   padding: 0.3rem 1rem;
   margin-right: 0.2rem;
-}
-
-.go-back-arrow:hover {
-  cursor: pointer;
-  transform: rotate(90deg);
-  transition: all 0.3s;
 }
 
 /* custom Btn */
@@ -1481,11 +1479,11 @@ textarea:focus {
   background: var(--cp-1_4);
 }
 
-.bg-cp-bg-light {
+.bg-cp-2-light {
   background: var(--cp-1_2-light);
 }
 
-.bg-cp-bg-light-c {
+.bg-cp-2-light-c {
   background: var(--cp-1_2-light-c);
 }
 
@@ -1599,6 +1597,11 @@ textarea:focus {
 .hover-cp-2:hover {
   background: var(--cp-1_2);
   transition: ease-out 0.3s;
+}
+.hover-spin-90:hover {
+  cursor: pointer;
+  transform: rotate(90deg);
+  transition: all 0.3s;
 }
 
 /* @test */

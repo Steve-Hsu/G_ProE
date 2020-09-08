@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import CasesContext from '../../context/cases/casesContext';
 import PopoverContext from '../../context/popover/popoverContext';
@@ -7,28 +7,10 @@ import MtrlClr from './1_6_1_MtrlClr';
 import MtrlSizeSPEC from './1_6_2_MtrlSizeSPEC';
 import MtrlCspt from './1_6_3_MtrlCspt';
 import DeleteBtnSmall from '../elements/btns/DeleteBtnSmall';
+import GoBackBtnSpinSmall from '../elements/btns/GoBackBtnSpinSmall';
+import Select from '../elements/select/Select';
 
 const Mtrl = ({ mtrl }) => {
-  useEffect(() => {
-    if (mtrl.unit === '') {
-    } else {
-      loadCaseSelectUnitTagIndex();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mtrl.unit]);
-  // useEffect(() => {
-  //   // if (osNo) {
-  //   //   const inputs = document.querySelectorAll('input');
-  //   //   console.log(inputs);
-  //   //   const length = inputs.length;
-  //   //   console.log('the length', length);
-  //   //   for (let i = 0; i < length; i++) {
-  //   //     inputs[i].setAttribute('readonly', true);
-  //   //   }
-  //   // }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
-
   const casesContext = useContext(CasesContext);
   const popoverContext = useContext(PopoverContext);
 
@@ -56,7 +38,7 @@ const Mtrl = ({ mtrl }) => {
     transform: 'translate(-0.2rem, -0.7rem)',
   };
   // Expand Panel class
-  const expandPanelClass = 'grid-1-5 bg-cp-bg-light pt-1 round-card bd-light';
+  const expandPanelClass = 'grid-1-5 bg-cp-2-light pt-1 round-card bd-light';
 
   const unitList = [
     'Select a Unit',
@@ -71,13 +53,6 @@ const Mtrl = ({ mtrl }) => {
     'doz',
     'g',
   ];
-
-  const loadCaseSelectUnitTagIndex = () => {
-    const theMtrl = document.getElementById(`${mtrl.unit}${mtrl.id}`);
-    if (theMtrl) {
-      theMtrl.setAttribute('selected', 'selected');
-    }
-  };
 
   // Ajust the color of dropdown btn when the attached table is expaneded.
   const dropDownStyle = (subject) => {
@@ -292,241 +267,228 @@ const Mtrl = ({ mtrl }) => {
 
   return (
     <div
-      className='mb-1 p-1 round-card bg-cp-elem bd-light'
+      className='mb-1 p-1 round-card bg-cp-elem bd-light flexBox'
       style={{ width: '100%' }}
       id='isEditingMtrl'
       onClick={onClick}
     >
-      {/* Title area */}
-      <div className='h-scatter-content mb-1'>
-        {/* The positon of the btn  should be reranged*/}
-        <div key={`${item_titles[0]}${mtrl.id}`} style={{ flex: '1 1 1' }}>
-          {inputItemObj(item_titles[0])}
-        </div>
-        <div
-          onClick={goBack}
-          style={{ flex: '1 1 50%', height: '3.5rem', opacity: 0 }}
-        ></div>
+      <GoBackBtnSpinSmall onClick={goBack} />
+      <div className='ml-05 w-90' style={{ flex: '1 1 auto' }}>
+        {/* Title area */}
+        <div className='h-scatter-content mb-1'>
+          <div key={`${item_titles[0]}${mtrl.id}`} style={{ flex: '1 1 1' }}>
+            {inputItemObj(item_titles[0])}
+          </div>
+          <div
+            onClick={goBack}
+            style={{ flex: '1 1 50%', height: '3.5rem', opacity: 0 }}
+          ></div>
 
-        {/* Row_1 - Delete Btn */}
-        <div>
-          {cNo === null || osNo ? null : (
-            <DeleteBtnSmall
+          {/* Row_1 - Delete Btn */}
+          <div>
+            {cNo === null || osNo ? null : (
+              <DeleteBtnSmall
+                value={mtrl.id}
+                name='mtrl'
+                onClick={togglePopover}
+                style={deleteBtnPosition}
+              />
+            )}
+          </div>
+        </div>
+        {/* Row_1  */}
+        <div className='grid-6'>
+          {/* Row_1 - Item */}
+          <div className='flexBox'>
+            <div className='ml-1'>No.{Number(mtrls.indexOf(mtrl) + 1)}</div>
+          </div>
+
+          {/* Row_1 - Supplier */}
+          <div
+            key={`${item_titles[1]}${mtrl.id}`}
+            style={{ gridColumn: '2 / 4' }}
+            className='pr-1'
+          >
+            {inputItemObj(item_titles[1])}
+          </div>
+          {/* Row_1 - Ref_no */}
+          <div
+            key={`${item_titles[2]}${mtrl.id}`}
+            style={{ gridColumn: '4 / 7' }}
+          >
+            {inputItemObj(item_titles[2])}
+          </div>
+        </div>
+
+        {/* Row_2  */}
+        <div className='grid-6'>
+          {/* Row_2 - Icon Space */}
+          <></>
+          {/* Row_2 - Position */}
+          <div
+            key={`${item_titles[3]}${mtrl.id}`}
+            style={{ gridColumn: '2 / 7' }}
+          >
+            {inputItemObj(item_titles[3])}
+          </div>
+        </div>
+
+        {/* Row_3  */}
+        <div className='grid-6'>
+          {/* Row_3 - Icon Space */}
+          <div></div>
+          {/* Row_3 - Description */}
+          <div
+            key={`${item_titles[4]}${mtrl.id}`}
+            style={{ gridColumn: '2 / 7' }}
+          >
+            {inputItemObj(item_titles[4])}
+          </div>
+        </div>
+
+        {/* Row_4  */}
+        <div className='grid-6 mt-1'>
+          {/* Row_4 - Icon Space */}
+          <div></div>
+          <div className='mr-1'>
+            <div className='fs-tiny transition'>
+              {mtrl.multipleColor == true ? 'Multiple' : 'Single'}
+            </div>
+            <button
               value={mtrl.id}
-              name='mtrl'
-              onClick={togglePopover}
-              style={deleteBtnPosition}
-            />
-          )}
-        </div>
-      </div>
-      {/* Row_1  */}
-      <div className='grid-6'>
-        {/* Row_1 - Item */}
-        <div className='flexBox ml-1'>
-          <div onClick={goBack} className='go-back-arrow'>
-            <i className='fas fa-angle-down'></i>
+              name='mtrlColor'
+              onClick={expandExtraPanels}
+              className='btn btn-dropdown lead'
+              style={dropDownStyle('mtrlColor')}
+            >
+              Color
+            </button>
           </div>
-          <div className='ml-1'>No.{Number(mtrls.indexOf(mtrl) + 1)}</div>
-        </div>
-
-        {/* Row_1 - Supplier */}
-        <div
-          key={`${item_titles[1]}${mtrl.id}`}
-          style={{ gridColumn: '2 / 4' }}
-          className='pr-1'
-        >
-          {inputItemObj(item_titles[1])}
-        </div>
-        {/* Row_1 - Ref_no */}
-        <div
-          key={`${item_titles[2]}${mtrl.id}`}
-          style={{ gridColumn: '4 / 7' }}
-        >
-          {inputItemObj(item_titles[2])}
-        </div>
-      </div>
-
-      {/* Row_2  */}
-      <div className='grid-6'>
-        {/* Row_2 - Icon Space */}
-        <></>
-        {/* Row_2 - Position */}
-        <div
-          key={`${item_titles[3]}${mtrl.id}`}
-          style={{ gridColumn: '2 / 7' }}
-        >
-          {inputItemObj(item_titles[3])}
-        </div>
-      </div>
-
-      {/* Row_3  */}
-      <div className='grid-6'>
-        {/* Row_3 - Icon Space */}
-        <div></div>
-        {/* Row_3 - Description */}
-        <div
-          key={`${item_titles[4]}${mtrl.id}`}
-          style={{ gridColumn: '2 / 7' }}
-        >
-          {inputItemObj(item_titles[4])}
-        </div>
-      </div>
-
-      {/* Row_4  */}
-      <div className='grid-6 mt-1'>
-        {/* Row_4 - Icon Space */}
-        <div></div>
-        <div className='mr-1'>
-          <div className='fs-tiny transition'>
-            {mtrl.multipleColor == true ? 'Multiple' : 'Single'}
+          <div className='mr-1'>
+            <div className='fs-tiny  transition'>
+              {mtrl.multipleSPEC == true ? 'Multiple' : 'Single'}
+            </div>
+            <button
+              value={mtrl.id}
+              name='SizeSPEC'
+              onClick={expandExtraPanels}
+              className='btn btn-dropdown lead'
+              style={dropDownStyle('SizeSPEC')}
+            >
+              SPEC
+            </button>
           </div>
-          <button
-            value={mtrl.id}
-            name='mtrlColor'
-            onClick={expandExtraPanels}
-            className='btn btn-dropdown lead'
-            style={dropDownStyle('mtrlColor')}
-          >
-            Color
-          </button>
-        </div>
-        <div className='mr-1'>
-          <div className='fs-tiny  transition'>
-            {mtrl.multipleSPEC == true ? 'Multiple' : 'Single'}
+          <div className='mr-1'>
+            <div className='fs-tiny  transition'>
+              {mtrl.multipleCSPT == true ? 'Multiple' : 'Single'}
+            </div>
+            <button
+              value={mtrl.id}
+              name='cspt'
+              onClick={expandExtraPanels}
+              className='btn btn-dropdown lead '
+              style={dropDownStyle('cspt')}
+            >
+              Consumption
+            </button>
           </div>
-          <button
-            value={mtrl.id}
-            name='SizeSPEC'
-            onClick={expandExtraPanels}
-            className='btn btn-dropdown lead'
-            style={dropDownStyle('SizeSPEC')}
-          >
-            SPEC
-          </button>
-        </div>
-        <div className='mr-1'>
-          <div className='fs-tiny  transition'>
-            {mtrl.multipleCSPT == true ? 'Multiple' : 'Single'}
-          </div>
-          <button
-            value={mtrl.id}
-            name='cspt'
-            onClick={expandExtraPanels}
-            className='btn btn-dropdown lead '
-            style={dropDownStyle('cspt')}
-          >
-            Consumption
-          </button>
-        </div>
-        {/* Row_4 - Unit Selector */}
-        <div>
-          <div className='fs-tiny  transition'>Unit</div>
-          <select
-            id={`Unit${mtrl.id}`}
-            name={mtrl.id}
-            list='garmentSize'
-            placeholder='Unit'
+          {/* Row_4 - Unit Selector */}
+          <Select
+            purpose='unit'
+            subject={mtrl}
             onChange={addMtrlValue}
-            default='yd'
-            className='select-primary-sub bd-light'
-            required
-          >
-            {unitList.map((s) => {
-              return (
-                <option key={`${s}${mtrl.id}`} id={`${s}${mtrl.id}`} value={s}>
-                  {s}
-                </option>
-              );
-            })}
-          </select>
+            required={true}
+            label='Unit'
+            className='select-primary-sub  bd-light'
+            selectedOption={mtrl.unit}
+          />
         </div>
-      </div>
-      {/* {Row_5} */}
-      {/* Color expand panel  */}
-      {mtrl.expandColor && cWays.length > 0 ? (
-        <div className={expandPanelClass}>
-          {/* The toggle switch for material Color */}
-          <div
-            style={{ height: '100%', display: 'grid', placeItems: 'center' }}
-          >
-            {osNo ? null : toggleSwitchObj('multipleColor')}
-          </div>
-          <div style={attachedTable('cWay')} className='mt-1'>
-            {mtrl.multipleColor == true ? (
-              mtrl.mtrlColors.map((mtrlColor) => (
+        {/* {Row_5} */}
+        {/* Color expand panel  */}
+        {mtrl.expandColor && cWays.length > 0 ? (
+          <div className={expandPanelClass}>
+            {/* The toggle switch for material Color */}
+            <div
+              style={{ height: '100%', display: 'grid', placeItems: 'center' }}
+            >
+              {osNo ? null : toggleSwitchObj('multipleColor')}
+            </div>
+            <div style={attachedTable('cWay')} className='mt-1'>
+              {mtrl.multipleColor == true ? (
+                mtrl.mtrlColors.map((mtrlColor) => (
+                  <MtrlClr
+                    key={mtrlColor.id}
+                    mtrlColor={mtrlColor}
+                    mtrlId={mtrl.id}
+                  />
+                ))
+              ) : (
                 <MtrlClr
-                  key={mtrlColor.id}
-                  mtrlColor={mtrlColor}
+                  key={mtrl.mtrlColors[0].id}
+                  mtrlColor={mtrl.mtrlColors[0]}
                   mtrlId={mtrl.id}
                 />
-              ))
-            ) : (
-              <MtrlClr
-                key={mtrl.mtrlColors[0].id}
-                mtrlColor={mtrl.mtrlColors[0]}
-                mtrlId={mtrl.id}
-              />
-            )}
+              )}
+            </div>
           </div>
-        </div>
-      ) : null}
-      {/* SizeSPEC expand panel  */}
-      {mtrl.expandSizeSPEC && sizes.length > 0 ? (
-        <div className={expandPanelClass}>
-          {/* The toggle switch for material SPEC */}
-          <div
-            style={{ height: '100%', display: 'grid', placeItems: 'center' }}
-          >
-            {osNo ? null : toggleSwitchObj('multipleSPEC')}
-          </div>
-          <div style={attachedTable('size')} className='mt-1'>
-            {mtrl.multipleSPEC == true ? (
-              mtrl.sizeSPECs.map((sizeSPEC) => (
+        ) : null}
+        {/* SizeSPEC expand panel  */}
+        {mtrl.expandSizeSPEC && sizes.length > 0 ? (
+          <div className={expandPanelClass}>
+            {/* The toggle switch for material SPEC */}
+            <div
+              style={{ height: '100%', display: 'grid', placeItems: 'center' }}
+            >
+              {osNo ? null : toggleSwitchObj('multipleSPEC')}
+            </div>
+            <div style={attachedTable('size')} className='mt-1'>
+              {mtrl.multipleSPEC == true ? (
+                mtrl.sizeSPECs.map((sizeSPEC) => (
+                  <MtrlSizeSPEC
+                    key={sizeSPEC.id}
+                    sizeSPEC={sizeSPEC}
+                    mtrlId={mtrl.id}
+                  />
+                ))
+              ) : (
                 <MtrlSizeSPEC
-                  key={sizeSPEC.id}
-                  sizeSPEC={sizeSPEC}
+                  key={mtrl.sizeSPECs[0].id}
+                  sizeSPEC={mtrl.sizeSPECs[0]}
                   mtrlId={mtrl.id}
                 />
-              ))
-            ) : (
-              <MtrlSizeSPEC
-                key={mtrl.sizeSPECs[0].id}
-                sizeSPEC={mtrl.sizeSPECs[0]}
-                mtrlId={mtrl.id}
-              />
-            )}
+              )}
+            </div>
           </div>
-        </div>
-      ) : null}
-      {/* cspt expand panel  */}
-      {mtrl.expandCspt && mtrl.cspts.length > 0 ? (
-        <div className={expandPanelClass}>
-          {/* The toggle switch for material SPEC */}
-          <div
-            style={{ height: '100%', display: 'grid', placeItems: 'center' }}
-          >
-            {osNo ? null : toggleSwitchObj('multipleCSPT')}
-          </div>
-          <div style={attachedTable('cspt')} className='mt-1'>
-            {mtrl.multipleCSPT == true ? (
-              sizes.map((size) => (
+        ) : null}
+        {/* cspt expand panel  */}
+        {mtrl.expandCspt && mtrl.cspts.length > 0 ? (
+          <div className={expandPanelClass}>
+            {/* The toggle switch for material SPEC */}
+            <div
+              style={{ height: '100%', display: 'grid', placeItems: 'center' }}
+            >
+              {osNo ? null : toggleSwitchObj('multipleCSPT')}
+            </div>
+            <div style={attachedTable('cspt')} className='mt-1'>
+              {mtrl.multipleCSPT == true ? (
+                sizes.map((size) => (
+                  <MtrlCspt
+                    key={`Fragment${size.id}${mtrl.id}`}
+                    size={size}
+                    mtrl={mtrl}
+                  />
+                ))
+              ) : (
                 <MtrlCspt
-                  key={`Fragment${size.id}${mtrl.id}`}
-                  size={size}
+                  key={`Fragment${sizes[0].id}${mtrl.id}`}
+                  size={sizes[0]}
                   mtrl={mtrl}
                 />
-              ))
-            ) : (
-              <MtrlCspt
-                key={`Fragment${sizes[0].id}${mtrl.id}`}
-                size={sizes[0]}
-                mtrl={mtrl}
-              />
-            )}
+              )}
+            </div>
           </div>
-        </div>
-      ) : null}
+        ) : null}
+      </div>
     </div>
   );
 };

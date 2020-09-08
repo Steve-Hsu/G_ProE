@@ -1,7 +1,7 @@
 import React from 'react';
 import BoardItem from './BoardItem';
 
-const Board = ({ purpose, subjects, displayTitles, toggleItemFunc }) => {
+const Board = ({ purpose, subjects, displayTitles, toggleItemAttributes }) => {
   let target = '';
   switch (purpose) {
     case '1_CaseForm':
@@ -10,6 +10,10 @@ const Board = ({ purpose, subjects, displayTitles, toggleItemFunc }) => {
     case 'CaseSelector':
       target = 'client';
       break;
+    case 'srMtrlSelector':
+      target = 'supplier';
+      break;
+
     default:
   }
 
@@ -19,8 +23,12 @@ const Board = ({ purpose, subjects, displayTitles, toggleItemFunc }) => {
       if (subject[target]) {
         str = subject[target].toLowerCase();
       }
+      // console.log('The target', target); // Test Code
+      // console.log('The subject', subject); // Test Code
       return str;
     });
+    // console.log('valueOfCategories', valueOfCategories); // Test Code
+
     const uniques = valueOfCategories.filter((vcate, idx) => {
       return valueOfCategories.indexOf(vcate) == idx;
     });
@@ -101,7 +109,7 @@ const Board = ({ purpose, subjects, displayTitles, toggleItemFunc }) => {
                           displayTitles={displayTitles}
                           // subjects={subjects}
                           subject={subject}
-                          toggleItemFunc={toggleItemFunc}
+                          toggleItemAttributes={toggleItemAttributes}
                           idx={subject_idx}
                         />
                       );
@@ -119,7 +127,7 @@ const Board = ({ purpose, subjects, displayTitles, toggleItemFunc }) => {
                           // target={target}
                           // subjects={subjects}
                           subject={subject}
-                          toggleItemFunc={toggleItemFunc}
+                          toggleItemAttributes={toggleItemAttributes}
                           idx={subject_idx}
                         />
                       );
@@ -128,12 +136,12 @@ const Board = ({ purpose, subjects, displayTitles, toggleItemFunc }) => {
                     }
                   default:
                     if (re.test(categories('unique')[idx])) {
-                      console.log(
-                        "categories('unique')[idx]",
-                        categories('unique')[idx]
-                      );
-                      console.log('the re', re);
-                      console.log('The cate', cate);
+                      // console.log(
+                      //   "categories('unique')[idx]",
+                      //   categories('unique')[idx]
+                      // );
+                      // console.log('the re', re);
+                      // console.log('The cate', cate);
                       return (
                         <BoardItem
                           key={`empty${subject.id ? subject.id : subject._id}`}
@@ -143,7 +151,7 @@ const Board = ({ purpose, subjects, displayTitles, toggleItemFunc }) => {
                           // target={target}
                           // subjects={subjects}
                           subject={subject}
-                          toggleItemFunc={toggleItemFunc}
+                          toggleItemAttributes={toggleItemAttributes}
                           idx={subject_idx}
                         />
                       );

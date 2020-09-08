@@ -1,7 +1,7 @@
 import React from 'react';
 import TableItem from './TableItem';
 
-const Table = ({ purpose, subjects, displayTitles, toggleItemFunc }) => {
+const Table = ({ purpose, subjects, displayTitles, toggleItemAttributes }) => {
   let supplier,
     ref_no,
     position,
@@ -132,7 +132,7 @@ const Table = ({ purpose, subjects, displayTitles, toggleItemFunc }) => {
             idx={idx}
             displayTitles={displayTitles}
             cellStyle={cellStyle}
-            toggleItemFunc={toggleItemFunc}
+            toggleItemAttributes={toggleItemAttributes}
             purpose={purpose}
           />
         ))}

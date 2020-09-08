@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import SrMtrlContext from '../../context/srMtrl/srMtrlContext';
 import PropTypes from 'prop-types';
+import Select from '../elements/select/Select';
 
 const MPrice = ({ mPrice, srMtrl, currentPath }) => {
   const srMtrlContext = useContext(SrMtrlContext);
@@ -214,6 +215,16 @@ const MPrice = ({ mPrice, srMtrl, currentPath }) => {
                   </div>
                 );
               case 'unit':
+                return (
+                  <Select
+                    key={`${m}${mPrice.id}`}
+                    purpose='unit'
+                    subject={mPrice}
+                    onChange={onChange}
+                    label='Unit'
+                    required={true}
+                  />
+                );
               case 'currency':
                 return (
                   <div key={`${m}${mPrice.id}`}>
@@ -281,5 +292,5 @@ export default MPrice;
 MPrice.propTypes = {
   mPrice: PropTypes.object.isRequired,
   srMtrl: PropTypes.object.isRequired,
-  currentPath: PropTypes.string.isRequired,
+  // currentPath: PropTypes.string.isRequired,
 };

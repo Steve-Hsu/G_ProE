@@ -4,6 +4,7 @@ import {
   SRMTRL_UPDATE,
   SRMTRL_UPLOAD,
   SRMTRL_CLEAR,
+  UPDATE_EDITING_LIST,
 } from '../types';
 
 export default (state, action) => {
@@ -33,6 +34,11 @@ export default (state, action) => {
       return {
         srMtrls: [],
         isUpdated: false,
+      };
+    case UPDATE_EDITING_LIST:
+      return {
+        ...state,
+        editingList: action.payload,
       };
     default:
   }

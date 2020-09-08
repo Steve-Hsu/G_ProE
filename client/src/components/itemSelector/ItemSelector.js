@@ -2,6 +2,7 @@ import React, { useContext, useEffect, Fragment } from 'react';
 
 // Context
 import CaseContext from '../../context/cases/casesContext';
+import SrMtrlContext from '../../context/srMtrl/srMtrlContext';
 import QuoContext from '../../context/quo/quoContext';
 import PurContext from '../../context/pur/purContext';
 // Components
@@ -12,6 +13,7 @@ import SqToggleSwitchL from '../elements/btns/SqToggleSwitchL';
 
 export const ItemSelector = ({ props, purpose }) => {
   const caseContext = useContext(CaseContext);
+  const srMtrlContext = useContext(SrMtrlContext);
   const quoContext = useContext(QuoContext);
   const purContext = useContext(PurContext);
   const {
@@ -22,11 +24,14 @@ export const ItemSelector = ({ props, purpose }) => {
     defaultCase,
     isBoardMode,
   } = caseContext;
+  const { srMtrls, getSrMtrls, openSrMtrl, editingList } = srMtrlContext;
   const { switchQuoFormSelector, quotation, switchQuoForm } = quoContext;
   const { selectCase, selectedCases, switchPage } = purContext;
 
   useEffect(() => {
-    if (purpose != 'quoFormSelector') {
+    if (purpose === 'srMtrlSelector') {
+      getSrMtrls();
+    } else if (purpose != 'quoFormSelector') {
       getList();
     }
 
@@ -35,7 +40,7 @@ export const ItemSelector = ({ props, purpose }) => {
 
   let getList = null;
   let subjects = null;
-  let funcs = null;
+  let attributes = null;
   let goBack = null;
   let displayTitles = [];
 
@@ -61,21 +66,29 @@ export const ItemSelector = ({ props, purpose }) => {
       ];
       switch (purpose) {
         case 'CaseSelector':
-          funcs = [downloadCase, addCaseValue];
+          attributes = [downloadCase, addCaseValue];
           break;
+
         case 'quoCaseSelector':
-          funcs = switchQuoFormSelector;
+          attributes = switchQuoFormSelector;
           break;
         case 'purCaseSelector':
-          funcs = [selectCase, selectedCases];
+          attributes = [selectCase, selectedCases];
           break;
         default:
       }
       break;
-
+    case 'srMtrlSelector':
+      subjects = srMtrls;
+      attributes = [openSrMtrl, editingList];
+      displayTitles = [{ supplier: true }, { ref_no: true }];
+      goBack = () => {
+        props.history.push('/api/case/director');
+      };
+      break;
     case 'quoFormSelector':
       subjects = quotation.quoForms;
-      funcs = switchQuoForm;
+      attributes = switchQuoForm;
       displayTitles = [
         {
           quoNo: true,
@@ -125,14 +138,14 @@ export const ItemSelector = ({ props, purpose }) => {
             purpose={purpose}
             subjects={subjects}
             displayTitles={displayTitles}
-            toggleItemFunc={funcs}
+            toggleItemAttributes={attributes}
           />
         ) : (
           <Table
             purpose={purpose}
             subjects={subjects}
             displayTitles={displayTitles}
-            toggleItemFunc={funcs}
+            toggleItemAttributes={attributes}
           />
         )}
       </div>
