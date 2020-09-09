@@ -122,7 +122,11 @@ export const ItemSelector = ({ props, purpose }) => {
 
   return (
     <Fragment>
-      <div className='p-1 container container-with-navbar'>
+      {/* <div style={{ paddingTop: '50px' }} className='p-1 container'> */}
+      <div
+        className=' container container-with-navbar'
+        // style={{ paddingTop: '60px' }}
+      >
         <div className='grid-6'>
           <GoBackBtn onClick={goBack} />
           <SqToggleSwitchL
@@ -148,6 +152,7 @@ export const ItemSelector = ({ props, purpose }) => {
             toggleItemAttributes={attributes}
           />
         )}
+        {/* </div> */}
       </div>
     </Fragment>
   );

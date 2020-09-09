@@ -100,7 +100,7 @@ const Table = ({ purpose, subjects, displayTitles, toggleItemAttributes }) => {
   };
 
   return (
-    <div className='mt-1 bg-cp-bg round-area'>
+    <div className='mt-1 mb-0 bg-cp-bg round-area' id='table'>
       {/* Taggole Header */}
       <div className='flexBox fc-cp-1 pb-05'>
         <div style={cellStyle('no')}>NO.</div>
@@ -123,7 +123,7 @@ const Table = ({ purpose, subjects, displayTitles, toggleItemAttributes }) => {
         })}
       </div>
       {/* Table body */}
-      <div className='overflow-auto-y' style={{ height: '74vh' }}>
+      <div className='overflow-auto-y ' style={{ maxHeight: '69vh' }}>
         {subjects.map((subject, idx) => (
           <TableItem
             key={subject.id ? subject.id : subject._id}

@@ -256,7 +256,7 @@ router.put('/:caseId', authUser, async (req, res) => {
           sizeSPECs: [],
           mPrices: [],
           company: cases.company,
-          expandPrice: false,
+          mainPrice: null,
         };
       } else {
         mtrlObj = existingSrMtrlObj;
@@ -751,26 +751,28 @@ router.put('/update/mpricevalues', authUser, async (req, res) => {
   // Start update
 
   await srMtrlList.map(async (srMtrl) => {
-    srMtrl.mPrices.map(async (mPrice) => {
-      // Check I.C.S
-      let checkICS = await SRMtrl.find(
+    const mainPrice = srMtrl.mainPrice;
+    console.log('The mainPrice', mainPrice); // Test Code
+    if (srMtrl.mPrices.length == 0) {
+      await SRMtrl.updateOne(
         {
           _id: srMtrl.id,
-          mPrices: {
-            $elemMatch: {
-              id: mPrice.id,
-              mColor: mPrice.mColor,
-              sizeSPEC: mPrice.sizeSPEC,
-            },
-          },
         },
-        { _id: 0, mPrices: 1 }
+        {
+          $set: {
+            mainPrice: mainPrice,
+          },
+        }
       );
-      if (checkICS.length > 0) {
-        // IF the mPrice (id, mColor and sizeSPEC duplicated) exisitng, update by replacing with new mPrice
-        await SRMtrl.updateOne(
+
+      // console.log('No mPrice'); // Test Code
+    } else {
+      srMtrl.mPrices.map(async (mPrice) => {
+        // Check I.C.S
+        let checkICS = await SRMtrl.find(
           {
             _id: srMtrl.id,
+            company: comId,
             mPrices: {
               $elemMatch: {
                 id: mPrice.id,
@@ -779,79 +781,113 @@ router.put('/update/mpricevalues', authUser, async (req, res) => {
               },
             },
           },
-          {
-            $set: {
-              'mPrices.$.unit': mPrice.unit.trim(),
-              'mPrices.$.currency': mPrice.currency.trim(),
-              'mPrices.$.mPrice': Number(mPrice.mPrice),
-              'mPrices.$.moq': Number(mPrice.moq),
-              'mPrices.$.moqPrice': Number(mPrice.moqPrice),
-            },
-          }
-        );
-      } else {
-        // If the mPrice (id, mColor ,sizeSPEC  duplicated) not exisitng, Check C.S
-        let checkCS = await SRMtrl.find(
-          {
-            _id: srMtrl.id,
-            mPrices: {
-              $elemMatch: {
-                mColor: mPrice.mColor,
-                sizeSPEC: mPrice.sizeSPEC,
-              },
-            },
-          },
           { _id: 0, mPrices: 1 }
         );
-        if (checkCS.length > 0) {
-          // If mColor and sizeSPEC is repeated then discard the mPrice by doing nothing.
-        } else {
-          // If the mPrice (mColor and sizeSPEC duplicated) not exisitng, Check ID
-          let checkI = await SRMtrl.find(
+        if (checkICS.length > 0) {
+          // IF the mPrice (id, mColor and sizeSPEC duplicated) exisitng, update by replacing with new mPrice
+          // console.log('Step_1 triggered'); // Test Code
+          await SRMtrl.updateOne(
             {
               _id: srMtrl.id,
+              company: comId,
               mPrices: {
                 $elemMatch: {
                   id: mPrice.id,
+                  mColor: mPrice.mColor,
+                  sizeSPEC: mPrice.sizeSPEC,
+                },
+              },
+            },
+            {
+              $set: {
+                mainPrice: mainPrice,
+                'mPrices.$.unit': mPrice.unit.trim(),
+                'mPrices.$.currency': mPrice.currency.trim(),
+                'mPrices.$.mPrice': Number(mPrice.mPrice),
+                'mPrices.$.moq': Number(mPrice.moq),
+                'mPrices.$.moqPrice': Number(mPrice.moqPrice),
+              },
+            }
+          );
+        } else {
+          // If the mPrice (id, mColor ,sizeSPEC  duplicated) not exisitng, Check C.S
+          // console.log('Step_2 triggered'); // Test Code
+          let checkCS = await SRMtrl.find(
+            {
+              _id: srMtrl.id,
+              company: comId,
+              mPrices: {
+                $elemMatch: {
+                  mColor: mPrice.mColor,
+                  sizeSPEC: mPrice.sizeSPEC,
                 },
               },
             },
             { _id: 0, mPrices: 1 }
           );
-          if (checkI.length > 0) {
-            // If the mPrice is existing item, then update by replacing with new one.
-            await SRMtrl.updateOne(
+          if (checkCS.length > 0) {
+            // If mColor and sizeSPEC is repeated then discard the mPrice by doing nothing.
+          } else {
+            // If the mPrice (mColor and sizeSPEC duplicated) not exisitng, Check ID
+
+            let checkI = await SRMtrl.find(
               {
                 _id: srMtrl.id,
+                company: comId,
                 mPrices: {
                   $elemMatch: {
                     id: mPrice.id,
                   },
                 },
               },
-              {
-                $set: {
-                  'mPrices.$.unit': mPrice.unit.trim(),
-                  'mPrices.$.currency': mPrice.currency.trim(),
-                  'mPrices.$.mPrice': Number(mPrice.mPrice),
-                  'mPrices.$.moq': Number(mPrice.moq),
-                  'mPrices.$.moqPrice': Number(mPrice.moqPrice),
+              { _id: 0, mPrices: 1 }
+            );
+            if (checkI.length > 0) {
+              // console.log('Step_3 triggered'); // Test Code
+              // If the mPrice is existing item, then update by replacing with new one.
+              await SRMtrl.updateOne(
+                {
+                  _id: srMtrl.id,
+                  company: comId,
+                  mPrices: {
+                    $elemMatch: {
+                      id: mPrice.id,
+                    },
+                  },
                 },
-              }
-            );
-          } else {
-            // If the mPrice is not existing item, then push mPrice to be new one
-            await SRMtrl.updateOne(
-              {
-                _id: srMtrl.id,
-              },
-              { $push: { mPrices: mPrice } }
-            );
+                {
+                  $set: {
+                    mainPrice: mainPrice,
+                    'mPrices.$.unit': mPrice.unit.trim(),
+                    'mPrices.$.currency': mPrice.currency.trim(),
+                    'mPrices.$.mPrice': Number(mPrice.mPrice),
+                    'mPrices.$.moq': Number(mPrice.moq),
+                    'mPrices.$.moqPrice': Number(mPrice.moqPrice),
+                  },
+                }
+              );
+            } else {
+              // console.log('Step_4 triggered'); // Test Code
+              // If the mPrice is not existing item, then push mPrice to be new one
+              await SRMtrl.updateOne(
+                {
+                  _id: srMtrl.id,
+                  company: comId,
+                },
+                {
+                  // $set: { multiplePrice: multiplePrice },
+                  $push: { mPrices: mPrice },
+                }
+              );
+            }
           }
         }
-      }
-    });
+      });
+      // console.log('with mPrice'); // Test Code
+    }
   });
+
+  // console.log('middle'); // Test Code
 
   try {
     // The the internet time log, here don't send back the result, as it always return the previous version.
@@ -1174,7 +1210,9 @@ router.put('/update/mpricevalues/quotation', authUser, async (req, res) => {
               {
                 _id: srMtrl.id,
               },
-              { $push: { mPrices: mPrice } }
+              {
+                $push: { mPrices: mPrice },
+              }
             );
           }
         }

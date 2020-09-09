@@ -9,6 +9,7 @@ import {
   SRMTRL_UPDATE,
   SRMTRL_CLEAR,
   UPDATE_EDITING_LIST,
+  TOGGLE_MAINPRICE,
 } from '../types';
 
 const SrMtrlState = (props) => {
@@ -31,17 +32,17 @@ const SrMtrlState = (props) => {
   };
 
   //@ new Items
-  const newMPrice = {
-    id: uuidv4() + generateId(),
-    mColor: '',
-    sizeSPEC: '',
-    unit: '',
-    currency: '',
-    mPrice: '',
-    moq: '',
-    moqPrice: '',
-    quotation: '',
-  };
+  // const newMPrice = {
+  //   id: uuidv4() + generateId(),
+  //   mColor: '',
+  //   sizeSPEC: '',
+  //   unit: '',
+  //   currency: '',
+  //   mPrice: '',
+  //   moq: '',
+  //   moqPrice: '',
+  //   quotation: '',
+  // };
 
   //@ Actions------------------------------------------------------
 
@@ -285,10 +286,19 @@ const SrMtrlState = (props) => {
       });
       dispatch({ type: UPDATE_EDITING_LIST, payload: list });
     } else {
-      console.log('The push is triggered');
+      // console.log('The push is triggered'); // test Code
       list.push(srMtrlId);
       dispatch({ type: UPDATE_EDITING_LIST, payload: list });
     }
+  };
+
+  const toggleMainPrice = (srMtrlId, mPriceId) => {
+    const ids = {
+      srMtrlId: srMtrlId,
+      mPriceId: mPriceId,
+    };
+    // console.log('the Ids', ids); // Test Code
+    dispatch({ type: TOGGLE_MAINPRICE, payload: ids });
   };
 
   //@ Returns------------------------------------------------------
@@ -299,6 +309,7 @@ const SrMtrlState = (props) => {
         srMtrls: state.srMtrls,
         isUpdated: state.isUpdated,
         editingList: state.editingList,
+        mainPrice: state.mainPrice,
         getSrMtrls,
         updateSrMtrlByMtrl,
         deleteSRMtrlByMtrl,
@@ -311,6 +322,7 @@ const SrMtrlState = (props) => {
         getSpecificSrMtrl,
         clearSrMtrl,
         openSrMtrl,
+        toggleMainPrice,
       }}
     >
       {props.children}

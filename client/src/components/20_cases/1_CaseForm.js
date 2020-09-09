@@ -169,7 +169,7 @@ const CaseForm = ({ props }) => {
       <Prompt when={formIsHalfFilledOut} message='Hey' />
       {popover ? <DeletePopover key={current._id} /> : null}
       {isEditingCase ? (
-        <div className='p-1 container container-with-navbar'>
+        <div className='container container-with-navbar'>
           <div className='h-scatter-content'>
             <GoBackBtn onClick={goBack} />
             {/* <GoBackBtn onClick={goBack} /> */}

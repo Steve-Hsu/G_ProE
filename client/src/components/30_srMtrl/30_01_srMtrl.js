@@ -1,16 +1,14 @@
 import React, { useContext } from 'react';
-
-import CasesContext from '../../context/cases/casesContext';
 import SrMtrlContext from '../../context/srMtrl/srMtrlContext';
 import MPrice from './30_01_01_mPrice';
 import PropTypes from 'prop-types';
 import SqBtnLarge from '../elements/btns/SqBtnLarge';
 import GoBackBtnSpinSmall from '../elements/btns/GoBackBtnSpinSmall';
+// import ToggleSwitch from '../elements/btns/ToggleSwitch';
 
 const SrMtrl = ({ srMtrl, currentPath }) => {
-  const casesContext = useContext(CasesContext);
   const srMtrlContext = useContext(SrMtrlContext);
-  const { expandPrice, addMPrice, openSrMtrl } = srMtrlContext;
+  const { addMPrice, openSrMtrl } = srMtrlContext;
   const onClick = (e) => {
     e.preventDefault();
 
@@ -46,13 +44,16 @@ const SrMtrl = ({ srMtrl, currentPath }) => {
             </div>
           </div>
         </div>
-        <div className='mb-05'>
-          <SqBtnLarge
-            name='mPriceBtn'
-            onClick={onClick}
-            label={<i className='fas fa-money-check-alt'> Price ＋</i>}
-          />
+        <div className='flexBox mb-05'>
+          <div>
+            <SqBtnLarge
+              name='mPriceBtn'
+              onClick={onClick}
+              label={<i className='fas fa-money-check-alt'> Price ＋</i>}
+            />
+          </div>
         </div>
+
         {/* mPrice container */}
         <div>
           {srMtrl.mPrices.map((mPrice) => (

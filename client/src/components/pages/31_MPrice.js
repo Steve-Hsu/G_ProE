@@ -17,6 +17,7 @@ export const MPrice = (props) => {
     await srMtrls.map((srMtrl) => {
       body.push({
         id: srMtrl._id,
+        mainPrice: srMtrl.mainPrice,
         mPrices: srMtrl.mPrices,
       });
     });

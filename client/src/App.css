@@ -115,7 +115,7 @@ img {
 }
 
 .container-with-navbar {
-  margin-top: 50px;
+  padding-top: 65px;
 }
 
 .transition {
@@ -500,7 +500,8 @@ img {
   height: 0;
 }
 
-.slider {
+.slider,
+.slider-cp-1 {
   position: absolute;
   cursor: pointer;
   top: 0;
@@ -515,7 +516,8 @@ img {
 }
 
 /* The circle in the toggle switch */
-.slider:before {
+.slider:before,
+.slider-cp-1:before {
   position: absolute;
   content: '';
   height: 22px;
@@ -527,7 +529,13 @@ img {
   transition: 0.4s;
 }
 
-.switchInput:checked + .slider {
+/* Seperate the circle color */
+.slider-cp-1:before {
+  background-color: var(--cp-1_1);
+}
+
+.switchInput:checked + .slider,
+.switchInput:checked + .slider-cp-1 {
   background-color: var(--cp-1_2-c);
 }
 
@@ -535,17 +543,20 @@ img {
   box-shadow: 0 0 1px #2196f3;
 } */
 
-.switchInput:checked + .slider:before {
+.switchInput:checked + .slider:before,
+.switchInput:checked + .slider-cp-1:before {
   -webkit-transform: translateX(23px);
   -ms-transform: translateX(23px);
   transform: translateX(23px);
 }
 
 /* Slider Type*/
-.slider.round {
+.slider.round,
+.slider-cp-1.round {
   border-radius: 24px;
 }
-.slider.round:before {
+.slider.round:before,
+.slider-cp-1.round:before {
   border-radius: 50%;
 }
 

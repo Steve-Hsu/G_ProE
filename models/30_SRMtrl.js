@@ -39,8 +39,8 @@ const SRMtrlSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'company',
   },
-  expandPrice: {
-    type: Boolean,
+  mainPrice: {
+    type: String,
   },
   date: {
     type: Date,

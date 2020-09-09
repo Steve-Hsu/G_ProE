@@ -5,7 +5,7 @@ import Select from '../elements/select/Select';
 
 const MPrice = ({ mPrice, srMtrl, currentPath }) => {
   const srMtrlContext = useContext(SrMtrlContext);
-  const { deleteSrMtrlPrice, addSrMtrlValue, srMtrls } = srMtrlContext;
+  const { deleteSrMtrlPrice, addSrMtrlValue, toggleMainPrice } = srMtrlContext;
 
   //@
   const srMtrlId = srMtrl._id;
@@ -141,8 +141,12 @@ const MPrice = ({ mPrice, srMtrl, currentPath }) => {
     transform: 'translate(-2rem, -1rem)',
   };
 
+  const onClick2 = () => {
+    toggleMainPrice(srMtrlId, mPrice.id);
+  };
+
   return (
-    <div className='card bg-cp-2-light bd-radius-s bd-light'>
+    <div className='card bg-cp-2-light bd-radius-s bd-light' onClick={onClick2}>
       <div className='grid-7'>
         {mPriceList().map((m) => {
           if (currentPath === '/api/quogarment') {

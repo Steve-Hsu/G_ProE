@@ -244,6 +244,8 @@ const Mtrl = ({ mtrl }) => {
         checked={mtrl[subject]}
         onChange={onChange}
         readOnlyIndicator={osNo}
+        onLabel='On'
+        offLabel='Off'
       />
     );
   };
