@@ -9,6 +9,7 @@ import MtrlCspt from './1_6_3_MtrlCspt';
 import DeleteBtnSmall from '../elements/btns/DeleteBtnSmall';
 import GoBackBtnSpinSmall from '../elements/btns/GoBackBtnSpinSmall';
 import Select from '../elements/select/Select';
+import ToggleSwitch from '../elements/btns/ToggleSwitch';
 
 const Mtrl = ({ mtrl }) => {
   const casesContext = useContext(CasesContext);
@@ -237,21 +238,13 @@ const Mtrl = ({ mtrl }) => {
 
   const toggleSwitchObj = (subject) => {
     return (
-      <div className='toggleSwitch'>
-        <label className='switch'>
-          <input
-            className='switchInput'
-            id={subject}
-            type='checkbox'
-            name={mtrl.id}
-            checked={mtrl[subject] == true}
-            onChange={onChange}
-            readOnly={osNo ? true : false}
-          />
-          <span className='slider round'></span>
-        </label>
-        <span>{mtrl[subject] == true ? 'ON' : 'OFF'}</span>
-      </div>
+      <ToggleSwitch
+        id={subject}
+        name={mtrl.id}
+        checked={mtrl[subject]}
+        onChange={onChange}
+        readOnlyIndicator={osNo}
+      />
     );
   };
 
