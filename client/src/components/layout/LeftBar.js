@@ -224,7 +224,7 @@ const LeftBar = ({ currentPath }) => {
       className='container-with-navbar leftbar bg-cp-1 bd-light bd-no-t h-100'
       style={{ height: 'clamp(100vh, 100%, 100%)' }}
     >
-      <div className='leftbar-component'>
+      <div className='leftbar-component ml-1'>
         {' '}
         {/* Upper load btn */}
         {osNo ? null : (
@@ -276,7 +276,9 @@ const LeftBar = ({ currentPath }) => {
               <div>
                 {currentPage === 'case' ? (
                   isImportedExcel ? (
-                    <div>Have imported Style from Excel</div>
+                    <div className='btn-block bd-radius-s bg-cp-2-light-c center-content mt-1'>
+                      Have imported Style from Excel
+                    </div>
                   ) : (
                     <div className='round-area bg-cp-3 mt-1'>
                       <i className='fas fa-table fc-cp-1'>

@@ -94,7 +94,8 @@ const UserLogin = (props) => {
         <input
           type='submit'
           value='Login'
-          className='btn btn-primary btn-block'
+          className='btn  btn-block mb-05'
+          style={{ height: '2rem' }}
         />
         {/* <TestCodeBtn /> */}
         <Alerts />

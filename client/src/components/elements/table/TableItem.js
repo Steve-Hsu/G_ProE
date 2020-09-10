@@ -65,12 +65,19 @@ const TableItem = ({
     return style;
   };
 
+  const checkSrMtrlId = (id) => {
+    if (toggleItemAttributes[1]) {
+      return toggleItemAttributes[1].includes(id);
+    } else {
+      return false;
+    }
+  };
+
   return (
     <Fragment>
       {purpose === '1_CaseForm' && isEditingMtrl == true ? (
         <Mtrl key={subject.id} mtrl={subject} />
-      ) : purpose === 'srMtrlSelector' &&
-        toggleItemAttributes[1].includes(id) ? (
+      ) : purpose === 'srMtrlSelector' && checkSrMtrlId(id) ? (
         <SrMtrl srMtrl={subject} />
       ) : purpose === 'purCaseSelector' && subject.poDate !== null ? null : (
         <div

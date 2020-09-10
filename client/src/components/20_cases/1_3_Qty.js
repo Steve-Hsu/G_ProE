@@ -38,7 +38,7 @@ const Qty = ({ size, gQty }) => {
             onChange={addNumber}
             min='0'
             max={Max}
-            className='MPH-input bg-cp-1 bd-no fs-lead h-100 pl-05'
+            className='MPH-input bd-no fs-lead h-100 pl-05 bg-cp-1'
           />
           <label
             htmlFor={gQty.id}

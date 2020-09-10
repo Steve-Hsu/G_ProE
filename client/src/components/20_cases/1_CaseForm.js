@@ -226,7 +226,7 @@ const CaseForm = ({ props }) => {
                     name='caseType'
                     list='caseTypeList'
                     onChange={addCaseValue}
-                    className='select-primary bd-light'
+                    className='bd-light'
                     required
                   >
                     {caseTypeList.map((t) => {
@@ -254,14 +254,14 @@ const CaseForm = ({ props }) => {
 
               {/* CS-Breakdown table */}
               {/* Color -------------------------- */}
-              <div className='grid-6 mb-1'>
+              <div className='grid-6 mb-05'>
                 <div
                   className='fs-lead v-center-content'
                   style={{ gridColumn: '1/2' }}
                 >
                   Size-Breakdown
                 </div>
-                {cNo !== null || osNo ? (
+                {osNo ? (
                   <div></div>
                 ) : (
                   <SqBtnLarge
@@ -270,7 +270,7 @@ const CaseForm = ({ props }) => {
                   />
                 )}
 
-                {cNo !== null || osNo ? (
+                {osNo ? (
                   <div></div>
                 ) : (
                   <SqBtnLarge

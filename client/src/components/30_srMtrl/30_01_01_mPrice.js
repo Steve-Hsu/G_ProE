@@ -2,10 +2,18 @@ import React, { useContext } from 'react';
 import SrMtrlContext from '../../context/srMtrl/srMtrlContext';
 import PropTypes from 'prop-types';
 import Select from '../elements/select/Select';
+import DeleteBtnSmall from '../elements/btns/DeleteBtnSmall';
 
-const MPrice = ({ mPrice, srMtrl, currentPath }) => {
+const MPrice = ({
+  mPrice,
+  srMtrl,
+  currentPath,
+  togglePopover,
+  idx,
+  mainPrice,
+}) => {
   const srMtrlContext = useContext(SrMtrlContext);
-  const { deleteSrMtrlPrice, addSrMtrlValue, toggleMainPrice } = srMtrlContext;
+  const { addSrMtrlValue, toggleMainPrice } = srMtrlContext;
 
   //@
   const srMtrlId = srMtrl._id;
@@ -15,8 +23,8 @@ const MPrice = ({ mPrice, srMtrl, currentPath }) => {
       'mColor',
       'sizeSPEC',
       'unit',
-      'currency',
       'moq',
+      'currency',
       'moqPrice',
       'mPrice',
     ];
@@ -25,20 +33,6 @@ const MPrice = ({ mPrice, srMtrl, currentPath }) => {
     }
     return arr;
   };
-
-  // const mPriceList = [
-  //   'mColor',
-  //   'sizeSPEC',
-  //   'unit',
-  //   'currency',
-  //   'moq',
-  //   'moqPrice',
-  //   'mPrice',
-  // ];
-
-  // if (currentPath === '/api/quogarment') {
-  //   mPriceList.push('quotation');
-  // }
 
   //@ Funcs
   const labels = (x) => {
@@ -63,9 +57,8 @@ const MPrice = ({ mPrice, srMtrl, currentPath }) => {
   };
 
   const onClick = (e) => {
-    e.preventDefault();
-
-    deleteSrMtrlPrice(e);
+    const subId = mPrice.id;
+    togglePopover(e, subId);
   };
 
   const onChange = (e) => {
@@ -136,18 +129,38 @@ const MPrice = ({ mPrice, srMtrl, currentPath }) => {
 
   //@ Style
   const deleteBtnPosition = {
-    top: ' 70%',
-    left: '100%',
-    transform: 'translate(-2rem, -1rem)',
+    transform: 'translate(0.3rem, -0.9rem)',
   };
 
   const onClick2 = () => {
     toggleMainPrice(srMtrlId, mPrice.id);
+    // console.log('the MainPrice', mainPrice); // Test Code
   };
 
   return (
-    <div className='card bg-cp-2-light bd-radius-s bd-light' onClick={onClick2}>
-      <div className='grid-7'>
+    <div className='card bg-cp-1 bd-radius-s bd-light pb-0 hover-cp-2-light'>
+      {/* <div className='ml-1 w-90' style={{ flex: '1 1 auto' }}> */}
+      {/* <div className='h-scatter-content'> */}
+      {/* {' '} */}
+      {/* {currentPath === '/api/case/mprice' ? ( */}
+      {/* <div>{mPrice.id === mainPrice ? <span>Main Price</span> : null}</div> */}
+
+      {/* // ) : null} */}
+      {/* </div> */}
+      <div className='grid-mPrice mb-0' style={{ height: '65px' }}>
+        <div className='fs-lead cursor' onClick={onClick2}>
+          <div
+            className='pr-05'
+            style={{ transform: 'translate(-0.3rem, -0.5rem)' }}
+          >
+            {' '}
+            {mainPrice === mPrice.id ? (
+              <i className='fas fa-magnet'></i>
+            ) : (
+              <div>{idx + 1}</div>
+            )}
+          </div>
+        </div>
         {mPriceList().map((m) => {
           if (currentPath === '/api/quogarment') {
             switch (m) {
@@ -184,106 +197,88 @@ const MPrice = ({ mPrice, srMtrl, currentPath }) => {
           } else {
             switch (m) {
               case 'mColor':
-                return (
-                  <Select
-                    key={`${m}${mPrice.id}`}
-                    subject={mPrice}
-                    optionList={selectList('mColor')}
-                    onChange={onChange}
-                    // label='Color'
-                    selectedOption={mPrice.mColor}
-                  />
-                );
               case 'sizeSPEC':
                 return (
-                  <Select
-                    key={`${m}${mPrice.id}`}
-                    subject={mPrice}
-                    optionList={selectList('sizeSPEC')}
-                    onChange={onChange}
-                    // label='SPEC'
-                    selectedOption={mPrice.sizeSPEC}
-                  />
+                  <div key={`div${m}${mPrice.id}`} className='ml-05'>
+                    <div className='fs-tiny'>
+                      {m === 'mColor' ? 'Color' : 'SPEC'}
+                    </div>
+                    <Select
+                      key={`${m}${mPrice.id}`}
+                      subject={mPrice}
+                      optionList={selectList(m)}
+                      onChange={onChange}
+                      selectedOption={mPrice[m]}
+                    />
+                  </div>
                 );
               case 'unit':
-                return (
-                  <Select
-                    key={`${m}${mPrice.id}`}
-                    purpose='unit'
-                    subject={mPrice}
-                    onChange={onChange}
-                    // label='Unit'
-                    required={true}
-                    selectedOption={mPrice.unit}
-                  />
-                );
               case 'currency':
                 return (
-                  <Select
-                    key={`${m}${mPrice.id}`}
-                    purpose='currency'
-                    subject={mPrice}
-                    onChange={onChange}
-                    // label='Currency'
-                    required={true}
-                    selectedOption={mPrice.currency}
-                  />
-                  // <div key={`${m}${mPrice.id}`}>
-                  //   <input
-                  //     type='text'
-                  //     id={`${m}${mPrice.id}`}
-                  //     name={mPrice.id}
-                  //     placeholder='.'
-                  //     onChange={onChange}
-                  //     className='MPH-input'
-                  //     value={mPrice[`${m}`] || ''}
-                  //   />
-                  //   <label
-                  //     htmlFor={`${m}${mPrice.id}`}
-                  //     className='MPH-input-label'
-                  //   >
-                  //     {labels(m)}
-                  //   </label>
-                  // </div>
+                  <div key={`div${m}${mPrice.id}`} className='ml-05'>
+                    <div className='fs-tiny'>
+                      {m === 'unit' ? 'Unit' : 'Currency'}
+                    </div>
+                    <Select
+                      key={`${m}${mPrice.id}`}
+                      purpose={m}
+                      subject={mPrice}
+                      onChange={onChange}
+                      required={true}
+                      selectedOption={mPrice[m]}
+                    />
+                  </div>
                 );
               default:
                 return (
-                  <div key={`${m}${mPrice.id}`}>
-                    <input
-                      type='number'
-                      id={`${m}${mPrice.id}`}
-                      name={mPrice.id}
-                      placeholder='.'
-                      onChange={addNumber}
-                      className='MPH-input'
-                      value={mPrice[`${m}`] || ''}
-                    />
-                    <label
-                      htmlFor={`${m}${mPrice.id}`}
-                      className='MPH-input-label'
-                    >
-                      {labels(m)}
-                    </label>
+                  <div
+                    key={`div${m}${mPrice.id}`}
+                    className='ml-05'
+                    style={{ height: '68px' }}
+                  >
+                    <div className='fs-tiny'>
+                      {m === 'moq'
+                        ? 'MOQ'
+                        : m === 'moqPrice'
+                        ? 'MOQ Price'
+                        : m === 'mPrice'
+                        ? 'Unit Price'
+                        : null}
+                    </div>
+                    <div key={`${m}${mPrice.id}`}>
+                      <input
+                        type='number'
+                        id={`${m}${mPrice.id}`}
+                        name={mPrice.id}
+                        // placeholder='.'
+                        onChange={addNumber}
+                        // className='MPH-input'
+                        value={mPrice[`${m}`] || ''}
+                      />
+                      {/* <label
+                          htmlFor={`${m}${mPrice.id}`}
+                          className='MPH-input-label'
+                        >
+                          {labels(m)}
+                        </label> */}
+                    </div>
                   </div>
                 );
             }
           }
         })}
-
-        {currentPath === '/api/case/mprice' ? (
-          <div>
-            <button
-              value={srMtrlId}
-              name={mPrice.id}
-              onClick={onClick}
-              className='btn btn-fade btn-square'
-              style={deleteBtnPosition}
-            >
-              x
-            </button>
-          </div>
-        ) : null}
+        <div className='ml-05'>
+          <DeleteBtnSmall
+            key={mPrice.id}
+            onClick={onClick}
+            name='deleteMPrice'
+            value={srMtrlId}
+            style={deleteBtnPosition}
+          />
+        </div>
       </div>
+
+      {/* </div> */}
     </div>
   );
 };

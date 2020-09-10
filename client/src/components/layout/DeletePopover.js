@@ -15,7 +15,7 @@ const DeletePopover = () => {
   const purContext = useContext(PurContext);
   const { _id, cNo, deleteMtrl, deletecWayOrgSize, deleteCase } = casesContext;
   const quoContext = useContext(QuoContext);
-  const { deleteSRMtrlByMtrl } = srMtrlContext;
+  const { deleteSRMtrlByMtrl, deleteSrMtrlPrice } = srMtrlContext;
   const { comName, comSymbol } = authUserContext;
   const {
     togglePopover,
@@ -58,6 +58,14 @@ const DeletePopover = () => {
         break;
       case 'deleteOs':
         deleteOs(current._id);
+        break;
+      case 'deleteMPrice':
+        const ids = {
+          srMtrlId: current.srMtrlId,
+          mPriceId: current.id,
+        };
+        deleteSrMtrlPrice(ids);
+        break;
       default:
     }
     toggleLoading(e);
@@ -81,7 +89,13 @@ const DeletePopover = () => {
         return `Quotation Form : ${current.quoNo}`;
       case 'deleteOs':
         return `Order Summary : ${current.osNo}`;
+      case 'deleteOs':
+        return `Order Summary : ${current.osNo}`;
+      case 'deleteMPrice':
+        return ` Price in SPEC : ${current.sizeSPEC}, and Color : ${current.mColor}`;
+
       default:
+        return 'No defined';
     }
   };
 
@@ -109,7 +123,7 @@ const DeletePopover = () => {
       <div className='popup-inner bd-radius-s'>
         {isLoading === false ? (
           <div className='popup-container bd-light bd-radius-s bg-cp-2'>
-            <div className='p-2 h-20'>You will delete this {`${words()}`}</div>
+            <div className='p-2 h-20'>Delete this {`${words()}`}</div>
             <div className='center-content h-40'>
               {' '}
               <h3>Are you sure?</h3>

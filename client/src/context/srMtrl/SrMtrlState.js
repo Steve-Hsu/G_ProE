@@ -184,15 +184,26 @@ const SrMtrlState = (props) => {
   };
 
   //@1 Delete srMtrl
-  const deleteSrMtrlPrice = (e) => {
-    const srMtrlId = e.target.value;
-    const mPriceId = e.target.name;
+  const deleteSrMtrlPrice = async (ids) => {
+    const srMtrlId = ids.srMtrlId;
+    const mPriceId = ids.mPriceId;
     let srMaterials = srMtrls;
     srMaterials.map((srMtrl) => {
       return (srMtrl.mPrices = srMtrl.mPrices.filter(
         (mPrice) => mPrice.id !== mPriceId
       ));
     });
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const res = await axios.put(
+      `/api/srmtrl/deleteprice/${srMtrlId}/${mPriceId}`,
+      config
+    );
+    console.log('the result of delete Price', res.data);
 
     dispatch({
       type: SRMTRL_UPDATE,
@@ -247,7 +258,7 @@ const SrMtrlState = (props) => {
 
   //@1 update quotation of material in mPrices
   const updateMPricesQuotation = async (body) => {
-    console.log('Yes triggered');
+    // console.log('Yes triggered'); // Test Code
     const config = {
       headers: {
         'Content-Type': 'application/json',
@@ -301,6 +312,16 @@ const SrMtrlState = (props) => {
     dispatch({ type: TOGGLE_MAINPRICE, payload: ids });
   };
 
+  // const deletePrice = async (srMtrlId, mPriceId) => {
+  //   const config = {
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //   };
+  //   const res = await axios.put(`/api/srmtrl/${srMtrlId}/${mPriceId}`, config);
+  //   console.log('the result of delete Price', res.data);
+  // };
+
   //@ Returns------------------------------------------------------
 
   return (
@@ -323,6 +344,7 @@ const SrMtrlState = (props) => {
         clearSrMtrl,
         openSrMtrl,
         toggleMainPrice,
+        // deletePrice,
       }}
     >
       {props.children}

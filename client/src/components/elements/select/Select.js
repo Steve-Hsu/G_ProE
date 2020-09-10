@@ -22,13 +22,13 @@ const Select = ({
   switch (purpose) {
     case 'unit':
       options = [
-        'Select a Unit',
+        'Unit',
         'yds',
         'm',
         'cm',
         'in',
         'set',
-        'print size',
+        // 'print size',
         'pcs',
         'gross',
         'doz',
@@ -37,7 +37,7 @@ const Select = ({
       break;
     case 'currency':
       options = [
-        'Select a Currency',
+        'Currency',
         'AUD',
         'EUR',
         'HKD',

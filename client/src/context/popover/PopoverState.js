@@ -10,6 +10,7 @@ import {
   ADD_DOUBLECHECK_VALUE,
 } from '../types';
 import CasesContext from '../../context/cases/casesContext';
+import SrMtrlContext from '../../context/srMtrl/srMtrlContext';
 import QuoContext from '../../context/quo/quoContext';
 import PurContext from '../../context/pur/purContext';
 
@@ -23,15 +24,17 @@ const PopoverState = (props) => {
   };
   const [state, dispatch] = useReducer(popoverReducer, initialState);
   const casesContext = useContext(CasesContext);
+  const srMtrlContext = useContext(SrMtrlContext);
   const quoContext = useContext(QuoContext);
   const purContext = useContext(PurContext);
   const { _id, cNo, cWays, sizes, mtrls } = casesContext;
+  const { srMtrls } = srMtrlContext;
   const { quotation } = quoContext;
   const { osList } = purContext;
 
   //Action -------
 
-  const togglePopover = (e) => {
+  const togglePopover = (e, subId) => {
     const newPopover = !state.popover;
     dispatch({ type: TOGGLE_POPOVER, payload: newPopover });
     if (newPopover) {
@@ -56,6 +59,11 @@ const PopoverState = (props) => {
           break;
         case 'deleteOs':
           subject = osList.find(({ _id }) => _id === targetId);
+          break;
+        case 'deleteMPrice':
+          let srMtrl = srMtrls.find(({ _id }) => _id === targetId);
+          subject = srMtrl.mPrices.find(({ id }) => id === subId);
+          subject.srMtrlId = targetId;
           break;
         default:
           subject = { key: 'no target id' };

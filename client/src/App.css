@@ -249,6 +249,11 @@ img {
   grid-template-columns: 1fr 5fr repeat(5, 1fr);
 }
 
+.grid-mPrice {
+  display: grid;
+  grid-template-columns: 20px 1fr 1.6fr 0.8fr 0.6fr 0.6fr 0.6fr 0.6fr 30px;
+}
+
 /* grid gap */
 .gap-ti {
   grid-gap: var(--tiny);
@@ -406,6 +411,7 @@ img {
 
 .btn-block {
   display: block;
+  height: 2.2rem;
   width: 100%;
 }
 
@@ -673,12 +679,12 @@ table th {
 }
 
 /* @input */
-input {
+/* input {
   margin: 0;
-  /* border-radius: var(--small); */
-}
+} */
 
 input,
+/* input[type='number'], */
 select,
 textarea {
   display: inline-block;
@@ -688,6 +694,7 @@ textarea {
   border-radius: var(--small);
   transition: all 0.5s;
   border: 1px solid var(--fade-color);
+  height: 2.2rem;
 }
 
 .select-primary {
@@ -695,19 +702,31 @@ textarea {
 }
 
 input:hover,
+/* input[type='number']:hover, */
 select:hover,
 textarea:hover {
-  color: var(--primary-text);
-  background: var(--primary-color);
-  transition: all 0.5s;
+  /* color: var(--primary-text); */
+  /* background: var(--primary-color); */
+  /* border: 1px solid var(--cp-1_2); */
+  transition: all 0.3s;
+  box-shadow: 0px 0 1px 2px var(--cp-1_2-c);
 }
-
-input:focus,
-select:focus,
+/* input[type='number']:focus, */
+/* input:focus,
 textarea:focus {
+  outline: none;
+} */
+input:focus,
+textarea:focus,
+select:focus {
   box-shadow: none;
   outline: none;
   transition: all 0.5s;
+}
+
+input[type='submit']:hover,
+input[type='submit']:focus {
+  box-shadow: none;
 }
 
 .select-primary:focus,
@@ -725,7 +744,7 @@ textarea:focus {
 .select-primary-sub:focus,
 .select-primary-sub:hover {
   /* color: white; */
-
+  border: 1px solid rgba(255, 255, 255, 0);
   background: var(--primary-color);
   transition: all 0.5s;
 }
@@ -761,7 +780,8 @@ textarea:focus {
 .MPH-input:focus {
   box-shadow: none;
   outline: none;
-  /* border: 1px solid var(--primary-color); */
+  background: var(--cp-1_2);
+  border: 1px solid rgba(255, 255, 255, 0);
   transition: all 1.2s;
 }
 
@@ -794,7 +814,17 @@ textarea:focus {
   font-size: 3rem;
   z-index: 2;
   border: 1px solid rgba(255, 255, 255, 0);
+  color: var(--cp-1_4);
 }
+
+.item-input:hover {
+  box-shadow: none;
+}
+
+.item-input:hover::placeholder {
+  color: var(--cp-1_4);
+}
+
 .item-input::placeholder {
   position: relative;
   color: var();
@@ -1559,7 +1589,7 @@ textarea:focus {
 
 /* transparent specific border */
 .bd-no {
-  border: 0;
+  border: 1px solid rgba(255, 255, 255, 0);
 }
 
 .bd-no-t {
@@ -1609,6 +1639,12 @@ textarea:focus {
   background: var(--cp-1_2);
   transition: ease-out 0.3s;
 }
+
+.hover-cp-2-light:hover {
+  background: var(--cp-1_2-light);
+  transition: ease-out 0.3s;
+}
+
 .hover-spin-90:hover {
   cursor: pointer;
   transform: rotate(90deg);

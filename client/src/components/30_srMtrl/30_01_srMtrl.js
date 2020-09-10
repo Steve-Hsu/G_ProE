@@ -4,11 +4,15 @@ import MPrice from './30_01_01_mPrice';
 import PropTypes from 'prop-types';
 import SqBtnLarge from '../elements/btns/SqBtnLarge';
 import GoBackBtnSpinSmall from '../elements/btns/GoBackBtnSpinSmall';
+import DeletePopover from '../layout/DeletePopover';
+import PopoverContext from '../../context/popover/popoverContext';
 // import ToggleSwitch from '../elements/btns/ToggleSwitch';
 
 const SrMtrl = ({ srMtrl, currentPath }) => {
   const srMtrlContext = useContext(SrMtrlContext);
+  const popoverContext = useContext(PopoverContext);
   const { addMPrice, openSrMtrl } = srMtrlContext;
+  const { popover, current, togglePopover } = popoverContext;
   const onClick = (e) => {
     e.preventDefault();
 
@@ -24,6 +28,8 @@ const SrMtrl = ({ srMtrl, currentPath }) => {
       className='mb-1 p-1 round-card bg-cp-elem bd-light flexBox'
       style={{ width: '100%' }}
     >
+      {/* {popover ? <DeletePopover key={current.id} /> : null} */}
+      {popover ? <DeletePopover key={'eee'} /> : null}
       <GoBackBtnSpinSmall onClick={goBack} />
       <div className='ml-1 w-90' style={{ flex: '1 1 auto' }}>
         <div className='grid-2'>
@@ -56,11 +62,14 @@ const SrMtrl = ({ srMtrl, currentPath }) => {
 
         {/* mPrice container */}
         <div>
-          {srMtrl.mPrices.map((mPrice) => (
+          {srMtrl.mPrices.map((mPrice, idx) => (
             <MPrice
               key={mPrice.id}
               mPrice={mPrice}
               srMtrl={srMtrl}
+              togglePopover={togglePopover}
+              idx={idx}
+              mainPrice={srMtrl.mainPrice}
               // currentPath={currentPath}
             />
           ))}

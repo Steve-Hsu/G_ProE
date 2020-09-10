@@ -1230,41 +1230,31 @@ router.put('/update/mpricevalues/quotation', authUser, async (req, res) => {
   }
 });
 
-// @route   PUT api/srmtrl/deleterefbygclrorgsize
+// @route   PUT api/srmtrl/deleteprice/srmtrlid/mpriceid
 // @desc    Delete the refs of rsMtrl by Mtrl
 // @access  Private
-// router.put(
-//   '/deleterefbygclrorgsize/:caseId/:subject:id',
-//   authUser,
-//   async (req, res) => {
-//     const user = await User.findById(req.user.id);
-//     if (!user.cases) {
-//       return res.status(400).json({
-//         msg: 'Out of authority',
-//       });
-//     }
-//     const { subject } = req.body;
-//     const userId = req.user.id;
-//     const comId = req.user.company;
-//     const caseId = req.params.caseId;
+router.put('/deleteprice/:srmtrlId/:mpriceId', authUser, async (req, res) => {
+  const user = await User.findById(req.user.id);
+  if (!user.cases) {
+    return res.status(400).json({
+      msg: 'Out of authority',
+    });
+  }
+  const comId = req.user.company;
+  const srmId = req.params.srmtrlId;
+  const mprice = req.params.mpriceId;
+  console.log('The srMtrlId', srmId);
+  console.log('The Material price', mprice);
 
-//     const theCase = Case.find({ _id: caseId, company: comId });
-//     if (theCase.length === 0) {
-//       console.log('No such case');
-//       return res.status(404).json({
-//         msg: 'No such case',
-//       });
-//     }
-
-//     const mtrls = theCase.mtrls;
-
-//     //No meed to reply any thing to client immediately so don't use promise.
-//     mtrls.map(async(mtrl) => {
-//       const supplier = mtrl.supplier
-//       const ref_no = mtrl.ref_no
-//       const
-//     });
-//   }
-// );
+  try {
+    await SRMtrl.updateOne(
+      { _id: srmId, company: comId },
+      { $pull: { mPrices: { id: mprice } } }
+    );
+    res.json({ msg: 'The Price is deleted' });
+  } catch (err) {
+    console.log(err);
+  }
+});
 
 module.exports = router;

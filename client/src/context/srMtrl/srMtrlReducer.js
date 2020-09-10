@@ -35,6 +35,7 @@ export default (state, action) => {
       return {
         srMtrls: [],
         isUpdated: false,
+        editingList: [],
       };
     case UPDATE_EDITING_LIST:
       return {
