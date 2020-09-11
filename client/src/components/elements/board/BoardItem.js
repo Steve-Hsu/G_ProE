@@ -71,7 +71,7 @@ const BoardItem = ({
           toggleItemAttributes[1].includes(id)) ||
         (purpose === 'quoSrMtrlSelector' &&
           toggleItemAttributes[1].includes(id)) ? (
-        <SrMtrl srMtrl={subject} />
+        <SrMtrl srMtrl={subject} currentPath={currentPath} />
       ) : (
         <div
           className='boardChild round-card bg-cp-elem bd-light hover-cp-2'
