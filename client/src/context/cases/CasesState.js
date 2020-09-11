@@ -778,6 +778,7 @@ const CasesState = (props) => {
       //   // materials.find(({ id }) => id === mtrlId).description = e.target.value;
       //   break;
       case 'unit' + String(mtrlId):
+        // console.log('The unit Add value is called'); // Test Codes
         let material = materials.find(({ id }) => id === mtrlId);
         material.unit = e.target.value;
         material.cspts.map((cspt) => {
