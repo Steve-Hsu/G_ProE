@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import SrMtrlContext from '../../context/srMtrl/srMtrlContext';
 import PropTypes from 'prop-types';
 import Select from '../elements/select/Select';
@@ -15,6 +15,10 @@ const MPrice = ({
   const srMtrlContext = useContext(SrMtrlContext);
   const { addSrMtrlValue, toggleMainPrice } = srMtrlContext;
 
+  useEffect(() => {
+    loadSelectUnitTagIndex();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   //@
   const srMtrlId = srMtrl._id;
 
@@ -109,23 +113,23 @@ const MPrice = ({
   };
 
   // update the select when donwload
-  // const loadSelectUnitTagIndex = () => {
-  //   // if (currentPath !== '/api/quogarment') {
-  //   // document
-  //   //   .getElementById(`${mPrice.mColor}${mPrice.id}`)
-  //   //   .removeAttribute('selected');
-  //   document
-  //     .getElementById(`${mPrice.mColor}${mPrice.id}`)
-  //     .setAttribute('selected', 'selected');
+  const loadSelectUnitTagIndex = () => {
+    // if (currentPath !== '/api/quogarment') {
+    // document
+    //   .getElementById(`${mPrice.mColor}${mPrice.id}`)
+    //   .removeAttribute('selected');
+    document
+      .getElementById(`${mPrice.mColor}${mPrice.id}`)
+      .setAttribute('selected', 'selected');
 
-  //   // document
-  //   //   .getElementById(`${mPrice.sizeSPEC}${mPrice.id}`)
-  //   //   .removeAttribute('selected');
-  //   document
-  //     .getElementById(`${mPrice.sizeSPEC}${mPrice.id}`)
-  //     .setAttribute('selected', 'selected');
-  //   // }
-  // };
+    // document
+    //   .getElementById(`${mPrice.sizeSPEC}${mPrice.id}`)
+    //   .removeAttribute('selected');
+    document
+      .getElementById(`${mPrice.sizeSPEC}${mPrice.id}`)
+      .setAttribute('selected', 'selected');
+    // }
+  };
 
   //@ Style
   const deleteBtnPosition = {
