@@ -13,6 +13,7 @@ const SrMtrl = ({ srMtrl, currentPath }) => {
   const popoverContext = useContext(PopoverContext);
   const { addMPrice, openSrMtrl } = srMtrlContext;
   const { popover, current, togglePopover } = popoverContext;
+  // let options = [];
   const onClick = (e) => {
     e.preventDefault();
 
@@ -71,6 +72,7 @@ const SrMtrl = ({ srMtrl, currentPath }) => {
               idx={idx}
               mainPrice={srMtrl.mainPrice}
               currentPath={currentPath}
+              // options={options}
             />
           ))}
         </div>

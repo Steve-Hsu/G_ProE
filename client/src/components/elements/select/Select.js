@@ -12,19 +12,24 @@ const Select = ({
   id,
 }) => {
   useEffect(() => {
-    if (selectedOption === '') {
-    } else {
-      loadCaseSelectUnitTagIndex();
-    }
-    // if (id === null) {
-    //   if (subject.id) {
-    //     id = purpose + subject.id;
-    //   } else {
-    //     id = purpose + subject._id;
-    //   }
-    // }
+    loadCaseSelectUnitTagIndex();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedOption]);
+  }, [subject]);
+
+  // useEffect(() => {
+  //   if (selectedOption === '') {
+  //   } else {
+  //     loadCaseSelectUnitTagIndex();
+  //   }
+  //   // if (id === null) {
+  //   //   if (subject.id) {
+  //   //     id = purpose + subject.id;
+  //   //   } else {
+  //   //     id = purpose + subject._id;
+  //   //   }
+  //   // }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [selectedOption]);
 
   let options = [];
   switch (purpose) {
@@ -63,37 +68,26 @@ const Select = ({
         'VND',
       ];
       break;
-    case null:
-      options = optionList;
-      break;
     default:
+      options = optionList;
   }
 
   const loadCaseSelectUnitTagIndex = () => {
-    const selected = document.getElementById(`${selectedOption}${subject.id}`);
+    let selected = null;
+    if (selectedOption) {
+      selected = document.getElementById(
+        `${purpose}${selectedOption}${subject.id}`
+      );
+    } else {
+      selected = document.getElementById(`${purpose}empty${subject.id}`);
+    }
     if (selected) {
+      selected.removeAttribute('selected');
       selected.setAttribute('selected', 'selected');
+      console.log('the seleted in select', selected);
     }
   };
 
-  //   // update the select when donwload
-  //   const loadSelectTagIndex = () => {
-  //     // if (currentPath !== '/api/quogarment') {
-  //     document
-  //       .getElementById(`${mPrice.mColor}${subject.id}`)
-  //       .removeAttribute('selected');
-  //     document
-  //       .getElementById(`${mPrice.mColor}${subject.id}`)
-  //       .setAttribute('selected', 'selected');
-
-  //     document
-  //       .getElementById(`${mPrice.sizeSPEC}${mPrice.id}`)
-  //       .removeAttribute('selected');
-  //     document
-  //       .getElementById(`${mPrice.sizeSPEC}${mPrice.id}`)
-  //       .setAttribute('selected', 'selected');
-  //     // }
-  //   };
   const theId = (id) => {
     if (id) {
       return id;
@@ -120,7 +114,11 @@ const Select = ({
           return (
             <option
               key={`${o}${subject.id ? subject.id : subject._id}`}
-              id={`${o}${subject.id ? subject.id : subject._id}`}
+              id={
+                o
+                  ? `${purpose}${o}${subject.id ? subject.id : subject._id}`
+                  : `${purpose}empty${subject.id ? subject.id : subject._id}`
+              }
               value={o}
             >
               {o}

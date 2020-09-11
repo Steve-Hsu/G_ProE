@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import SrMtrlContext from '../../context/srMtrl/srMtrlContext';
 import PropTypes from 'prop-types';
 import Select from '../elements/select/Select';
@@ -15,10 +15,6 @@ const MPrice = ({
   const srMtrlContext = useContext(SrMtrlContext);
   const { addSrMtrlValue, toggleMainPrice } = srMtrlContext;
 
-  useEffect(() => {
-    loadSelectUnitTagIndex();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
   //@
   const srMtrlId = srMtrl._id;
 
@@ -109,27 +105,31 @@ const MPrice = ({
         break;
       default:
     }
+    console.log('the selectList in mPrice', arr);
     return arr;
   };
 
   // update the select when donwload
-  const loadSelectUnitTagIndex = () => {
-    // if (currentPath !== '/api/quogarment') {
-    // document
-    //   .getElementById(`${mPrice.mColor}${mPrice.id}`)
-    //   .removeAttribute('selected');
-    document
-      .getElementById(`${mPrice.mColor}${mPrice.id}`)
-      .setAttribute('selected', 'selected');
+  // const loadSelectUnitTagIndex = () => {
+  //   // if (currentPath !== '/api/quogarment') {
+  //   const mColorOption = document.getElementById(
+  //     `${mPrice.mColor}${mPrice.id}`
+  //   );
 
-    // document
-    //   .getElementById(`${mPrice.sizeSPEC}${mPrice.id}`)
-    //   .removeAttribute('selected');
-    document
-      .getElementById(`${mPrice.sizeSPEC}${mPrice.id}`)
-      .setAttribute('selected', 'selected');
-    // }
-  };
+  //   const sizeSPECOption = document.getElementById(
+  //     `${mPrice.sizeSPEC}${mPrice.id}`
+  //   );
+
+  //   mColorOption.removeAttribute('selected');
+  //   mColorOption.setAttribute('selected', 'selected');
+
+  //   sizeSPECOption.removeAttribute('selected');
+  //   sizeSPECOption.setAttribute('selected', 'selected');
+
+  //   console.log('the mColorOption', mColorOption);
+  //   console.log('the sizeSPECOption', sizeSPECOption);
+  //   // }
+  // };
 
   //@ Style
   const deleteBtnPosition = {
@@ -208,6 +208,7 @@ const MPrice = ({
                       {m === 'mColor' ? 'Color' : 'SPEC'}
                     </div>
                     <Select
+                      purpose={m}
                       key={`${m}${mPrice.id}`}
                       id={`${m}${mPrice.id}`}
                       subject={mPrice}

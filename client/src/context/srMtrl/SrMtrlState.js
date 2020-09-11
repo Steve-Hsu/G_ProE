@@ -126,15 +126,14 @@ const SrMtrlState = (props) => {
     const sizeSPECNum = srMaterial.sizeSPECs.length;
     const mPriceNum = srMaterial.mPrices.length;
     const mPriceMaxNum = mtrlColorNum * sizeSPECNum;
-    console.log('this is mtrlColorNum', mtrlColorNum);
-    console.log('this is sizeSPECNum', sizeSPECNum);
-    console.log('this is mPriceNum', mPriceNum);
-    console.log('this is mPriceMaxNum', mPriceMaxNum);
+    // console.log('this is mtrlColorNum', mtrlColorNum); // Test Code
+    // console.log('this is sizeSPECNum', sizeSPECNum);
+    // console.log('this is mPriceNum', mPriceNum);
+    // console.log('this is mPriceMaxNum', mPriceMaxNum);
     // Prevent duplicated mPrice (repeated in set of color and spec)
     if (mPriceNum < mPriceMaxNum) {
       let cArr = [];
       let sArr = [];
-      // srMaterial.mPrices.push(newMPrice);
 
       if (mPriceNum === 0) {
         cArr.push(srMaterial.mtrlColors[0].mColor);
@@ -167,7 +166,6 @@ const SrMtrlState = (props) => {
       srMaterial.mPrices.push({
         id: uuidv4() + generateId(),
         mColor: cArr[0],
-        // mColor: '',
         sizeSPEC: sArr[0],
         unit: '',
         currency: '',
@@ -344,6 +342,8 @@ const SrMtrlState = (props) => {
         clearSrMtrl,
         openSrMtrl,
         toggleMainPrice,
+        // mtrlColorOption,
+        // sizeSPECOption,
         // deletePrice,
       }}
     >
