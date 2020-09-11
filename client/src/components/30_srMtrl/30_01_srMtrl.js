@@ -70,7 +70,7 @@ const SrMtrl = ({ srMtrl, currentPath }) => {
               togglePopover={togglePopover}
               idx={idx}
               mainPrice={srMtrl.mainPrice}
-              // currentPath={currentPath}
+              currentPath={currentPath}
             />
           ))}
         </div>

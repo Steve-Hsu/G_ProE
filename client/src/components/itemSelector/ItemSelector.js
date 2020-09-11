@@ -11,7 +11,7 @@ import Board from '../elements/board/Board';
 import GoBackBtn from '../elements/btns/GoBackBtn';
 import SqToggleSwitchL from '../elements/btns/SqToggleSwitchL';
 
-export const ItemSelector = ({ props, purpose }) => {
+export const ItemSelector = ({ props, purpose, currentPath }) => {
   const caseContext = useContext(CaseContext);
   const srMtrlContext = useContext(SrMtrlContext);
   const quoContext = useContext(QuoContext);
@@ -29,16 +29,21 @@ export const ItemSelector = ({ props, purpose }) => {
   const { selectCase, selectedCases, switchPage } = purContext;
 
   useEffect(() => {
-    if (purpose === 'srMtrlSelector') {
-      getSrMtrls();
-    } else if (purpose != 'quoFormSelector') {
-      getList();
+    switch (purpose) {
+      case 'srMtrlSelector':
+      case 'quoSrMtrlSelector':
+        getSrMtrls();
+        break;
+      case 'CaseSelector':
+      case 'quoCaseSelector':
+      case 'purCaseSelector':
+        getCaseList();
+        break;
+      default:
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  let getList = null;
   let subjects = null;
   let attributes = null;
   let goBack = null;
@@ -48,15 +53,7 @@ export const ItemSelector = ({ props, purpose }) => {
     case 'CaseSelector':
     case 'quoCaseSelector':
     case 'purCaseSelector':
-      getList = getCaseList;
       subjects = caseList;
-      goBack = () => {
-        if (purpose === 'purCaseSelector') {
-          switchPage(null);
-        } else {
-          props.history.push('/api/case/director');
-        }
-      };
       displayTitles = [
         { cNo: true },
         { caseType: true },
@@ -67,24 +64,40 @@ export const ItemSelector = ({ props, purpose }) => {
       switch (purpose) {
         case 'CaseSelector':
           attributes = [downloadCase, addCaseValue];
+          goBack = () => {
+            props.history.push('/api/case/director');
+          };
           break;
-
         case 'quoCaseSelector':
           attributes = switchQuoFormSelector;
+          goBack = () => {
+            quoContext.switchPage();
+          };
           break;
         case 'purCaseSelector':
           attributes = [selectCase, selectedCases];
+          goBack = () => {
+            switchPage(null);
+          };
           break;
         default:
       }
       break;
     case 'srMtrlSelector':
+    case 'quoSrMtrlSelector':
       subjects = srMtrls;
       attributes = [openSrMtrl, editingList];
       displayTitles = [{ supplier: true }, { ref_no: true }];
-      goBack = () => {
-        props.history.push('/api/case/director');
-      };
+      if (purpose === 'srMtrlSelector') {
+        goBack = () => {
+          props.history.push('/api/case/director');
+        };
+      } else {
+        goBack = () => {
+          quoContext.switchPage();
+        };
+      }
+
       break;
     case 'quoFormSelector':
       subjects = quotation.quoForms;
@@ -107,18 +120,6 @@ export const ItemSelector = ({ props, purpose }) => {
       break;
     default:
   }
-
-  // const goBack = () => {
-  //   switch (purpose) {
-  //     case 'CaseSelector':
-  //       console.log('the props', props);
-  //       props.history.push('/api/case/director');
-  //       break;
-  //     case 'quoCaseSelector':
-  //       break;
-  //     default:
-  //   }
-  // };
 
   return (
     <Fragment>
@@ -143,6 +144,7 @@ export const ItemSelector = ({ props, purpose }) => {
             subjects={subjects}
             displayTitles={displayTitles}
             toggleItemAttributes={attributes}
+            currentPath={currentPath}
           />
         ) : (
           <Table
@@ -150,6 +152,7 @@ export const ItemSelector = ({ props, purpose }) => {
             subjects={subjects}
             displayTitles={displayTitles}
             toggleItemAttributes={attributes}
+            currentPath={currentPath}
           />
         )}
         {/* </div> */}

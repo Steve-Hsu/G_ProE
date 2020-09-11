@@ -4,10 +4,11 @@ import PopoverContext from '../../context/popover/popoverContext';
 
 // Components
 import LeftBar from '../layout/LeftBar';
-import QuoCaseSelector from '../../components/40_quo/40_01_quoCaseSelector';
+// import QuoCaseSelector from '../../components/40_quo/40_01_quoCaseSelector';
 import QuoFormSelector from '../../components/40_quo/40_02_quoFormSelector';
 import QuoForm from '../../components/40_quo/40_03_quoForm';
-// import SrMtrlForm from '../../components/30_srMtrl/30_01_srMtrlForm';
+// import SrMtrl from '../../components/30_srMtrl/30_01_srMtrl';
+import ItemSelector from '../itemSelector/ItemSelector';
 import DeletePopover from '../../components/layout/DeletePopover';
 import GoBackBtn from '../elements/btns/GoBackBtn';
 // quoForm
@@ -43,7 +44,7 @@ const Quotation = (props) => {
 
         {/* Grid-2 */}
         {quotateFor === null ? (
-          <div className='p-1 container container-with-navbar'>
+          <div className=' container container-with-navbar'>
             <GoBackBtn
               onClick={() => {
                 props.history.push('/api/case/director');
@@ -57,14 +58,11 @@ const Quotation = (props) => {
             </button>
           </div>
         ) : quotateFor === 'material' ? (
-          <div className='p-1 container container-with-navbar'>
-            <GoBackBtn onClick={onClick} />
-            {/* <SrMtrlForm currentPath={currentPath} /> */}
-          </div>
+          <ItemSelector purpose='quoSrMtrlSelector' currentPath={currentPath} />
         ) : quotateFor === 'garment' ? (
           <div>
             {isQuotating === null ? (
-              <QuoCaseSelector props={props} />
+              <ItemSelector props={props} purpose='quoCaseSelector' />
             ) : (
               <div>
                 {openQuoForm === null ? <QuoFormSelector /> : <QuoForm />}

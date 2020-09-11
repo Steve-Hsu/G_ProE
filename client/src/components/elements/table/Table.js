@@ -1,7 +1,13 @@
 import React from 'react';
 import TableItem from './TableItem';
 
-const Table = ({ purpose, subjects, displayTitles, toggleItemAttributes }) => {
+const Table = ({
+  purpose,
+  subjects,
+  displayTitles,
+  toggleItemAttributes,
+  currentPath,
+}) => {
   let supplier,
     ref_no,
     position,
@@ -134,6 +140,7 @@ const Table = ({ purpose, subjects, displayTitles, toggleItemAttributes }) => {
             cellStyle={cellStyle}
             toggleItemAttributes={toggleItemAttributes}
             purpose={purpose}
+            currentPath={currentPath}
           />
         ))}
       </div>

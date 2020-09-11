@@ -1,7 +1,13 @@
 import React from 'react';
 import BoardItem from './BoardItem';
 
-const Board = ({ purpose, subjects, displayTitles, toggleItemAttributes }) => {
+const Board = ({
+  purpose,
+  subjects,
+  displayTitles,
+  toggleItemAttributes,
+  currentPath,
+}) => {
   let target = '';
   switch (purpose) {
     case '1_CaseForm':
@@ -11,6 +17,7 @@ const Board = ({ purpose, subjects, displayTitles, toggleItemAttributes }) => {
       target = 'client';
       break;
     case 'srMtrlSelector':
+    case 'quoSrMtrlSelector':
       target = 'supplier';
       break;
 
@@ -118,6 +125,7 @@ const Board = ({ purpose, subjects, displayTitles, toggleItemAttributes }) => {
                               subject={subject}
                               toggleItemAttributes={toggleItemAttributes}
                               idx={subject_idx}
+                              currentPath={currentPath}
                             />
                           );
                         } else {
@@ -138,6 +146,7 @@ const Board = ({ purpose, subjects, displayTitles, toggleItemAttributes }) => {
                               subject={subject}
                               toggleItemAttributes={toggleItemAttributes}
                               idx={subject_idx}
+                              currentPath={currentPath}
                             />
                           );
                         } else {
@@ -164,6 +173,7 @@ const Board = ({ purpose, subjects, displayTitles, toggleItemAttributes }) => {
                               subject={subject}
                               toggleItemAttributes={toggleItemAttributes}
                               idx={subject_idx}
+                              currentPath={currentPath}
                             />
                           );
                         } else {

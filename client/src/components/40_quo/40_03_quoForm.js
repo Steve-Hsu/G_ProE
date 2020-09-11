@@ -97,7 +97,7 @@ const QuoForm = () => {
 
   return (
     <Fragment>
-      <div className='p-1 container container-with-navbar'>
+      <div className='container container-with-navbar'>
         <button name='goBackBtn' onClick={onClick}>
           Go Back
         </button>{' '}

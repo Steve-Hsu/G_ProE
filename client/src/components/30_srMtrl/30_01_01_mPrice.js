@@ -205,6 +205,7 @@ const MPrice = ({
                     </div>
                     <Select
                       key={`${m}${mPrice.id}`}
+                      id={`${m}${mPrice.id}`}
                       subject={mPrice}
                       optionList={selectList(m)}
                       onChange={onChange}
@@ -221,6 +222,7 @@ const MPrice = ({
                     </div>
                     <Select
                       key={`${m}${mPrice.id}`}
+                      id={`${m}${mPrice.id}`}
                       purpose={m}
                       subject={mPrice}
                       onChange={onChange}

@@ -13,6 +13,7 @@ const BoardItem = ({
   subject,
   toggleItemAttributes,
   idx,
+  currentPath,
 }) => {
   const popoverContext = useContext(PopoverContext);
 
@@ -43,6 +44,7 @@ const BoardItem = ({
         toggleItemAttributes(subject._id);
         break;
       case 'srMtrlSelector':
+      case 'quoSrMtrlSelector':
       case 'purCaseSelector':
         toggleItemAttributes[0](subject._id);
         break;
@@ -65,8 +67,10 @@ const BoardItem = ({
     <Fragment>
       {purpose === '1_CaseForm' && isEditingMtrl == true ? (
         <Mtrl key={subject.id} mtrl={subject} />
-      ) : purpose === 'srMtrlSelector' &&
-        toggleItemAttributes[1].includes(id) ? (
+      ) : (purpose === 'srMtrlSelector' &&
+          toggleItemAttributes[1].includes(id)) ||
+        (purpose === 'quoSrMtrlSelector' &&
+          toggleItemAttributes[1].includes(id)) ? (
         <SrMtrl srMtrl={subject} />
       ) : (
         <div

@@ -13,6 +13,7 @@ const TableItem = ({
   cellStyle,
   toggleItemAttributes,
   purpose,
+  currentPath,
 }) => {
   const popoverContext = useContext(PopoverContext);
 
@@ -47,6 +48,7 @@ const TableItem = ({
         toggleItemAttributes(subject._id);
         break;
       case 'srMtrlSelector':
+      case 'quoSrMtrlSelector':
       case 'purCaseSelector':
         toggleItemAttributes[0](subject._id);
         break;
@@ -77,8 +79,9 @@ const TableItem = ({
     <Fragment>
       {purpose === '1_CaseForm' && isEditingMtrl == true ? (
         <Mtrl key={subject.id} mtrl={subject} />
-      ) : purpose === 'srMtrlSelector' && checkSrMtrlId(id) ? (
-        <SrMtrl srMtrl={subject} />
+      ) : (purpose === 'srMtrlSelector' && checkSrMtrlId(id)) ||
+        (purpose === 'quoSrMtrlSelector' && checkSrMtrlId(id)) ? (
+        <SrMtrl srMtrl={subject} currentPath={currentPath} />
       ) : purpose === 'purCaseSelector' && subject.poDate !== null ? null : (
         <div
           className='flexBox bd-light bd-no-t bg-cp-elem hover-cp-2'

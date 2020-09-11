@@ -9,11 +9,19 @@ const Select = ({
   label,
   className,
   selectedOption,
+  id,
 }) => {
   useEffect(() => {
     if (selectedOption === '') {
     } else {
       loadCaseSelectUnitTagIndex();
+    }
+    if ((id = null)) {
+      if (subject.id) {
+        id = purpose + subject.id;
+      } else {
+        id = purpose + subject._id;
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedOption]);
@@ -91,7 +99,8 @@ const Select = ({
     <div>
       {label ? <div className='fs-tiny  transition'>{label}</div> : null}
       <select
-        id={`${purpose}${subject.id ? subject.id : subject._id}`}
+        // id={`${purpose}${subject.id ? subject.id : subject._id}`}
+        id={id}
         name={subject.id ? subject.id : subject._id}
         // list='garmentSize'
         // placeholder={placeholder}
