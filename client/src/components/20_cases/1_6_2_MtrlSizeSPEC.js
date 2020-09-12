@@ -11,7 +11,7 @@ const MtrlSizeSPEC = ({ sizeSPEC, mtrlId }) => {
 
   //@ Value for input
   //words length limit
-  const maxWdsLength = '50';
+  const maxWdsLength = '77';
   const SizeSPECLength = maxWdsLength;
 
   return (

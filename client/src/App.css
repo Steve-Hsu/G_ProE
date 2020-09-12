@@ -34,6 +34,7 @@
   /* The color for fade element such as thin border */
   /* This color should be able to apply to any color wihout dismatch.  */
   --fade-color: rgba(0, 0, 0, 0.08);
+  --fade-color-dark: rgba(0, 0, 0, 0.35);
 
   /* Space */
   --gap: 0;
@@ -251,7 +252,13 @@ img {
 
 .grid-mPrice {
   display: grid;
-  grid-template-columns: 20px 1fr 1.6fr 0.8fr 0.6fr 0.6fr 0.6fr 0.6fr 30px;
+  grid-template-columns: 20px 1fr 1.7fr 0.6fr 0.6fr 0.6fr 0.6fr 0.6fr 30px;
+}
+
+.grid-mPrice-quo {
+  display: grid;
+  grid-template-columns: 20px 1fr 1.7fr 0.6fr 0.6fr 0.6fr 0.6fr 0.6fr 0.6fr 30px;
+  /* grid-auto-rows: auto; */
 }
 
 /* grid gap */
@@ -365,8 +372,8 @@ img {
 
 .btn-sq {
   height: var(--btn-h-m);
-  border-radius: var(--small);
   width: var(--btn-h-m);
+  border-radius: var(--small);
   background: var(--cp-1_3);
   color: var(--cp-1_2);
   border: 2px solid var(--cp-1_4);
@@ -1099,6 +1106,14 @@ input[type='submit']:focus {
   color: var(--cp-1_4);
 }
 
+.fc-fade {
+  color: var(--fade-color);
+}
+
+.fc-fade-dark {
+  color: var(--fade-color-dark);
+}
+
 /* Text positoin */
 /* Font position */
 .tp-center,
@@ -1223,6 +1238,9 @@ input[type='submit']:focus {
 }
 .pt-0 {
   padding-top: 0;
+}
+.pt-04 {
+  padding-top: 0.4rem;
 }
 .pt-05 {
   padding-top: 0.5rem;
@@ -1478,8 +1496,14 @@ input[type='submit']:focus {
 .w-20 {
   width: 20%;
 }
+.w-20vw {
+  width: 20vw;
+}
 .w-30 {
   width: 30%;
+}
+.w-30vw {
+  width: 30vw;
 }
 .w-40 {
   width: 40%;

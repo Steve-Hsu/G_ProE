@@ -3,6 +3,7 @@ import SrMtrlContext from '../../context/srMtrl/srMtrlContext';
 import PropTypes from 'prop-types';
 import Select from '../elements/select/Select';
 import DeleteBtnSmall from '../elements/btns/DeleteBtnSmall';
+import TopLabelTiny from '../elements/Label/TopLabelTiny';
 
 const MPrice = ({
   mPrice,
@@ -141,17 +142,17 @@ const MPrice = ({
     // console.log('the MainPrice', mainPrice); // Test Code
   };
 
-  return (
-    <div className='card bg-cp-1 bd-radius-s bd-light pb-0 hover-cp-2-light'>
-      {/* <div className='ml-1 w-90' style={{ flex: '1 1 auto' }}> */}
-      {/* <div className='h-scatter-content'> */}
-      {/* {' '} */}
-      {/* {currentPath === '/api/case/mprice' ? ( */}
-      {/* <div>{mPrice.id === mainPrice ? <span>Main Price</span> : null}</div> */}
+  const gridStyle = (currentPath) => {
+    if (currentPath === '/api/quogarment') {
+      return 'grid-mPrice-quo mb-0';
+    } else {
+      return 'grid-mPrice mb-0';
+    }
+  };
 
-      {/* // ) : null} */}
-      {/* </div> */}
-      <div className='grid-mPrice mb-0' style={{ height: '65px' }}>
+  return (
+    <div className='card bg-cp-1 bd-radius-s bd-light pb-05 hover-cp-2-light'>
+      <div className={gridStyle(currentPath)}>
         <div className='fs-lead cursor' onClick={onClick2}>
           <div
             className='pr-05'
@@ -171,30 +172,28 @@ const MPrice = ({
               case 'quotation':
                 return (
                   <div key={`${m}${mPrice.id}`}>
-                    <input
-                      type='number'
-                      id={`${m}${mPrice.id}`}
-                      name={mPrice.id}
-                      placeholder='.'
-                      onChange={addNumber}
-                      className='MPH-input'
-                      value={mPrice[`${m}`] || ''}
-                    />
-                    <label
-                      htmlFor={`${m}${mPrice.id}`}
-                      className='MPH-input-label'
-                    >
-                      {labels(m)}
-                    </label>
+                    <TopLabelTiny label={labels(m)} />
+                    <div key={`${m}${mPrice.id}`}>
+                      <input
+                        type='number'
+                        id={`${m}${mPrice.id}`}
+                        name={mPrice.id}
+                        onChange={addNumber}
+                        value={mPrice[`${m}`] || ''}
+                      />
+                    </div>
                   </div>
                 );
               default:
                 return (
                   <div key={`${m}${mPrice.id}`}>
-                    <label htmlFor={`${m}${mPrice.id}`} className='label'>
-                      {labels(m)}
-                    </label>
-                    <div className='lead'>{mPrice[`${m}`]}</div>
+                    <TopLabelTiny label={labels(m)} />
+                    <div
+                      className='v-center-content pr-05 pt-04'
+                      // style={{ height: '2.2rem' }}
+                    >
+                      {mPrice[`${m}`]}
+                    </div>
                   </div>
                 );
             }
@@ -204,9 +203,7 @@ const MPrice = ({
               case 'sizeSPEC':
                 return (
                   <div key={`div${m}${mPrice.id}`} className='ml-05'>
-                    <div className='fs-tiny'>
-                      {m === 'mColor' ? 'Color' : 'SPEC'}
-                    </div>
+                    <TopLabelTiny label={labels(m)} />
                     <Select
                       purpose={m}
                       key={`${m}${mPrice.id}`}
@@ -222,9 +219,7 @@ const MPrice = ({
               case 'currency':
                 return (
                   <div key={`div${m}${mPrice.id}`} className='ml-05'>
-                    <div className='fs-tiny'>
-                      {m === 'unit' ? 'Unit' : 'Currency'}
-                    </div>
+                    <TopLabelTiny label={labels(m)} />
                     <Select
                       key={`${m}${mPrice.id}`}
                       id={`${m}${mPrice.id}`}
@@ -243,31 +238,15 @@ const MPrice = ({
                     className='ml-05'
                     style={{ height: '68px' }}
                   >
-                    <div className='fs-tiny'>
-                      {m === 'moq'
-                        ? 'MOQ'
-                        : m === 'moqPrice'
-                        ? 'MOQ Price'
-                        : m === 'mPrice'
-                        ? 'Unit Price'
-                        : null}
-                    </div>
+                    <TopLabelTiny label={labels(m)} />
                     <div key={`${m}${mPrice.id}`}>
                       <input
                         type='number'
                         id={`${m}${mPrice.id}`}
                         name={mPrice.id}
-                        // placeholder='.'
                         onChange={addNumber}
-                        // className='MPH-input'
                         value={mPrice[`${m}`] || ''}
                       />
-                      {/* <label
-                          htmlFor={`${m}${mPrice.id}`}
-                          className='MPH-input-label'
-                        >
-                          {labels(m)}
-                        </label> */}
                     </div>
                   </div>
                 );
@@ -284,7 +263,6 @@ const MPrice = ({
           />
         </div>
       </div>
-
       {/* </div> */}
     </div>
   );
@@ -295,5 +273,4 @@ export default MPrice;
 MPrice.propTypes = {
   mPrice: PropTypes.object.isRequired,
   srMtrl: PropTypes.object.isRequired,
-  // currentPath: PropTypes.string.isRequired,
 };

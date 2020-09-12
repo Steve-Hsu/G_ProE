@@ -6,6 +6,7 @@ import SqBtnLarge from '../elements/btns/SqBtnLarge';
 import GoBackBtnSpinSmall from '../elements/btns/GoBackBtnSpinSmall';
 import DeletePopover from '../layout/DeletePopover';
 import PopoverContext from '../../context/popover/popoverContext';
+import TopLabelTiny from '../elements/Label/TopLabelTiny';
 // import ToggleSwitch from '../elements/btns/ToggleSwitch';
 
 const SrMtrl = ({ srMtrl, currentPath }) => {
@@ -24,6 +25,18 @@ const SrMtrl = ({ srMtrl, currentPath }) => {
     openSrMtrl(srMtrl._id);
   };
 
+  const mPricelengthLimit = () => {
+    const mtrlColorsLength = Number(srMtrl.mtrlColors.length);
+    const sizeSPECsLength = Number(srMtrl.sizeSPECs.length);
+    const mPricesLength = Number(srMtrl.mPrices.length);
+    const limit = mtrlColorsLength * sizeSPECsLength;
+    if (mPricesLength < limit) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   return (
     <div
       className='mb-1 p-1 round-card bg-cp-elem bd-light flexBox'
@@ -35,17 +48,13 @@ const SrMtrl = ({ srMtrl, currentPath }) => {
       <div className='ml-1 w-90' style={{ flex: '1 1 auto' }}>
         <div className='grid-2'>
           <div>
-            <label htmlFor={`supplier${srMtrl._id}`} className='fs-tiny'>
-              Supplier
-            </label>
+            <TopLabelTiny label='Supplier' />
             <div className='fs-large' id={`supplier${srMtrl._id}`}>
               {srMtrl.supplier}
             </div>
           </div>
           <div>
-            <label htmlFor={`ref_no${srMtrl._id}`} className='fs-tiny'>
-              Ref No.
-            </label>
+            <TopLabelTiny label='Ref No.' />
             <div className='fs-large' id={`ref_no${srMtrl._id}`}>
               {srMtrl.ref_no}
             </div>
@@ -53,11 +62,17 @@ const SrMtrl = ({ srMtrl, currentPath }) => {
         </div>
         <div className='flexBox mb-05'>
           <div>
-            <SqBtnLarge
-              name='mPriceBtn'
-              onClick={onClick}
-              label={<i className='fas fa-money-check-alt'> Price ＋</i>}
-            />
+            {currentPath === '/api/case/mprice' && mPricelengthLimit() ? (
+              <SqBtnLarge
+                name='mPriceBtn'
+                onClick={onClick}
+                label={<i className='fas fa-money-check-alt'> Price ＋</i>}
+              />
+            ) : currentPath === '/api/case/mprice' ? (
+              <div className='sq-block bd-radius-s bg-cp-2-light-c center-content w-20vw'>
+                All color and SPEC are listed
+              </div>
+            ) : null}
           </div>
         </div>
 

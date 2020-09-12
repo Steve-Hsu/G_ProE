@@ -32,7 +32,11 @@ export const MPrice = (props) => {
       {/* Grid-2 */}
       <form id='srMtrlForm' onSubmit={onSubmitSrMtrl}>
         {' '}
-        <ItemSelector purpose='srMtrlSelector' props={props} />
+        <ItemSelector
+          purpose='srMtrlSelector'
+          props={props}
+          currentPath={currentPath}
+        />
       </form>
     </div>
   );
