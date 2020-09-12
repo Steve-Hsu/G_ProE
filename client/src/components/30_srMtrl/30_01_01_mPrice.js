@@ -138,8 +138,17 @@ const MPrice = ({
   };
 
   const onClick2 = () => {
-    toggleMainPrice(srMtrlId, mPrice.id);
-    // console.log('the MainPrice', mainPrice); // Test Code
+    if (currentPath === '/api/case/mprice') {
+      toggleMainPrice(srMtrlId, mPrice.id);
+    }
+  };
+
+  const headNumStyle = (currentPath) => {
+    if (currentPath === '/api/case/mprice') {
+      return 'fs-lead cursor';
+    } else {
+      return 'fs-lead';
+    }
   };
 
   const gridStyle = (currentPath) => {
@@ -153,7 +162,7 @@ const MPrice = ({
   return (
     <div className='card bg-cp-1 bd-radius-s bd-light pb-05 hover-cp-2-light'>
       <div className={gridStyle(currentPath)}>
-        <div className='fs-lead cursor' onClick={onClick2}>
+        <div className={headNumStyle(currentPath)} onClick={onClick2}>
           <div
             className='pr-05'
             style={{ transform: 'translate(-0.3rem, -0.5rem)' }}
