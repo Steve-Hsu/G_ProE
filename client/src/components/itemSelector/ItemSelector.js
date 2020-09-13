@@ -71,14 +71,21 @@ export const ItemSelector = ({ props, purpose, currentPath }) => {
         case 'quoCaseSelector':
           attributes = switchQuoFormSelector;
           goBack = () => {
-            quoContext.switchPage();
+            props.history.push('/api/case/director');
           };
+          // attributes = switchQuoFormSelector;
+          // goBack = () => {
+          //   quoContext.switchPage();
+          // };
           break;
         case 'purCaseSelector':
           attributes = [selectCase, selectedCases];
           goBack = () => {
-            switchPage(null);
+            props.history.push('/api/case/director');
           };
+          // goBack = () => {
+          //   switchPage(null);
+          // };
           break;
         default:
       }
@@ -88,15 +95,18 @@ export const ItemSelector = ({ props, purpose, currentPath }) => {
       subjects = srMtrls;
       attributes = [openSrMtrl, editingList];
       displayTitles = [{ supplier: true }, { ref_no: true }];
-      if (purpose === 'srMtrlSelector') {
-        goBack = () => {
-          props.history.push('/api/case/director');
-        };
-      } else {
-        goBack = () => {
-          quoContext.switchPage();
-        };
-      }
+      goBack = () => {
+        props.history.push('/api/case/director');
+      };
+      // if (purpose === 'srMtrlSelector') {
+      //   goBack = () => {
+      //     props.history.push('/api/case/director');
+      //   };
+      // } else {
+      //   goBack = () => {
+      //     quoContext.switchPage();
+      //   };
+      // }
 
       break;
     case 'quoFormSelector':

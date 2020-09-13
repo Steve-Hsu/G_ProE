@@ -10,7 +10,7 @@ import QuoForm from '../../components/40_quo/40_03_quoForm';
 // import SrMtrl from '../../components/30_srMtrl/30_01_srMtrl';
 import ItemSelector from '../itemSelector/ItemSelector';
 import DeletePopover from '../../components/layout/DeletePopover';
-import GoBackBtn from '../elements/btns/GoBackBtn';
+// import GoBackBtn from '../elements/btns/GoBackBtn';
 // quoForm
 
 const Quotation = (props) => {
@@ -18,7 +18,7 @@ const Quotation = (props) => {
   const quoContext = useContext(QuoContext);
   const popoverContext = useContext(PopoverContext);
   const {
-    switchPage,
+    // switchPage,
     quotateFor,
     isQuotating,
     openQuoForm,
@@ -27,13 +27,13 @@ const Quotation = (props) => {
   const { popover, current } = popoverContext;
   const currentPath = props.location.pathname;
 
-  const onClick = (e) => {
-    e.preventDefault();
-    switchPage(e.target.value);
-    // if (e.target.value === 'garment') {
-    //   getCaseList();
-    // }
-  };
+  // const onClick = (e) => {
+  //   e.preventDefault();
+  //   switchPage(e.target.value);
+  //   // if (e.target.value === 'garment') {
+  //   //   getCaseList();
+  //   // }
+  // };
   return (
     <Fragment>
       {/* {popover ? <DeletePopover key={current.id} current={current} /> : null} */}
@@ -43,22 +43,12 @@ const Quotation = (props) => {
         <LeftBar currentPath={currentPath} />
 
         {/* Grid-2 */}
-        {quotateFor === null ? (
-          <div className=' container container-with-navbar'>
-            <GoBackBtn
-              onClick={() => {
-                props.history.push('/api/case/director');
-              }}
-            />
-            <button value='material' onClick={onClick}>
-              Quotation for materials
-            </button>
-            <button value='garment' onClick={onClick}>
-              Quotation for garments
-            </button>
-          </div>
-        ) : quotateFor === 'material' ? (
-          <ItemSelector purpose='quoSrMtrlSelector' currentPath={currentPath} />
+        {quotateFor === 'material' ? (
+          <ItemSelector
+            props={props}
+            purpose='quoSrMtrlSelector'
+            currentPath={currentPath}
+          />
         ) : quotateFor === 'garment' ? (
           <div>
             {isQuotating === null ? (

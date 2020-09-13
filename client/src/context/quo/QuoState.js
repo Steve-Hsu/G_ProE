@@ -70,11 +70,11 @@ const QuoState = (props) => {
   // };
 
   const switchPage = (value) => {
-    if (quotateFor === null) {
-      dispatch({ type: QUOPAGE_SWITCH, payload: value });
-    } else {
-      dispatch({ type: QUOPAGE_SWITCH, payload: null });
-    }
+    // if (quotateFor === null) {
+    dispatch({ type: QUOPAGE_SWITCH, payload: value });
+    // } else {
+    //   dispatch({ type: QUOPAGE_SWITCH, payload: null });
+    // }
   };
 
   const switchQuoFormSelector = (cNo) => {

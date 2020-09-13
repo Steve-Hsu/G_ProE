@@ -26,6 +26,10 @@ const Purchase = (props) => {
   const popoverContext = useContext(PopoverContext);
   const { popover, current } = popoverContext;
 
+  const goBack = () => {
+    props.history.push('/api/case/director');
+  };
+
   const onClick = (e) => {
     e.preventDefault();
     switchPage(e.target.value);
@@ -41,21 +45,7 @@ const Purchase = (props) => {
     <Fragment>
       {popover ? <DeletePopover key={current._id} current={current} /> : null}
       {/* Grid-1 */}
-      {openPage === null ? (
-        <div className='p-1 container container-with-navbar'>
-          <GoBackBtn
-            onClick={() => {
-              props.history.push('/api/case/director');
-            }}
-          />
-          <button value='caseSelector' onClick={onClick}>
-            CaseSelector
-          </button>
-          <button value='osSelector' onClick={onClick}>
-            Quotation for garments
-          </button>
-        </div>
-      ) : openPage === 'caseSelector' ? (
+      {openPage === 'caseSelector' ? (
         <div className='grid-1-4'>
           <LeftBar currentPath={currentPath} />
           <form id='purchase' onSubmit={onSubmit}>
@@ -70,14 +60,14 @@ const Purchase = (props) => {
       ) : openPage === 'osSelector' ? (
         <div className='grid-1-4'>
           <LeftBar currentPath={currentPath} />
-          <div className='p-1 container container-with-navbar'>
-            <button onClick={onClick}>go back</button>
+          <div className='container container-with-navbar'>
+            <button onClick={goBack}>go back</button>
             <OsSelector />
           </div>
         </div>
       ) : openPage === 'orderSummary' ? (
         <Fragment>
-          <div className='p-1 container container-with-navbar'>
+          <div className='container container-with-navbar'>
             <button value='osSelector' onClick={onClick}>
               go back
             </button>
@@ -86,7 +76,7 @@ const Purchase = (props) => {
         </Fragment>
       ) : openPage === 'purchaseOrder' ? (
         <Fragment>
-          <div className='p-1 container container-with-navbar'>
+          <div className='container container-with-navbar'>
             <button value='orderSummary' onClick={onClick}>
               go back
             </button>

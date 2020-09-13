@@ -1,7 +1,13 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useContext } from 'react';
 import Banner from '../elements/banner/Banner';
+import QuoContext from '../../context/quo/quoContext';
+import PurContext from '../../context/pur/purContext';
 
 export const Director = (props) => {
+  const quoContext = useContext(QuoContext);
+  const purContext = useContext(PurContext);
+  const { switchPage } = quoContext;
+  // const { switchPage } = purContext;
   const goCase = () => {
     //Jump to other page while keeping authenticated
     props.history.push('/api/case/merchandiser');
@@ -11,15 +17,43 @@ export const Director = (props) => {
     props.history.push('/api/case/mprice');
   };
 
-  const goQuotation = () => {
-    //Jump to other page while keeping authenticated
-    props.history.push('/api/quogarment');
-  };
+  const goQuotation = [
+    {
+      material: () => {
+        props.history.push('/api/quogarment');
+        switchPage('material');
+      },
+    },
+    {
+      garment: () => {
+        props.history.push('/api/quogarment');
+        switchPage('garment');
+      },
+    },
+  ];
 
-  const goPurchase = () => {
-    //Jump to other page while keeping authenticated
-    props.history.push('/api/purchase');
-  };
+  const quoLabel = ['Quotation for Materil', 'Quotation for Garment'];
+
+  const goPurchase = [
+    {
+      caseSelector: () => {
+        props.history.push('/api/purchase');
+        purContext.switchPage('caseSelector');
+      },
+    },
+    {
+      osSelector: () => {
+        props.history.push('/api/purchase');
+        purContext.switchPage('osSelector');
+      },
+    },
+  ];
+
+  const purLabel = ['Select case, Make order summary', 'Check order summary'];
+  // const goPurchase = () => {
+  //   //Jump to other page while keeping authenticated
+  //   props.history.push('/api/purchase');
+  // };
 
   const goProgress = () => {
     //Jump to other page while keeping authenticated
@@ -31,11 +65,11 @@ export const Director = (props) => {
       {/* content */}
       <div className='h-center-content'>
         <div className='container container-with-navbar w-100'>
-          <Banner onClick={goCase} label='Start a case' />
-          <Banner onClick={gomPrice} label='Material Price' />
-          <Banner onClick={goQuotation} label='Quotation' />
-          <Banner onClick={goPurchase} label='Purchase' />
-          <Banner onClick={goProgress} label='Progress' />
+          <Banner purpose='case' onClick={goCase} label='Start a case' />
+          <Banner purpose='mPrice' onClick={gomPrice} label='Material Price' />
+          <Banner purpose='quotation' onClick={goQuotation} label={quoLabel} />
+          <Banner purpose='purchase' onClick={goPurchase} label={purLabel} />
+          {/* <Banner purpose='progress' onClick={goProgress} label='Progress' /> */}
         </div>
       </div>
     </Fragment>
