@@ -39,7 +39,7 @@ const SrMtrl = ({ srMtrl, currentPath }) => {
 
   return (
     <div
-      className='mb-1 p-1 round-card bg-cp-elem bd-light flexBox'
+      className=' p-1 round-card bg-cp-elem bd-light flexBox'
       style={{ width: '100%' }}
     >
       {/* {popover ? <DeletePopover key={current.id} /> : null} */}

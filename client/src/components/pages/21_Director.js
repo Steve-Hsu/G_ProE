@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import Banner from '../elements/banner/Banner';
 
 export const Director = (props) => {
   const goCase = () => {
@@ -28,36 +29,13 @@ export const Director = (props) => {
   return (
     <Fragment>
       {/* content */}
-      <div className='form-container'>
-        <div>
-          <a onClick={goCase} className='cursor'>
-            <i className='fas fa-sign-out-alt'></i>{' '}
-            <span className='hide-lg'>Manage Cases</span>
-          </a>
-        </div>
-        <div>
-          <a onClick={gomPrice} className='cursor'>
-            <i className='fas fa-sign-out-alt'></i>{' '}
-            <span className='hide-lg'>Material Price</span>
-          </a>
-        </div>
-        <div>
-          <a onClick={goQuotation} className='cursor'>
-            <i className='fas fa-sign-out-alt'></i>{' '}
-            <span className='hide-lg'>Quotation</span>
-          </a>
-        </div>
-        <div>
-          <a onClick={goPurchase} className='cursor'>
-            <i className='fas fa-sign-out-alt'></i>{' '}
-            <span className='hide-lg'>Purchase</span>
-          </a>
-        </div>
-        <div>
-          <a onClick={goProgress} className='cursor'>
-            <i className='fas fa-sign-out-alt'></i>{' '}
-            <span className='hide-lg'>Progress</span>
-          </a>
+      <div className='h-center-content'>
+        <div className='container container-with-navbar w-100'>
+          <Banner onClick={goCase} label='Start a case' />
+          <Banner onClick={gomPrice} label='Material Price' />
+          <Banner onClick={goQuotation} label='Quotation' />
+          <Banner onClick={goPurchase} label='Purchase' />
+          <Banner onClick={goProgress} label='Progress' />
         </div>
       </div>
     </Fragment>

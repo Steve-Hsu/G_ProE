@@ -1458,6 +1458,9 @@ input[type='submit']:focus {
 .h-20 {
   height: 20%;
 }
+.h-20vh {
+  height: 20vh;
+}
 .h-30 {
   height: 30%;
 }
