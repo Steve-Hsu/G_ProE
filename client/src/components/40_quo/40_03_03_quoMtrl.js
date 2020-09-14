@@ -28,7 +28,7 @@ const QuoMtrl = ({ mtrl }) => {
   const addNumber = (e) => {
     e.preventDefault();
     const num = e.target.value;
-    const Max = 0;
+    let Max = 0;
     switch (e.target.name) {
       case 'cspt':
         Max = 999;

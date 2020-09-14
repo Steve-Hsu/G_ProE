@@ -10,6 +10,7 @@ const Select = ({
   className,
   selectedOption,
   id,
+  name,
 }) => {
   useEffect(() => {
     loadCaseSelectUnitTagIndex();
@@ -96,13 +97,21 @@ const Select = ({
     }
   };
 
+  const theName = (name) => {
+    if (name) {
+      return name;
+    } else {
+      return `${subject.id ? subject.id : subject._id}`;
+    }
+  };
+
   return (
     <div>
       {label ? <div className='fs-tiny  transition'>{label}</div> : null}
       <select
         // id={`${purpose}${subject.id ? subject.id : subject._id}`}
         id={theId(id)}
-        name={subject.id ? subject.id : subject._id}
+        name={theName(name)}
         // list='garmentSize'
         // placeholder={placeholder}
         onChange={onChange}

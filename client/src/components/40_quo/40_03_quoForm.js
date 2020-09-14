@@ -1,15 +1,23 @@
 import React, { useContext, Fragment } from 'react';
+//Context
 import QuoContext from '../../context/quo/quoContext';
-// import CaseContext from '../../context/cases/casesContext';
+import AuthUserContext from '../../context/authUser/authUserContext';
 import PopoverContext from '../../context/popover/popoverContext';
+
+//Component
 import DeletePopover from '../layout/DeletePopover';
 import SizeSelector from './40_03_01_sizeSelector';
 import CWaySelector from './40_03_02_cWaySelector';
 import QuoMtrl from './40_03_03_quoMtrl';
 import QuoOtherEx from './40_03_04_quoOtherEx';
+
+//element
+import Select from '../elements/select/Select';
+
 const QuoForm = () => {
+  const authUserContext = useContext(AuthUserContext);
+  const { comName, comNameTail, comAddress } = authUserContext;
   const quoContext = useContext(QuoContext);
-  // const caseContext = useContext(CaseContext);
   const popoverContext = useContext(PopoverContext);
   const {
     switchQuoForm,
@@ -122,6 +130,11 @@ const QuoForm = () => {
         <button name='goBackBtn' onClick={onClick}>
           Go Back
         </button>{' '}
+        <div>
+          {comName}
+          {comNameTail}
+        </div>
+        <div>{comAddress}</div>
         <form id='quoForm' onSubmit={onSubmitQuoForm}>
           <div>Case Number : {cNo}</div>
           <div>Quotation Number : {quoNo} </div>
@@ -130,13 +143,19 @@ const QuoForm = () => {
           <div>{style}</div>
           <div>{client}</div>
           <div>Quotation currency</div>
-          <input
+          <Select
+            purpose='currency'
+            onChange={onChange}
+            id={`currency${_id}`}
+            value={currency || ''}
+          />
+          {/* <input
             type='text'
             name='currency'
             onChange={onChange}
             id={`currency${_id}`}
             value={currency || ''}
-          />
+          /> */}
           <div>Sizes : Total {sizes.length} sizes</div>
           <div>Quotated Sizes</div>
           <SizeSelector sizes={sizes} />
