@@ -196,12 +196,19 @@ router.get('/quohead/:cNo', authUser, async (req, res) => {
         //   });
 
         /////////////////////////////
-        //@ Part_3 insert quoForm
+        //@ Part_3 insert quoForm and Case
         Promise.all([getTheResult])
           .then(async (result) => {
             const quoHead = result[0];
             const quoHeadId = quoHead._id;
 
+            // Mtrls
+            const findCase = await Case.findOne(
+              { company: comId, cNo: cNo },
+              { _id: 0, company: 0 }
+            );
+
+            // QuoForm
             const quoForms = await QuoForm.find(
               {
                 company: comId,
@@ -210,14 +217,20 @@ router.get('/quohead/:cNo', authUser, async (req, res) => {
               { company: 0 }
             );
 
+            if (findCase) {
+              quoHead.theCase = findCase;
+            } else {
+              quoHead.theCase = 'No Case is found for this case';
+            }
+
             if (quoForms) {
               quoHead.quoForms = quoForms;
             }
-            console.log('this is the quoHead', quoHead);
+            // console.log('this is the quoHead', quoHead); // Test Code
             return quoHead;
           })
           .then((result) => {
-            console.log('The Promise.all result - return the quotation');
+            console.log('The Promise.all result - return the quotation'); // Test Code
             return res.json(result);
           })
           .catch((err) => {

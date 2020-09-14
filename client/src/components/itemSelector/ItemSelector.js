@@ -124,7 +124,7 @@ export const ItemSelector = ({ props, purpose, currentPath }) => {
       ];
       goBack = () => {
         switchQuoFormSelector(null);
-        defaultCase();
+        // defaultCase();
       };
       break;
     default:

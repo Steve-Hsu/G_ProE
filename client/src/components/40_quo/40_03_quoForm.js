@@ -1,6 +1,6 @@
 import React, { useContext, Fragment } from 'react';
 import QuoContext from '../../context/quo/quoContext';
-import CaseContext from '../../context/cases/casesContext';
+// import CaseContext from '../../context/cases/casesContext';
 import PopoverContext from '../../context/popover/popoverContext';
 import DeletePopover from '../layout/DeletePopover';
 import SizeSelector from './40_03_01_sizeSelector';
@@ -9,7 +9,7 @@ import QuoMtrl from './40_03_03_quoMtrl';
 import QuoOtherEx from './40_03_04_quoOtherEx';
 const QuoForm = () => {
   const quoContext = useContext(QuoContext);
-  const caseContext = useContext(CaseContext);
+  // const caseContext = useContext(CaseContext);
   const popoverContext = useContext(PopoverContext);
   const {
     switchQuoForm,
@@ -19,6 +19,7 @@ const QuoForm = () => {
     uploadQuoForm,
     isQuotating,
     updateCurrentQuoForm,
+    quotation,
   } = quoContext;
   const {
     _id,
@@ -33,18 +34,38 @@ const QuoForm = () => {
     otherExpensesTotal,
     fob,
   } = currentQuoForm;
-
-  const {
-    cNo,
+  const theCases = quotation.theCase;
+  let cNo,
     caseType,
     style,
     client,
     cWays,
     sizes,
     gQtys,
-    mtrls,
-    defaultCase,
-  } = caseContext;
+    mtrls = null;
+
+  if (theCases) {
+    cNo = theCases.cNo;
+    caseType = theCases.caseType;
+    style = theCases.caseType;
+    client = theCases.client;
+    cWays = theCases.cWays;
+    sizes = theCases.sizes;
+    gQtys = theCases.gQtys;
+    mtrls = theCases.mtrls;
+  }
+
+  // const {
+  //   cNo,
+  //   caseType,
+  //   style,
+  //   client,
+  //   cWays,
+  //   sizes,
+  //   gQtys,
+  //   mtrls,
+  //   defaultCase,
+  // } = quotation.theCase;
   const { popover, current } = popoverContext;
   const onSubmitQuoForm = (e) => {
     console.log('here triggered');

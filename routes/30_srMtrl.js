@@ -1155,6 +1155,7 @@ router.put('/:caseId/deletesrmtrl', authUser, async (req, res) => {
 // @desc    Update the value in mPrice
 // @access  Private
 router.put('/update/mpricevalues/quotation', authUser, async (req, res) => {
+  console.log('the mPrice quotation is starting to update'); // Test Code
   const srMtrlList = req.body;
   const userId = req.user.id;
   let user = await User.findById(userId);
@@ -1180,8 +1181,8 @@ router.put('/update/mpricevalues/quotation', authUser, async (req, res) => {
           mPrices: {
             $elemMatch: {
               id: mPrice.id,
-              mColor: mPrice.mColor,
-              sizeSPEC: mPrice.sizeSPEC,
+              // mColor: mPrice.mColor,
+              // sizeSPEC: mPrice.sizeSPEC,
             },
           },
         },
@@ -1195,8 +1196,8 @@ router.put('/update/mpricevalues/quotation', authUser, async (req, res) => {
             mPrices: {
               $elemMatch: {
                 id: mPrice.id,
-                mColor: mPrice.mColor,
-                sizeSPEC: mPrice.sizeSPEC,
+                // mColor: mPrice.mColor,
+                // sizeSPEC: mPrice.sizeSPEC,
               },
             },
           },

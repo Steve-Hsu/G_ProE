@@ -1,13 +1,11 @@
 import React, { useContext, Fragment } from 'react';
 import QuoContext from '../../context/quo/quoContext';
-import CaseContext from '../../context/cases/casesContext';
 import DeletePopover from '../layout/DeletePopover';
 import Table from '../elements/table/Table';
 import GoBackBtn from '../elements/btns/GoBackBtn';
 
 const QuoForm = () => {
   const quoContext = useContext(QuoContext);
-  const caseContext = useContext(CaseContext);
 
   const {
     isQuotating,
@@ -15,7 +13,6 @@ const QuoForm = () => {
     switchQuoFormSelector,
     switchQuoForm,
     uploadQuoForm,
-    downLoadQuoHead,
   } = quoContext;
 
   const addNewQuotation = (e) => {
@@ -44,7 +41,6 @@ const QuoForm = () => {
 
   const goBack = () => {
     switchQuoFormSelector(null);
-    caseContext.defaultCase();
   };
 
   return (

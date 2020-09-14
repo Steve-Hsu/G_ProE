@@ -36,6 +36,7 @@ const QuoState = (props) => {
         //   fob: '',
         // },
       ],
+      theCase: null,
     },
     currentQuoForm: null,
   };
@@ -123,12 +124,15 @@ const QuoState = (props) => {
   };
 
   const downLoadQuoHead = async (check) => {
-    console.log('downLoadQuoHead is called, the check', check); // Test Code
+    // console.log('downLoadQuoHead is called, the check', check); // Test Code
     if (check !== null) {
       const res = await axios.get(`/api/quogarment/quohead/${check}`);
       dispatch({ type: QUOTATION_DOWNLOAD, payload: res.data });
     } else {
-      dispatch({ type: QUOTATION_DOWNLOAD, payload: { quoForms: [] } });
+      dispatch({
+        type: QUOTATION_DOWNLOAD,
+        payload: { quoForms: [], theCase: null },
+      });
     }
   };
 

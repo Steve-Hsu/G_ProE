@@ -262,15 +262,17 @@ const MPrice = ({
             }
           }
         })}
-        <div className='ml-05'>
-          <DeleteBtnSmall
-            key={mPrice.id}
-            onClick={onClick}
-            name='deleteMPrice'
-            value={srMtrlId}
-            style={deleteBtnPosition}
-          />
-        </div>
+        {currentPath === '/api/case/mprice' ? (
+          <div className='ml-05'>
+            <DeleteBtnSmall
+              key={mPrice.id}
+              onClick={onClick}
+              name='deleteMPrice'
+              value={srMtrlId}
+              style={deleteBtnPosition}
+            />
+          </div>
+        ) : null}
       </div>
       {/* </div> */}
     </div>

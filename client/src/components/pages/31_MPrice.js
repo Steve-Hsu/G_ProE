@@ -9,9 +9,10 @@ import SrMtrlContext from '../../context/srMtrl/srMtrlContext';
 export const MPrice = (props) => {
   const srMtrlContext = useContext(SrMtrlContext);
   const currentPath = props.location.pathname;
-  const { srMtrls, updateMPrices } = srMtrlContext;
+  const { srMtrls, updateMPrices, updateMPricesQuotation } = srMtrlContext;
 
   const onSubmitSrMtrl = async (e) => {
+    console.log('yes the submit is hit');
     e.preventDefault();
     const body = [];
     await srMtrls.map((srMtrl) => {
@@ -21,7 +22,9 @@ export const MPrice = (props) => {
         mPrices: srMtrl.mPrices,
       });
     });
-    updateMPrices(body);
+    if (currentPath === '/api/case/mprice') {
+      updateMPrices(body);
+    }
   };
 
   return (
