@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import QuoContext from '../../context/quo/quoContext';
 
-const QuoMtrl = ({ mtrl }) => {
+const QuoMtrl = ({ mtrl, className }) => {
   const quoContext = useContext(QuoContext);
 
   const {
@@ -49,19 +49,14 @@ const QuoMtrl = ({ mtrl }) => {
 
   return (
     // <div className='mb-1 p-1 card'>
-    <div className='grid-1-5-1-1-1-1-1 card mb-1 p-1'>
-      <div>{mtrl.item}</div>
-      <div>
+    <div className={`grid-1-5-1-1-1-1-1 card mb-1 p-1 ${className}`}>
+      <div className='v-center-content pr-05'>{mtrl.item}</div>
+      <div className='v-center-content pr-05'>
         {mtrl.supplier} / {mtrl.ref_no} / {mtrl.sizeSPECs[0].mSizeSPEC} /{' '}
         {mtrl.position}
       </div>
-      {/* <div>
-          {mtrl.supplier} / {mtrl.ref_no} / {mtrl.sizeSPECs[0]} /{' '}
-          {mtrl.position}
-        </div> */}
-      <div>{mtrl.unit}</div>
-      <div>
-        Consumption
+      <div className='v-center-content pr-05'>
+        {/* Consumption */}
         <input
           type='number'
           id={`cspt${mtrl.id}`}
@@ -73,8 +68,9 @@ const QuoMtrl = ({ mtrl }) => {
           onChange={addNumber}
         />
       </div>
-      <div>
-        Unit Price
+      <div className='v-center-content pr-05'>{mtrl.unit}</div>
+      <div className='v-center-content pr-05'>
+        {/* Unit Price */}
         <input
           type='number'
           id={`unitprice${mtrl.id}`}

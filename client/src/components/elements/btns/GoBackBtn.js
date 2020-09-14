@@ -1,9 +1,10 @@
 import React from 'react';
 
-const GoBackBtn = ({ onClick }) => {
+const GoBackBtn = ({ name, onClick, className }) => {
   return (
     <button
-      className='btn btn-sq center-content bd-round bd-no'
+      name={name}
+      className={`btn btn-sq center-content bd-round bd-no ${className}`}
       onClick={onClick}
     >
       <i className='fas fa-chevron-left'></i>

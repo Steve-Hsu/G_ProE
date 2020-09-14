@@ -364,6 +364,7 @@ img {
   transition: opacity 0.2s ease-in;
   outline: none;
   place-items: center;
+  height: var(--btn-h-m);
 }
 
 .btn:hover {
@@ -1036,6 +1037,7 @@ input[type='submit']:focus {
 }
 
 /* @Mobile Styles  -------------------------------- */
+
 @media (max-width: 700px) {
   .hide-sm {
     display: none;
@@ -1677,6 +1679,30 @@ input[type='submit']:focus {
   transform: rotate(90deg);
   transition: all 0.3s;
 }
+
+/* @Print setting */
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+  }
+  .whenPrint {
+    width: 100vw;
+  }
+  .noBreak {
+    break-inside: avoid;
+  }
+  /* If the node with this class, the node will not show when print. */
+  .noPrint {
+    display: none;
+  }
+}
+@page {
+  size: A4 portrait;
+  margin: -40px 0 20px 0;
+}
+/* @page :first {
+  margin-left: 0;
+} */
 
 /* @test */
 /* A quick way to check the area of the element */

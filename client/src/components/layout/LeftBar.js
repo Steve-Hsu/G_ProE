@@ -208,18 +208,19 @@ const LeftBar = ({ currentPath }) => {
   };
 
   const printPage = (id) => {
-    var prtContent = document.getElementById(id);
-    console.log(prtContent); // Test Code
-    var WinPrint = window.open(
-      '',
-      '',
-      'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0'
-    );
-    WinPrint.document.write(prtContent.innerHTML);
-    WinPrint.document.close();
-    WinPrint.focus();
-    WinPrint.print();
-    WinPrint.close();
+    // var prtContent = document.getElementById(id);
+    // console.log(prtContent); // Test Code
+    // var WinPrint = window.open(
+    //   '',
+    //   '',
+    //   'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0'
+    // );
+    // WinPrint.document.write(prtContent.innerHTML);
+    // WinPrint.document.close();
+    // WinPrint.focus();
+    // WinPrint.print();
+    // WinPrint.close();
+    window.print();
   };
 
   const onClickPrintPage = () => {
@@ -228,7 +229,7 @@ const LeftBar = ({ currentPath }) => {
 
   return (
     <div
-      className='container-with-navbar leftbar bg-cp-1 bd-light bd-no-t h-100'
+      className='container-with-navbar leftbar bg-cp-1 bd-light bd-no-t h-100 noPrint'
       style={{ height: 'clamp(100vh, 100%, 100%)' }}
     >
       <div className='leftbar-component ml-1'>

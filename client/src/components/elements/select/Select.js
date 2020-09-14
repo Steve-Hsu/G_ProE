@@ -75,17 +75,19 @@ const Select = ({
 
   const loadCaseSelectUnitTagIndex = () => {
     let selected = null;
+    let id = subject.id || subject._id;
     if (selectedOption) {
-      selected = document.getElementById(
-        `${purpose}${selectedOption}${subject.id}`
-      );
+      selected = document.getElementById(`${purpose}${selectedOption}${id}`);
+      // console.log('the id', id); // test Code
+      // console.log('the selectedOption', selectedOption); // test Code
+      // console.log('the selected', selected); // test Code
     } else {
-      selected = document.getElementById(`${purpose}empty${subject.id}`);
+      selected = document.getElementById(`${purpose}empty${id}`);
     }
     if (selected) {
       selected.removeAttribute('selected');
       selected.setAttribute('selected', 'selected');
-      console.log('the seleted in select', selected);
+      // console.log('the seleted in select', selected); // Test Code
     }
   };
 

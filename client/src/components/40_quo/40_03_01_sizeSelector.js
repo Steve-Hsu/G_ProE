@@ -1,7 +1,7 @@
 import React, { useContext, Fragment } from 'react';
 import QuoContext from '../../context/quo/quoContext';
 
-const SizeSelector = ({ sizes }) => {
+const SizeSelector = ({ sizes, className }) => {
   const quoContext = useContext(QuoContext);
 
   const { currentQuoForm, updateQuoSize, quotation } = quoContext;
@@ -32,14 +32,14 @@ const SizeSelector = ({ sizes }) => {
   };
 
   return (
-    <div>
+    <div className={`flexBox ${className}`}>
       {sizes.map((i) => {
         return (
           <button
             key={`sizeSelector${i.id}`}
             name={i.gSize}
             type='button'
-            className='btn btn-dropdown lead'
+            className='btn'
             onClick={onClick}
             style={btnClickedStyle(i.gSize)}
           >

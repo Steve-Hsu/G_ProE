@@ -10,9 +10,11 @@ import SizeSelector from './40_03_01_sizeSelector';
 import CWaySelector from './40_03_02_cWaySelector';
 import QuoMtrl from './40_03_03_quoMtrl';
 import QuoOtherEx from './40_03_04_quoOtherEx';
+import goBackBtn from '../elements/btns/GoBackBtn';
 
 //element
 import Select from '../elements/select/Select';
+import GoBackBtn from '../elements/btns/GoBackBtn';
 
 const QuoForm = () => {
   const authUserContext = useContext(AuthUserContext);
@@ -80,7 +82,7 @@ const QuoForm = () => {
     e.preventDefault();
     // uploadQuoForm(isQuotating, true);
 
-    uploadQuoForm(isQuotating, false, currentQuoForm).then((result) => {
+    uploadQuoForm(isQuotating, false, currentQuoForm).then(() => {
       console.log('QuoForm is updated');
     });
   };
@@ -126,45 +128,66 @@ const QuoForm = () => {
 
   return (
     <Fragment>
-      <div className='container container-with-navbar' id='quotationForm'>
-        <button name='goBackBtn' onClick={onClick}>
+      <div
+        className='container container-with-navbar whenPrint'
+        id='quotationForm'
+      >
+        <GoBackBtn name='goBackBtn' onClick={onClick} className='noPrint' />
+        {/* <button name='goBackBtn' onClick={onClick}>
           Go Back
-        </button>{' '}
-        <div>
-          {comName}
-          {comNameTail}
-        </div>
-        <div>{comAddress}</div>
-        <form id='quoForm' onSubmit={onSubmitQuoForm}>
+        </button>{' '} */}
+        <section className='h-20 w-100 test-2 mt-05' id='formHead'>
+          <form id='quoForm' onSubmit={onSubmitQuoForm} />
+          <div className='fs-large h-center-content '>
+            {comName} {comNameTail}
+          </div>
+          <div className='h-center-content '>{comAddress}</div>
+        </section>
+        <section id='formInformation'>
           <div>Case Number : {cNo}</div>
           <div>Quotation Number : {quoNo} </div>
-          <div>Now we are quotate for {quotateFor}</div>
-          <div>{caseType}</div>
-          <div>{style}</div>
-          <div>{client}</div>
-          <div>Quotation currency</div>
-          <Select
-            purpose='currency'
-            onChange={onChange}
-            id={`currency${_id}`}
-            value={currency || ''}
-          />
-          {/* <input
-            type='text'
-            name='currency'
-            onChange={onChange}
-            id={`currency${_id}`}
-            value={currency || ''}
-          /> */}
-          <div>Sizes : Total {sizes.length} sizes</div>
-          <div>Quotated Sizes</div>
-          <SizeSelector sizes={sizes} />
+          <div>Quotation for : {quotateFor}</div>
+          <div>Quotation Type : {caseType}</div>
+          <div className='flexBox'>
+            {' '}
+            <div>Quotation currency : </div>
+            <div style={{ width: '6rem' }}>
+              {'  '}
+              <Select
+                purpose='currency'
+                onChange={onChange}
+                name='currency'
+                id={_id}
+                subject={currentQuoForm}
+                // value={currency || ''}
+                selectedOption={currency}
+              />
+            </div>
+          </div>
 
-          <div>Color Ways : Total {cWays.length} Color Ways</div>
-          <div>Quotated colorWays</div>
-          <CWaySelector cWays={cWays} />
+          <div>Client : {client}</div>
+          <div>Style : {style}</div>
+          <div>Total {sizes.length} sizes</div>
+          <div>Total {cWays.length} Color Ways</div>
+        </section>
+        <section id='QuotationArea'>
           <div>
-            <div>CM</div>
+            {quoSizes.length} Quotated Sizes :{' '}
+            {quoSizes.map((size) => (
+              <span key={`quotatedsize${size}`}>{size}, </span>
+            ))}
+          </div>
+          <SizeSelector sizes={sizes} className='noPrint' />
+
+          <div>
+            {quocWays.length} Quotated colorWays :{' '}
+            {quocWays.map((cWay) => (
+              <span key={`quotatedcway${cWay}`}>{cWay}, </span>
+            ))}
+          </div>
+          <CWaySelector cWays={cWays} className='noPrint' />
+          <div className='flexBox'>
+            <div>CM : </div>
             <input
               type='number'
               step='.01'
@@ -174,13 +197,33 @@ const QuoForm = () => {
               min='0'
               max='99999'
               value={cm || ''}
+              style={{ width: '5rem' }}
             />
-            <button name='quotationBtn' value={_id} onClick={onClick}>
-              Quotate
-            </button>
+          </div>
+          <button
+            name='quotationBtn'
+            value={_id}
+            onClick={onClick}
+            className='noPrint'
+          >
+            Quotate
+          </button>
+
+          <div className='grid-1-5-1-1-1-1-1 card mb-1 p-1'>
+            <div>Item</div>
+            <div>Description</div>
+            <div>Consuption</div>
+            <div>Unit</div>
+            <div>Unit Price</div>
+            <div>Currency</div>
+            <div>Subtotal</div>
           </div>
           {mtrls.map((mtrl) => (
-            <QuoMtrl key={`quoMtrl${mtrl.id}`} mtrl={mtrl} />
+            <QuoMtrl
+              key={`quoMtrl${mtrl.id}`}
+              mtrl={mtrl}
+              className='noBreak'
+            />
           ))}
           <div>{`Subtotal of material : ${mQuosTotal}`}</div>
           <button name='addOtherExpense' onClick={onClick}>
@@ -193,7 +236,7 @@ const QuoForm = () => {
               ))}
           <div>{`Subtotal of material : ${otherExpensesTotal}`}</div>
           <div>{`FOB : ${fob}`}</div>
-        </form>
+        </section>
       </div>
     </Fragment>
   );
