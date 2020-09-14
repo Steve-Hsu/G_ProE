@@ -9,6 +9,7 @@ import QuoFormSelector from '../../components/40_quo/40_02_quoFormSelector';
 import QuoForm from '../../components/40_quo/40_03_quoForm';
 // import SrMtrl from '../../components/30_srMtrl/30_01_srMtrl';
 import ItemSelector from '../itemSelector/ItemSelector';
+import Table from '../elements/table/Table';
 import DeletePopover from '../../components/layout/DeletePopover';
 // import GoBackBtn from '../elements/btns/GoBackBtn';
 // quoForm

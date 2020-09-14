@@ -65,18 +65,6 @@ const LeftBar = ({ currentPath }) => {
           label: 'Save The Case',
           form: 'caseForm',
         };
-        // if (cNo === null) {
-        //   obj = {
-        //     label: 'Save new Case',
-        //     form: 'caseForm',
-        //   };
-        //   // return 'Add New Case';
-        // } else {
-        //   obj = {
-        //     label: 'Update the Case',
-        //     form: 'caseForm',
-        //   };
-        // }
         break;
       case '/api/case/mprice':
         obj = {
@@ -219,6 +207,25 @@ const LeftBar = ({ currentPath }) => {
     }
   };
 
+  const printPage = (id) => {
+    var prtContent = document.getElementById(id);
+    console.log(prtContent); // Test Code
+    var WinPrint = window.open(
+      '',
+      '',
+      'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0'
+    );
+    WinPrint.document.write(prtContent.innerHTML);
+    WinPrint.document.close();
+    WinPrint.focus();
+    WinPrint.print();
+    WinPrint.close();
+  };
+
+  const onClickPrintPage = () => {
+    printPage('quotationForm');
+  };
+
   return (
     <div
       className='container-with-navbar leftbar bg-cp-1 bd-light bd-no-t h-100'
@@ -242,7 +249,9 @@ const LeftBar = ({ currentPath }) => {
                   Case ＋
                 </button>
               </div>
-            ) : (
+            ) : currentPage === 'quotation' &&
+              quotateFor === 'garment' &&
+              isQuotating === null ? null : (
               <div className='round-area bg-cp-3'>
                 <i className='fas fa-cloud-upload-alt fc-cp-1 mb-05'> Save</i>
                 <input
@@ -347,10 +356,36 @@ const LeftBar = ({ currentPath }) => {
               )}
             </div>
           </>
-        ) : null}
+        ) : (
+          (currentPage =
+            'quotation' && quotateFor === 'garment' ? (
+              isQuotating === null || openQuoForm === null ? null : (
+                <div className='round-area bg-cp-3 mt-1'>
+                  <i className='fas fa-print fc-cp-1 mb-05'> Print</i>
+                  <button
+                    className='btn bg-cp-2 btn-block bd-radius-s bd-light'
+                    onClick={onClickPrintPage}
+                  >
+                    Print out
+                  </button>
+                </div>
+              )
+            ) : null)
+        )}
       </div>
     </div>
   );
 };
 
 export default LeftBar;
+
+//  {
+//    /* </div>
+//             <div className='h-scatter-content mt-05'>
+//               <div>Print</div>
+//               <SqBtnLarge
+//                 label={<i className='fas fa-print '> Print</i>}
+//                 onClick={onClickPrintPage}
+//               />
+//             </div> */
+//  }

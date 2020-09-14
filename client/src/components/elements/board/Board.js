@@ -14,6 +14,7 @@ const Board = ({
       target = 'item';
       break;
     case 'CaseSelector':
+    case 'quoCaseSelector':
       target = 'client';
       break;
     case 'srMtrlSelector':
