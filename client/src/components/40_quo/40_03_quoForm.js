@@ -10,11 +10,11 @@ import SizeSelector from './40_03_01_sizeSelector';
 import CWaySelector from './40_03_02_cWaySelector';
 import QuoMtrl from './40_03_03_quoMtrl';
 import QuoOtherEx from './40_03_04_quoOtherEx';
-import goBackBtn from '../elements/btns/GoBackBtn';
 
 //element
 import Select from '../elements/select/Select';
 import GoBackBtn from '../elements/btns/GoBackBtn';
+import SqBtnLarge from '../elements/btns/SqBtnLarge';
 
 const QuoForm = () => {
   const authUserContext = useContext(AuthUserContext);
@@ -204,42 +204,83 @@ const QuoForm = () => {
               style={{ width: '5rem' }}
             />
           </div>
-          <button
+          <SqBtnLarge
+            name='quotationBtn'
+            value={_id}
+            onClick={onClick}
+            label='Price suggestion'
+            className='noPrint w-15vw mb-05'
+          />
+          {/* <button
             name='quotationBtn'
             value={_id}
             onClick={onClick}
             className='noPrint'
           >
             Quotate
-          </button>
+          </button> */}
 
-          <div className='grid-1-5-1-1-1-1-1 card mb-1 p-1'>
-            <div>Item</div>
-            <div>Description</div>
-            <div>Consuption</div>
-            <div>Unit</div>
-            <div>Unit Price</div>
-            <div>Currency</div>
-            <div>Subtotal</div>
+          <div className='grid-1-5-1-1-1-1-1 card p-1 test-2'>
+            {/* Row of title */}
+            {[
+              'Item',
+              'Description',
+              'Consuption',
+              'Unit',
+              'Unit Price',
+              'Currency',
+              'Subtotal',
+            ].map((i) => (
+              <div key={`mQuosTitle${i}`} className='bd-light'>
+                {i}
+              </div>
+            ))}
           </div>
           {mtrls.map((mtrl) => (
             <QuoMtrl
               key={`quoMtrl${mtrl.id}`}
               mtrl={mtrl}
-              className='noBreak'
+              className='noBreak bd-light mt-0 mb-0'
             />
           ))}
-          <div>{`Subtotal of material : ${mQuosTotal}`}</div>
-          <button name='addOtherExpense' onClick={onClick}>
+          <div className='mt-05 mb-2 h-scatter-content'>
+            <div></div>
+            <div>{`Subtotal of material : ${mQuosTotal}`}</div>
+          </div>
+          {/* <button name='addOtherExpense' onClick={onClick}>
             Add other expense
-          </button>
-          {otherExpenses.length === 0
-            ? null
-            : otherExpenses.map((oE) => (
-                <QuoOtherEx key={`otherExpense${oE.id}`} otherExpense={oE} />
+          </button> */}
+          <SqBtnLarge
+            name='addOtherExpense'
+            onClick={onClick}
+            label='Add other expense'
+            className='noPrint w-15vw mb-05'
+          />
+          {otherExpenses.length === 0 ? null : (
+            <div>
+              <div className='grid-1-5-1-1-1-1-1 card p-1 test-2'>
+                {/* Row of title */}
+                {['Cost', 'Description', 'Figure'].map((i) => (
+                  <div key={`otherExpenseTitle${i}`} className='bd-light'>
+                    {i}
+                  </div>
+                ))}
+              </div>
+              {otherExpenses.map((oE) => (
+                <QuoOtherEx
+                  key={`otherExpense${oE.id}`}
+                  otherExpense={oE}
+                  className='noBreak bd-light mt-0 mb-0'
+                />
               ))}
-          <div>{`Subtotal of other expenses : ${otherExpensesTotal}`}</div>
-          <div>{`FOB : ${fob}`}</div>
+            </div>
+          )}
+
+          <div className='mt-05 mb-2 h-scatter-content'>
+            <div></div>
+            <div>{`Subtotal of other expenses : ${otherExpensesTotal}`}</div>
+          </div>
+          <div className='fs-large'>{`FOB : ${fob}`}</div>
         </section>
       </div>
     </Fragment>

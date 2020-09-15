@@ -14,6 +14,7 @@ import {
   QUOTATION_DOWNLOAD,
   QUOFORM_UPDATE,
   CURRETQUOFORM_UPDATE,
+  CURRETQUOFORM_MQUOS_UPDATE,
 } from '../types';
 
 const QuoState = (props) => {
@@ -150,7 +151,8 @@ const QuoState = (props) => {
       return i._id === quoFormId;
     });
     dispatch({ type: QUOFORM_UPDATE, payload: res.data });
-    dispatch({ type: CURRETQUOFORM_UPDATE, payload: quoForm[0] });
+    dispatch({ type: CURRETQUOFORM_MQUOS_UPDATE, payload: quoForm[0] });
+    // dispatch({ type: CURRETQUOFORM_UPDATE, payload: quoForm[0] });
   };
 
   const deleteQuoForm = async (body) => {
@@ -232,6 +234,13 @@ const QuoState = (props) => {
         quoForm.otherExpenses = quoForm.otherExpenses.filter((i) => {
           return i.id !== value;
         });
+        quoForm.otherExpenses.map((oE) => {
+          if (oE.id === idOfItem) {
+            oE.cost = Number(e.target.value);
+          }
+          totalCost += Number(oE.cost);
+        });
+        quoForm.otherExpensesTotal = totalCost;
         break;
       case 'cspt':
         quoForm.mQuos.map((mQuo) => {

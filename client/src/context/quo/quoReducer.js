@@ -8,6 +8,7 @@ import {
   QUOFORM_DELETE,
   QUOFORM_UPDATE,
   CURRETQUOFORM_UPDATE,
+  CURRETQUOFORM_MQUOS_UPDATE,
 } from '../types';
 
 export default (state, action) => {
@@ -59,6 +60,19 @@ export default (state, action) => {
       return {
         ...state,
         currentQuoForm: action.payload,
+      };
+    case CURRETQUOFORM_MQUOS_UPDATE:
+      return {
+        ...state,
+        currentQuoForm: {
+          ...state.currentQuoForm,
+          mQuos: action.payload.mQuos,
+          mQuosTotal: action.payload.mQuosTotal,
+          fob:
+            Number(state.currentQuoForm.cm) +
+            Number(state.currentQuoForm.otherExpensesTotal) +
+            Number(action.payload.mQuosTotal),
+        },
       };
     default:
   }

@@ -49,7 +49,7 @@ const QuoMtrl = ({ mtrl, className }) => {
 
   return (
     // <div className='mb-1 p-1 card'>
-    <div className={`grid-1-5-1-1-1-1-1 card mb-1 p-1 ${className}`}>
+    <div className={`grid-1-5-1-1-1-1-1 card p-1 ${className}`}>
       <div className='v-center-content pr-05'>{mtrl.item}</div>
       <div className='v-center-content pr-05'>
         {mtrl.supplier} / {mtrl.ref_no} / {mtrl.sizeSPECs[0].mSizeSPEC} /{' '}

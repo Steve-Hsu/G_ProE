@@ -1498,6 +1498,12 @@ input[type='submit']:focus {
 .w-10 {
   width: 10%;
 }
+.w-10vw {
+  width: 10vw;
+}
+.w-15vw {
+  width: 15vw;
+}
 .w-20 {
   width: 20%;
 }
@@ -1698,11 +1704,11 @@ input[type='submit']:focus {
 }
 @page {
   size: A4 portrait;
-  margin: -40px 0 20px 0;
+  margin-bottom: 20px;
 }
-/* @page :first {
-  margin-left: 0;
-} */
+@page :first {
+  margin-top: -45px;
+}
 
 /* @test */
 /* A quick way to check the area of the element */

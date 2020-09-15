@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
 import QuoContext from '../../context/quo/quoContext';
+import DeleteBtnSmall from '../elements/btns/DeleteBtnSmall';
 
-const QuoOtherEx = ({ otherExpense }) => {
+const QuoOtherEx = ({ otherExpense, className }) => {
   const quoContext = useContext(QuoContext);
 
   const {
@@ -53,9 +54,8 @@ const QuoOtherEx = ({ otherExpense }) => {
 
   return (
     // <div className='mb-1 p-1 card'>
-    <div className='grid-1-5-1-1-1-1-1 card mb-1 p-1'>
+    <div className={`grid-1-5-1-1-1-1-1 card p-1  ${className}`}>
       <div>
-        Cost
         <input
           type='text'
           id={`costName${otherExpense.id}`}
@@ -66,7 +66,6 @@ const QuoOtherEx = ({ otherExpense }) => {
         />
       </div>
       <div>
-        Description
         <input
           type='text'
           id={`costDescription${otherExpense.id}`}
@@ -77,7 +76,6 @@ const QuoOtherEx = ({ otherExpense }) => {
         />
       </div>
       <div>
-        Figure
         <input
           type='number'
           id={`otherExpenseCost${otherExpense.id}`}
@@ -89,15 +87,13 @@ const QuoOtherEx = ({ otherExpense }) => {
           onChange={addNumber}
         />
       </div>
-      <button
+      <DeleteBtnSmall
         name='deleteOtherExpense'
         value={otherExpense.id}
-        className='btn btn-fade btn-square'
         style={deleteBtnPosition}
         onClick={onClick}
-      >
-        x
-      </button>
+        className='noPrint'
+      />
     </div>
     // </div>
   );
