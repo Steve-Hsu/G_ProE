@@ -34,20 +34,22 @@ const CWaySelector = ({ cWays, className }) => {
 
   return (
     <div className={`flexBox ${className}`}>
-      {cWays.map((i) => {
-        return (
-          <button
-            key={`sizeSelector${i.id}`}
-            name={i.gClr}
-            type='button'
-            className='btn'
-            onClick={onClick}
-            style={btnClickedStyle(i.gClr)}
-          >
-            {i.gClr}
-          </button>
-        );
-      })}
+      {cWays
+        ? cWays.map((i) => {
+            return (
+              <button
+                key={`sizeSelector${i.id}`}
+                name={i.gClr}
+                type='button'
+                className='btn'
+                onClick={onClick}
+                style={btnClickedStyle(i.gClr)}
+              >
+                {i.gClr}
+              </button>
+            );
+          })
+        : null}
     </div>
   );
 };

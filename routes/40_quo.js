@@ -124,37 +124,80 @@ router.get('/quohead/:cNo', authUser, async (req, res) => {
                   totalGarmentQty: { $sum: '$gQtys.gQty' },
                 },
               },
-            ])
-              .then((totalQtySum) => {
-                // console.log('the totalQtySum', totalQtySum); // Test Code
-                return totalQtySum;
-              })
-              .then(async (totalQtySum) => {
-                const totalGarmentQty = totalQtySum[0].totalGarmentQty;
-                const newQuo = new QuoHead({
-                  company: comId,
-                  cNo: cNo,
-                  // quoForms: [],
-                  gTQty: totalGarmentQty,
-                });
-                newQuo.save();
-                return newQuo;
-              })
-              .then(async (newQuo) => {
-                const theQuoHead = await QuoHead.findOne(
-                  { _id: newQuo._id },
-                  { company: 0 }
-                );
-                const theResult = {
-                  // quoForms: result.quoForms,
-                  versionNum: theQuoHead.versionNum,
-                  _id: theQuoHead._id,
-                  cNo: theQuoHead.cNo,
-                  date: theQuoHead.date,
-                  quoForms: [],
-                };
-                return resolve(theResult);
-              });
+            ]);
+            const totalGarmentQty = theResult[0].totalGarmentQty;
+            const newQuo = await new QuoHead({
+              company: comId,
+              cNo: cNo,
+              // quoForms: [],
+              gTQty: totalGarmentQty,
+            });
+            newQuo.save();
+
+            const finalResult = {
+              // quoForms: result.quoForms,
+              versionNum: newQuo.versionNum,
+              _id: newQuo._id,
+              cNo: newQuo.cNo,
+              date: newQuo.date,
+              quoForms: [],
+            };
+            return resolve(finalResult);
+
+            // .then(async (totalQtySum) => {
+
+            //   return newQuo;
+            // })
+            // .then(async (newQuo) => {
+            //   const theQuoHead = await QuoHead.findOne(
+            //     { _id: newQuo._id },
+            //     { company: 0 }
+            //   );
+
+            // });
+            // theResult = await Case.aggregate([
+            //   {
+            //     $match: {
+            //       cNo: cNo,
+            //       company: mongoose.Types.ObjectId(req.user.company),
+            //     },
+            //   },
+            //   {
+            //     $project: {
+            //       totalGarmentQty: { $sum: '$gQtys.gQty' },
+            //     },
+            //   },
+            // ])
+            //   .then((totalQtySum) => {
+            //     // console.log('the totalQtySum', totalQtySum); // Test Code
+            //     return totalQtySum;
+            //   })
+            //   .then(async (totalQtySum) => {
+            //     const totalGarmentQty = totalQtySum[0].totalGarmentQty;
+            //     const newQuo = new QuoHead({
+            //       company: comId,
+            //       cNo: cNo,
+            //       // quoForms: [],
+            //       gTQty: totalGarmentQty,
+            //     });
+            //     newQuo.save();
+            //     return newQuo;
+            //   })
+            //   .then(async (newQuo) => {
+            //     const theQuoHead = await QuoHead.findOne(
+            //       { _id: newQuo._id },
+            //       { company: 0 }
+            //     );
+            //     const theResult = {
+            //       // quoForms: result.quoForms,
+            //       versionNum: theQuoHead.versionNum,
+            //       _id: theQuoHead._id,
+            //       cNo: theQuoHead.cNo,
+            //       date: theQuoHead.date,
+            //       quoForms: [],
+            //     };
+            //     return resolve(theResult);
+            //   });
           }
         });
 
@@ -441,9 +484,13 @@ router.put('/quoform/:cNo/uploadquoForm', authUser, async (req, res) => {
           let mQuosTotal = 0;
           mQuos.map((mQuo) => {
             num = num + 1;
-            mQuo.materialFinalQuotation = Number(
-              mQuo.mQuoAddvised * mQuo.csptAddvised
-            ).toFixed(2);
+            if (mQuo.mQuoAddvised === 0 || mQuo.csptAddvised === 0) {
+              materialFinalQuotation = 0;
+            } else {
+              mQuo.materialFinalQuotation = Number(
+                mQuo.mQuoAddvised * mQuo.csptAddvised
+              ).toFixed(2);
+            }
           });
           if (num === mQuos.length) {
             mQuosTotal = mQuos.reduce((res, curr) => {
@@ -476,8 +523,9 @@ router.put('/quoform/:cNo/uploadquoForm', authUser, async (req, res) => {
             const quotatedQty = result[0];
             const mQuosTotal = result[1];
             const otherExpensesTotal = result[2];
-            const FOB =
-              Number(cm) + Number(mQuosTotal) + Number(otherExpensesTotal);
+            const FOB = Number(cm + mQuosTotal + otherExpensesTotal).toFixed(2);
+            // const FOB =
+            //   Number(cm) + Number(mQuosTotal) + Number(otherExpensesTotal);
             console.log(cm, '-', mQuosTotal, '-', otherExpensesTotal);
             await QuoForm.updateOne(
               { company: comId, _id: _id, quoNo: quoNo },
@@ -492,7 +540,8 @@ router.put('/quoform/:cNo/uploadquoForm', authUser, async (req, res) => {
                   mQuosTotal: mQuosTotal,
                   otherExpenses: otherExpenses,
                   otherExpensesTotal: otherExpensesTotal,
-                  fob: Number(FOB).toFixed(2),
+                  // fob: Number(FOB).toFixed(2),
+                  fob: FOB,
                   useAsFinalQuotation: useAsFinalQuotation,
                 },
               }
@@ -648,7 +697,7 @@ router.put('/quotateadvise', authUser, async (req, res) => {
   }
 
   //@ Declare needed total gQtys ----------------------------------
-  //Here the total gQtys means the sum of the quantity of the sizes and colors the user selexted, not the total quantity of the case
+  //Here the total gQtys means the sum of the quantity of the sizes and colors the user selected, not the total quantity of the case
   const quoSizesInId = quoSizes.map((size) => {
     return sizes.find(({ gSize }) => gSize === size).id;
   });
@@ -727,8 +776,9 @@ router.put('/quotateadvise', authUser, async (req, res) => {
             });
             // console.log('475 gQtyOfTheSize', gQtyOfTheSize); // Test Code
 
-            // The selected sum of quantity of this size
-            const selectedQtyOfTheSize = gQtyOfTheSize.reduce(
+            // The selected sum of quantity
+            // We use the size to get this number, if the size is same as we selected, no matter what gClr it have, add it up.
+            const selectedgQtyOfTheSize = gQtyOfTheSize.reduce(
               (result, currentItem) => {
                 if (quocWaysInId.includes(currentItem.cWay)) {
                   result += currentItem.gQty;
@@ -737,20 +787,21 @@ router.put('/quotateadvise', authUser, async (req, res) => {
               },
               0
             );
-            // console.log('484 selectedQtyOfTheSize', selectedQtyOfTheSize); // Test Code
+            // console.log('484 selectedgQtyOfTheSize', selectedgQtyOfTheSize); // Test Code
 
-            if (selectedQtyOfTheSize === 0) {
+            if (selectedgQtyOfTheSize === 0) {
               console.log("The Size Don't have any quantity");
               return reject("The Size Don't have any quantity");
             }
 
             console.log(
-              'selectedQtyOfTheSize of the size',
+              'selectedgQtyOfTheSize of the size',
               quoSizesNum + 1,
-              selectedQtyOfTheSize
+              selectedgQtyOfTheSize
             ); // Test Code
 
-            const weightOftheSize = selectedQtyOfTheSize / totalgQty;
+            // weithgOftheSize actually is the wieght of the selected quantity
+            const wieghtOfTheSelectedgQty = selectedgQtyOfTheSize / totalgQty;
 
             const getColorWeightedPriceAndCSPT = new Promise(
               (resolve, reject) => {
@@ -768,7 +819,7 @@ router.put('/quotateadvise', authUser, async (req, res) => {
                       'The mQuo have the garment color way that not exist in the case'
                     );
                     return reject(
-                      'The mQuo have the garment color way that not exist in the case'
+                      'The mQuo have the garment color way that not exist in the case, These are expected being matched in internal of the system'
                     );
                   }
                   const cWayId = garmentcWay.id;
@@ -784,70 +835,116 @@ router.put('/quotateadvise', authUser, async (req, res) => {
                   }
 
                   //@_srMtrl mtrl quotation
-                  const materialColor = mtrlColor.mColor;
+                  // const materialColor = mtrlColor.mColor;
                   const srMtrl = await SRMtrl.findOne(
                     {
+                      company: comId,
                       CSRIC: CSRIC,
-                      mPrices: {
-                        $elemMatch: {
-                          mColor: materialColor,
-                          sizeSPEC: materialSPEC,
-                        },
-                      },
-                    },
-                    { 'mPrices.$': 1 }
-                  );
-                  if (!srMtrl) {
-                    console.log("The material doesn't have Price yet");
-                    return reject("The material doesn't have Price yet");
-                  }
-                  // console.log('531, the srMtrl ', srMtrl); // Test Code
-                  const mPrice = srMtrl.mPrices[0];
-
-                  // console.log('531, the mPrice ', mPrice); // Test Code
-                  // console.log('531, the CSRIC ', CSRIC); // Test Code
-
-                  const materialQuotation = mPrice.quotation;
-
-                  //@_get CSPT
-                  const cspts = mtrl.cspts;
-                  const cspt = cspts.reduce((result, currentItem) => {
-                    if (
-                      currentItem.cWay === cWayId &&
-                      currentItem.size === gSizeId
-                    ) {
-                      result = result + currentItem.cspt;
+                      // mPrices: {
+                      //   $elemMatch: {
+                      //     mColor: materialColor,
+                      //     sizeSPEC: materialSPEC,
+                      //   },
+                      // },
                     }
-                    return result;
-                  }, 0);
-
-                  const gQty = gQtyOfTheSize.find(
-                    ({ cWay }) => cWay === cWayId
+                    // { 'mPrices.$': 1 }
                   );
-                  // console.log('617, the gQty', gQty); // Test Code
-                  const qtyOfTheSizeAndcWay = gQty.gQty;
-                  console.log(
-                    '619, the qtyOfTheSizeAndcWay',
-                    qtyOfTheSizeAndcWay,
-                    'the',
-                    quocWaysNum,
-                    'time'
-                  ); // Test Code
-                  const weightOfThecWay =
-                    qtyOfTheSizeAndcWay / selectedQtyOfTheSize;
 
-                  colorWeightedPrice =
-                    colorWeightedPrice + materialQuotation * weightOfThecWay;
+                  if (!srMtrl) {
+                    console.log("Don't have this srMtrl");
+                    return reject("Don't have this srMtrl");
+                    // resolve([0, 0]);
+                  } else {
+                    if (srMtrl.mPrices.length === 0) {
+                      console.log("The srMtrl doesn't have Price yet");
+                      return reject("The srMtrl doesn't have Price yet");
+                      // resolve([0, 0]);
+                    } else {
+                      const mPrices = srMtrl.mPrices;
+                      const materialColor = mtrlColor.mColor;
 
-                  colorWeightedCSPT =
-                    colorWeightedCSPT + cspt * weightOfThecWay;
+                      // console.log('531, the srMtrl ', srMtrl); // Test Code
+                      const colorAndSPECMatchedMPrice = mPrices.filter(
+                        (mP) =>
+                          mP.mColor === materialColor &&
+                          mP.sizeSPEC === materialSPEC
+                      );
 
-                  quocWaysNum = quocWaysNum + 1;
+                      // Define the price
+                      let mPrice = null;
+                      const mainPrice = srMtrl.mainPrice;
+                      if (colorAndSPECMatchedMPrice.length === 0) {
+                        //If no mPrice with matched mColor and spec
+                        if (mainPrice) {
+                          //if have the mainPrice, use the mainPrice
+                          mPrice = mPrices.filter((i) => i.id === mainPrice)[0];
+                        } else {
+                          //If don't have mainPrice, use the 1st price as its price
+                          mPrice = mPrices[0];
+                        }
+                      } else {
+                        mPrice = colorAndSPECMatchedMPrice[0];
+                      }
+                      // const mPrice = srMtrl.mPrices[0];
 
-                  if (quocWaysNum === quocWays.length) {
-                    console.log('The colorWeightedPrice', colorWeightedPrice); // Test Code
-                    console.log('The colorWeightedPrice', colorWeightedCSPT); // Test Code
-                    resolve([colorWeightedPrice, colorWeightedCSPT]);
+                      // console.log('531, the mPrice ', mPrice); // Test Code
+                      // console.log('531, the CSRIC ', CSRIC); // Test Code
+
+                      const materialQuotation = mPrice.quotation;
+
+                      //@_get CSPT
+                      const cspts = mtrl.cspts;
+                      const cspt = cspts.reduce((result, currentItem) => {
+                        if (
+                          currentItem.cWay === cWayId &&
+                          currentItem.size === gSizeId
+                        ) {
+                          result = result + currentItem.cspt;
+                        }
+                        return result;
+                      }, 0);
+
+                      const gQty = gQtyOfTheSize.find(
+                        ({ cWay }) => cWay === cWayId
+                      );
+                      // console.log('617, the gQty', gQty); // Test Code
+                      const qtyOfTheSizeAndcWay = gQty.gQty;
+                      console.log(
+                        '619, the qtyOfTheSizeAndcWay',
+                        qtyOfTheSizeAndcWay,
+                        'the',
+                        quocWaysNum,
+                        'time'
+                      ); // Test Code
+
+                      //Notcie
+                      // gQtyOfTheSize : The subtotal qty of a specific size of this case.
+                      // selectedgQtyOfTheSize : The subtotal qty of the selected specific size of this case. The selection is made by the user before make the request
+                      // gtyOfTheSizeAndcWay : The qty of a specific colorway and sizepsec.
+                      const weightOfThecWay =
+                        qtyOfTheSizeAndcWay / selectedgQtyOfTheSize;
+
+                      colorWeightedPrice =
+                        colorWeightedPrice +
+                        materialQuotation * weightOfThecWay;
+
+                      colorWeightedCSPT =
+                        colorWeightedCSPT + cspt * weightOfThecWay;
+
+                      quocWaysNum = quocWaysNum + 1;
+
+                      if (quocWaysNum === quocWays.length) {
+                        console.log(
+                          'The colorWeightedPrice',
+                          colorWeightedPrice
+                        ); // Test Code
+                        console.log(
+                          'The colorWeightedPrice',
+                          colorWeightedCSPT
+                        ); // Test Code
+                        resolve([colorWeightedPrice, colorWeightedCSPT]);
+                      }
+                    }
                   }
                 });
               }
@@ -866,17 +963,27 @@ router.put('/quotateadvise', authUser, async (req, res) => {
                   colorWeightedCSPT
                 ); // Test Code
 
-                sizeAndColorWeightedPrice =
-                  sizeAndColorWeightedPrice +
-                  colorWeightedPrice * weightOftheSize;
+                // If one of the 2 index equlas to zero, skip the calculating.
+                if (colorWeightedPrice === 0 || wieghtOfTheSelectedgQty === 0) {
+                } else {
+                  sizeAndColorWeightedPrice =
+                    sizeAndColorWeightedPrice +
+                    colorWeightedPrice * wieghtOfTheSelectedgQty;
+                }
+
                 console.log(
                   'The Promise all_1 sizeAndColorWdightedPrice',
                   sizeAndColorWeightedPrice
                 ); // Test Code
 
-                sizeAndColorWeightedCSPT =
-                  sizeAndColorWeightedCSPT +
-                  colorWeightedCSPT * weightOftheSize;
+                // If one of the 2 index equlas to zero, skip the calculating.
+                if (colorWeightedCSPT === 0 || wieghtOfTheSelectedgQty === 0) {
+                } else {
+                  sizeAndColorWeightedCSPT =
+                    sizeAndColorWeightedCSPT +
+                    colorWeightedCSPT * wieghtOfTheSelectedgQty;
+                }
+
                 return [sizeAndColorWeightedPrice, sizeAndColorWeightedCSPT];
               })
               .then((result) => {
@@ -896,16 +1003,29 @@ router.put('/quotateadvise', authUser, async (req, res) => {
               });
           });
         }
-      );
+      ).catch((err) => {
+        console.log(err);
+        return err;
+      });
 
       // Connect to mongoDB updload the AVGPRICE
       Promise.all([getWeightedAVGPriceAndAVGCSPT])
         .then(async (result) => {
-          const AVGPrice = result[0][0].toFixed(2); //Rounding number in 2nd decimal place
-          const AVGCSPT = result[0][1].toFixed(2);
-          const mtrlPrice = Number(AVGPrice * AVGCSPT).toFixed(2);
+          let AVGPrice = result[0][0]; //Rounding number in 2nd decimal place
+          let AVGCSPT = result[0][1];
+          // const AVGPrice = result[0][0].toFixed(2); //Rounding number in 2nd decimal place
+          // const AVGCSPT = result[0][1].toFixed(2);
+          let mtrlPrice = 0;
+          if (AVGPrice === 0 || AVGCSPT === 0) {
+          } else {
+            AVGPrice = AVGPrice.toFixed(2);
+            AVGCSPT = AVGCSPT.toFixed(2);
+            mtrlPrice = Number(AVGPrice * AVGCSPT).toFixed(2);
+          }
+
           console.log('The Promise all_2 AVGPrice ', AVGPrice); // Test Code
           console.log('The Promise all_2 AVGCSPT ', AVGCSPT); // Test Code
+
           await QuoForm.findOneAndUpdate(
             {
               company: comId,
@@ -917,9 +1037,9 @@ router.put('/quotateadvise', authUser, async (req, res) => {
             {
               $set: {
                 quotatedQty: Number(totalgQty),
-                'mQuos.$.mQuoAddvised': Number(AVGPrice),
-                'mQuos.$.csptAddvised': Number(AVGCSPT),
-                'mQuos.$.materialFinalQuotation': Number(mtrlPrice),
+                'mQuos.$.mQuoAddvised': AVGPrice,
+                'mQuos.$.csptAddvised': AVGCSPT,
+                'mQuos.$.materialFinalQuotation': mtrlPrice,
               },
             }
           );
@@ -988,12 +1108,16 @@ router.put('/quotateadvise', authUser, async (req, res) => {
           console.log(err);
         });
     });
+  }).catch((err) => {
+    console.log(err);
+    return err;
   });
 
   Promise.all([insertmtrlQuotation])
     .then((result) => {
       const resQuoForms = result[0];
       // console.log('The material quotation is finished ', resQuoForms); // Test Code
+      console.log('The material quotation is finished and returned');
       return res.json(resQuoForms);
     })
     .catch((err) => {

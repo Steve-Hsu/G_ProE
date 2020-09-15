@@ -91,12 +91,12 @@ const QuoState = (props) => {
   };
 
   const switchQuoForm = (quoFormId) => {
-    if (openQuoForm === null) {
-      dispatch({ type: QUOFORM_SWITCH, payload: quoFormId });
-      return quoFormId;
-    } else {
+    if (quoFormId === null) {
       dispatch({ type: QUOFORM_SWITCH, payload: null });
       return null;
+    } else {
+      dispatch({ type: QUOFORM_SWITCH, payload: quoFormId });
+      return quoFormId;
     }
   };
 

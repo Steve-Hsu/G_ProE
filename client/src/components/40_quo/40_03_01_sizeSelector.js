@@ -33,20 +33,22 @@ const SizeSelector = ({ sizes, className }) => {
 
   return (
     <div className={`flexBox ${className}`}>
-      {sizes.map((i) => {
-        return (
-          <button
-            key={`sizeSelector${i.id}`}
-            name={i.gSize}
-            type='button'
-            className='btn'
-            onClick={onClick}
-            style={btnClickedStyle(i.gSize)}
-          >
-            {i.gSize}
-          </button>
-        );
-      })}
+      {sizes
+        ? sizes.map((i) => {
+            return (
+              <button
+                key={`sizeSelector${i.id}`}
+                name={i.gSize}
+                type='button'
+                className='btn'
+                onClick={onClick}
+                style={btnClickedStyle(i.gSize)}
+              >
+                {i.gSize}
+              </button>
+            );
+          })
+        : null}
     </div>
   );
 };

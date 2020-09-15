@@ -45,14 +45,14 @@ const QuoForm = () => {
     fob,
   } = currentQuoForm;
   const theCases = quotation.theCase;
+  let cWays,
+    sizes,
+    gQtys,
+    mtrls = [];
   let cNo,
     caseType,
     style,
-    client,
-    cWays,
-    sizes,
-    gQtys,
-    mtrls = null;
+    client = '';
 
   if (theCases) {
     cNo = theCases.cNo;
@@ -82,9 +82,13 @@ const QuoForm = () => {
     e.preventDefault();
     // uploadQuoForm(isQuotating, true);
 
-    uploadQuoForm(isQuotating, false, currentQuoForm).then(() => {
-      console.log('QuoForm is updated');
-    });
+    uploadQuoForm(isQuotating, false, currentQuoForm)
+      .then(() => {
+        console.log('QuoForm is updated');
+      })
+      .then(() => {
+        switchQuoForm(_id);
+      });
   };
 
   const onChange = (e) => {
@@ -167,8 +171,8 @@ const QuoForm = () => {
 
           <div>Client : {client}</div>
           <div>Style : {style}</div>
-          <div>Total {sizes.length} sizes</div>
-          <div>Total {cWays.length} Color Ways</div>
+          <div>Total {sizes ? sizes.length : 0} sizes</div>
+          <div>Total {cWays ? sizes.length : 0} Color Ways</div>
         </section>
         <section id='QuotationArea'>
           <div>
