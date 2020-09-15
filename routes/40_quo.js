@@ -907,6 +907,12 @@ router.put('/quotateadvise', authUser, async (req, res) => {
                       const gQty = gQtyOfTheSize.find(
                         ({ cWay }) => cWay === cWayId
                       );
+                      console.log(
+                        'test code, the gQtyOftheSize',
+                        gQtyOfTheSize,
+                        'the cWayId',
+                        cWayId
+                      );
                       // console.log('617, the gQty', gQty); // Test Code
                       const qtyOfTheSizeAndcWay = gQty.gQty;
                       console.log(

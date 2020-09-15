@@ -1007,32 +1007,51 @@ const CasesState = (props) => {
         let num = 0;
         let gQtysLength = gQtys.length;
         let cWayLength = cWays.length;
-        let sizeLength = sizes.length;
+        // let sizeLength = sizes.length;
         let cWayKey = gQtysLength / cWayLength;
-        let sizeKey = gQtysLength / sizeLength;
+        // let sizeKey = gQtysLength / sizeLength;
         let cWayIdx = 0;
         let sizeIdx = 0;
-        newgQtys = await gQtys.map((gQty, idx) => {
-          gQty.cWay = newColorWays[cWayIdx].id;
-          gQty.size = newSizes[sizeIdx].id;
-          gQty.id = uuidv4() + generateId();
+        // const getIndex = (length, idx)=>{
+        //   let number = (idx + 1) % length
 
+        // }
+        // const getId = (obj, idx) => {
+        //   return obj[idx].id;
+        // };
+
+        await gQtys.map((gQty, idx) => {
           let checkcWay = (idx + 1) % cWayKey;
-          let checkSize = (idx + 1) % sizeKey;
-          // console.log('checkcWay', checkcWay, 'the cwayIdx', cWayIdx); // Test code
-          // console.log('checkSize', checkSize); // Test Code
+          const newObj = {
+            id: uuidv4() + generateId(),
+            cWay: newColorWays[cWayIdx].id,
+            size: newSizes[sizeIdx].id,
+            gQty: gQty.gQty,
+          };
+
+          newgQtys.push(newObj);
+
+          // console.log(
+          //   'checkcWay',
+          //   checkcWay,
+          //   'the cwayIdx',
+          //   cWayIdx,
+          //   'the (idx + 1)',
+          //   idx + 1
+          // ); // Test code
+          // console.log('the sizeIndx', sizeIdx, 'the (idx +1 ', idx + 1); // Test Code
+          // console.log('The cWay Id', newColorWays[cWayIdx].id);
+          // console.log('the size Id ', newSizes[sizeIdx].id);
+
+          sizeIdx = sizeIdx + 1;
 
           if (checkcWay) {
           } else {
             cWayIdx = cWayIdx + 1;
-          }
-          if (checkSize) {
-          } else {
-            sizeIdx = sizeIdx + 1;
+            sizeIdx = 0;
           }
 
           num = idx;
-          return gQty;
         });
         if (num + 1 === gQtys.length) {
           console.log('the newgQtys', newgQtys);
@@ -1049,49 +1068,53 @@ const CasesState = (props) => {
       console.log('newSize', newSizes);
       console.log('newgQtys', newgQtys);
       const MtrlPart = new Promise((resolve) => {
-        mtrls.map((mtrl, mtrlIdx) => {
-          mtrl.id = uuidv4() + generateId();
+        if (mtrls.length > 0) {
+          mtrls.map((mtrl, mtrlIdx) => {
+            mtrl.id = uuidv4() + generateId();
 
-          const mtrlcWayPart = new Promise((resolve) => {
-            mtrl.mtrlColors.map((mtrlColor, idx) => {
-              mtrlColor.id = uuidv4() + generateId();
-              mtrlColor.mtrl = mtrl.id;
-              mtrlColor.cWay = newColorWays[idx].id;
-              if (idx + 1 === newColorWays.length) {
-                resolve();
+            const mtrlcWayPart = new Promise((resolve) => {
+              mtrl.mtrlColors.map((mtrlColor, idx) => {
+                mtrlColor.id = uuidv4() + generateId();
+                mtrlColor.mtrl = mtrl.id;
+                mtrlColor.cWay = newColorWays[idx].id;
+                if (idx + 1 === newColorWays.length) {
+                  resolve();
+                }
+              });
+            });
+            const mtrlSizePart = new Promise((resolve) => {
+              mtrl.sizeSPECs.map((spec, idx) => {
+                spec.id = uuidv4() + generateId();
+                spec.mtrl = mtrl.id;
+                spec.size = newSizes[idx].id;
+                if (idx + 1 === newSizes.length) {
+                  resolve();
+                }
+              });
+            });
+
+            const mtrlgQtyPart = new Promise((resolve) => {
+              mtrl.cspts.map((cspt, idx) => {
+                cspt.id = uuidv4() + generateId();
+                cspt.cWay = newgQtys[idx].cWay;
+                cspt.size = newgQtys[idx].size;
+                cspt.gQty = newgQtys[idx].id;
+                cspt.mtrl = mtrl.id;
+                if (idx + 1 === newgQtys.length) {
+                  resolve();
+                }
+              });
+            });
+
+            Promise.all([mtrlcWayPart, mtrlSizePart, mtrlgQtyPart]).then(() => {
+              if (mtrlIdx + 1 === mtrls.length) {
+                return resolve(mtrls);
               }
             });
           });
-          const mtrlSizePart = new Promise((resolve) => {
-            mtrl.sizeSPECs.map((spec, idx) => {
-              spec.id = uuidv4() + generateId();
-              spec.mtrl = mtrl.id;
-              spec.size = newSizes[idx].id;
-              if (idx + 1 === newSizes.length) {
-                resolve();
-              }
-            });
-          });
-
-          const mtrlgQtyPart = new Promise((resolve) => {
-            mtrl.cspts.map((cspt, idx) => {
-              cspt.id = uuidv4() + generateId();
-              cspt.cWay = newgQtys[idx].cWay;
-              cspt.size = newgQtys[idx].size;
-              cspt.gQty = newgQtys[idx].id;
-              cspt.mtrl = mtrl.id;
-              if (idx + 1 === newgQtys.length) {
-                resolve();
-              }
-            });
-          });
-
-          Promise.all([mtrlcWayPart, mtrlSizePart, mtrlgQtyPart]).then(() => {
-            if (mtrlIdx + 1 === mtrls.length) {
-              return resolve(mtrls);
-            }
-          });
-        });
+        } else {
+          return resolve([]);
+        }
       });
 
       Promise.all([MtrlPart]).then((result) => {
