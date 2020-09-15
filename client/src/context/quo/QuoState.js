@@ -238,22 +238,22 @@ const QuoState = (props) => {
           if (mQuo.mtrlId === idOfItem) {
             mQuo.csptAddvised = e.target.value;
             let mtrlQuotation = mQuo.csptAddvised * mQuo.mQuoAddvised;
-            mQuo.materialFinalQuotation = Number(mtrlQuotation).toFixed(2);
+            mQuo.materialFinalQuotation = Number(mtrlQuotation);
           }
           totalCost += Number(mQuo.materialFinalQuotation);
         });
-        quoForm.mQuosTotal = totalCost;
+        quoForm.mQuosTotal = totalCost.toFixed(2);
         break;
       case 'unitprice':
         quoForm.mQuos.map((mQuo) => {
           if (mQuo.mtrlId === idOfItem) {
             mQuo.mQuoAddvised = e.target.value;
             let mtrlQuotation = mQuo.csptAddvised * mQuo.mQuoAddvised;
-            mQuo.materialFinalQuotation = Number(mtrlQuotation).toFixed(2);
+            mQuo.materialFinalQuotation = Number(mtrlQuotation);
           }
           totalCost += Number(mQuo.materialFinalQuotation);
         });
-        quoForm.mQuosTotal = totalCost;
+        quoForm.mQuosTotal = totalCost.toFixed(2);
         break;
       case 'otherExpenseCost':
         quoForm.otherExpenses.map((oE) => {
@@ -280,9 +280,14 @@ const QuoState = (props) => {
         break;
       default:
     }
-    quoForm.fob = Number(
-      quoForm.cm + quoForm.mQuosTotal + quoForm.otherExpensesTotal
-    ).toFixed(2);
+    const finalTotal =
+      Number(quoForm.cm) +
+      Number(quoForm.mQuosTotal) +
+      Number(quoForm.otherExpensesTotal);
+    // quoForm.fob = Number(
+    //   quoForm.cm + quoForm.mQuosTotal + quoForm.otherExpensesTotal
+    // ).toFixed(2);
+    quoForm.fob = finalTotal.toFixed(2);
 
     dispatch({ type: CURRETQUOFORM_UPDATE, payload: quoForm });
   };

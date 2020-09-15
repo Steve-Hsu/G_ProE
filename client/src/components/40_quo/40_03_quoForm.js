@@ -238,7 +238,7 @@ const QuoForm = () => {
             : otherExpenses.map((oE) => (
                 <QuoOtherEx key={`otherExpense${oE.id}`} otherExpense={oE} />
               ))}
-          <div>{`Subtotal of material : ${otherExpensesTotal}`}</div>
+          <div>{`Subtotal of other expenses : ${otherExpensesTotal}`}</div>
           <div>{`FOB : ${fob}`}</div>
         </section>
       </div>
