@@ -218,7 +218,7 @@ const QuoState = (props) => {
         quoForm.currency = value;
         break;
       case 'cm':
-        quoForm.cm = value;
+        quoForm.cm = Number(value);
         break;
       case 'addOtherExpense':
         quoForm.otherExpenses.push({
@@ -258,7 +258,7 @@ const QuoState = (props) => {
       case 'otherExpenseCost':
         quoForm.otherExpenses.map((oE) => {
           if (oE.id === idOfItem) {
-            oE.cost = e.target.value;
+            oE.cost = Number(e.target.value);
           }
           totalCost += Number(oE.cost);
         });
@@ -280,7 +280,9 @@ const QuoState = (props) => {
         break;
       default:
     }
-    quoForm.fob = quoForm.cm + quoForm.mQuosTotal + quoForm.otherExpensesTotal;
+    quoForm.fob = Number(
+      quoForm.cm + quoForm.mQuosTotal + quoForm.otherExpensesTotal
+    ).toFixed(2);
 
     dispatch({ type: CURRETQUOFORM_UPDATE, payload: quoForm });
   };
