@@ -31,7 +31,7 @@ const QuoMtrl = ({ mtrl, className }) => {
     let Max = 0;
     switch (e.target.name) {
       case 'cspt':
-        Max = 999;
+        Max = 9999;
         break;
       case 'unitprice':
         Max = 9999999;
@@ -48,49 +48,41 @@ const QuoMtrl = ({ mtrl, className }) => {
   };
 
   return (
-    // <div className='mb-1 p-1 card'>
-    <div className={`grid-1-5-1-1-1-1-1 card p-1 ${className}`}>
-      <div className='v-center-content pr-05'>{mtrl.item}</div>
-      <div className='v-center-content pr-05'>
+    <div className={`grid-Quo-Mtrl m-0 p-0 bd-light bd-no-t ${className}`}>
+      <div className='bd-light bd-no-t v-center-content p-05'>{mtrl.item}</div>
+      <div className='bd-light bd-no-t v-center-content p-05'>
         {mtrl.supplier} / {mtrl.ref_no} / {mtrl.sizeSPECs[0].mSizeSPEC} /{' '}
         {mtrl.position}
       </div>
-      <div className='v-center-content pr-05'>
-        {/* Consumption */}
+      <div className='bd-light bd-no-t v-center-content '>
+        {' '}
         <input
           type='number'
           id={`cspt${mtrl.id}`}
           name='cspt'
-          min='0'
-          max='999'
           step='.01'
           value={csptAddvised || ''}
           onChange={addNumber}
+          className='whenPrintNoBorder'
         />
       </div>
-      <div className='v-center-content pr-05'>{mtrl.unit}</div>
-      <div className='v-center-content pr-05'>
-        {/* Unit Price */}
+      <div className='bd-light bd-no-t v-center-content p-05'>{mtrl.unit}</div>
+      <div className='bd-light bd-no-t v-center-content '>
         <input
           type='number'
           id={`unitprice${mtrl.id}`}
           name='unitprice'
-          min='0'
-          max='9999999'
           step='.01'
           value={mQuoAddvised || ''}
           onChange={addNumber}
+          className='whenPrintNoBorder'
         />
       </div>
-
-      {/* {mtrl.map((label) => (
-            <div key={`QuoListItem${label}${listItem.cNo}`}>
-              <div className='label'>{labelSwitcher(label)}</div>
-              <div>{listItem[label]}</div>
-            </div>
-          ))} */}
+      <div className='bd-light bd-no-t v-center-content p-05'>{currency}</div>
+      <div className='bd-light bd-no-t v-center-content p-05'>
+        {materialFinalQuotation}
+      </div>
     </div>
-    // </div>
   );
 };
 

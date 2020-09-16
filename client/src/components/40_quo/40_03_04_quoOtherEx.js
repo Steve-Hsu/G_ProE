@@ -47,15 +47,27 @@ const QuoOtherEx = ({ otherExpense, className }) => {
 
   //@ Style
   const deleteBtnPosition = {
-    top: ' 70%',
-    left: '100%',
-    transform: 'translate(-2rem, -1rem)',
+    // top: ' 50%',
+    // // left: '100%',
+    // transform: 'translate(0, -1rem)',
   };
 
   return (
     // <div className='mb-1 p-1 card'>
-    <div className={`grid-1-5-1-1-1-1-1 card p-1  ${className}`}>
-      <div>
+    <div
+      className={`grid-Quo-otherExpanse m-0 p-0 bd-light bd-no-t ${className}`}
+    >
+      <div className='bd-light bd-no-t v-center-content'>
+        <div className='noPrint p-05' style={{ width: '50px' }}>
+          <DeleteBtnSmall
+            name='deleteOtherExpense'
+            value={otherExpense.id}
+            style={deleteBtnPosition}
+            onClick={onClick}
+            className='noPrint m-0'
+          />
+        </div>
+
         <input
           type='text'
           id={`costName${otherExpense.id}`}
@@ -63,9 +75,10 @@ const QuoOtherEx = ({ otherExpense, className }) => {
           maxLength='30'
           value={otherExpense.costName || ''}
           onChange={onChange}
+          className='whenPrintNoBorder'
         />
       </div>
-      <div>
+      <div className='bd-light bd-no-t v-center-content '>
         <input
           type='text'
           id={`costDescription${otherExpense.id}`}
@@ -73,27 +86,25 @@ const QuoOtherEx = ({ otherExpense, className }) => {
           maxLength='200'
           value={otherExpense.costDescription || ''}
           onChange={onChange}
+          className='whenPrintNoBorder'
         />
       </div>
-      <div>
-        <input
-          type='number'
-          id={`otherExpenseCost${otherExpense.id}`}
-          name='otherExpenseCost'
-          min='0'
-          max='9999999'
-          step='.01'
-          value={otherExpense.cost || ''}
-          onChange={addNumber}
-        />
+      <div className='bd-light bd-no-t v-center-content p-05'>{currency}</div>
+      <div className='bd-light bd-no-t v-center-content'>
+        <div className='h-scatter-content'>
+          <input
+            type='number'
+            id={`otherExpenseCost${otherExpense.id}`}
+            name='otherExpenseCost'
+            min='0'
+            max='9999999'
+            step='.01'
+            value={otherExpense.cost || ''}
+            onChange={addNumber}
+            className='whenPrintNoBorder'
+          />
+        </div>
       </div>
-      <DeleteBtnSmall
-        name='deleteOtherExpense'
-        value={otherExpense.id}
-        style={deleteBtnPosition}
-        onClick={onClick}
-        className='noPrint'
-      />
     </div>
     // </div>
   );

@@ -261,6 +261,16 @@ img {
   /* grid-auto-rows: auto; */
 }
 
+.grid-Quo-Mtrl {
+  display: grid;
+  grid-template-columns: 1fr 5fr 6rem 4rem 8rem 5rem 5rem;
+}
+
+.grid-Quo-otherExpanse {
+  display: grid;
+  grid-template-columns: 10rem 1fr 5rem 5rem;
+}
+
 /* grid gap */
 .gap-ti {
   grid-gap: var(--tiny);
@@ -1182,6 +1192,9 @@ input[type='submit']:focus {
 .p {
   padding: var(--gap);
 }
+.p-0 {
+  padding: 0;
+}
 
 .p-05 {
   padding: 0.5rem;
@@ -1330,6 +1343,7 @@ input[type='submit']:focus {
 .m {
   margin: var(--gap);
 }
+
 .m-05 {
   margin: 0.5rem;
 }
@@ -1449,6 +1463,10 @@ input[type='submit']:focus {
   margin-right: 3rem;
 }
 
+.m-0 {
+  margin: 0;
+}
+
 /* @Size of the element */
 /* Height */
 .h-5 {
@@ -1494,6 +1512,9 @@ input[type='submit']:focus {
 /* width */
 .w-5 {
   width: 5%;
+}
+.w-5rem {
+  width: 5rem;
 }
 .w-10 {
   width: 10%;
@@ -1694,17 +1715,22 @@ input[type='submit']:focus {
   .whenPrint {
     width: 100vw;
   }
+  .whenPrintNoBorder {
+    border-color: rgba(255, 255, 255, 0);
+  }
   .noBreak {
     break-inside: avoid;
   }
   /* If the node with this class, the node will not show when print. */
   .noPrint {
     display: none;
+    /* padding-left: 0; */
   }
 }
 @page {
   size: A4 portrait;
   margin-bottom: 20px;
+  margin: 0 5px 20px;
 }
 @page :first {
   margin-top: -45px;

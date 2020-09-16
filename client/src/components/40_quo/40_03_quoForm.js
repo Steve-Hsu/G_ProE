@@ -190,7 +190,7 @@ const QuoForm = () => {
             ))}
           </div>
           <CWaySelector cWays={cWays} className='noPrint' />
-          <div className='flexBox'>
+          <div className='flexBox mb-05'>
             <div>CM : </div>
             <input
               type='number'
@@ -220,8 +220,7 @@ const QuoForm = () => {
             Quotate
           </button> */}
 
-          <div className='grid-1-5-1-1-1-1-1 card p-1 test-2'>
-            {/* Row of title */}
+          <div className='grid-Quo-Mtrl bd-light bg-cp-2-light m-0 p-0'>
             {[
               'Item',
               'Description',
@@ -231,7 +230,10 @@ const QuoForm = () => {
               'Currency',
               'Subtotal',
             ].map((i) => (
-              <div key={`mQuosTitle${i}`} className='bd-light'>
+              <div
+                key={`mQuosTitle${i}`}
+                className='bd-light v-center-content p-05'
+              >
                 {i}
               </div>
             ))}
@@ -240,7 +242,7 @@ const QuoForm = () => {
             <QuoMtrl
               key={`quoMtrl${mtrl.id}`}
               mtrl={mtrl}
-              className='noBreak bd-light mt-0 mb-0'
+              className='noBreak'
             />
           ))}
           <div className='mt-05 mb-2 h-scatter-content'>
@@ -258,10 +260,13 @@ const QuoForm = () => {
           />
           {otherExpenses.length === 0 ? null : (
             <div>
-              <div className='grid-1-5-1-1-1-1-1 card p-1 test-2'>
+              <div className='grid-Quo-otherExpanse bd-light bg-cp-2-light m-0 p-0'>
                 {/* Row of title */}
-                {['Cost', 'Description', 'Figure'].map((i) => (
-                  <div key={`otherExpenseTitle${i}`} className='bd-light'>
+                {['Cost', 'Description', 'Currency', 'Figure'].map((i) => (
+                  <div
+                    key={`otherExpenseTitle${i}`}
+                    className='bd-light v-center-content p-05'
+                  >
                     {i}
                   </div>
                 ))}
