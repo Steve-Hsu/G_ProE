@@ -1,5 +1,6 @@
 import React, { useContext, Fragment } from 'react';
 import QuoContext from '../../context/quo/quoContext';
+import SqBtnLarge from '../elements/btns/SqBtnLarge';
 
 const SizeSelector = ({ sizes, className }) => {
   const quoContext = useContext(QuoContext);
@@ -20,32 +21,40 @@ const SizeSelector = ({ sizes, className }) => {
     const haveTheQuoSize = quoForm.quoSizes.includes(subject);
     if (haveTheQuoSize) {
       return {
-        color: 'white',
+        color: 'var(--primary-text)',
         background: 'var(--primary-color)',
-        // transition: 'all 0.5s',
-        border: '0',
-        borderBottom: '1px solid var(--primary - color)',
+        flex: '1 0 3.5rem',
       };
     } else {
-      return {};
+      return {
+        flex: '1 0 3.5rem',
+      };
     }
   };
 
   return (
-    <div className={`flexBox ${className}`}>
+    <div className={`flexBox bd-radius-s ${className}`}>
       {sizes
         ? sizes.map((i) => {
             return (
-              <button
+              <SqBtnLarge
                 key={`sizeSelector${i.id}`}
                 name={i.gSize}
-                type='button'
-                className='btn'
                 onClick={onClick}
+                label={i.gSize}
                 style={btnClickedStyle(i.gSize)}
-              >
-                {i.gSize}
-              </button>
+                className='mt-05 mx-03'
+              />
+              // <button
+              //   key={`sizeSelector${i.id}`}
+              //   name={i.gSize}
+              //   type='button'
+              //   className='btn'
+              //   onClick={onClick}
+              //   style={btnClickedStyle(i.gSize)}
+              // >
+              //   {i.gSize}
+              // </button>
             );
           })
         : null}

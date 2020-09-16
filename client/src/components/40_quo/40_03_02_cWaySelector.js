@@ -1,5 +1,6 @@
 import React, { useContext, Fragment } from 'react';
 import QuoContext from '../../context/quo/quoContext';
+import SqBtnLarge from '../elements/btns/SqBtnLarge';
 
 const CWaySelector = ({ cWays, className }) => {
   const quoContext = useContext(QuoContext);
@@ -21,11 +22,8 @@ const CWaySelector = ({ cWays, className }) => {
     const haveTheQuocWay = quoForm.quocWays.includes(subject);
     if (haveTheQuocWay) {
       return {
-        color: 'white',
+        color: 'var(--primary-text)',
         background: 'var(--primary-color)',
-        // transition: 'all 0.5s',
-        border: '0',
-        borderBottom: '1px solid var(--primary - color)',
       };
     } else {
       return {};
@@ -37,16 +35,14 @@ const CWaySelector = ({ cWays, className }) => {
       {cWays
         ? cWays.map((i) => {
             return (
-              <button
+              <SqBtnLarge
                 key={`sizeSelector${i.id}`}
                 name={i.gClr}
-                type='button'
-                className='btn'
                 onClick={onClick}
                 style={btnClickedStyle(i.gClr)}
-              >
-                {i.gClr}
-              </button>
+                label={i.gClr}
+                className='mt-05 mx-03 w-100'
+              />
             );
           })
         : null}

@@ -129,6 +129,25 @@ const QuoForm = () => {
       updateCurrentQuoForm(e);
     }
   };
+  const d = new Date();
+  const months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+
+  const theTime = String(
+    d.getDate() + '/' + months[d.getMonth()] + '/' + d.getFullYear()
+  );
 
   return (
     <Fragment>
@@ -140,7 +159,14 @@ const QuoForm = () => {
         {/* <button name='goBackBtn' onClick={onClick}>
           Go Back
         </button>{' '} */}
-        <section className='h-20 w-100 test-2 mt-05' id='formHead'>
+        <div className='h-scatter-content'>
+          <div></div>
+          <div className='fs-tiny'>
+            <div>No : {quoNo} </div>
+            <div>Date : {theTime}</div>
+          </div>
+        </div>
+        <section className='h-20 w-100 mt-05 mb-3' id='formHead'>
           <form id='quoForm' onSubmit={onSubmitQuoForm} />
           <div className='fs-large h-center-content '>
             {comName} {comNameTail}
@@ -148,14 +174,35 @@ const QuoForm = () => {
           <div className='h-center-content '>{comAddress}</div>
         </section>
         <section id='formInformation'>
-          <div>Case Number : {cNo}</div>
-          <div>Quotation Number : {quoNo} </div>
+          {/* <div>Case Number : {cNo}</div>
+
           <div>Quotation for : {quotateFor}</div>
-          <div>Quotation Type : {caseType}</div>
-          <div className='flexBox'>
+          <div>Quotation Type : {caseType}</div> */}
+
+          <div>Client : {client}</div>
+          <div>Style : {style}</div>
+          <div>Style total sizes : {sizes ? sizes.length : 0}</div>
+          <div>Style total colorways {cWays ? sizes.length : 0} Color Ways</div>
+        </section>
+        <section id='QuotationArea'>
+          <div>
+            {quoSizes.length} Quotated Sizes :{' '}
+            {quoSizes.map((size) => (
+              <span key={`quotatedsize${size}`}>{size}, </span>
+            ))}
+          </div>
+
+          <div>
+            {quocWays.length} Quotated colorWays :{' '}
+            {quocWays.map((cWay) => (
+              <span key={`quotatedcway${cWay}`}>{cWay}, </span>
+            ))}
+          </div>
+
+          <div className='v-center-content'>
             {' '}
-            <div>Quotation currency : </div>
-            <div style={{ width: '6rem' }}>
+            <div>Quotation in : </div>
+            <div style={{ width: '10rem' }}>
               {'  '}
               <Select
                 purpose='currency'
@@ -168,29 +215,7 @@ const QuoForm = () => {
               />
             </div>
           </div>
-
-          <div>Client : {client}</div>
-          <div>Style : {style}</div>
-          <div>Total {sizes ? sizes.length : 0} sizes</div>
-          <div>Total {cWays ? sizes.length : 0} Color Ways</div>
-        </section>
-        <section id='QuotationArea'>
-          <div>
-            {quoSizes.length} Quotated Sizes :{' '}
-            {quoSizes.map((size) => (
-              <span key={`quotatedsize${size}`}>{size}, </span>
-            ))}
-          </div>
-          <SizeSelector sizes={sizes} className='noPrint' />
-
-          <div>
-            {quocWays.length} Quotated colorWays :{' '}
-            {quocWays.map((cWay) => (
-              <span key={`quotatedcway${cWay}`}>{cWay}, </span>
-            ))}
-          </div>
-          <CWaySelector cWays={cWays} className='noPrint' />
-          <div className='flexBox mb-05'>
+          <div className='v-center-content mb-2'>
             <div>CM : </div>
             <input
               type='number'
@@ -204,22 +229,7 @@ const QuoForm = () => {
               style={{ width: '5rem' }}
             />
           </div>
-          <SqBtnLarge
-            name='quotationBtn'
-            value={_id}
-            onClick={onClick}
-            label='Price suggestion'
-            className='noPrint w-15vw mb-05'
-          />
-          {/* <button
-            name='quotationBtn'
-            value={_id}
-            onClick={onClick}
-            className='noPrint'
-          >
-            Quotate
-          </button> */}
-
+          <div className='fs-lead'>Materials</div>
           <div className='grid-Quo-Mtrl bd-light bg-cp-2-light m-0 p-0'>
             {[
               'Item',
@@ -252,34 +262,55 @@ const QuoForm = () => {
           {/* <button name='addOtherExpense' onClick={onClick}>
             Add other expense
           </button> */}
+          <div className='fs-lead'>Other Expanses</div>
           <SqBtnLarge
             name='addOtherExpense'
             onClick={onClick}
             label='Add other expense'
             className='noPrint w-15vw mb-05'
           />
-          {otherExpenses.length === 0 ? null : (
-            <div>
-              <div className='grid-Quo-otherExpanse bd-light bg-cp-2-light m-0 p-0'>
-                {/* Row of title */}
-                {['Cost', 'Description', 'Currency', 'Figure'].map((i) => (
-                  <div
-                    key={`otherExpenseTitle${i}`}
-                    className='bd-light v-center-content p-05'
-                  >
-                    {i}
-                  </div>
-                ))}
+
+          <div className='grid-Quo-otherExpanse bd-light bg-cp-2-light m-0 p-0'>
+            {/* Row of title */}
+            {['Cost', 'Description', 'Currency', 'Figure'].map((i) => (
+              <div
+                key={`otherExpenseTitle${i}`}
+                className='bd-light v-center-content p-05'
+              >
+                {i}
               </div>
-              {otherExpenses.map((oE) => (
-                <QuoOtherEx
-                  key={`otherExpense${oE.id}`}
-                  otherExpense={oE}
-                  className='noBreak bd-light mt-0 mb-0'
-                />
-              ))}
+            ))}
+          </div>
+          {/* <div
+            className={`grid-Quo-otherExpanse m-0 p-0 bd-light bd-no-t mt-0 mb-0`}
+          >
+            <div className='bd-light bd-no-t v-center-content p-05'>CM</div>
+            <div className='bd-light bd-no-t v-center-content p-05'>
+              Cuting and making
             </div>
-          )}
+            <div className='bd-light bd-no-t v-center-content p-05'>
+              {currency}
+            </div>
+            <div className='bd-light bd-no-t v-center-content'>
+              <input
+                type='number'
+                step='.01'
+                name='cm'
+                onChange={addNumber}
+                id={`cm${_id}`}
+                value={cm || ''}
+                className='whenPrintNoBorder'
+                // style={{ width: '5rem' }}
+              />
+            </div>
+          </div> */}
+          {otherExpenses.map((oE) => (
+            <QuoOtherEx
+              key={`otherExpense${oE.id}`}
+              otherExpense={oE}
+              className='noBreak bd-light mt-0 mb-0'
+            />
+          ))}
 
           <div className='mt-05 mb-2 h-scatter-content'>
             <div></div>

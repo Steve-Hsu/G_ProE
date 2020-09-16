@@ -5,6 +5,9 @@ import SearchBar from './SearchBar';
 // import Papa from 'papaparse';
 import readXlsxFile from 'read-excel-file';
 import SqBtnLarge from '../elements/btns/SqBtnLarge';
+// Components
+import SizeSelector from '../40_quo/40_03_01_sizeSelector';
+import CWaySelector from '../40_quo/40_03_02_cWaySelector';
 
 const LeftBar = ({ currentPath }) => {
   const casesContext = useContext(CasesContext);
@@ -23,7 +26,16 @@ const LeftBar = ({ currentPath }) => {
     inputFileName,
     isEditingCase,
   } = casesContext;
-  const { isQuotating, quotateFor, openQuoForm } = quoContext;
+  const {
+    isQuotating,
+    quotateFor,
+    openQuoForm,
+    quotation,
+    currentQuoForm,
+    downLoadmtrlPrice,
+  } = quoContext;
+  const theCase = quotation.theCase;
+
   const SHEET_NAME_LIST = [
     'bom',
     'trims',
@@ -55,6 +67,16 @@ const LeftBar = ({ currentPath }) => {
   const onClick = (e) => {
     e.preventDefault();
     clearcNo(mtrls);
+  };
+
+  const onClickQuo = () => {
+    const body = {
+      quoNo: currentQuoForm.quoNo,
+      quoFormId: currentQuoForm._id,
+      quoSizes: currentQuoForm.quoSizes,
+      quocWays: currentQuoForm.quocWays,
+    };
+    downLoadmtrlPrice(body);
   };
 
   const updateBtnlabel = () => {
@@ -361,14 +383,52 @@ const LeftBar = ({ currentPath }) => {
           (currentPage =
             'quotation' && quotateFor === 'garment' ? (
               isQuotating === null || openQuoForm === null ? null : (
-                <div className='round-area bg-cp-3 mt-1'>
-                  <i className='fas fa-print fc-cp-1 mb-05'> Print</i>
-                  <button
-                    className='btn bg-cp-2 btn-block bd-radius-s bd-light'
-                    onClick={onClickPrintPage}
-                  >
-                    Print out
-                  </button>
+                <div>
+                  {' '}
+                  <div className='round-area bg-cp-3 mt-1 mb-1'>
+                    <i className='fas fa-print fc-cp-1 mb-05'> Print</i>
+                    <button
+                      className='btn bg-cp-2 btn-block bd-radius-s bd-light'
+                      onClick={onClickPrintPage}
+                    >
+                      Print out
+                    </button>
+                  </div>
+                  <div className='round-area bd-light bg-cp-3 noPrint mb-05'>
+                    <i className='fas fa-calculator fc-cp-1 mb-05'>
+                      {' '}
+                      Get the suggested Price
+                    </i>
+                    <div className='round-area bd-light bg-cp-1 mb-05'>
+                      Select Size
+                      <SizeSelector
+                        sizes={theCase.sizes ? theCase.sizes : []}
+                        className='noPrint'
+                      />
+                    </div>
+                    <div className='round-area bd-light bg-cp-1 mb-05'>
+                      Select color Way
+                      <CWaySelector
+                        cWays={theCase.cWays ? theCase.cWays : []}
+                        className='noPrint'
+                      />
+                    </div>
+                    <button
+                      name='quotationBtn'
+                      value={currentQuoForm._id}
+                      onClick={onClickQuo}
+                      className='btn bg-cp-2 btn-block bd-radius-s bd-light'
+                    >
+                      Price suggestion
+                    </button>
+                    {/* <SqBtnLarge
+                      name='quotationBtn'
+                      value={currentQuoForm._id}
+                      onClick={onClickQuo}
+                      label='Price suggestion'
+                      className='noPrint w-15vw mb-05 '
+                    /> */}
+                  </div>
                 </div>
               )
             ) : null)

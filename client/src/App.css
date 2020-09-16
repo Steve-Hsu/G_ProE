@@ -263,7 +263,7 @@ img {
 
 .grid-Quo-Mtrl {
   display: grid;
-  grid-template-columns: 1fr 5fr 6rem 4rem 8rem 5rem 5rem;
+  grid-template-columns: 1fr 5fr 6rem 4rem 6rem 5rem 5rem;
 }
 
 .grid-Quo-otherExpanse {
@@ -401,7 +401,7 @@ img {
 .btn-sq:hover {
   background: var(--cp-1_2);
   color: var(--cp-1_3);
-  opacity: 1;
+  opacity: 0.7;
 }
 
 .btn-dropdown {
@@ -1344,6 +1344,10 @@ input[type='submit']:focus {
   margin: var(--gap);
 }
 
+.m-02 {
+  margin: 0.2rem;
+}
+
 .m-05 {
   margin: 0.5rem;
 }
@@ -1362,7 +1366,8 @@ input[type='submit']:focus {
   margin: var(--gap) 0;
 }
 .my-0 {
-  margin: 0;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 .my-05 {
   margin: 0.5rem 0;
@@ -1375,6 +1380,30 @@ input[type='submit']:focus {
 }
 .my-3 {
   margin: 3rem 0;
+}
+
+/* Margin - x axis */
+.mx {
+  margin: 0 var(--gap);
+}
+.mx-0 {
+  margin-left: 0;
+  margin-right: 0;
+}
+.mx-03 {
+  margin: 0 0.3rem;
+}
+.mx-05 {
+  margin: 0 0.5rem;
+}
+.mx-1 {
+  margin: 0 1rem;
+}
+.mx-2 {
+  margin: 0 2rem;
+}
+.mx-3 {
+  margin: 0 3rem;
 }
 
 /* Margin - top */
@@ -1510,6 +1539,12 @@ input[type='submit']:focus {
 }
 
 /* width */
+.w-3rem {
+  width: 3rem;
+}
+.w-3dot5rem {
+  width: 3.5rem;
+}
 .w-5 {
   width: 5%;
 }
