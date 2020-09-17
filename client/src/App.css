@@ -271,6 +271,11 @@ img {
   grid-template-columns: 10rem 1fr 5rem 5rem;
 }
 
+.grid-Quo-condition {
+  display: grid;
+  grid-template-columns: 10rem 1fr;
+}
+
 /* grid gap */
 .gap-ti {
   grid-gap: var(--tiny);
@@ -1125,6 +1130,10 @@ input[type='submit']:focus {
 .fc-fade-dark {
   color: var(--fade-color-dark);
 }
+/* font weight */
+.fw-bold {
+  font-weight: bold;
+}
 
 /* Text positoin */
 /* Font position */
@@ -1761,11 +1770,13 @@ input[type='submit']:focus {
     display: none;
     /* padding-left: 0; */
   }
+  .whenPrintFSSmall {
+    font-size: 0.8rem;
+  }
 }
 @page {
   size: A4 portrait;
-  margin-bottom: 20px;
-  margin: 0 5px 20px;
+  margin: 30px 20px;
 }
 @page :first {
   margin-top: -45px;

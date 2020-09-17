@@ -10,6 +10,7 @@ import SizeSelector from './40_03_01_sizeSelector';
 import CWaySelector from './40_03_02_cWaySelector';
 import QuoMtrl from './40_03_03_quoMtrl';
 import QuoOtherEx from './40_03_04_quoOtherEx';
+import QuoCondition from './40_03_05_quoCondition';
 
 //element
 import Select from '../elements/select/Select';
@@ -43,6 +44,7 @@ const QuoForm = () => {
     cm,
     otherExpensesTotal,
     fob,
+    conditions,
   } = currentQuoForm;
   const theCases = quotation.theCase;
   let cWays,
@@ -112,6 +114,7 @@ const QuoForm = () => {
         downLoadmtrlPrice(body);
         break;
       case 'addOtherExpense':
+      case 'addCondition':
         updateCurrentQuoForm(e);
         break;
       default:
@@ -168,7 +171,8 @@ const QuoForm = () => {
         </div>
         <section className='h-20 w-100 mt-05 mb-3' id='formHead'>
           <form id='quoForm' onSubmit={onSubmitQuoForm} />
-          <div className='fs-large h-center-content '>
+          <div className='fs-large h-center-content'>Garment Quotation</div>
+          <div className='fs-lead h-center-content '>
             {comName} {comNameTail}
           </div>
           <div className='h-center-content '>{comAddress}</div>
@@ -179,21 +183,36 @@ const QuoForm = () => {
           <div>Quotation for : {quotateFor}</div>
           <div>Quotation Type : {caseType}</div> */}
 
-          <div>Client : {client}</div>
-          <div>Style : {style}</div>
-          <div>Style total sizes : {sizes ? sizes.length : 0}</div>
-          <div>Style total colorways {cWays ? sizes.length : 0} Color Ways</div>
-        </section>
-        <section id='QuotationArea'>
           <div>
-            {quoSizes.length} Quotated Sizes :{' '}
+            <span className='fw-bold'>Client : </span>
+            {client}
+          </div>
+          <div>
+            <span className='fw-bold'>Style : </span>
+            {style}
+          </div>
+          <div>
+            <span className='fw-bold'>Style total sizes :</span>{' '}
+            {sizes ? sizes.length : 0} Sizes
+          </div>
+          <div>
+            <span className='fw-bold'>Style total colorways : </span>{' '}
+            {cWays ? sizes.length : 0} Color Ways
+          </div>
+        </section>
+        <section id='QuotationInformation'>
+          <div>
+            <span className='fw-bold'>{quoSizes.length} Quotated Sizes :</span>{' '}
             {quoSizes.map((size) => (
               <span key={`quotatedsize${size}`}>{size}, </span>
             ))}
           </div>
 
           <div>
-            {quocWays.length} Quotated colorWays :{' '}
+            <span className='fw-bold'>
+              {' '}
+              {quocWays.length} Quotated colorWays :
+            </span>{' '}
             {quocWays.map((cWay) => (
               <span key={`quotatedcway${cWay}`}>{cWay}, </span>
             ))}
@@ -201,7 +220,9 @@ const QuoForm = () => {
 
           <div className='v-center-content'>
             {' '}
-            <div>Quotation in : </div>
+            <div>
+              <span className='fw-bold'>Quotation in : </span>{' '}
+            </div>
             <div style={{ width: '10rem' }}>
               {'  '}
               <Select
@@ -216,7 +237,9 @@ const QuoForm = () => {
             </div>
           </div>
           <div className='v-center-content mb-2'>
-            <div>CM : </div>
+            <div>
+              <span className='fw-bold'>CM : </span>{' '}
+            </div>
             <input
               type='number'
               step='.01'
@@ -229,8 +252,10 @@ const QuoForm = () => {
               style={{ width: '5rem' }}
             />
           </div>
+        </section>
+        <section id='materialQuotationArea'>
           <div className='fs-lead'>Materials</div>
-          <div className='grid-Quo-Mtrl bd-light bg-cp-2-light m-0 p-0'>
+          <div className='grid-Quo-Mtrl bd-light bg-cp-2-light m-0 p-0 whenPrintFSSmall'>
             {[
               'Item',
               'Description',
@@ -252,30 +277,38 @@ const QuoForm = () => {
             <QuoMtrl
               key={`quoMtrl${mtrl.id}`}
               mtrl={mtrl}
-              className='noBreak'
+              className='noBreak whenPrintFSSmall'
             />
           ))}
           <div className='mt-05 mb-2 h-scatter-content'>
             <div></div>
             <div>{`Subtotal of material : ${mQuosTotal}`}</div>
           </div>
-          {/* <button name='addOtherExpense' onClick={onClick}>
+        </section>
+        {/* <button name='addOtherExpense' onClick={onClick}>
             Add other expense
           </button> */}
-          <div className='fs-lead'>Other Expanses</div>
-          <SqBtnLarge
-            name='addOtherExpense'
-            onClick={onClick}
-            label='Add other expense'
-            className='noPrint w-15vw mb-05'
-          />
 
+        <SqBtnLarge
+          name='addCondition'
+          onClick={onClick}
+          label='Add condition'
+          className='noPrint w-15vw mb-05'
+        />
+        <SqBtnLarge
+          name='addOtherExpense'
+          onClick={onClick}
+          label='Add other expense'
+          className='noPrint w-15vw mb-05'
+        />
+        <section id='expensesArea'>
+          <div className='fs-lead'>Expenses</div>
           <div className='grid-Quo-otherExpanse bd-light bg-cp-2-light m-0 p-0'>
             {/* Row of title */}
             {['Cost', 'Description', 'Currency', 'Figure'].map((i) => (
               <div
                 key={`otherExpenseTitle${i}`}
-                className='bd-light v-center-content p-05'
+                className='bd-light v-center-content p-05 whenPrintFSSmall'
               >
                 {i}
               </div>
@@ -308,15 +341,56 @@ const QuoForm = () => {
             <QuoOtherEx
               key={`otherExpense${oE.id}`}
               otherExpense={oE}
-              className='noBreak bd-light mt-0 mb-0'
+              className='noBreak bd-light mt-0 mb-0 whenPrintFSSmall'
             />
           ))}
-
           <div className='mt-05 mb-2 h-scatter-content'>
             <div></div>
             <div>{`Subtotal of other expenses : ${otherExpensesTotal}`}</div>
           </div>
-          <div className='fs-large'>{`FOB : ${fob}`}</div>
+        </section>
+        <div className='h-scatter-content mb-2'>
+          <div></div>
+          <div className='fs-lead'>{`FOB : ${fob}`}</div>
+        </div>
+
+        {/* Conditions area */}
+
+        <SqBtnLarge
+          name='addCondition'
+          onClick={onClick}
+          label='Add condition'
+          className='noPrint w-15vw mb-05'
+        />
+        <section id='conditions' className='mb-2 noBreak'>
+          <div className='fs-lead'>Condition</div>
+          {conditions
+            ? conditions.map((c) => (
+                <QuoCondition
+                  key={`condition${c.id}`}
+                  condition={c}
+                  className='noBreak bd-light mt-0 mb-0 whenPrintFSSmall'
+                />
+              ))
+            : null}
+        </section>
+
+        <section id='confirmArea' className='noBreak mb-1'>
+          <div className='fs-lead'>Confirmed by :</div>
+          <div className='h-scatter-content'>
+            <div></div>
+            <div>
+              <div className='fs-tiny'>Signature</div>
+              <br />
+              <br />
+              <br />
+              <div>______________________________________________</div>
+              <div>
+                {' '}
+                {comName} {comNameTail}
+              </div>
+            </div>
+          </div>
         </section>
       </div>
     </Fragment>

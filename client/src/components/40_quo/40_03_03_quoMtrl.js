@@ -63,7 +63,7 @@ const QuoMtrl = ({ mtrl, className }) => {
           step='.01'
           value={csptAddvised || ''}
           onChange={addNumber}
-          className='whenPrintNoBorder'
+          className='whenPrintNoBorder whenPrintFSSmall'
         />
       </div>
       <div className='bd-light bd-no-t v-center-content p-05'>{mtrl.unit}</div>
@@ -75,7 +75,7 @@ const QuoMtrl = ({ mtrl, className }) => {
           step='.01'
           value={mQuoAddvised || ''}
           onChange={addNumber}
-          className='whenPrintNoBorder'
+          className='whenPrintNoBorder whenPrintFSSmall'
         />
       </div>
       <div className='bd-light bd-no-t v-center-content p-05'>{currency}</div>

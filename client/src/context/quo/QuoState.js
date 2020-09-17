@@ -230,6 +230,13 @@ const QuoState = (props) => {
           cost: 0,
         });
         break;
+      case 'addCondition':
+        quoForm.conditions.push({
+          id: uuidv4() + generateId(),
+          condition: '',
+          conditionDescription: '',
+        });
+        break;
       case 'deleteOtherExpense':
         quoForm.otherExpenses = quoForm.otherExpenses.filter((i) => {
           return i.id !== value;
@@ -241,6 +248,11 @@ const QuoState = (props) => {
           totalCost += Number(oE.cost);
         });
         quoForm.otherExpensesTotal = totalCost;
+        break;
+      case 'deleteCondition':
+        quoForm.conditions = quoForm.conditions.filter((i) => {
+          return i.id !== value;
+        });
         break;
       case 'cspt':
         quoForm.mQuos.map((mQuo) => {
@@ -287,6 +299,21 @@ const QuoState = (props) => {
           }
         });
         break;
+      case 'condition':
+      case 'conditionDescription':
+        quoForm.conditions.map((c) => {
+          if (c.id === idOfItem) {
+            c[nameOfTarget] = e.target.value;
+          }
+        });
+        break;
+
+      // quoForm.conditions.map((c) => {
+      //   if (c.id === idOfItem) {
+      //     c.conditionDescription = e.target.value;
+      //   }
+      // });
+      // break;
       default:
     }
     const finalTotal =

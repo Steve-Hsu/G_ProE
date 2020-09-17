@@ -387,6 +387,7 @@ router.put('/quoform/:cNo/uploadquoForm', authUser, async (req, res) => {
               otherExpenses: [],
               otherExpensesTotal: 0,
               fob: 0,
+              conditions: [],
               useAsFinalQuotation: false,
               date: new Date(),
             })
@@ -438,6 +439,7 @@ router.put('/quoform/:cNo/uploadquoForm', authUser, async (req, res) => {
           mQuos,
           otherExpenses,
           useAsFinalQuotation,
+          conditions,
         } = req.body.form;
 
         if (quoSizes.length === 0) {
@@ -542,6 +544,7 @@ router.put('/quoform/:cNo/uploadquoForm', authUser, async (req, res) => {
                   otherExpensesTotal: otherExpensesTotal,
                   // fob: Number(FOB).toFixed(2),
                   fob: FOB,
+                  conditions: conditions,
                   useAsFinalQuotation: useAsFinalQuotation,
                 },
               }

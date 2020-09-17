@@ -1,8 +1,9 @@
 import React, { useContext } from 'react';
 import QuoContext from '../../context/quo/quoContext';
 import DeleteBtnSmall from '../elements/btns/DeleteBtnSmall';
+import Select from '../elements/select/Select';
 
-const QuoOtherEx = ({ otherExpense, className }) => {
+const QuoCondition = ({ condition, className }) => {
   const quoContext = useContext(QuoContext);
 
   const {
@@ -21,6 +22,7 @@ const QuoOtherEx = ({ otherExpense, className }) => {
     mQuos,
     otherExpenses,
     fob,
+    conditions,
   } = currentQuoForm;
 
   const onClick = (e) => {
@@ -33,17 +35,17 @@ const QuoOtherEx = ({ otherExpense, className }) => {
     updateCurrentQuoForm(e);
   };
 
-  const addNumber = (e) => {
-    e.preventDefault();
-    const num = e.target.value;
-    const Max = 9999999;
-    if (String(num).length > String(Max).length) {
-      e.target.value = Max;
-      updateCurrentQuoForm(e);
-    } else {
-      updateCurrentQuoForm(e);
-    }
-  };
+  //   const addNumber = (e) => {
+  //     e.preventDefault();
+  //     const num = e.target.value;
+  //     const Max = 9999999;
+  //     if (String(num).length > String(Max).length) {
+  //       e.target.value = Max;
+  //       updateCurrentQuoForm(e);
+  //     } else {
+  //       updateCurrentQuoForm(e);
+  //     }
+  //   };
 
   //@ Style
   const deleteBtnPosition = {
@@ -54,14 +56,12 @@ const QuoOtherEx = ({ otherExpense, className }) => {
 
   return (
     // <div className='mb-1 p-1 card'>
-    <div
-      className={`grid-Quo-otherExpanse m-0 p-0 bd-light bd-no-t ${className}`}
-    >
+    <div className={`grid-Quo-condition m-0 p-0 bd-light bd-no-t ${className}`}>
       <div className='bd-light bd-no-t v-center-content'>
         <div className='noPrint p-05' style={{ width: '50px' }}>
           <DeleteBtnSmall
-            name='deleteOtherExpense'
-            value={otherExpense.id}
+            name='deleteCondition'
+            value={condition.id}
             style={deleteBtnPosition}
             onClick={onClick}
             className='noPrint m-0'
@@ -70,10 +70,10 @@ const QuoOtherEx = ({ otherExpense, className }) => {
 
         <input
           type='text'
-          id={`costName${otherExpense.id}`}
-          name='costName'
+          id={`condition${condition.id}`}
+          name='condition'
           maxLength='30'
-          value={otherExpense.costName || ''}
+          value={condition.condition || ''}
           onChange={onChange}
           className='whenPrintNoBorder whenPrintFSSmall'
         />
@@ -81,33 +81,17 @@ const QuoOtherEx = ({ otherExpense, className }) => {
       <div className='bd-light bd-no-t v-center-content '>
         <input
           type='text'
-          id={`costDescription${otherExpense.id}`}
-          name='costDescription'
+          id={`conditionDescription${condition.id}`}
+          name='conditionDescription'
           maxLength='200'
-          value={otherExpense.costDescription || ''}
+          value={condition.conditionDescription || ''}
           onChange={onChange}
           className='whenPrintNoBorder whenPrintFSSmall'
         />
-      </div>
-      <div className='bd-light bd-no-t v-center-content p-05'>{currency}</div>
-      <div className='bd-light bd-no-t v-center-content'>
-        <div className='h-scatter-content'>
-          <input
-            type='number'
-            id={`otherExpenseCost${otherExpense.id}`}
-            name='otherExpenseCost'
-            min='0'
-            max='9999999'
-            step='.01'
-            value={otherExpense.cost || ''}
-            onChange={addNumber}
-            className='whenPrintNoBorder whenPrintFSSmall'
-          />
-        </div>
       </div>
     </div>
     // </div>
   );
 };
 
-export default QuoOtherEx;
+export default QuoCondition;

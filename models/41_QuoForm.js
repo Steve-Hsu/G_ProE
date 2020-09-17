@@ -53,6 +53,14 @@ const QuoFormSchema = mongoose.Schema({
       cost: Number,
     },
   ],
+  conditions: [
+    {
+      _id: false, // to prevent mess up and the object is generated from client so don't generate duplicated _id
+      id: String,
+      condition: String,
+      conditionDescription: String,
+    },
+  ],
   otherExpensesTotal: {
     type: Number,
   },
