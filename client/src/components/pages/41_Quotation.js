@@ -39,7 +39,7 @@ const Quotation = (props) => {
   // };
 
   const onSubmitSrMtrl = async (e) => {
-    console.log('yes the submit is hit');
+    // console.log('yes the submit is hit'); // Test code
     e.preventDefault();
     const body = [];
     await srMtrls.map((srMtrl) => {

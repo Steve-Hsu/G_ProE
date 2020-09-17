@@ -69,6 +69,20 @@ const Select = ({
         'VND',
       ];
       break;
+    case 'conditions':
+      options = [
+        'Select',
+        'Payment',
+        'Delivery',
+        'Shipment',
+        'Packing',
+        'Forwarder',
+        'Inspection',
+        'Shipping sample',
+        'Remark',
+        'Shipping Mark',
+      ];
+      break;
     default:
       options = optionList;
   }

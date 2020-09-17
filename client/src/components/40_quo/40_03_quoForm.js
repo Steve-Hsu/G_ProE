@@ -80,7 +80,7 @@ const QuoForm = () => {
   // } = quotation.theCase;
   const { popover, current } = popoverContext;
   const onSubmitQuoForm = (e) => {
-    console.log('here triggered');
+    // console.log('here triggered'); // Test Code
     e.preventDefault();
     // uploadQuoForm(isQuotating, true);
 
@@ -177,52 +177,56 @@ const QuoForm = () => {
           </div>
           <div className='h-center-content '>{comAddress}</div>
         </section>
-        <section id='formInformation'>
+        <section id='formInformation' className='mb-2'>
+          <div className='fs-lead'>Quotation For</div>
           {/* <div>Case Number : {cNo}</div>
 
           <div>Quotation for : {quotateFor}</div>
           <div>Quotation Type : {caseType}</div> */}
+          <div className='whenPrintFSSmall'>
+            <div>
+              <span className='fw-bold'>Client : </span>
+              {client}
+            </div>
+            <div>
+              <span className='fw-bold'>Style : </span>
+              {style}
+            </div>
+            <div>
+              <span className='fw-bold'>Style total sizes :</span>{' '}
+              {sizes ? sizes.length : 0} Sizes
+            </div>
+            <div>
+              <span className='fw-bold'>Style total colorways : </span>{' '}
+              {cWays ? cWays.length : 0} Color Ways
+            </div>
 
-          <div>
-            <span className='fw-bold'>Client : </span>
-            {client}
-          </div>
-          <div>
-            <span className='fw-bold'>Style : </span>
-            {style}
-          </div>
-          <div>
-            <span className='fw-bold'>Style total sizes :</span>{' '}
-            {sizes ? sizes.length : 0} Sizes
-          </div>
-          <div>
-            <span className='fw-bold'>Style total colorways : </span>{' '}
-            {cWays ? sizes.length : 0} Color Ways
+            <div>
+              <span className='fw-bold'>
+                {quoSizes.length} Quotated Sizes :
+              </span>{' '}
+              {quoSizes.map((size) => (
+                <span key={`quotatedsize${size}`}>{size}, </span>
+              ))}
+            </div>
+
+            <div>
+              <span className='fw-bold'>
+                {' '}
+                {quocWays.length} Quotated colorWays :
+              </span>{' '}
+              {quocWays.map((cWay) => (
+                <span key={`quotatedcway${cWay}`}>{cWay}, </span>
+              ))}
+            </div>
           </div>
         </section>
-        <section id='QuotationInformation'>
-          <div>
-            <span className='fw-bold'>{quoSizes.length} Quotated Sizes :</span>{' '}
-            {quoSizes.map((size) => (
-              <span key={`quotatedsize${size}`}>{size}, </span>
-            ))}
-          </div>
 
-          <div>
-            <span className='fw-bold'>
-              {' '}
-              {quocWays.length} Quotated colorWays :
-            </span>{' '}
-            {quocWays.map((cWay) => (
-              <span key={`quotatedcway${cWay}`}>{cWay}, </span>
-            ))}
-          </div>
-
-          <div className='v-center-content'>
+        <section id='currencySelection' className='noPrint mb-2'>
+          <div className='fs-lead'>Select a Currency</div>
+          <div className='h-scatter-content round-card bg-cp-1 w-30'>
             {' '}
-            <div>
-              <span className='fw-bold'>Quotation in : </span>{' '}
-            </div>
+            <div className='fw-bold mr-1'>Quotation in</div>
             <div style={{ width: '10rem' }}>
               {'  '}
               <Select
@@ -236,24 +240,9 @@ const QuoForm = () => {
               />
             </div>
           </div>
-          <div className='v-center-content mb-2'>
-            <div>
-              <span className='fw-bold'>CM : </span>{' '}
-            </div>
-            <input
-              type='number'
-              step='.01'
-              name='cm'
-              onChange={addNumber}
-              id={`cm${_id}`}
-              min='0'
-              max='99999'
-              value={cm || ''}
-              style={{ width: '5rem' }}
-            />
-          </div>
         </section>
-        <section id='materialQuotationArea'>
+
+        <section id='materialQuotationArea' className='mb-2'>
           <div className='fs-lead'>Materials</div>
           <div className='grid-Quo-Mtrl bd-light bg-cp-2-light m-0 p-0 whenPrintFSSmall'>
             {[
@@ -280,9 +269,9 @@ const QuoForm = () => {
               className='noBreak whenPrintFSSmall'
             />
           ))}
-          <div className='mt-05 mb-2 h-scatter-content'>
+          <div className='mt-05 h-scatter-content'>
             <div></div>
-            <div>{`Subtotal of material : ${mQuosTotal}`}</div>
+            <div>{`Subtotal : ${mQuosTotal} ${currency}`}</div>
           </div>
         </section>
         {/* <button name='addOtherExpense' onClick={onClick}>
@@ -290,18 +279,13 @@ const QuoForm = () => {
           </button> */}
 
         <SqBtnLarge
-          name='addCondition'
-          onClick={onClick}
-          label='Add condition'
-          className='noPrint w-15vw mb-05'
-        />
-        <SqBtnLarge
           name='addOtherExpense'
           onClick={onClick}
           label='Add other expense'
           className='noPrint w-15vw mb-05'
         />
-        <section id='expensesArea'>
+
+        <section id='expensesArea' className='mb-2'>
           <div className='fs-lead'>Expenses</div>
           <div className='grid-Quo-otherExpanse bd-light bg-cp-2-light m-0 p-0'>
             {/* Row of title */}
@@ -314,9 +298,7 @@ const QuoForm = () => {
               </div>
             ))}
           </div>
-          {/* <div
-            className={`grid-Quo-otherExpanse m-0 p-0 bd-light bd-no-t mt-0 mb-0`}
-          >
+          <div className='grid-Quo-otherExpanse m-0 p-0 bd-light bd-no-t mt-0 mb-0 whenPrintFSSmall'>
             <div className='bd-light bd-no-t v-center-content p-05'>CM</div>
             <div className='bd-light bd-no-t v-center-content p-05'>
               Cuting and making
@@ -332,11 +314,11 @@ const QuoForm = () => {
                 onChange={addNumber}
                 id={`cm${_id}`}
                 value={cm || ''}
-                className='whenPrintNoBorder'
+                className='whenPrintNoBorder whenPrintFSSmall'
                 // style={{ width: '5rem' }}
               />
             </div>
-          </div> */}
+          </div>
           {otherExpenses.map((oE) => (
             <QuoOtherEx
               key={`otherExpense${oE.id}`}
@@ -344,14 +326,17 @@ const QuoForm = () => {
               className='noBreak bd-light mt-0 mb-0 whenPrintFSSmall'
             />
           ))}
-          <div className='mt-05 mb-2 h-scatter-content'>
+          <div className='mt-05 h-scatter-content'>
             <div></div>
-            <div>{`Subtotal of other expenses : ${otherExpensesTotal}`}</div>
+            <div>{`Subtotal : ${Number(
+              otherExpensesTotal + cm
+            )} ${currency}`}</div>
           </div>
         </section>
+
         <div className='h-scatter-content mb-2'>
           <div></div>
-          <div className='fs-lead'>{`FOB : ${fob}`}</div>
+          <div className='fs-lead'>{`Total : ${fob} ${currency}`}</div>
         </div>
 
         {/* Conditions area */}
@@ -362,18 +347,20 @@ const QuoForm = () => {
           label='Add condition'
           className='noPrint w-15vw mb-05'
         />
-        <section id='conditions' className='mb-2 noBreak'>
-          <div className='fs-lead'>Condition</div>
-          {conditions
-            ? conditions.map((c) => (
-                <QuoCondition
-                  key={`condition${c.id}`}
-                  condition={c}
-                  className='noBreak bd-light mt-0 mb-0 whenPrintFSSmall'
-                />
-              ))
-            : null}
-        </section>
+        {conditions.length > 0 ? (
+          <section id='conditions' className='mb-2 noBreak'>
+            <div className='fs-lead'>Condition</div>
+            {conditions
+              ? conditions.map((c) => (
+                  <QuoCondition
+                    key={`condition${c.id}`}
+                    condition={c}
+                    className='noBreak mt-0 mb-0 whenPrintFSSmall'
+                  />
+                ))
+              : null}
+          </section>
+        ) : null}
 
         <section id='confirmArea' className='noBreak mb-1'>
           <div className='fs-lead'>Confirmed by :</div>

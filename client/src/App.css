@@ -1752,6 +1752,11 @@ input[type='submit']:focus {
 }
 
 /* @Print setting */
+
+.showWhenPrint {
+  display: none;
+}
+
 @media print {
   * {
     -webkit-print-color-adjust: exact !important;
@@ -1772,6 +1777,9 @@ input[type='submit']:focus {
   }
   .whenPrintFSSmall {
     font-size: 0.8rem;
+  }
+  .showWhenPrint {
+    display: inline;
   }
 }
 @page {

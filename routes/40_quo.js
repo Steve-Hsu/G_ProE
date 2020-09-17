@@ -306,6 +306,8 @@ router.put('/quoform/:cNo/uploadquoForm', authUser, async (req, res) => {
   const comId = req.user.company;
   const cNo = req.params.cNo;
   const Cases = await Case.findOne({ cNo: cNo, company: comId });
+  const sizesValue = Cases.sizes.map((s) => s.gSize);
+  const cWayValue = Cases.cWays.map((c) => c.gClr);
   if (Cases.mtrls.length > 0) {
     console.log(cNo);
     const { isNewQuoForm } = req.body; // isNewQuoForm is a boolean
@@ -348,6 +350,7 @@ router.put('/quoform/:cNo/uploadquoForm', authUser, async (req, res) => {
             });
           });
           const quoNo = cNo + '_QV' + versionNum;
+
           Promise.all([createMQuos]).then(async (result) => {
             // console.log('Promise all'); // Test Code
             await QuoHead.updateOne(
@@ -378,8 +381,8 @@ router.put('/quoform/:cNo/uploadquoForm', authUser, async (req, res) => {
               quoHead: quoHeadId,
               quoNo: quoNo,
               currency: '',
-              quoSizes: [],
-              quocWays: [],
+              quoSizes: sizesValue,
+              quocWays: cWayValue,
               quotatedQty: 0,
               cm: 0,
               mQuos: result[0],
