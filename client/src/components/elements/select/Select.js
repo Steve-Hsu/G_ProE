@@ -69,7 +69,7 @@ const Select = ({
         'VND',
       ];
       break;
-    case 'conditions':
+    case 'condition':
       options = [
         'Select',
         'Payment',

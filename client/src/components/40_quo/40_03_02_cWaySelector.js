@@ -19,7 +19,10 @@ const CWaySelector = ({ cWays, className }) => {
 
   const btnClickedStyle = (subject) => {
     const quoForm = quotation.quoForms.find(({ _id }) => _id === quoFormId);
-    const haveTheQuocWay = quoForm.quocWays.includes(subject);
+    let haveTheQuocWay = [];
+    if (quoForm.quocWays) {
+      haveTheQuocWay = quoForm.quocWays.includes(subject);
+    }
     if (haveTheQuocWay) {
       return {
         color: 'var(--primary-text)',

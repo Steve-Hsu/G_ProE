@@ -23,6 +23,11 @@ const QuoMtrl = ({ mtrl, className }) => {
   } = currentQuoForm;
 
   const mQuo = mQuos.find(({ mtrlId }) => mtrlId === mtrl.id);
+
+  // let mQuoAddvised,
+  //   csptAddvised,
+  //   materialFinalQuotation = null;
+  // if (mQuo) {
   const { mQuoAddvised, csptAddvised, materialFinalQuotation } = mQuo;
 
   const addNumber = (e) => {

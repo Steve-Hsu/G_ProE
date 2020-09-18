@@ -1,10 +1,19 @@
 import React, { useContext } from 'react';
-import QuoContext from '../../context/quo/quoContext';
-import DeleteBtnSmall from '../elements/btns/DeleteBtnSmall';
-import SqBtnLarge from '../elements/btns/SqBtnLarge';
-import Select from '../elements/select/Select';
+import QuoContext from '../../../../context/quo/quoContext';
+import DeleteBtnSmall from '../../btns/DeleteBtnSmall';
+import SqBtnLarge from '../../btns/SqBtnLarge';
+import Select from '../../select/Select';
 
-const QuoCondition = ({ condition, className }) => {
+const ConditionItem = ({
+  subject,
+  itemClassName,
+  deleteBtnName,
+  deleteBtnOnClick,
+  selectName,
+  selectOnChange,
+  inputName,
+  inputOnChange,
+}) => {
   const quoContext = useContext(QuoContext);
 
   const {
@@ -33,7 +42,7 @@ const QuoCondition = ({ condition, className }) => {
 
   const onChange = (e) => {
     e.preventDefault();
-    updateCurrentQuoForm(e);
+    inputOnChange(e);
   };
 
   //   const addNumber = (e) => {
@@ -49,34 +58,28 @@ const QuoCondition = ({ condition, className }) => {
   //   };
 
   //@ Style
-  const deleteBtnPosition = {
-    // top: ' 50%',
-    // // left: '100%',
-    // transform: 'translate(0, -1rem)',
-  };
 
   return (
     // <div className='mb-1 p-1 card'>
     <div>
-      <div className={`grid-Quo-condition m-0 p-0 noPrint ${className}`}>
+      <div className={`grid-Quo-condition m-0 p-0 noPrint ${itemClassName}`}>
         <div className='v-center-content noPrint'>
           <div className='noPrint p-05' style={{ width: '50px' }}>
             <DeleteBtnSmall
-              name='deleteCondition'
-              value={condition.id}
-              style={deleteBtnPosition}
-              onClick={onClick}
+              name={deleteBtnName}
+              value={subject.id}
+              onClick={deleteBtnOnClick}
               className='noPrint m-0'
             />
           </div>
 
           <Select
-            purpose='condition'
-            id={`condition${condition.id}`}
-            subject={condition}
-            name='condition'
-            onChange={onChange}
-            selectedOption={condition.condition}
+            purpose={selectName}
+            id={`${selectName}${subject.id}`}
+            subject={subject}
+            name={selectName}
+            onChange={selectOnChange}
+            selectedOption={subject[selectName]}
             className='noPrint'
           />
           {/* <input
@@ -92,22 +95,22 @@ const QuoCondition = ({ condition, className }) => {
         <div className='v-center-content noPrint'>
           <input
             type='text'
-            id={`conditionDescription${condition.id}`}
-            name='conditionDescription'
+            id={`${inputName}${subject.id}`}
+            name={inputName}
             maxLength='200'
-            value={condition.conditionDescription || ''}
-            onChange={onChange}
+            value={subject[inputName] || ''}
+            onChange={inputOnChange}
             className='whenPrintNoBorder whenPrintFSSmall ml-05'
           />
         </div>
       </div>
       {/* Show only when print */}
       <div className='showWhenPrint w-100 fs-small'>
-        <span className='fw-bold'>{condition.condition} : </span>
-        {condition.conditionDescription}
+        <span className='fw-bold'>{subject.condition} : </span>
+        {subject.conditionDescription}
       </div>
     </div>
   );
 };
 
-export default QuoCondition;
+export default ConditionItem;

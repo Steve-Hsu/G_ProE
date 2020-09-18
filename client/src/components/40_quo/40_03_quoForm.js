@@ -17,6 +17,9 @@ import Select from '../elements/select/Select';
 import GoBackBtn from '../elements/btns/GoBackBtn';
 import SqBtnLarge from '../elements/btns/SqBtnLarge';
 import DeleteBtnSmall from '../elements/btns/DeleteBtnSmall';
+import NoAndDateHeader from '../elements/formPart/NoAndDateHeader';
+import FormTitle from '../elements/formPart/FormTitle';
+import Conditions from '../elements/formPart/Conditions/Conditions';
 
 const QuoForm = () => {
   const authUserContext = useContext(AuthUserContext);
@@ -117,6 +120,9 @@ const QuoForm = () => {
         break;
       case 'addOtherExpense':
       case 'addCondition':
+      case 'deleteCondition':
+      case 'conditionDescription':
+      case 'condition':
         updateCurrentQuoForm(e);
         break;
       default:
@@ -134,25 +140,6 @@ const QuoForm = () => {
       updateCurrentQuoForm(e);
     }
   };
-  const d = new Date();
-  const months = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ];
-
-  const theTime = String(
-    d.getDate() + '/' + months[d.getMonth()] + '/' + d.getFullYear()
-  );
 
   // const deleteQuoFormBtn = () => {
   //   togglePopover();
@@ -179,21 +166,18 @@ const QuoForm = () => {
         {/* <button name='goBackBtn' onClick={onClick}>
           Go Back
         </button>{' '} */}
-        <div className='h-scatter-content'>
-          <div></div>
-          <div className='fs-tiny'>
-            <div>No : {quoNo} </div>
-            <div>Date : {theTime}</div>
-          </div>
-        </div>
-        <section className='h-20 w-100 mt-05 mb-3' id='formHead'>
+        <form id='quoForm' onSubmit={onSubmitQuoForm} />
+        <NoAndDateHeader No={quoNo} />
+        <FormTitle title='Garment Quotation' />
+
+        {/* <section className='h-20 w-100 mt-05 mb-3' id='formHead'>
           <form id='quoForm' onSubmit={onSubmitQuoForm} />
           <div className='fs-large h-center-content'>Garment Quotation</div>
           <div className='fs-lead h-center-content '>
             {comName} {comNameTail}
           </div>
           <div className='h-center-content '>{comAddress}</div>
-        </section>
+        </section> */}
         <section id='formInformation' className='mb-2'>
           <div className='fs-lead'>Quotation For</div>
           {/* <div>Case Number : {cNo}</div>
@@ -352,8 +336,18 @@ const QuoForm = () => {
         </div>
 
         {/* Conditions area */}
+        <Conditions
+          onClick={onClick}
+          subjects={conditions}
+          deleteBtnName='deleteCondition'
+          deleteBtnOnClick={onClick}
+          selectName='condition'
+          selectOnChange={onClick}
+          inputName='conditionDescription'
+          inputOnChange={onClick}
+        />
 
-        <SqBtnLarge
+        {/* <SqBtnLarge
           name='addCondition'
           onClick={onClick}
           label='Add condition'
@@ -372,7 +366,7 @@ const QuoForm = () => {
                 ))
               : null}
           </section>
-        ) : null}
+        ) : null} */}
 
         <section id='confirmArea' className='noBreak mb-1'>
           <div className='fs-lead'>Confirmed by :</div>
