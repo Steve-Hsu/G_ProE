@@ -309,7 +309,7 @@ const QuoForm = () => {
                 onChange={addNumber}
                 id={`cm${_id}`}
                 value={cm || ''}
-                className='whenPrintNoBorder whenPrintFSSmall'
+                className='whenPrintNoBorder whenPrintFSSmall bd-no'
                 // style={{ width: '5rem' }}
               />
             </div>

@@ -97,7 +97,7 @@ const QuoCondition = ({ condition, className }) => {
             maxLength='200'
             value={condition.conditionDescription || ''}
             onChange={onChange}
-            className='whenPrintNoBorder whenPrintFSSmall'
+            className='whenPrintNoBorder whenPrintFSSmall ml-05'
           />
         </div>
       </div>

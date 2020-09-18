@@ -75,7 +75,7 @@ const QuoOtherEx = ({ otherExpense, className }) => {
           maxLength='30'
           value={otherExpense.costName || ''}
           onChange={onChange}
-          className='whenPrintNoBorder whenPrintFSSmall'
+          className='whenPrintNoBorder whenPrintFSSmall bd-no'
         />
       </div>
       <div className='bd-light bd-no-t v-center-content '>
@@ -86,7 +86,7 @@ const QuoOtherEx = ({ otherExpense, className }) => {
           maxLength='200'
           value={otherExpense.costDescription || ''}
           onChange={onChange}
-          className='whenPrintNoBorder whenPrintFSSmall'
+          className='whenPrintNoBorder whenPrintFSSmall bd-no'
         />
       </div>
       <div className='bd-light bd-no-t v-center-content'>
@@ -100,7 +100,7 @@ const QuoOtherEx = ({ otherExpense, className }) => {
             step='.01'
             value={otherExpense.cost || ''}
             onChange={addNumber}
-            className='whenPrintNoBorder whenPrintFSSmall'
+            className='whenPrintNoBorder whenPrintFSSmall bd-no'
           />
         </div>
       </div>

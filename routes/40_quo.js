@@ -739,6 +739,7 @@ router.put('/quotateadvise', authUser, async (req, res) => {
         console.log('The mQuo have the material that not exist in the case');
         return reject('The mQuo have the material that not exist in the case');
       }
+      const mtrlUnit = mtrl.unit;
       const supplier = mtrl.supplier;
       const ref_no = mtrl.ref_no;
       const CSRIC = (comName + comSymbol + supplier + ref_no)
@@ -875,7 +876,7 @@ router.put('/quotateadvise', authUser, async (req, res) => {
                               mP.sizeSPEC === materialSPEC
                           );
 
-                          // Define the price
+                          //@ Define the price --------
                           let mPrice = null;
                           const mainPrice = srMtrl.mainPrice;
                           if (colorAndSPECMatchedMPrice.length === 0) {
@@ -897,9 +898,160 @@ router.put('/quotateadvise', authUser, async (req, res) => {
                           // console.log('531, the mPrice ', mPrice); // Test Code
                           // console.log('531, the CSRIC ', CSRIC); // Test Code
 
-                          const materialQuotation = mPrice.quotation;
+                          let materialQuotation = 0;
 
-                          //@_get CSPT
+                          //Unit consform
+                          const mPUnit = mPrice.unit;
+                          if (mPUnit && mtrlUnit) {
+                            if (mPUnit === mtrlUnit) {
+                              materialQuotation = mPrice.quotation;
+                            } else {
+                              switch (mPUnit) {
+                                case 'yds':
+                                  switch (mtrlUnit) {
+                                    case 'm':
+                                      materialQuotation = Number(
+                                        mPrice.quotation / 0.9144
+                                      );
+                                      break;
+                                    case 'cm':
+                                      materialQuotation = Number(
+                                        mPrice.quotation / 91.44
+                                      );
+                                      break;
+                                    case 'in':
+                                      materialQuotation = Number(
+                                        mPrice.quotation / 36
+                                      );
+                                      break;
+                                    default:
+                                  }
+                                  break;
+                                case 'm':
+                                  switch (mtrlUnit) {
+                                    case 'yds':
+                                      materialQuotation = Number(
+                                        mPrice.quotation * 0.9144
+                                      );
+                                      break;
+                                    case 'cm':
+                                      materialQuotation = Number(
+                                        mPrice.quotation / 100
+                                      );
+                                      break;
+                                    case 'in':
+                                      materialQuotation = Number(
+                                        mPrice.quotation / 39.3701
+                                      );
+                                      break;
+                                    default:
+                                  }
+                                  break;
+                                case 'cm':
+                                  switch (mtrlUnit) {
+                                    case 'yds':
+                                      materialQuotation = Number(
+                                        mPrice.quotation * 91.44
+                                      );
+                                      break;
+                                    case 'm':
+                                      materialQuotation = Number(
+                                        mPrice.quotation * 100
+                                      );
+                                      break;
+                                    case 'in':
+                                      materialQuotation = Number(
+                                        mPrice.quotation * 2.54
+                                      );
+                                      break;
+                                    default:
+                                  }
+                                  break;
+                                case 'in':
+                                  switch (mtrlUnit) {
+                                    case 'yds':
+                                      materialQuotation = Number(
+                                        mPrice.quotation * 36
+                                      );
+                                      break;
+                                    case 'm':
+                                      materialQuotation = Number(
+                                        mPrice.quotation * 39.3701
+                                      );
+                                      break;
+                                    case 'cm':
+                                      materialQuotation = Number(
+                                        mPrice.quotation / 2.54
+                                      );
+                                      break;
+                                    default:
+                                  }
+                                  break;
+                                case 'pcs':
+                                  switch (mtrlUnit) {
+                                    case 'gross':
+                                      materialQuotation = Number(
+                                        mPrice.quotation * 144
+                                      );
+                                      break;
+                                    case 'doz':
+                                      materialQuotation = Number(
+                                        mPrice.quotation * 12
+                                      );
+                                      break;
+                                    default:
+                                  }
+                                  break;
+                                case 'gross':
+                                  switch (mtrlUnit) {
+                                    case 'pcs':
+                                      materialQuotation = Number(
+                                        mPrice.quotation / 144
+                                      );
+                                      break;
+                                    case 'doz':
+                                      materialQuotation = Number(
+                                        mPrice.quotation / 12
+                                      );
+                                      break;
+                                    default:
+                                  }
+                                  break;
+                                case 'doz':
+                                  switch (mtrlUnit) {
+                                    case 'pcs':
+                                      materialQuotation = Number(
+                                        mPrice.quotation / 12
+                                      );
+                                      break;
+                                    case 'gross':
+                                      materialQuotation = Number(
+                                        mPrice.quotation * 12
+                                      );
+                                      break;
+                                    default:
+                                  }
+                                  break;
+                                default:
+                              }
+                            }
+                          } else {
+                            console.log(
+                              "the srMtrl dosen't have unit or the mtrl dosen't have unit, so the price returned will be 0"
+                            );
+                          }
+                          // if (!mPUnit) {
+                          //   materialQuotation = 0;
+                          // } else  {
+                          //   switch(mPUnit){
+                          //     case'':
+                          //     mtrlUnit
+                          //     break
+                          //     default;
+                          //   }
+                          // }
+
+                          //@_get CSPT --------
                           const cspts = mtrl.cspts;
                           const cspt = cspts.reduce((result, currentItem) => {
                             if (
@@ -1033,9 +1185,9 @@ router.put('/quotateadvise', authUser, async (req, res) => {
           let mtrlPrice = 0;
           if (AVGPrice === 0 || AVGCSPT === 0) {
           } else {
-            AVGPrice = AVGPrice.toFixed(2);
-            AVGCSPT = AVGCSPT.toFixed(2);
-            mtrlPrice = Number(AVGPrice * AVGCSPT).toFixed(2);
+            AVGPrice = AVGPrice.toFixed(3);
+            AVGCSPT = AVGCSPT.toFixed(3);
+            mtrlPrice = Number(AVGPrice * AVGCSPT).toFixed(3);
           }
 
           console.log('The Promise all_2 AVGPrice ', AVGPrice); // Test Code
@@ -1103,7 +1255,7 @@ router.put('/quotateadvise', authUser, async (req, res) => {
               {
                 mQuosTotal: mQuosTotal,
                 otherExpensesTotal: otherExpensesTotal,
-                fob: Number(FOB).toFixed(2),
+                fob: Number(FOB).toFixed(3),
               }
             );
 
