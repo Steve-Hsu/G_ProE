@@ -244,19 +244,17 @@ const QuoForm = () => {
 
         <section id='materialQuotationArea' className='mb-2'>
           <div className='fs-lead'>Materials</div>
-          <div className='grid-Quo-Mtrl bd-light bg-cp-2-light m-0 p-0 whenPrintFSSmall'>
+          <div className='grid-Quo-Mtrl bd-light bg-cp-2-light m-0 p-0 fs-small'>
             {[
               'Item',
               'Description',
               'Consuption',
-              'Unit',
-              'Unit Price',
-              'Currency',
-              'Subtotal',
+              `Unit Price (${currency})`,
+              `Amount (${currency})`,
             ].map((i) => (
               <div
                 key={`mQuosTitle${i}`}
-                className='bd-light v-center-content p-05'
+                className='bd-light v-center-content p-05 f-wrap'
               >
                 {i}
               </div>
@@ -287,12 +285,12 @@ const QuoForm = () => {
 
         <section id='expensesArea' className='mb-2'>
           <div className='fs-lead'>Expenses</div>
-          <div className='grid-Quo-otherExpanse bd-light bg-cp-2-light m-0 p-0'>
+          <div className='grid-Quo-otherExpanse bd-light bg-cp-2-light m-0 p-0 fs-small'>
             {/* Row of title */}
-            {['Cost', 'Description', 'Currency', 'Figure'].map((i) => (
+            {['Cost', 'Description', `Amount (${currency})`].map((i) => (
               <div
                 key={`otherExpenseTitle${i}`}
-                className='bd-light v-center-content p-05 whenPrintFSSmall'
+                className='bd-light v-center-content p-05 '
               >
                 {i}
               </div>
@@ -302,9 +300,6 @@ const QuoForm = () => {
             <div className='bd-light bd-no-t v-center-content p-05'>CM</div>
             <div className='bd-light bd-no-t v-center-content p-05'>
               Cuting and making
-            </div>
-            <div className='bd-light bd-no-t v-center-content p-05'>
-              {currency}
             </div>
             <div className='bd-light bd-no-t v-center-content'>
               <input

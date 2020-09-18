@@ -89,7 +89,6 @@ const QuoOtherEx = ({ otherExpense, className }) => {
           className='whenPrintNoBorder whenPrintFSSmall'
         />
       </div>
-      <div className='bd-light bd-no-t v-center-content p-05'>{currency}</div>
       <div className='bd-light bd-no-t v-center-content'>
         <div className='h-scatter-content'>
           <input

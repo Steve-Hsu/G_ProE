@@ -401,17 +401,21 @@ const LeftBar = ({ currentPath }) => {
                     </i>
                     <div className='round-area bd-light bg-cp-1 mb-05'>
                       Select Size
-                      <SizeSelector
-                        sizes={theCase.sizes ? theCase.sizes : []}
-                        className='noPrint'
-                      />
+                      {theCase ? (
+                        <SizeSelector
+                          sizes={theCase.sizes ? theCase.sizes : []}
+                          className='noPrint'
+                        />
+                      ) : null}
                     </div>
                     <div className='round-area bd-light bg-cp-1 mb-05'>
                       Select color Way
-                      <CWaySelector
-                        cWays={theCase.cWays ? theCase.cWays : []}
-                        className='noPrint'
-                      />
+                      {theCase ? (
+                        <CWaySelector
+                          cWays={theCase.cWays ? theCase.cWays : []}
+                          className='noPrint'
+                        />
+                      ) : null}
                     </div>
                     <button
                       name='quotationBtn'

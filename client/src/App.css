@@ -263,12 +263,12 @@ img {
 
 .grid-Quo-Mtrl {
   display: grid;
-  grid-template-columns: 1fr 5fr 6rem 4rem 6rem 5rem 5rem;
+  grid-template-columns: 8rem 1fr 8rem 8rem 5rem;
 }
 
 .grid-Quo-otherExpanse {
   display: grid;
-  grid-template-columns: 10rem 1fr 5rem 5rem;
+  grid-template-columns: 10rem 1fr 5rem;
 }
 
 .grid-Quo-condition {
@@ -1135,6 +1135,11 @@ input[type='submit']:focus {
   font-weight: bold;
 }
 
+/* font warp */
+.f-warp {
+  word-wrap: normal;
+}
+
 /* Text positoin */
 /* Font position */
 .tp-center,
@@ -1780,6 +1785,14 @@ input[type='submit']:focus {
   }
   .showWhenPrint {
     display: inline;
+  }
+  .grid-Quo-Mtrl {
+    display: grid;
+    grid-template-columns: 5rem 1fr 5rem 5rem 5rem;
+  }
+  .grid-Quo-otherExpanse {
+    display: grid;
+    grid-template-columns: 7rem 1fr 5rem;
   }
 }
 @page {

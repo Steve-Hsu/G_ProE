@@ -54,7 +54,8 @@ const QuoMtrl = ({ mtrl, className }) => {
         {mtrl.supplier} / {mtrl.ref_no} / {mtrl.sizeSPECs[0].mSizeSPEC} /{' '}
         {mtrl.position}
       </div>
-      <div className='bd-light bd-no-t v-center-content '>
+
+      <div className='bd-light bd-no-t v-center-content'>
         {' '}
         <input
           type='number'
@@ -63,10 +64,15 @@ const QuoMtrl = ({ mtrl, className }) => {
           step='.01'
           value={csptAddvised || ''}
           onChange={addNumber}
-          className='whenPrintNoBorder whenPrintFSSmall'
+          className='noPrint bd-no mr-05'
         />
+        <div className='noPrint mr-05'>{mtrl.unit}</div>
+        <div className='showWhenPrint m-05'>
+          {csptAddvised} {mtrl.unit}
+        </div>
       </div>
-      <div className='bd-light bd-no-t v-center-content p-05'>{mtrl.unit}</div>
+
+      {/* <div className='bd-light bd-no-t v-center-content p-05'>{mtrl.unit}</div> */}
       <div className='bd-light bd-no-t v-center-content '>
         <input
           type='number'
@@ -75,10 +81,12 @@ const QuoMtrl = ({ mtrl, className }) => {
           step='.01'
           value={mQuoAddvised || ''}
           onChange={addNumber}
-          className='whenPrintNoBorder whenPrintFSSmall'
+          className='noPrint bd-no'
         />
+        {/* <div className='noPrint mr-05'>{currency}</div> */}
+        <div className='showWhenPrint m-05'>{mQuoAddvised}</div>
       </div>
-      <div className='bd-light bd-no-t v-center-content p-05'>{currency}</div>
+      {/* <div className='bd-light bd-no-t v-center-content p-05'>{currency}</div> */}
       <div className='bd-light bd-no-t v-center-content p-05'>
         {materialFinalQuotation}
       </div>

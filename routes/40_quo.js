@@ -822,139 +822,142 @@ router.put('/quotateadvise', authUser, async (req, res) => {
                   // console.log('497, the gColor', gColor); // Test Code
                   if (!garmentcWay) {
                     console.log(
-                      'The mQuo have the garment color way that not exist in the case'
-                    );
-                    return reject(
                       'The mQuo have the garment color way that not exist in the case, These are expected being matched in internal of the system'
                     );
-                  }
-                  const cWayId = garmentcWay.id;
-                  console.log('578, The cWayId', cWayId); // Test Code
-
-                  //@_mtrlColor
-                  const mtrlColor = mtrl.mtrlColors.find(
-                    ({ cWay }) => cWay === cWayId
-                  );
-                  if (!mtrlColor) {
-                    console.log("The material don't have this color way");
-                    return reject("The material don't have this color way");
-                  }
-
-                  //@_srMtrl mtrl quotation
-                  // const materialColor = mtrlColor.mColor;
-                  const srMtrl = await SRMtrl.findOne(
-                    {
-                      company: comId,
-                      CSRIC: CSRIC,
-                      // mPrices: {
-                      //   $elemMatch: {
-                      //     mColor: materialColor,
-                      //     sizeSPEC: materialSPEC,
-                      //   },
-                      // },
-                    }
-                    // { 'mPrices.$': 1 }
-                  );
-
-                  if (!srMtrl) {
-                    console.log("Don't have this srMtrl");
-                    return reject("Don't have this srMtrl");
-                    // resolve([0, 0]);
+                    //For the counting not being stoped, use resolve
+                    resolve([0, 0]);
                   } else {
-                    if (srMtrl.mPrices.length === 0) {
-                      console.log("The srMtrl doesn't have Price yet");
-                      return reject("The srMtrl doesn't have Price yet");
-                      // resolve([0, 0]);
+                    const cWayId = garmentcWay.id;
+                    console.log('578, The cWayId', cWayId); // Test Code
+
+                    //@_mtrlColor
+                    const mtrlColor = mtrl.mtrlColors.find(
+                      ({ cWay }) => cWay === cWayId
+                    );
+                    if (!mtrlColor) {
+                      console.log("The material don't have this color way");
+                      //For the counting not being stoped, use resolve
+                      resolve([0, 0]);
                     } else {
-                      const mPrices = srMtrl.mPrices;
-                      const materialColor = mtrlColor.mColor;
-
-                      // console.log('531, the srMtrl ', srMtrl); // Test Code
-                      const colorAndSPECMatchedMPrice = mPrices.filter(
-                        (mP) =>
-                          mP.mColor === materialColor &&
-                          mP.sizeSPEC === materialSPEC
+                      //@_srMtrl mtrl quotation
+                      // const materialColor = mtrlColor.mColor;
+                      const srMtrl = await SRMtrl.findOne(
+                        {
+                          company: comId,
+                          CSRIC: CSRIC,
+                          // mPrices: {
+                          //   $elemMatch: {
+                          //     mColor: materialColor,
+                          //     sizeSPEC: materialSPEC,
+                          //   },
+                          // },
+                        }
+                        // { 'mPrices.$': 1 }
                       );
 
-                      // Define the price
-                      let mPrice = null;
-                      const mainPrice = srMtrl.mainPrice;
-                      if (colorAndSPECMatchedMPrice.length === 0) {
-                        //If no mPrice with matched mColor and spec
-                        if (mainPrice) {
-                          //if have the mainPrice, use the mainPrice
-                          mPrice = mPrices.filter((i) => i.id === mainPrice)[0];
-                        } else {
-                          //If don't have mainPrice, use the 1st price as its price
-                          mPrice = mPrices[0];
-                        }
+                      if (!srMtrl) {
+                        console.log("Don't have this srMtrl");
+                        //For the counting not being stoped, use resolve
+                        resolve([0, 0]);
                       } else {
-                        mPrice = colorAndSPECMatchedMPrice[0];
-                      }
-                      // const mPrice = srMtrl.mPrices[0];
+                        if (srMtrl.mPrices.length === 0) {
+                          console.log("The srMtrl doesn't have Price yet");
+                          //For the counting not being stoped, use resolve
+                          resolve([0, 0]);
+                        } else {
+                          const mPrices = srMtrl.mPrices;
+                          const materialColor = mtrlColor.mColor;
 
-                      // console.log('531, the mPrice ', mPrice); // Test Code
-                      // console.log('531, the CSRIC ', CSRIC); // Test Code
+                          // console.log('531, the srMtrl ', srMtrl); // Test Code
+                          const colorAndSPECMatchedMPrice = mPrices.filter(
+                            (mP) =>
+                              mP.mColor === materialColor &&
+                              mP.sizeSPEC === materialSPEC
+                          );
 
-                      const materialQuotation = mPrice.quotation;
+                          // Define the price
+                          let mPrice = null;
+                          const mainPrice = srMtrl.mainPrice;
+                          if (colorAndSPECMatchedMPrice.length === 0) {
+                            //If no mPrice with matched mColor and spec
+                            if (mainPrice) {
+                              //if have the mainPrice, use the mainPrice
+                              mPrice = mPrices.filter(
+                                (i) => i.id === mainPrice
+                              )[0];
+                            } else {
+                              //If don't have mainPrice, use the 1st price as its price
+                              mPrice = mPrices[0];
+                            }
+                          } else {
+                            mPrice = colorAndSPECMatchedMPrice[0];
+                          }
+                          // const mPrice = srMtrl.mPrices[0];
 
-                      //@_get CSPT
-                      const cspts = mtrl.cspts;
-                      const cspt = cspts.reduce((result, currentItem) => {
-                        if (
-                          currentItem.cWay === cWayId &&
-                          currentItem.size === gSizeId
-                        ) {
-                          result = result + currentItem.cspt;
+                          // console.log('531, the mPrice ', mPrice); // Test Code
+                          // console.log('531, the CSRIC ', CSRIC); // Test Code
+
+                          const materialQuotation = mPrice.quotation;
+
+                          //@_get CSPT
+                          const cspts = mtrl.cspts;
+                          const cspt = cspts.reduce((result, currentItem) => {
+                            if (
+                              currentItem.cWay === cWayId &&
+                              currentItem.size === gSizeId
+                            ) {
+                              result = result + currentItem.cspt;
+                            }
+                            return result;
+                          }, 0);
+
+                          const gQty = gQtyOfTheSize.find(
+                            ({ cWay }) => cWay === cWayId
+                          );
+                          console.log(
+                            'test code, the gQtyOftheSize',
+                            gQtyOfTheSize,
+                            'the cWayId',
+                            cWayId
+                          );
+                          // console.log('617, the gQty', gQty); // Test Code
+                          const qtyOfTheSizeAndcWay = gQty.gQty;
+                          console.log(
+                            '619, the qtyOfTheSizeAndcWay',
+                            qtyOfTheSizeAndcWay,
+                            'the',
+                            quocWaysNum,
+                            'time'
+                          ); // Test Code
+
+                          //Notcie
+                          // gQtyOfTheSize : The subtotal qty of a specific size of this case.
+                          // selectedgQtyOfTheSize : The subtotal qty of the selected specific size of this case. The selection is made by the user before make the request
+                          // gtyOfTheSizeAndcWay : The qty of a specific colorway and sizepsec.
+                          const weightOfThecWay =
+                            qtyOfTheSizeAndcWay / selectedgQtyOfTheSize;
+
+                          colorWeightedPrice =
+                            colorWeightedPrice +
+                            materialQuotation * weightOfThecWay;
+
+                          colorWeightedCSPT =
+                            colorWeightedCSPT + cspt * weightOfThecWay;
+
+                          quocWaysNum = quocWaysNum + 1;
+
+                          if (quocWaysNum === quocWays.length) {
+                            console.log(
+                              'The colorWeightedPrice',
+                              colorWeightedPrice
+                            ); // Test Code
+                            console.log(
+                              'The colorWeightedPrice',
+                              colorWeightedCSPT
+                            ); // Test Code
+                            resolve([colorWeightedPrice, colorWeightedCSPT]);
+                          }
                         }
-                        return result;
-                      }, 0);
-
-                      const gQty = gQtyOfTheSize.find(
-                        ({ cWay }) => cWay === cWayId
-                      );
-                      console.log(
-                        'test code, the gQtyOftheSize',
-                        gQtyOfTheSize,
-                        'the cWayId',
-                        cWayId
-                      );
-                      // console.log('617, the gQty', gQty); // Test Code
-                      const qtyOfTheSizeAndcWay = gQty.gQty;
-                      console.log(
-                        '619, the qtyOfTheSizeAndcWay',
-                        qtyOfTheSizeAndcWay,
-                        'the',
-                        quocWaysNum,
-                        'time'
-                      ); // Test Code
-
-                      //Notcie
-                      // gQtyOfTheSize : The subtotal qty of a specific size of this case.
-                      // selectedgQtyOfTheSize : The subtotal qty of the selected specific size of this case. The selection is made by the user before make the request
-                      // gtyOfTheSizeAndcWay : The qty of a specific colorway and sizepsec.
-                      const weightOfThecWay =
-                        qtyOfTheSizeAndcWay / selectedgQtyOfTheSize;
-
-                      colorWeightedPrice =
-                        colorWeightedPrice +
-                        materialQuotation * weightOfThecWay;
-
-                      colorWeightedCSPT =
-                        colorWeightedCSPT + cspt * weightOfThecWay;
-
-                      quocWaysNum = quocWaysNum + 1;
-
-                      if (quocWaysNum === quocWays.length) {
-                        console.log(
-                          'The colorWeightedPrice',
-                          colorWeightedPrice
-                        ); // Test Code
-                        console.log(
-                          'The colorWeightedPrice',
-                          colorWeightedCSPT
-                        ); // Test Code
-                        resolve([colorWeightedPrice, colorWeightedCSPT]);
                       }
                     }
                   }
