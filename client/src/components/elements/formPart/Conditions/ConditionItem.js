@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import QuoContext from '../../../../context/quo/quoContext';
 import DeleteBtnSmall from '../../btns/DeleteBtnSmall';
-import SqBtnLarge from '../../btns/SqBtnLarge';
 import Select from '../../select/Select';
 
 const ConditionItem = ({

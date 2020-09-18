@@ -1,16 +1,14 @@
 import React, { useContext, Fragment } from 'react';
 //Context
 import QuoContext from '../../context/quo/quoContext';
-import AuthUserContext from '../../context/authUser/authUserContext';
 import PopoverContext from '../../context/popover/popoverContext';
 
 //Component
 import DeletePopover from '../layout/DeletePopover';
-import SizeSelector from './40_03_01_sizeSelector';
-import CWaySelector from './40_03_02_cWaySelector';
+
 import QuoMtrl from './40_03_03_quoMtrl';
 import QuoOtherEx from './40_03_04_quoOtherEx';
-import QuoCondition from './40_03_05_quoCondition';
+// import QuoCondition from './40_03_05_quoCondition';
 
 //element
 import Select from '../elements/select/Select';
@@ -20,10 +18,9 @@ import DeleteBtnSmall from '../elements/btns/DeleteBtnSmall';
 import NoAndDateHeader from '../elements/formPart/NoAndDateHeader';
 import FormTitle from '../elements/formPart/FormTitle';
 import Conditions from '../elements/formPart/Conditions/Conditions';
+import ConfirmArea from '../elements/formPart/Conditions/ConfirmArea';
 
 const QuoForm = () => {
-  const authUserContext = useContext(AuthUserContext);
-  const { comName, comNameTail, comAddress } = authUserContext;
   const quoContext = useContext(QuoContext);
   const popoverContext = useContext(PopoverContext);
   const {
@@ -335,7 +332,7 @@ const QuoForm = () => {
           <div className='fs-lead'>{`Total : ${fob} ${currency}`}</div>
         </div>
 
-        {/* Conditions area */}
+        {/*@ Conditions area */}
         <Conditions
           onClick={onClick}
           subjects={conditions}
@@ -346,48 +343,32 @@ const QuoForm = () => {
           inputName='conditionDescription'
           inputOnChange={onClick}
         />
-
-        {/* <SqBtnLarge
-          name='addCondition'
-          onClick={onClick}
-          label='Add condition'
-          className='noPrint w-15vw mb-05'
-        />
-        {conditions.length > 0 ? (
-          <section id='conditions' className='mb-2 noBreak'>
-            <div className='fs-lead'>Condition</div>
-            {conditions
-              ? conditions.map((c) => (
-                  <QuoCondition
-                    key={`condition${c.id}`}
-                    condition={c}
-                    className='noBreak mt-0 mb-0 whenPrintFSSmall'
-                  />
-                ))
-              : null}
-          </section>
-        ) : null} */}
-
-        <section id='confirmArea' className='noBreak mb-1'>
-          <div className='fs-lead'>Confirmed by :</div>
-          <div className='h-scatter-content'>
-            <div></div>
-            <div>
-              <div className='fs-tiny'>Signature</div>
-              <br />
-              <br />
-              <br />
-              <div>______________________________________________</div>
-              <div>
-                {' '}
-                {comName} {comNameTail}
-              </div>
-            </div>
-          </div>
-        </section>
+        {/*@ Confirm Area */}
+        <ConfirmArea />
       </div>
     </Fragment>
   );
 };
 
 export default QuoForm;
+
+// /* <SqBtnLarge
+//           name='addCondition'
+//           onClick={onClick}
+//           label='Add condition'
+//           className='noPrint w-15vw mb-05'
+//         />
+//         {conditions.length > 0 ? (
+//           <section id='conditions' className='mb-2 noBreak'>
+//             <div className='fs-lead'>Condition</div>
+//             {conditions
+//               ? conditions.map((c) => (
+//                   <QuoCondition
+//                     key={`condition${c.id}`}
+//                     condition={c}
+//                     className='noBreak mt-0 mb-0 whenPrintFSSmall'
+//                   />
+//                 ))
+//               : null}
+//           </section>
+//         ) : null} */
