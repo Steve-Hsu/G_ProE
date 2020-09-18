@@ -25,7 +25,7 @@ const DeletePopover = () => {
     doubleCheck,
     addDoubleCheckValue,
   } = popoverContext;
-  const { deleteQuoForm, deletemQuo } = quoContext;
+  const { deleteQuoForm, deletemQuo, switchQuoForm } = quoContext;
   const { deleteOs } = purContext;
   // }
   const onChangeDelete = (e) => {
@@ -55,6 +55,7 @@ const DeletePopover = () => {
           quoFormId: current._id,
         };
         deleteQuoForm(body);
+        switchQuoForm(null);
         break;
       case 'deleteOs':
         deleteOs(current._id);
@@ -100,16 +101,16 @@ const DeletePopover = () => {
   };
 
   const doubleCheckInput = () => {
-    if (current.target === 'case') {
+    if (current.target === 'case' || current.target === 'quoForm') {
       return (
         <div key='doubleCheckDiv' className='px-1'>
-          <div className='fs-tiny'>Enter the Case Number for deleting</div>
+          <div className='fs-tiny'>Enter the Number for deleting</div>
           <input
             key='doubleCheckInput'
             type='text'
             value={doubleCheck || ''}
             onChange={addDoubleCheckValue}
-            placeholder={cNo}
+            placeholder={current.cNo ? current.cNo : current.quoNo}
           />
         </div>
       );
@@ -140,7 +141,9 @@ const DeletePopover = () => {
                 </button>
               </div>
               <div className='center-content w-50'>
-                {current.target === 'case' && doubleCheck != cNo ? (
+                {(current.target === 'case' && doubleCheck != current.cNo) ||
+                (current.target === 'quoForm' &&
+                  doubleCheck != current.quoNo) ? (
                   <div className='btn btn-sq btn-block sq-block bg-cp-2 fc-cp-3 center-content'>
                     Delete
                   </div>

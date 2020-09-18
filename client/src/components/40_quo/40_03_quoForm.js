@@ -16,6 +16,7 @@ import QuoCondition from './40_03_05_quoCondition';
 import Select from '../elements/select/Select';
 import GoBackBtn from '../elements/btns/GoBackBtn';
 import SqBtnLarge from '../elements/btns/SqBtnLarge';
+import DeleteBtnSmall from '../elements/btns/DeleteBtnSmall';
 
 const QuoForm = () => {
   const authUserContext = useContext(AuthUserContext);
@@ -31,6 +32,7 @@ const QuoForm = () => {
     isQuotating,
     updateCurrentQuoForm,
     quotation,
+    deleteQuoForm,
   } = quoContext;
   const {
     _id,
@@ -78,7 +80,7 @@ const QuoForm = () => {
   //   mtrls,
   //   defaultCase,
   // } = quotation.theCase;
-  const { popover, current } = popoverContext;
+  const { popover, current, togglePopover } = popoverContext;
   const onSubmitQuoForm = (e) => {
     // console.log('here triggered'); // Test Code
     e.preventDefault();
@@ -152,13 +154,28 @@ const QuoForm = () => {
     d.getDate() + '/' + months[d.getMonth()] + '/' + d.getFullYear()
   );
 
+  // const deleteQuoFormBtn = () => {
+  //   togglePopover();
+  // };
+
   return (
     <Fragment>
+      {popover ? <DeletePopover key={current._id} /> : null}
       <div
         className='container container-with-navbar whenPrint'
         id='quotationForm'
       >
-        <GoBackBtn name='goBackBtn' onClick={onClick} className='noPrint' />
+        <div className='h-scatter-content '>
+          <GoBackBtn name='goBackBtn' onClick={onClick} className='noPrint' />
+
+          <DeleteBtnSmall
+            name='quoForm'
+            onClick={togglePopover}
+            value={_id}
+            className='m-0 noPrint'
+          />
+        </div>
+
         {/* <button name='goBackBtn' onClick={onClick}>
           Go Back
         </button>{' '} */}
