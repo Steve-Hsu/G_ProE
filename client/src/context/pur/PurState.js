@@ -75,7 +75,9 @@ const PurState = (props) => {
     };
     try {
       // const res = await axios.post('/api/purchase', selectedCases, config);
-      await axios.post('/api/purchase', selectedCases, config);
+      await axios.post('/api/purchase', selectedCases, config).then(() => {
+        switchPage('osSelector');
+      });
       console.log('Upload Order Summary');
       // dispatch({ type: CASE_LIST_DOWNLOAD, payload: res.data });
     } catch (err) {
