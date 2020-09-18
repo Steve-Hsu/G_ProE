@@ -48,6 +48,9 @@ const BoardItem = ({
       case 'purCaseSelector':
         toggleItemAttributes[0](subject._id);
         break;
+      case 'purchaseOrder':
+        toggleItemAttributes('purchaseOrder', subject);
+        break;
       default:
     }
   };
@@ -72,6 +75,18 @@ const BoardItem = ({
         (purpose === 'quoSrMtrlSelector' &&
           toggleItemAttributes[1].includes(id)) ? (
         <SrMtrl srMtrl={subject} currentPath={currentPath} />
+      ) : purpose === 'purchaseOrder' ? (
+        <div
+          className='boardChild round-card bg-cp-elem bd-light hover-cp-2'
+          // style={selectedBackGround(id)}
+          onClick={onClick}
+        >
+          <div>
+            No.
+            {idx + 1}
+          </div>
+          {subject}
+        </div>
       ) : (
         <div
           className='boardChild round-card bg-cp-elem bd-light hover-cp-2'
@@ -107,6 +122,6 @@ export default BoardItem;
 
 // PropTyeps
 BoardItem.propTypes = {
-  displayTitles: PropTypes.array.isRequired,
-  subject: PropTypes.object.isRequired,
+  // displayTitles: PropTypes.array.isRequired,
+  // subject: PropTypes.object.isRequired,
 };

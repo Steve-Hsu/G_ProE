@@ -3,7 +3,7 @@ import PurContext from '../../context/pur/purContext';
 import AuthUserContext from '../../context/authUser/authUserContext';
 import PoItem from './50_04_01_poItem';
 
-const OrderSummary = () => {
+const PurchaseOrder = () => {
   // const { downloadCase } = caseContext;
 
   const purContext = useContext(PurContext);
@@ -22,6 +22,8 @@ const OrderSummary = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // let currentMtrls = [];
+
   return (
     <Fragment>
       {/* {currentPoPriceList === [] ? null : (
@@ -34,7 +36,7 @@ const OrderSummary = () => {
       <div>{comAddress}</div>
       <div>{comPhone}</div>
       <br />
-      <div>To : {String(caseMtrls[0].supplier).toUpperCase()}</div>
+      <div>To : {String(currentPo).toUpperCase()}</div>
       <div>ATTN: The contactor of the T2</div>
       <br />
       {caseMtrls.map((mtrl) => {
@@ -60,4 +62,4 @@ const OrderSummary = () => {
   );
 };
 
-export default OrderSummary;
+export default PurchaseOrder;

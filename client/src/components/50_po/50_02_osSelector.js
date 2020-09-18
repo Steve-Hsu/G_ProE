@@ -1,11 +1,18 @@
 import React, { useContext, useEffect } from 'react';
 import PurContext from '../../context/pur/purContext';
+import Table from '../elements/table/Table';
 //@ Child component
-import OsItem from './50_02_01_osItem';
+// import OsItem from './50_02_01_osItem';
 
 const OsSelector = () => {
   const purContext = useContext(PurContext);
-  const { osList, getOsList, openPage } = purContext;
+  const {
+    osList,
+    getOsList,
+    openPage,
+    switchOsCurrent,
+    switchPage,
+  } = purContext;
 
   useEffect(() => {
     // alert('Try get os List');
@@ -17,11 +24,17 @@ const OsSelector = () => {
   //@ return
   return (
     // <div>test</div>
-    <div className='p-1 container container-with-navbar'>
-      {osList.map((osItem) => (
-        <OsItem key={`caseList${osItem._id}`} osItem={osItem} />
-      ))}
-    </div>
+    <Table
+      subjects={osList}
+      purpose='osSelector'
+      toggleItemAttributes={[switchOsCurrent, switchPage]}
+      displayTitles={[{ osNo: true }]}
+    />
+    // <div className='p-1 container container-with-navbar'>
+    //   {osList.map((osItem) => (
+    //     <OsItem key={`caseList${osItem._id}`} osItem={osItem} />
+    //   ))}
+    // </div>
   );
 };
 

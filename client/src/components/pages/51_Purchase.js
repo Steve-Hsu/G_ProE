@@ -30,15 +30,21 @@ const Purchase = (props) => {
     props.history.push('/api/case/director');
   };
 
-  const onClick = (e) => {
-    e.preventDefault();
-    switchPage(e.target.value);
-  };
-
   const onSubmit = (e) => {
     e.preventDefault();
     console.log('order summary is triggered');
     createOrderSummary(selectedCases);
+  };
+
+  //Here use same function the "switchPage", but separate to 2 onClick func the "goOsSelector" and "goOrderSummary", if not do so, the render seems sometime not refering to the value soon enough, cause the func in the state will enter an null value
+  const goOsSelector = (e) => {
+    e.preventDefault();
+    switchPage('osSelector');
+  };
+
+  const goOrderSummanry = (e) => {
+    e.preventDefault();
+    switchPage('orderSummary');
   };
 
   return (
@@ -51,38 +57,34 @@ const Purchase = (props) => {
           <form id='purchase' onSubmit={onSubmit}>
             <ItemSelector props={props} purpose='purCaseSelector' />
           </form>
-
-          {/* <div className='p-1 container container-with-navbar'>
-            <button onClick={onClick}>go back</button>
-            <CaseSelector />
-          </div> */}
         </div>
       ) : openPage === 'osSelector' ? (
         <div className='grid-1-4'>
           <LeftBar currentPath={currentPath} />
           <div className='container container-with-navbar'>
-            <button onClick={goBack}>go back</button>
+            <GoBackBtn onClick={goBack} />
             <OsSelector />
           </div>
         </div>
       ) : openPage === 'orderSummary' ? (
-        <Fragment>
+        <div className='grid-1-4'>
+          <LeftBar currentPath={currentPath} />
           <div className='container container-with-navbar'>
-            <button value='osSelector' onClick={onClick}>
+            {/* <button value='osSelector' onClick={onClick}>
               go back
-            </button>
+            </button> */}
+            <GoBackBtn onClick={goOsSelector} />
             <OrderSummary />
           </div>
-        </Fragment>
+        </div>
       ) : openPage === 'purchaseOrder' ? (
-        <Fragment>
+        <div className='grid-1-4'>
+          <LeftBar currentPath={currentPath} />
           <div className='container container-with-navbar'>
-            <button value='orderSummary' onClick={onClick}>
-              go back
-            </button>
+            <GoBackBtn onClick={goOrderSummanry} />
             <PurchaseOrder />
           </div>
-        </Fragment>
+        </div>
       ) : null}
     </Fragment>
   );

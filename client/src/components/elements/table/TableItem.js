@@ -52,6 +52,13 @@ const TableItem = ({
       case 'purCaseSelector':
         toggleItemAttributes[0](subject._id);
         break;
+      case 'osSelector':
+        // e.target.name = 'osSelector'
+        console.log('The osSelector click is triggered');
+        toggleItemAttributes[0](subject);
+        toggleItemAttributes[1]('orderSummary');
+
+        break;
       default:
     }
   };

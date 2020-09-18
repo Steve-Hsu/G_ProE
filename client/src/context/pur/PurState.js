@@ -91,7 +91,11 @@ const PurState = (props) => {
 
   const switchPage = (value, id = null) => {
     switch (value) {
+      case 'caseSelector':
+        dispatch({ type: PURPAGE_SWITCH, payload: value });
+        break;
       case 'osSelector':
+        console.log('osSelector in state is triggered');
         dispatch({ type: PURPAGE_SWITCH, payload: value });
         dispatch({ type: OS_CURRENT, payload: null });
         break;
@@ -100,14 +104,19 @@ const PurState = (props) => {
         dispatch({ type: PO_CURRENT, payload: id });
         dispatch({ type: PO_CURRENT_MTRLPRICE, payload: [] });
         break;
-      case null:
-      case '':
-        dispatch({ type: PURPAGE_SWITCH, payload: null });
-        break;
-      default:
+      case 'purchaseOrder':
         dispatch({ type: PURPAGE_SWITCH, payload: value });
         dispatch({ type: PO_CURRENT, payload: id });
         break;
+      // case null:
+      // case '':
+      //   dispatch({ type: PURPAGE_SWITCH, payload: null });
+      //   break;
+      default:
+        console.log('no value is triggered ');
+      // dispatch({ type: PURPAGE_SWITCH, payload: value });
+      // dispatch({ type: PO_CURRENT, payload: id });
+      // break;
     }
 
     // if (value) {

@@ -1,5 +1,6 @@
 import React, { useContext, Fragment } from 'react';
 import PurContext from '../../context/pur/purContext';
+import Board from '../elements/board/Board';
 
 const OrderSummary = () => {
   // const { downloadCase } = caseContext;
@@ -38,7 +39,14 @@ const OrderSummary = () => {
         })}
       </div>
       The Purchase orders
-      {suppliers.map((supplier) => (
+      <Board
+        subjects={suppliers}
+        // displayTitles={suppliers}
+        purpose='purchaseOrder'
+        label='Purchase Order'
+        toggleItemAttributes={switchPage}
+      />
+      {/* {suppliers.map((supplier) => (
         <div key={supplier} className='grid-4'>
           <div>{supplier}</div>
 
@@ -52,7 +60,7 @@ const OrderSummary = () => {
             Check PO{' '}
           </button>
         </div>
-      ))}
+      ))} */}
     </Fragment>
   );
 };
