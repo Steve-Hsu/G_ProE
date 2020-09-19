@@ -270,67 +270,101 @@ router.post('/materialprice', authUser, async (req, res) => {
     filteredCaseMtrls.map(async (mtrl) => {
       const { id, supplier, ref_no, mColor, mSizeSPEC } = mtrl;
 
-      const srMtrl = await SRMtrl.findOne(
-        {
-          company: comId,
-          supplier: currentPo,
-          ref_no: ref_no,
-        },
-        { mPrices: 1 }
-      );
+      const srMtrl = await SRMtrl.findOne({
+        company: comId,
+        supplier: currentPo,
+        ref_no: ref_no,
+      });
       if (!srMtrl || srMtrl.mPrices.length === 0) {
         console.log(
           "No such material or the material dosen't have any price built in the srMtrl database"
         );
-        return res.status(404).json({
-          msg:
-            "No such material or the material dosen't have any price built in the srMtrl database",
+        materialPriceList.push({
+          id: id,
+          unit: 'no srMtrl',
+          currency: 0,
+          mPrice: 0,
+          moq: 0,
+          moqPrice: 0,
+        });
+      } else {
+        // console.log('the srMrls', srMtrl); // Test Code
+        // extract the mPrice that match to the current material with name of supplier, ref_no, mColor and mSizeSPEC
+        const { mPrices } = srMtrl;
+        const srMtrlCondition = {
+          mColor: mColor,
+          sizeSPEC: mSizeSPEC,
+        };
+        const mainPrice = srMtrl.mainPrice;
+        // console.log('The srMtrlCondition', srMtrlCondition); // Test Code
+        const currentSrMtrlPrice = mPrices.filter((i, idx) => {
+          if (i.mColor === mColor && i.sizeSPEC === mSizeSPEC) {
+            return i;
+          } else if (mainPrice) {
+            return i.id === mainPrice;
+          } else {
+            return i.id === mPrices[0].id;
+          }
+
+          // for (var key in srMtrlCondition) {
+          //   if (i[key] === undefined || i[key] != srMtrlCondition[key]) {
+          //     return false;
+          //   }
+          // }
+          // return true;
+        });
+        console.log('the mPrice selected', currentSrMtrlPrice);
+        // console.log('the currentSrMtrlPrice', currentSrMtrlPrice); // Test Code
+        // Push the information to the materialPriceList
+        // let { unit, currency, mPrice, moq, moqPrice } = currentSrMtrlPrice[0];
+
+        // if (!currentSrMtrlPrice[0].unit) {
+        //   unit = 'undefined';
+        // }
+        // if (!currency) {
+        //   curreny = 'undefined';
+        // }
+        // if (!mPrice) {
+        //   mPrice = 'undefined';
+        // }
+        // if (!moq) {
+        //   moq = 'undefined';
+        // }
+        // if (!moqPrice) {
+        //   moqPrice = 'undefined';
+        // }
+        // materialPriceList.push({
+        //   id: id,
+        //   unit: unit,
+        //   currency: currency,
+        //   mPrice: mPrice,
+        //   moq: moq,
+        //   moqPrice: moqPrice,
+        // });
+
+        // const theUnit = currentSrMtrlPrice[0].unit
+        //   ? currentSrMtrlPrice[0].unit
+        //   : 'undefined';
+        const itemNames = ['unit', 'currency', 'mPrice', 'moq', 'moqPrice'];
+        const theValues = itemNames.map((i, idx) => {
+          if (!currentSrMtrlPrice[0][i]) {
+            return { [i]: 'undefined' };
+          } else {
+            return { [i]: currentSrMtrlPrice[0][i] };
+          }
+        });
+
+        console.log(theValues);
+
+        materialPriceList.push({
+          id: id,
+          unit: theValues[0].unit,
+          currency: theValues[1].currency,
+          mPrice: theValues[2].mPrice,
+          moq: theValues[3].moq,
+          moqPrice: theValues[4].moqPrice,
         });
       }
-      // console.log('the srMrls', srMtrl); // Test Code
-      // extract the mPrice that match to the current material with name of supplier, ref_no, mColor and mSizeSPEC
-      const { mPrices } = srMtrl;
-      const srMtrlCondition = {
-        mColor: mColor,
-        sizeSPEC: mSizeSPEC,
-      };
-      // console.log('The srMtrlCondition', srMtrlCondition); // Test Code
-      const currentSrMtrlPrice = mPrices.filter((i) => {
-        for (var key in srMtrlCondition) {
-          if (i[key] === undefined || i[key] != srMtrlCondition[key]) {
-            return false;
-          }
-        }
-        return true;
-      });
-      // console.log('the currentSrMtrlPrice', currentSrMtrlPrice); // Test Code
-      // Push the information to the materialPriceList
-      let { unit, currency, mPrice, moq, moqPrice } = currentSrMtrlPrice[0];
-
-      if (!unit) {
-        unit = 'undefined';
-      }
-      if (!currency) {
-        curreny = 'undefined';
-      }
-      if (!mPrice) {
-        mPrice = 'undefined';
-      }
-      if (!moq) {
-        moq = 'undefined';
-      }
-      if (!moqPrice) {
-        moqPrice = 'undefined';
-      }
-      materialPriceList.push({
-        id: id,
-        unit: unit,
-        currency: currency,
-        mPrice: mPrice,
-        moq: moq,
-        moqPrice: moqPrice,
-      });
-
       caseMtrlsCount = caseMtrlsCount + 1;
       if (caseMtrlsCount === filteredCaseMtrls.length) {
         resolve();
