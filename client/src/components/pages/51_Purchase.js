@@ -80,8 +80,8 @@ const Purchase = (props) => {
       ) : openPage === 'purchaseOrder' ? (
         <div className='grid-1-4'>
           <LeftBar currentPath={currentPath} />
-          <div className='container container-with-navbar'>
-            <GoBackBtn onClick={goOrderSummanry} />
+          <div className='container container-with-navbar whenPrint'>
+            <GoBackBtn onClick={goOrderSummanry} className='noPrint' />
             <PurchaseOrder />
           </div>
         </div>

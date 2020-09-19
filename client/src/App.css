@@ -276,6 +276,11 @@ img {
   grid-template-columns: 10rem 1fr;
 }
 
+.grid-Pur-Mtrl {
+  display: grid;
+  grid-template-columns: 2rem 10rem 10rem 1fr 8rem 5rem 5rem;
+}
+
 /* grid gap */
 .gap-ti {
   grid-gap: var(--tiny);
@@ -1227,7 +1232,9 @@ input[type='submit']:focus {
 .py {
   padding: var(--gap) 0;
 }
-
+.py-03 {
+  padding: 0.3rem 0;
+}
 .py-05 {
   padding: 0.5rem 0;
 }
@@ -1793,6 +1800,11 @@ input[type='submit']:focus {
   .grid-Quo-otherExpanse {
     display: grid;
     grid-template-columns: 7rem 1fr 5rem;
+  }
+
+  .grid-Pur-Mtrl {
+    display: grid;
+    grid-template-columns: 2rem 8rem 5rem 1fr 5rem 4rem 4rem;
   }
 }
 @page {

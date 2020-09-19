@@ -288,15 +288,9 @@ router.post('/materialprice', authUser, async (req, res) => {
           moqPrice: 0,
         });
       } else {
-        // console.log('the srMrls', srMtrl); // Test Code
         // extract the mPrice that match to the current material with name of supplier, ref_no, mColor and mSizeSPEC
         const { mPrices } = srMtrl;
-        const srMtrlCondition = {
-          mColor: mColor,
-          sizeSPEC: mSizeSPEC,
-        };
         const mainPrice = srMtrl.mainPrice;
-        // console.log('The srMtrlCondition', srMtrlCondition); // Test Code
         const currentSrMtrlPrice = mPrices.filter((i, idx) => {
           if (i.mColor === mColor && i.sizeSPEC === mSizeSPEC) {
             return i;
@@ -305,46 +299,9 @@ router.post('/materialprice', authUser, async (req, res) => {
           } else {
             return i.id === mPrices[0].id;
           }
-
-          // for (var key in srMtrlCondition) {
-          //   if (i[key] === undefined || i[key] != srMtrlCondition[key]) {
-          //     return false;
-          //   }
-          // }
-          // return true;
         });
-        console.log('the mPrice selected', currentSrMtrlPrice);
-        // console.log('the currentSrMtrlPrice', currentSrMtrlPrice); // Test Code
-        // Push the information to the materialPriceList
-        // let { unit, currency, mPrice, moq, moqPrice } = currentSrMtrlPrice[0];
+        // console.log('the mPrice selected', currentSrMtrlPrice); // Test code
 
-        // if (!currentSrMtrlPrice[0].unit) {
-        //   unit = 'undefined';
-        // }
-        // if (!currency) {
-        //   curreny = 'undefined';
-        // }
-        // if (!mPrice) {
-        //   mPrice = 'undefined';
-        // }
-        // if (!moq) {
-        //   moq = 'undefined';
-        // }
-        // if (!moqPrice) {
-        //   moqPrice = 'undefined';
-        // }
-        // materialPriceList.push({
-        //   id: id,
-        //   unit: unit,
-        //   currency: currency,
-        //   mPrice: mPrice,
-        //   moq: moq,
-        //   moqPrice: moqPrice,
-        // });
-
-        // const theUnit = currentSrMtrlPrice[0].unit
-        //   ? currentSrMtrlPrice[0].unit
-        //   : 'undefined';
         const itemNames = ['unit', 'currency', 'mPrice', 'moq', 'moqPrice'];
         const theValues = itemNames.map((i, idx) => {
           if (!currentSrMtrlPrice[0][i]) {
@@ -354,7 +311,7 @@ router.post('/materialprice', authUser, async (req, res) => {
           }
         });
 
-        console.log(theValues);
+        // console.log(theValues); // Test code
 
         materialPriceList.push({
           id: id,

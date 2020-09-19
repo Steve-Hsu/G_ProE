@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import CasesContext from '../../context/cases/casesContext';
 import QuoContext from '../../context/quo/quoContext';
+import PurContext from '../../context/pur/purContext';
 import SearchBar from './SearchBar';
 // import Papa from 'papaparse';
 import readXlsxFile from 'read-excel-file';
@@ -12,6 +13,7 @@ import CWaySelector from '../40_quo/40_03_02_cWaySelector';
 const LeftBar = ({ currentPath }) => {
   const casesContext = useContext(CasesContext);
   const quoContext = useContext(QuoContext);
+  const purContext = useContext(PurContext);
   const {
     addCaseValue,
     mtrls,
@@ -34,6 +36,9 @@ const LeftBar = ({ currentPath }) => {
     currentQuoForm,
     downLoadmtrlPrice,
   } = quoContext;
+
+  const { openPage } = purContext;
+
   const theCase = quotation.theCase;
 
   const SHEET_NAME_LIST = [
@@ -249,6 +254,20 @@ const LeftBar = ({ currentPath }) => {
     printPage('quotationForm');
   };
 
+  const printOutElement = () => {
+    return (
+      <div className='round-area bg-cp-3 mt-1 mb-1'>
+        <i className='fas fa-print fc-cp-1 mb-05'> Print</i>
+        <button
+          className='btn bg-cp-2 btn-block bd-radius-s bd-light'
+          onClick={onClickPrintPage}
+        >
+          Print out
+        </button>
+      </div>
+    );
+  };
+
   return (
     <div
       className='container-with-navbar leftbar bg-cp-1 bd-light bd-no-t h-100 noPrint'
@@ -379,21 +398,15 @@ const LeftBar = ({ currentPath }) => {
               )}
             </div>
           </>
-        ) : (
+        ) : null}
+        {/* Quotation Set */}
+        {
           (currentPage =
             'quotation' && quotateFor === 'garment' ? (
               isQuotating === null || openQuoForm === null ? null : (
                 <div>
                   {' '}
-                  <div className='round-area bg-cp-3 mt-1 mb-1'>
-                    <i className='fas fa-print fc-cp-1 mb-05'> Print</i>
-                    <button
-                      className='btn bg-cp-2 btn-block bd-radius-s bd-light'
-                      onClick={onClickPrintPage}
-                    >
-                      Print out
-                    </button>
-                  </div>
+                  {printOutElement()}
                   <div className='round-area bd-light bg-cp-3 noPrint mb-05'>
                     <i className='fas fa-calculator fc-cp-1 mb-05'>
                       {' '}
@@ -436,7 +449,11 @@ const LeftBar = ({ currentPath }) => {
                 </div>
               )
             ) : null)
-        )}
+        }
+        {/* Purchase Set */}
+        {currentPath === '/api/purchase' && openPage === 'purchaseOrder' ? (
+          <div>{printOutElement()}</div>
+        ) : null}
       </div>
     </div>
   );

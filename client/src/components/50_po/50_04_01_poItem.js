@@ -1,7 +1,7 @@
 import React, { useContext, Fragment } from 'react';
 import PurContext from '../../context/pur/purContext';
 
-const PoItem = ({ mtrl }) => {
+const PoItem = ({ mtrl, theNumber, className }) => {
   const purContext = useContext(PurContext);
   const { currentPoPriceList } = purContext;
   //   const { suppliers } = currentOrderSummary;
@@ -37,19 +37,30 @@ const PoItem = ({ mtrl }) => {
   }
 
   return (
-    <Fragment>
-      <div className='p-1 grid-15 test-4'>
-        <div className='gridCol-1-3 test-1'>{ref_no}</div>
-        <div className='gridCol-3-7 test-3'>Description</div>
-        <div className='gridCol-7-9 test-1'>{mColor}</div>
-        <div className='gridCol-9-10 test-3'>{mSizeSPEC}</div>
-        <div className='gridCol-10-11 test-1'>{mPrice}</div>
-        <div className='gridCol-11-12 test-3'>{currency}</div>
-        <div className='gridCol-12-13 test-1'>/{unit}</div>
-        <div className='gridCol-13-14 test-3'>{purchaseQtySumUp}</div>
-        <div className='gridCol-14-16 test-1'>{purchaseQtySumUp * mPrice}</div>
+    <div className={`grid-Pur-Mtrl m-0 p-0 bd-light bd-no-t ${className}`}>
+      <div className='bd-light bd-no-t v-center-content px-05 py-03'>
+        {theNumber}
       </div>
-    </Fragment>
+      <div className='bd-light bd-no-t v-center-content px-05 py-03'>
+        {ref_no}
+      </div>
+      <div className='bd-light bd-no-t v-center-content px-05 py-03'>
+        {mColor}
+      </div>
+      <div className='bd-light bd-no-t v-center-content px-05 py-03'>
+        {mSizeSPEC}
+      </div>
+      <div className='bd-light bd-no-t v-center-content px-05 py-03'>
+        {mPrice}
+        {currency} per {unit}
+      </div>
+      <div className='bd-light bd-no-t v-center-content px-05 py-03'>
+        {purchaseQtySumUp}
+      </div>
+      <div className='bd-light bd-no-t v-center-content px-05 py-03'>
+        {purchaseQtySumUp * mPrice}
+      </div>
+    </div>
   );
 };
 
