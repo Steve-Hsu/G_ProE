@@ -211,8 +211,8 @@ const Board = ({
               {subjects.map((subject, subject_idx) => {
                 return (
                   <BoardItem
-                    key={`${subject}${subject_idx}`}
-                    id={`${subject}${subject_idx}`}
+                    key={`${subject.id || subject._id}${subject_idx}`}
+                    id={`${subject.id || subject._id}${subject_idx}`}
                     purpose={purpose}
                     displayTitles={[]}
                     // subjects={subjects}

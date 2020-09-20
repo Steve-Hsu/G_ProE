@@ -32,13 +32,28 @@ const OSSchema = mongoose.Schema({
   ],
   suppliers: [
     {
-      type: String,
+      supplier: {
+        type: String,
+      },
+      conditions: {
+        type: Array,
+      },
+      poConfirmDate: {
+        //This confirm date is for the staff of purchase dapartment to confirm the po is correct in qty, price, conditions, all the information in the po. once it confirmed, it can't be updated and changed.
+        type: Date,
+        default: null,
+      },
     },
   ],
   caseMtrls: [],
   date: {
     type: Date,
     default: Date.now,
+  },
+  osConfirmDate: {
+    // As the osConfirmDate is made, the accounting department receive a applying for payment of this os.
+    type: Date,
+    default: null,
   },
 });
 module.exports = mongoose.model('os', OSSchema);

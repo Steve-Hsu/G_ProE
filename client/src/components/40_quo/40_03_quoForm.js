@@ -18,7 +18,7 @@ import DeleteBtnSmall from '../elements/btns/DeleteBtnSmall';
 import NoAndDateHeader from '../elements/formPart/NoAndDateHeader';
 import FormTitle from '../elements/formPart/FormTitle';
 import Conditions from '../elements/formPart/Conditions/Conditions';
-import ConfirmArea from '../elements/formPart/Conditions/ConfirmArea';
+import ConfirmArea from '../elements/formPart/ConfirmArea';
 
 const QuoForm = () => {
   const quoContext = useContext(QuoContext);

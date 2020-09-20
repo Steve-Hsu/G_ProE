@@ -85,7 +85,7 @@ const BoardItem = ({
             No.
             {idx + 1}
           </div>
-          {subject}
+          {subject.supplier}
         </div>
       ) : (
         <div

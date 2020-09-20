@@ -6,12 +6,18 @@ import AuthUserContext from '../../context/authUser/authUserContext';
 import PoItem from './50_04_01_poItem';
 import NoAndDateHeader from '../../components/elements/formPart/NoAndDateHeader';
 import FormTitle from '../../components/elements/formPart/FormTitle';
+import Conditions from '../elements/formPart/Conditions/Conditions';
 
 const PurchaseOrder = () => {
   // const { downloadCase } = caseContext;
 
   const purContext = useContext(PurContext);
-  const { currentOrderSummary, currentPo, getMaterialPrice } = purContext;
+  const {
+    currentOrderSummary,
+    currentPo,
+    getMaterialPrice,
+    updateCondition,
+  } = purContext;
   const { osNo, caseMtrls } = currentOrderSummary;
 
   const authUserContext = useContext(AuthUserContext);
@@ -30,6 +36,11 @@ const PurchaseOrder = () => {
 
   let theNumber = 0;
 
+  const onClick = (e) => {
+    e.preventDefault();
+    updateCondition(e);
+  };
+
   return (
     <div className=''>
       {/* {currentPoPriceList === [] ? null : (
@@ -44,7 +55,7 @@ const PurchaseOrder = () => {
       <div>{comAddress}</div>
       <div>{comPhone}</div>
       <br /> */}
-      <div>To : {String(currentPo).toUpperCase()}</div>
+      <div>To : {String(currentPo.supplier).toUpperCase()}</div>
       <div>ATTN: The contactor of the T2</div>
       <br />
       <section id='purchaseListArea' className='mb-2'>
@@ -68,7 +79,7 @@ const PurchaseOrder = () => {
           ))}
         </div>
         {caseMtrls.map((mtrl) => {
-          if (mtrl.supplier == currentPo) {
+          if (mtrl.supplier == currentPo.supplier) {
             theNumber = theNumber + 1;
             // console.log(mtrl.supplier);
             return (
@@ -89,7 +100,27 @@ const PurchaseOrder = () => {
         </div>
       </section>
 
-      <br />
+      <Conditions
+        onClick={onClick}
+        subjects={currentPo.conditions}
+        deleteBtnName='deleteCondition'
+        deleteBtnOnClick={onClick}
+        selectName='condition'
+        selectOnChange={onClick}
+        inputName='conditionDescription'
+        inputOnChange={onClick}
+      />
+      {/*   onClick,
+  subjects,
+  deleteBtnName,
+  deleteBtnOnClick,
+  selectName,
+  selectOnChange,
+  inputName,
+  inputOnChange,
+  itemClassName, */}
+
+      {/* <br />
       <div>Conditions :</div>
       <div>Payment :</div>
       <div>Delivery :</div>
@@ -99,7 +130,7 @@ const PurchaseOrder = () => {
       <div>Inspection Certificate :</div>
       <div>Shipping samples :</div>
       <div>Remark :</div>
-      <div>Shipping Mark :</div>
+      <div>Shipping Mark :</div> */}
     </div>
   );
 };

@@ -27,6 +27,15 @@ const PurState = (props) => {
   };
   const [state, dispatch] = useReducer(PurReducer, initialState);
   const { caseList, openPage, currentOrderSummary } = state;
+  //@ Id for prevent uuid duplicated
+  const generateId = () => {
+    return (
+      //generate 22 digits string with number or character.
+      Math.random().toString(36).substring(2, 15) +
+      Math.random().toString(36).substring(2, 15)
+    );
+  };
+
   //@_action
 
   //@ Use searchbar to find the cases
@@ -89,7 +98,7 @@ const PurState = (props) => {
     dispatch({ type: DEFAULT });
   };
 
-  const switchPage = (value, id = null) => {
+  const switchPage = (value, value2 = null) => {
     switch (value) {
       case 'caseSelector':
         dispatch({ type: PURPAGE_SWITCH, payload: value });
@@ -100,13 +109,15 @@ const PurState = (props) => {
         dispatch({ type: OS_CURRENT, payload: null });
         break;
       case 'orderSummary':
+        // const subject = value2
         dispatch({ type: PURPAGE_SWITCH, payload: value });
-        dispatch({ type: PO_CURRENT, payload: id });
+        dispatch({ type: PO_CURRENT, payload: null });
         dispatch({ type: PO_CURRENT_MTRLPRICE, payload: [] });
         break;
       case 'purchaseOrder':
+        const subject = value2;
         dispatch({ type: PURPAGE_SWITCH, payload: value });
-        dispatch({ type: PO_CURRENT, payload: id });
+        dispatch({ type: PO_CURRENT, payload: subject });
         break;
       // case null:
       // case '':
@@ -173,6 +184,41 @@ const PurState = (props) => {
     }
   };
 
+  const updateCondition = (e) => {
+    const nameOfTarget = e.target.name;
+    const idOfTarget = e.target.id;
+    const value = e.target.value;
+    const idOfItem = String(e.target.id).slice(
+      nameOfTarget.length,
+      idOfTarget.length
+    );
+
+    let subject = state.currentPo;
+    switch (nameOfTarget) {
+      case 'addCondition':
+        subject.conditions.push({
+          id: uuidv4() + generateId(),
+          condition: null,
+          conditionDescription: null,
+        });
+        break;
+      case 'condition':
+      case 'conditionDescription':
+        subject.conditions.map((c) => {
+          if (c.id === idOfItem) {
+            c[nameOfTarget] = value;
+          }
+        });
+        break;
+      case 'deleteCondition':
+        subject.conditions = subject.conditions.filter((c) => c.id != value);
+        break;
+      default:
+    }
+
+    dispatch({ type: PO_CURRENT, payload: subject });
+  };
+
   return (
     <PurContext.Provider
       value={{
@@ -192,6 +238,7 @@ const PurState = (props) => {
         switchOsCurrent,
         getMaterialPrice,
         deleteOs,
+        updateCondition,
       }}
     >
       {props.children}

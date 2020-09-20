@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import AuthUserContext from '../../../../context/authUser/authUserContext';
+import AuthUserContext from '../../../context/authUser/authUserContext';
 
 function ConfirmArea() {
   const authUserContext = useContext(AuthUserContext);

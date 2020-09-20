@@ -154,8 +154,15 @@ router.post('/', authUser, async (req, res) => {
             // console.log('The existingCaseMtrl', existCaseMtrl); // Test Code
 
             if (existCaseMtrl.length === 0) {
-              if (!supplierList.includes(supplier)) {
-                supplierList.push(supplier);
+              const checkSupplier = supplierList.filter(
+                (s) => s.supplier === supplier
+              ).length;
+              if (!checkSupplier) {
+                supplierList.push({
+                  supplier: supplier,
+                  conditions: [],
+                  poConfirmDate: null,
+                });
               }
 
               caseMtrls.push({

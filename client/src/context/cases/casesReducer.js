@@ -140,7 +140,7 @@ export default (state, action) => {
           },
         ],
         formIsHalfFilledOut: true,
-        error: null,
+        error: action.type === CASE_CLEAR ? null : action.payload,
         isUpdated: null,
         isEditingCase: false,
         isBoardMode: false,

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import QuoContext from '../../../../context/quo/quoContext';
+// import QuoContext from '../../../../context/quo/quoContext';
 import DeleteBtnSmall from '../../btns/DeleteBtnSmall';
 import Select from '../../select/Select';
 
@@ -13,36 +13,36 @@ const ConditionItem = ({
   inputName,
   inputOnChange,
 }) => {
-  const quoContext = useContext(QuoContext);
+  // const quoContext = useContext(QuoContext);
 
-  const {
-    isQuotating,
-    switchQuoFormSelector,
-    currentQuoForm,
-    updateCurrentQuoForm,
-  } = quoContext;
-  const {
-    _id,
-    quoNo,
-    quoSizes,
-    quocWays,
-    currency,
-    cmpts,
-    mQuos,
-    otherExpenses,
-    fob,
-    conditions,
-  } = currentQuoForm;
+  // const {
+  //   isQuotating,
+  //   switchQuoFormSelector,
+  //   currentQuoForm,
+  //   updateCurrentQuoForm,
+  // } = quoContext;
+  // const {
+  //   _id,
+  //   quoNo,
+  //   quoSizes,
+  //   quocWays,
+  //   currency,
+  //   cmpts,
+  //   mQuos,
+  //   otherExpenses,
+  //   fob,
+  //   conditions,
+  // } = currentQuoForm;
 
-  const onClick = (e) => {
-    e.preventDefault();
-    updateCurrentQuoForm(e);
-  };
+  // const onClick = (e) => {
+  //   e.preventDefault();
+  //   updateCurrentQuoForm(e);
+  // };
 
-  const onChange = (e) => {
-    e.preventDefault();
-    inputOnChange(e);
-  };
+  // const onChange = (e) => {
+  //   e.preventDefault();
+  //   inputOnChange(e);
+  // };
 
   //   const addNumber = (e) => {
   //     e.preventDefault();
