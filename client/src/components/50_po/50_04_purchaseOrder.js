@@ -1,6 +1,6 @@
 import React, { useContext, Fragment, useEffect } from 'react';
 import PurContext from '../../context/pur/purContext';
-import AuthUserContext from '../../context/authUser/authUserContext';
+// import AuthUserContext from '../../context/authUser/authUserContext';
 
 // Component
 import PoItem from './50_04_01_poItem';
@@ -17,11 +17,12 @@ const PurchaseOrder = () => {
     currentPo,
     getMaterialPrice,
     updateCondition,
+    uploadPO,
   } = purContext;
-  const { osNo, caseMtrls } = currentOrderSummary;
+  const { _id, osNo, caseMtrls } = currentOrderSummary;
 
-  const authUserContext = useContext(AuthUserContext);
-  const { comName, comNameTail, comAddress, comPhone } = authUserContext;
+  // const authUserContext = useContext(AuthUserContext);
+  // const { comName, comNameTail, comAddress, comPhone } = authUserContext;
 
   useEffect(() => {
     const currentMtrls = caseMtrls.filter((mtrl) => {
@@ -41,6 +42,11 @@ const PurchaseOrder = () => {
     updateCondition(e);
   };
 
+  const submit = (e) => {
+    e.preventDefault();
+    uploadPO(_id, currentPo);
+  };
+
   return (
     <div className=''>
       {/* {currentPoPriceList === [] ? null : (
@@ -58,6 +64,7 @@ const PurchaseOrder = () => {
       <div>To : {String(currentPo.supplier).toUpperCase()}</div>
       <div>ATTN: The contactor of the T2</div>
       <br />
+      <form id='updatePurchaseOrder' onSubmit={submit}></form>
       <section id='purchaseListArea' className='mb-2'>
         <div className='fs-lead'>Materials</div>
         <div className='grid-Pur-Mtrl bd-light bg-cp-2-light m-0 p-0 fs-small'>

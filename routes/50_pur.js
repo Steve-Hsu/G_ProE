@@ -378,4 +378,81 @@ router.delete('/deleteos/:osId', authUser, async (req, res) => {
   });
 });
 
+// @route   POST api/purchase/updatecondition/:osId/:supplierId
+// @desc    Update the conditions in the suppliers of OS and return the suppliers
+// @access  Private
+router.post('/purchaseorder/:osId', authUser, async (req, res) => {
+  console.log('Start upload Po'); // Test Code
+  let user = await User.findById(req.user.id);
+  if (!user.po) {
+    return res.status(400).json({ msg: 'Out of authority' });
+  }
+  const comId = req.user.company;
+  const osId = req.params.osId;
+  const { supplier, priceList } = req.body;
+  // console.log('the body', req.body); // test Code
+  // the currentPo is the name of the supplier
+  const checkIfConfirmed = supplier.poConfirmDate;
+  // console.log('the id of the supplier', supplier._id); // test Code
+  // console.log('The conditions of the supplier', supplier.conditions); // Test Code
+
+  try {
+    const updatedSuppliers = await OS.findOneAndUpdate(
+      { company: comId, _id: osId, 'suppliers._id': supplier._id },
+      { $set: { 'suppliers.$.conditions': supplier.conditions } },
+      { projection: { _id: 0, suppliers: 1 } }
+    );
+
+    if (checkIfConfirmed) {
+      const orderSummary = await OS.findOne(
+        {
+          company: comId,
+          _id: osId,
+        },
+        { caseMtrls: 1 }
+      );
+      const caseMtrls = orderSummary.caseMtrls;
+
+      const newCasaMtrl = await caseMtrls.map((mtrl) => {
+        thePrice = priceList.filter((p) => p.id === mtrl.id);
+        if (thePrice.length > 0) {
+          mtrl.price = thePrice[0];
+        }
+      });
+
+      const updateCaseMtrl = await OS.findOneAndUpdate(
+        {
+          company: comId,
+          _id: osId,
+        },
+        {
+          set: {
+            caseMtrls: newCasaMtrl,
+          },
+        },
+        { caseMtrls: 1 }
+      );
+
+      const result = {
+        updatedSuppliers: updatedSuppliers,
+        updateCaseMtrl: updateCaseMtrl,
+      };
+      // console.log('the checkIfConfirmed is true triggered, the result', result); // Test Code
+      console.log('The result with suppliers and caseMtrl is returned');
+      return res.json(result);
+    } else {
+      const result = {
+        updatedSuppliers: updatedSuppliers,
+      };
+      // console.log(
+      //   'the checkIfConfirmed is false triggered, the result',
+      //   result
+      // ); // Test Code
+      console.log('The result with suppliers is returned');
+      return res.json(result);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+});
 module.exports = router;

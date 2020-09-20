@@ -37,7 +37,7 @@ const LeftBar = ({ currentPath }) => {
     downLoadmtrlPrice,
   } = quoContext;
 
-  const { openPage } = purContext;
+  const { openPage, currentPo } = purContext;
 
   const theCase = quotation.theCase;
 
@@ -57,15 +57,20 @@ const LeftBar = ({ currentPath }) => {
   switch (currentPath) {
     case '/api/case/merchandiser':
       currentPage = 'case';
+      console.log(currentPage);
       break;
     case '/api/case/mprice':
       currentPage = 'mprice';
+      console.log(currentPage);
       break;
     case '/api/quogarment':
       currentPage = 'quotation';
+      console.log(currentPage);
       break;
     case '/api/purchase':
       currentPage = 'purchase';
+      console.log(currentPage);
+      break;
     default:
   }
 
@@ -120,10 +125,18 @@ const LeftBar = ({ currentPath }) => {
         }
         break;
       case '/api/purchase':
-        obj = {
-          label: 'Create Order Summary',
-          form: 'purchase',
-        };
+        if (openPage === 'purchaseOrder') {
+          obj = {
+            label: 'Update PO',
+            form: 'updatePurchaseOrder',
+          };
+        } else {
+          obj = {
+            label: 'Create Order Summary',
+            form: 'purchase',
+          };
+        }
+
         break;
       default:
     }
@@ -234,19 +247,7 @@ const LeftBar = ({ currentPath }) => {
     }
   };
 
-  const printPage = (id) => {
-    // var prtContent = document.getElementById(id);
-    // console.log(prtContent); // Test Code
-    // var WinPrint = window.open(
-    //   '',
-    //   '',
-    //   'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0'
-    // );
-    // WinPrint.document.write(prtContent.innerHTML);
-    // WinPrint.document.close();
-    // WinPrint.focus();
-    // WinPrint.print();
-    // WinPrint.close();
+  const printPage = () => {
     window.print();
   };
 
@@ -268,6 +269,21 @@ const LeftBar = ({ currentPath }) => {
     );
   };
 
+  const normalSummitBtn = () => {
+    return (
+      <div className='round-area bg-cp-3'>
+        <i className='fas fa-cloud-upload-alt fc-cp-1 mb-05'> Save</i>
+        <input
+          type='submit'
+          form={btnSwitcher.form}
+          className='btn bg-cp-2 btn-block'
+          value={btnSwitcher.label || ''}
+          style={{ height: '37px' }}
+        />
+      </div>
+    );
+  };
+
   return (
     <div
       className='container-with-navbar leftbar bg-cp-1 bd-light bd-no-t h-100 noPrint'
@@ -275,50 +291,41 @@ const LeftBar = ({ currentPath }) => {
     >
       <div className='leftbar-component ml-1'>
         {' '}
-        {/* Upper load btn */}
-        {osNo ? null : (
-          <>
-            {isEditingCase === false &&
-            cNo === null &&
-            currentPage === 'case' ? (
-              <div className='round-area bg-cp-3'>
-                <i className='fas fa-folder-plus fc-cp-1 mb-05'> New Case</i>
-                <button
-                  className='btn bg-cp-2 btn-block bd-radius-s bd-light'
-                  name='isEditingCase'
-                  onClick={addCaseValue}
-                >
-                  Case ＋
-                </button>
-              </div>
-            ) : currentPage === 'quotation' &&
-              quotateFor === 'garment' &&
-              isQuotating === null ? null : (
-              <div className='round-area bg-cp-3'>
-                <i className='fas fa-cloud-upload-alt fc-cp-1 mb-05'> Save</i>
-                <input
-                  type='submit'
-                  form={btnSwitcher.form}
-                  className='btn bg-cp-2 btn-block'
-                  value={btnSwitcher.label || ''}
-                  style={{ height: '37px' }}
-                />
-              </div>
-            )}
-          </>
-        )}
-        {/* Submit
-        </input> */}
-        {/* SearchBar */}
-        {/* <SearchBar currentPage={currentPage} /> */}
-        {/* <div className='h-scatter-content mt-1'>
-          <div>New Case</div>
-          <SqBtnLarge
-            label={<i className='fas fa-swatchbook'> Case ＋</i>}
-            name='isEditingCase'
-            onClick={addCaseValue}
-          />
-        </div> */}
+        {/* Submit Btn */}
+        {/*Submit BTN Case Set */}
+        {currentPage === 'case' && osNo === null && isEditingCase === false ? (
+          <div className='round-area bg-cp-3'>
+            <i className='fas fa-folder-plus fc-cp-1 mb-05'> New Case</i>
+            <button
+              className='btn bg-cp-2 btn-block bd-radius-s bd-light'
+              name='isEditingCase'
+              onClick={addCaseValue}
+            >
+              Case ＋
+            </button>
+          </div>
+        ) : currentPage === 'case' &&
+          osNo === null &&
+          isEditingCase === true ? (
+          normalSummitBtn()
+        ) : null}
+        {/*Submit BTN srMtr Set */}
+        {currentPage === 'mprice' ? normalSummitBtn() : null}
+        {/*Submit BTN quotation Set */}
+        {currentPage === 'quotation' &&
+        quotateFor === 'garment' &&
+        isQuotating === null
+          ? null
+          : currentPage === 'quotation'
+          ? normalSummitBtn()
+          : null}
+        {/*Submit BTN Purchase Set */}
+        {currentPage === 'purchase' && openPage === 'caseSelector'
+          ? normalSummitBtn()
+          : currentPage === 'purchase' && openPage === 'purchaseOrder'
+          ? normalSummitBtn()
+          : null}
+        {/* Other Btns */}
         {/* Case Sets */}
         {isEditingCase && currentPage === 'case' ? (
           <>

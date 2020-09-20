@@ -14,6 +14,8 @@ import {
   PO_CURRENT,
   PO_CURRENT_MTRLPRICE,
   OS_DELETE,
+  UPDATE_SUPPLIERS,
+  UPDATE_CASEMTRL,
 } from '../types';
 
 const PurState = (props) => {
@@ -219,6 +221,32 @@ const PurState = (props) => {
     dispatch({ type: PO_CURRENT, payload: subject });
   };
 
+  const uploadPO = async (osId, currentPo, priceList = null) => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const body = { supplier: currentPo, priceList: priceList };
+    try {
+      const res = await axios.post(
+        `/api/purchase/purchaseorder/${osId}`,
+        body,
+        config
+      );
+      console.log('Upload condition succeed');
+
+      const theSuppliers = res.data.updatedSuppliers;
+      dispatch({ type: UPDATE_SUPPLIERS, payload: theSuppliers });
+      // if (!currentPo.poConfirmDate) {
+      //   const updateCaseMtrl = res.data.updateCaseMtrl;
+      //   dispatch({ type: UPDATE_CASEMTRL, payload: updateCaseMtrl });
+      // }
+    } catch (err) {
+      console.log(err.msg, 'Upload conditions failed');
+    }
+  };
+
   return (
     <PurContext.Provider
       value={{
@@ -239,6 +267,7 @@ const PurState = (props) => {
         getMaterialPrice,
         deleteOs,
         updateCondition,
+        uploadPO,
       }}
     >
       {props.children}

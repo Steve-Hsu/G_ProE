@@ -1,5 +1,4 @@
-import React, { useContext } from 'react';
-// import QuoContext from '../../../../context/quo/quoContext';
+import React from 'react';
 import DeleteBtnSmall from '../../btns/DeleteBtnSmall';
 import Select from '../../select/Select';
 
@@ -13,53 +12,7 @@ const ConditionItem = ({
   inputName,
   inputOnChange,
 }) => {
-  // const quoContext = useContext(QuoContext);
-
-  // const {
-  //   isQuotating,
-  //   switchQuoFormSelector,
-  //   currentQuoForm,
-  //   updateCurrentQuoForm,
-  // } = quoContext;
-  // const {
-  //   _id,
-  //   quoNo,
-  //   quoSizes,
-  //   quocWays,
-  //   currency,
-  //   cmpts,
-  //   mQuos,
-  //   otherExpenses,
-  //   fob,
-  //   conditions,
-  // } = currentQuoForm;
-
-  // const onClick = (e) => {
-  //   e.preventDefault();
-  //   updateCurrentQuoForm(e);
-  // };
-
-  // const onChange = (e) => {
-  //   e.preventDefault();
-  //   inputOnChange(e);
-  // };
-
-  //   const addNumber = (e) => {
-  //     e.preventDefault();
-  //     const num = e.target.value;
-  //     const Max = 9999999;
-  //     if (String(num).length > String(Max).length) {
-  //       e.target.value = Max;
-  //       updateCurrentQuoForm(e);
-  //     } else {
-  //       updateCurrentQuoForm(e);
-  //     }
-  //   };
-
-  //@ Style
-
   return (
-    // <div className='mb-1 p-1 card'>
     <div>
       <div className={`grid-Quo-condition m-0 p-0 noPrint ${itemClassName}`}>
         <div className='v-center-content noPrint'>
@@ -81,15 +34,6 @@ const ConditionItem = ({
             selectedOption={subject[selectName]}
             className='noPrint'
           />
-          {/* <input
-          type='text'
-          id={`condition${condition.id}`}
-          name='condition'
-          maxLength='30'
-          value={condition.condition || ''}
-          onChange={onChange}
-          className='whenPrintNoBorder whenPrintFSSmall'
-        /> */}
         </div>
         <div className='v-center-content noPrint'>
           <input

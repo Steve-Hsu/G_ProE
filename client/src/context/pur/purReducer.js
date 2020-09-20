@@ -8,6 +8,8 @@ import {
   PO_CURRENT,
   PO_CURRENT_MTRLPRICE,
   OS_DELETE,
+  UPDATE_SUPPLIERS,
+  UPDATE_CASEMTRL,
 } from '../types';
 
 export default (state, action) => {
@@ -63,6 +65,19 @@ export default (state, action) => {
         osList: state.osList.filter((os) => {
           return os._id !== action.payload;
         }),
+      };
+    case UPDATE_SUPPLIERS:
+      return {
+        ...state,
+        suppliers: action.payload,
+      };
+    case UPDATE_CASEMTRL:
+      return {
+        ...state,
+        currentOrderSummary: {
+          ...state.currentOrderSummary,
+          caseMtrls: action.payload,
+        },
       };
     default:
   }
