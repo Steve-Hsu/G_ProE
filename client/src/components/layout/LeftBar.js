@@ -37,7 +37,7 @@ const LeftBar = ({ currentPath }) => {
     downLoadmtrlPrice,
   } = quoContext;
 
-  const { openPage, currentPo } = purContext;
+  const { openPage, toggleConfirmDate } = purContext;
 
   const theCase = quotation.theCase;
 
@@ -320,11 +320,16 @@ const LeftBar = ({ currentPath }) => {
           ? normalSummitBtn()
           : null}
         {/*Submit BTN Purchase Set */}
-        {currentPage === 'purchase' && openPage === 'caseSelector'
-          ? normalSummitBtn()
-          : currentPage === 'purchase' && openPage === 'purchaseOrder'
-          ? normalSummitBtn()
-          : null}
+        {currentPage === 'purchase' && openPage === 'caseSelector' ? (
+          normalSummitBtn()
+        ) : currentPage === 'purchase' && openPage === 'purchaseOrder' ? (
+          <div>
+            {normalSummitBtn()}
+            <div>
+              <SqBtnLarge onClick={toggleConfirmDate} label='Confirme' />
+            </div>
+          </div>
+        ) : null}
         {/* Other Btns */}
         {/* Case Sets */}
         {isEditingCase && currentPage === 'case' ? (

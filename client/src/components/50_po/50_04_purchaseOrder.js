@@ -32,7 +32,7 @@ const PurchaseOrder = () => {
 
     getMaterialPrice(currentPo, currentMtrls);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [currentPo]);
 
   // let currentMtrls = [];
 

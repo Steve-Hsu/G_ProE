@@ -69,7 +69,13 @@ export default (state, action) => {
     case UPDATE_SUPPLIERS:
       return {
         ...state,
-        suppliers: action.payload,
+        currentOrderSummary: {
+          ...state.currentOrderSummary,
+          suppliers: action.payload,
+        },
+        // currentPo: action.payload.find(
+        //   ({ _id }) => _id === state.currentPo._id
+        // ),
       };
     case UPDATE_CASEMTRL:
       return {

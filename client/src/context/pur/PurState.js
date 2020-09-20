@@ -227,6 +227,14 @@ const PurState = (props) => {
         'Content-Type': 'application/json',
       },
     };
+
+    const checkConfirmDate = currentPo.poConfirmDate;
+    const currentPoId = currentPo._id;
+    console.log('the currentPo id', currentPoId);
+    if (checkConfirmDate) {
+      priceList = state.currentPoPriceList;
+    }
+
     const body = { supplier: currentPo, priceList: priceList };
     try {
       const res = await axios.post(
@@ -237,14 +245,35 @@ const PurState = (props) => {
       console.log('Upload condition succeed');
 
       const theSuppliers = res.data.updatedSuppliers;
+      // console.log(theSuppliers);
+      const subject = theSuppliers.find(({ _id }) => _id === currentPoId);
+      // console.log('The subject', subject);
       dispatch({ type: UPDATE_SUPPLIERS, payload: theSuppliers });
-      // if (!currentPo.poConfirmDate) {
-      //   const updateCaseMtrl = res.data.updateCaseMtrl;
-      //   dispatch({ type: UPDATE_CASEMTRL, payload: updateCaseMtrl });
-      // }
+      dispatch({ type: PO_CURRENT, payload: subject });
+      const updateCaseMtrl = res.data.updateCaseMtrl;
+      console.log('The updateCaseMtrl', updateCaseMtrl);
+      if (updateCaseMtrl) {
+        dispatch({
+          type: UPDATE_CASEMTRL,
+          payload: updateCaseMtrl,
+        });
+      }
     } catch (err) {
       console.log(err.msg, 'Upload conditions failed');
     }
+  };
+
+  const toggleConfirmDate = () => {
+    let subject = state.currentPo;
+    const checkConfirmDate = subject.poConfirmDate;
+    if (checkConfirmDate) {
+      subject.poConfirmDate = null;
+    } else {
+      var date = Date.now();
+      subject.poConfirmDate = date;
+    }
+
+    dispatch({ type: PO_CURRENT, payload: subject });
   };
 
   return (
@@ -268,6 +297,7 @@ const PurState = (props) => {
         deleteOs,
         updateCondition,
         uploadPO,
+        toggleConfirmDate,
       }}
     >
       {props.children}
