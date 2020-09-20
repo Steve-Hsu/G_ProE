@@ -38,7 +38,7 @@ router.get('/ordersummary', authUser, async (req, res) => {
 // @desc    generate order summary by the list of case's Id, then generate purchases orders seperated by suppliers.
 // @access  Private
 router.post('/', authUser, async (req, res) => {
-  console.log('The router api/purchase is triggered');
+  console.log('Generate Order Summary by cases selected');
   const user = await User.findById(req.user.id);
   if (!user.po) {
     return res.status(400).json({ msg: 'Out of authority' });
@@ -255,7 +255,7 @@ router.post('/', authUser, async (req, res) => {
 // @access  Private
 // Result   Return an array named "materialPriceList"
 router.post('/materialprice', authUser, async (req, res) => {
-  console.log('Start making order summary'); // Test Code
+  console.log('Start getting material Price'); // Test Code
   let user = await User.findById(req.user.id);
   if (!user.po) {
     return res.status(400).json({ msg: 'Out of authority' });
@@ -269,8 +269,12 @@ router.post('/materialprice', authUser, async (req, res) => {
   const materialPriceList = [];
 
   const filteredCaseMtrls = caseMtrls.filter((mtrl) => {
-    return mtrl.supplier === currentPo;
+    return mtrl.supplier === currentPo.supplier;
   });
+
+  console.log('The caseMtrls passed in', caseMtrls);
+
+  console.log('filterdCaseMtrls in getting price', filteredCaseMtrls); // Test Code
 
   let caseMtrlsCount = 0;
   const insertSrPrice = new Promise(async (resolve, reject) => {
@@ -279,7 +283,7 @@ router.post('/materialprice', authUser, async (req, res) => {
 
       const srMtrl = await SRMtrl.findOne({
         company: comId,
-        supplier: currentPo,
+        supplier: currentPo.supplier,
         ref_no: ref_no,
       });
       if (!srMtrl || srMtrl.mPrices.length === 0) {
@@ -287,8 +291,8 @@ router.post('/materialprice', authUser, async (req, res) => {
           "No such material or the material dosen't have any price built in the srMtrl database"
         );
         materialPriceList.push({
-          id: id,
-          unit: 'no srMtrl',
+          osMtrlId: id,
+          poUnit: 'no srMtrl',
           currency: 0,
           mPrice: 0,
           moq: 0,
@@ -321,8 +325,8 @@ router.post('/materialprice', authUser, async (req, res) => {
         // console.log(theValues); // Test code
 
         materialPriceList.push({
-          id: id,
-          unit: theValues[0].unit,
+          osMtrlId: id,
+          poUnit: theValues[0].unit,
           currency: theValues[1].currency,
           mPrice: theValues[2].mPrice,
           moq: theValues[3].moq,

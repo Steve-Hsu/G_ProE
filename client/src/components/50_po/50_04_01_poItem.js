@@ -1,7 +1,7 @@
 import React, { useContext, Fragment } from 'react';
 import PurContext from '../../context/pur/purContext';
 
-const PoItem = ({ mtrl, theNumber, className }) => {
+const PoItem = ({ osMtrl, theNumber, className }) => {
   const purContext = useContext(PurContext);
   const { currentPoPriceList } = purContext;
   //   const { suppliers } = currentOrderSummary;
@@ -19,8 +19,10 @@ const PoItem = ({ mtrl, theNumber, className }) => {
   //     e.preventDefault();
   //     switchPage(e.target.value);
   //   };
-  const { supplier, ref_no, mColor, mSizeSPEC, purchaseQtySumUp } = mtrl;
-  const currentMtrlPrice = currentPoPriceList.find(({ id }) => id === mtrl.id);
+  const { supplier, ref_no, mColor, mSizeSPEC, purchaseQtySumUp } = osMtrl;
+  const currentMtrlPrice = currentPoPriceList.find(
+    ({ osMtrlId }) => osMtrlId === osMtrl.id
+  );
 
   // The loading may later than the mount of the component, so here set the default value for these variables to ref
   let unit = '';
@@ -29,7 +31,7 @@ const PoItem = ({ mtrl, theNumber, className }) => {
   let moq = 0;
   let moqPrice = 0;
   if (currentMtrlPrice) {
-    unit = currentMtrlPrice.unit;
+    unit = currentMtrlPrice.poUnit;
     currency = currentMtrlPrice.currency;
     mPrice = currentMtrlPrice.mPrice;
     moq = currentMtrlPrice.moq;

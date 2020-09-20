@@ -7,6 +7,7 @@ import PoItem from './50_04_01_poItem';
 import NoAndDateHeader from '../../components/elements/formPart/NoAndDateHeader';
 import FormTitle from '../../components/elements/formPart/FormTitle';
 import Conditions from '../elements/formPart/Conditions/Conditions';
+import ConfirmArea from '../elements/formPart/ConfirmArea';
 
 const PurchaseOrder = () => {
   // const { downloadCase } = caseContext;
@@ -26,7 +27,7 @@ const PurchaseOrder = () => {
 
   useEffect(() => {
     const currentMtrls = caseMtrls.filter((mtrl) => {
-      return mtrl.supplier === currentPo;
+      return mtrl.supplier === currentPo.supplier;
     });
 
     getMaterialPrice(currentPo, currentMtrls);
@@ -85,14 +86,14 @@ const PurchaseOrder = () => {
             </div>
           ))}
         </div>
-        {caseMtrls.map((mtrl) => {
-          if (mtrl.supplier == currentPo.supplier) {
+        {caseMtrls.map((osMtrl) => {
+          if (osMtrl.supplier == currentPo.supplier) {
             theNumber = theNumber + 1;
             // console.log(mtrl.supplier);
             return (
               <PoItem
-                key={mtrl.id}
-                mtrl={mtrl}
+                key={osMtrl.id}
+                osMtrl={osMtrl}
                 theNumber={theNumber}
                 className='noBreak whenPrintFSSmall'
               />
@@ -117,6 +118,7 @@ const PurchaseOrder = () => {
         inputName='conditionDescription'
         inputOnChange={onClick}
       />
+      <ConfirmArea />
       {/*   onClick,
   subjects,
   deleteBtnName,
