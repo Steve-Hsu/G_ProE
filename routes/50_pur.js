@@ -501,22 +501,20 @@ router.post('/purchaseorder/:osId', authUser, async (req, res) => {
               },
               { new: true }
             ).then((result) => {
-              const results = {
-                updatedSuppliers: updatedSuppliers.suppliers,
-                updateCaseMtrl: result.caseMtrls,
-              };
+              // const results = {
+              //   updatedSuppliers: updatedSuppliers.suppliers,
+              //   updateCaseMtrl: result.caseMtrls,
+              //   os: result,
+              // };
               console.log('The result with suppliers and caseMtrl is returned');
               // console.log('the result', results);
-              return res.json(results);
+              return res.json(result);
             });
           }
         );
       } else {
         console.log('The priceList is empty, return the suppliers only');
-        const result = {
-          updatedSuppliers: updatedSuppliers.suppliers,
-          updateCaseMtrl: null,
-        };
+        const result = updatedSuppliers;
         return res.json(result);
       }
     } else {
@@ -571,13 +569,14 @@ router.post('/purchaseorder/:osId', authUser, async (req, res) => {
           { new: true }
           // { projection: { caseMtrls: 1 } }
         ).then((result) => {
-          const results = {
-            updatedSuppliers: updatedSuppliers.suppliers,
-            updateCaseMtrl: result.caseMtrls,
-          };
+          // const results = {
+          //   updatedSuppliers: updatedSuppliers.suppliers,
+          //   updateCaseMtrl: result.caseMtrls,
+          //   os: result,
+          // };
           console.log('The result with suppliers is returned');
           // console.log('The result', results);
-          return res.json(results);
+          return res.json(result);
         });
       });
     }

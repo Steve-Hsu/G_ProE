@@ -21,12 +21,14 @@ const OrderSummary = () => {
         <div className='h-scatter-content'>
           {' '}
           <div className='mb-5'>The Order Summary : {osNo}</div>
-          <DeleteBtnSmall
-            name='deleteOs'
-            onClick={togglePopover}
-            value={_id}
-            className='m-0 noPrint'
-          />
+          {osConfirmDate === null ? (
+            <DeleteBtnSmall
+              name='deleteOs'
+              onClick={togglePopover}
+              value={_id}
+              className='m-0 noPrint'
+            />
+          ) : null}
         </div>
 
         <div>

@@ -11,42 +11,50 @@ const ConditionItem = ({
   selectOnChange,
   inputName,
   inputOnChange,
+  isDisplay,
 }) => {
   return (
     <div>
-      <div className={`grid-Quo-condition m-0 p-0 noPrint ${itemClassName}`}>
-        <div className='v-center-content noPrint'>
-          <div className='noPrint p-05' style={{ width: '50px' }}>
-            <DeleteBtnSmall
-              name={deleteBtnName}
-              value={subject.id}
-              onClick={deleteBtnOnClick}
-              className='noPrint m-0'
+      {isDisplay === null ? (
+        <div className={`grid-Quo-condition m-0 p-0 noPrint ${itemClassName}`}>
+          <div className='v-center-content noPrint'>
+            <div className='noPrint p-05' style={{ width: '50px' }}>
+              <DeleteBtnSmall
+                name={deleteBtnName}
+                value={subject.id}
+                onClick={deleteBtnOnClick}
+                className='noPrint m-0'
+              />
+            </div>
+
+            <Select
+              purpose={selectName}
+              id={`${selectName}${subject.id}`}
+              subject={subject}
+              name={selectName}
+              onChange={selectOnChange}
+              selectedOption={subject[selectName]}
+              className='noPrint'
             />
           </div>
-
-          <Select
-            purpose={selectName}
-            id={`${selectName}${subject.id}`}
-            subject={subject}
-            name={selectName}
-            onChange={selectOnChange}
-            selectedOption={subject[selectName]}
-            className='noPrint'
-          />
+          <div className='v-center-content noPrint'>
+            <input
+              type='text'
+              id={`${inputName}${subject.id}`}
+              name={inputName}
+              maxLength='200'
+              value={subject[inputName] || ''}
+              onChange={inputOnChange}
+              className='whenPrintNoBorder whenPrintFSSmall ml-05'
+            />
+          </div>
         </div>
-        <div className='v-center-content noPrint'>
-          <input
-            type='text'
-            id={`${inputName}${subject.id}`}
-            name={inputName}
-            maxLength='200'
-            value={subject[inputName] || ''}
-            onChange={inputOnChange}
-            className='whenPrintNoBorder whenPrintFSSmall ml-05'
-          />
+      ) : (
+        <div className='noPrint w-100 mb-05'>
+          <span className='fw-bold'>{subject.condition} : </span>
+          {subject.conditionDescription}
         </div>
-      </div>
+      )}
       {/* Show only when print */}
       <div className='showWhenPrint w-100 fs-small'>
         <span className='fw-bold'>{subject.condition} : </span>

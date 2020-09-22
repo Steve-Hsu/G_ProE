@@ -15,7 +15,7 @@ import {
   PO_CURRENT_MTRLPRICE,
   OS_DELETE,
   UPDATE_SUPPLIERS,
-  UPDATE_CASEMTRL,
+  // UPDATE_CASEMTRL,
 } from '../types';
 
 const PurState = (props) => {
@@ -250,20 +250,21 @@ const PurState = (props) => {
       );
       console.log('Upload condition succeed');
 
-      const theSuppliers = res.data.updatedSuppliers;
+      const theSuppliers = res.data.suppliers;
       // console.log(theSuppliers);
       const subject = theSuppliers.find(({ _id }) => _id === currentPoId);
       // console.log('The subject', subject);
       dispatch({ type: UPDATE_SUPPLIERS, payload: theSuppliers });
       dispatch({ type: PO_CURRENT, payload: subject });
-      const updateCaseMtrl = res.data.updateCaseMtrl;
-      console.log('The updateCaseMtrl', updateCaseMtrl);
-      if (updateCaseMtrl) {
-        dispatch({
-          type: UPDATE_CASEMTRL,
-          payload: updateCaseMtrl,
-        });
-      }
+      dispatch({ type: OS_CURRENT, payload: res.data });
+      // const updateCaseMtrl = res.data.caseMtrls;
+      // console.log('The updateCaseMtrl', updateCaseMtrl);
+      // if (updateCaseMtrl) {
+      //   dispatch({
+      //     type: UPDATE_CASEMTRL,
+      //     payload: updateCaseMtrl,
+      //   });
+      // }
     } catch (err) {
       console.log(err.msg, 'Upload conditions failed');
     }

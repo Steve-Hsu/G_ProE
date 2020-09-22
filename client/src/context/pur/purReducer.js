@@ -9,7 +9,7 @@ import {
   PO_CURRENT_MTRLPRICE,
   OS_DELETE,
   UPDATE_SUPPLIERS,
-  UPDATE_CASEMTRL,
+  // UPDATE_CASEMTRL,
 } from '../types';
 
 export default (state, action) => {
@@ -77,14 +77,14 @@ export default (state, action) => {
         //   ({ _id }) => _id === state.currentPo._id
         // ),
       };
-    case UPDATE_CASEMTRL:
-      return {
-        ...state,
-        currentOrderSummary: {
-          ...state.currentOrderSummary,
-          caseMtrls: action.payload,
-        },
-      };
+    // case UPDATE_CASEMTRL:
+    //   return {
+    //     ...state,
+    //     currentOrderSummary: {
+    //       ...state.currentOrderSummary,
+    //       caseMtrls: action.payload,
+    //     },
+    //   };
     default:
   }
 };

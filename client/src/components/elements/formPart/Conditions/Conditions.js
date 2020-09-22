@@ -12,15 +12,19 @@ const Conditions = ({
   inputName,
   inputOnChange,
   itemClassName,
+  isDisplay = null,
 }) => {
   return (
     <Fragment>
-      <SqBtnLarge
-        name='addCondition'
-        onClick={onClick}
-        label='Add condition'
-        className='noPrint w-15vw mb-05'
-      />
+      {isDisplay === null ? (
+        <SqBtnLarge
+          name='addCondition'
+          onClick={onClick}
+          label='Add condition'
+          className='noPrint w-15vw mb-05'
+        />
+      ) : null}
+
       {subjects.length > 0 ? (
         <section id='conditions' className='mb-2 noBreak'>
           <div className='fs-lead'>Condition</div>
@@ -36,6 +40,7 @@ const Conditions = ({
                   selectOnChange={selectOnChange}
                   inputName={inputName}
                   inputOnChange={inputOnChange}
+                  isDisplay={isDisplay}
                 />
               ))
             : null}

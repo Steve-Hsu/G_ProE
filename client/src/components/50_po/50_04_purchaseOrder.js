@@ -72,22 +72,26 @@ const PurchaseOrder = () => {
       </div>
 
       {['address', 'attn', 'email', 'tel'].map((i) => (
-        <div>
+        <div key={`${i}input`}>
           <div className='grid-Quo-condition p-0 noPrint mb-05'>
             <div className='v-center-content noPrint'>
               <div className='fw-bold'>{i.toUpperCase()} : </div>
             </div>
-            <div className='v-center-content noPrint'>
-              <input
-                type='text'
-                id={`${i}${_id}`}
-                name={i}
-                maxLength='200'
-                value={currentPo[i] || ''}
-                onChange={onChange}
-                className='whenPrintNoBorder whenPrintFSSmall ml-05'
-              />
-            </div>
+            {currentPo.poConfirmDate === null ? (
+              <div className='v-center-content noPrint'>
+                <input
+                  type='text'
+                  id={`${i}${_id}`}
+                  name={i}
+                  maxLength='200'
+                  value={currentPo[i] || ''}
+                  onChange={onChange}
+                  className='whenPrintNoBorder whenPrintFSSmall ml-05'
+                />
+              </div>
+            ) : (
+              <div>{currentPo[i]}</div>
+            )}
           </div>
           <div className='showWhenPrint w-100 fs-small'>
             <span className='fw-bold'>{i.toUpperCase()} : </span>
@@ -149,6 +153,7 @@ const PurchaseOrder = () => {
         selectOnChange={onClick}
         inputName='conditionDescription'
         inputOnChange={onClick}
+        isDisplay={currentPo.poConfirmDate}
       />
       <ConfirmArea />
       {/*   onClick,
