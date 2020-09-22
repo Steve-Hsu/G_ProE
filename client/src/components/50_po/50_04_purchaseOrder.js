@@ -17,7 +17,7 @@ const PurchaseOrder = () => {
     currentOrderSummary,
     currentPo,
     getMaterialPrice,
-    updateCondition,
+    updatePOInform,
     uploadPO,
   } = purContext;
   const { _id, osNo, caseMtrls } = currentOrderSummary;
@@ -40,12 +40,17 @@ const PurchaseOrder = () => {
 
   const onClick = (e) => {
     e.preventDefault();
-    updateCondition(e);
+    updatePOInform(e);
   };
 
   const submit = (e) => {
     e.preventDefault();
     uploadPO(_id, currentPo);
+  };
+
+  const onChange = (e) => {
+    e.preventDefault();
+    updatePOInform(e);
   };
 
   return (
@@ -62,8 +67,35 @@ const PurchaseOrder = () => {
       <div>{comAddress}</div>
       <div>{comPhone}</div>
       <br /> */}
-      <div>To : {String(currentPo.supplier).toUpperCase()}</div>
-      <div>ATTN: The contactor of the T2</div>
+      <div className='fs-lead'>
+        To : {String(currentPo.supplier).toUpperCase()}
+      </div>
+
+      {['address', 'attn', 'email', 'tel'].map((i) => (
+        <div>
+          <div className='grid-Quo-condition p-0 noPrint mb-05'>
+            <div className='v-center-content noPrint'>
+              <div className='fw-bold'>{i.toUpperCase()} : </div>
+            </div>
+            <div className='v-center-content noPrint'>
+              <input
+                type='text'
+                id={`${i}${_id}`}
+                name={i}
+                maxLength='200'
+                value={currentPo[i] || ''}
+                onChange={onChange}
+                className='whenPrintNoBorder whenPrintFSSmall ml-05'
+              />
+            </div>
+          </div>
+          <div className='showWhenPrint w-100 fs-small'>
+            <span className='fw-bold'>{i.toUpperCase()} : </span>
+            {currentPo[i]}
+          </div>
+        </div>
+      ))}
+
       <br />
       <form id='updatePurchaseOrder' onSubmit={submit}></form>
       <section id='purchaseListArea' className='mb-2'>

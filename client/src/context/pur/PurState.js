@@ -186,7 +186,7 @@ const PurState = (props) => {
     }
   };
 
-  const updateCondition = (e) => {
+  const updatePOInform = (e) => {
     const nameOfTarget = e.target.name;
     const idOfTarget = e.target.id;
     const value = e.target.value;
@@ -214,6 +214,12 @@ const PurState = (props) => {
         break;
       case 'deleteCondition':
         subject.conditions = subject.conditions.filter((c) => c.id != value);
+        break;
+      case 'address':
+      case 'attn':
+      case 'email':
+      case 'tel':
+        subject[nameOfTarget] = value;
         break;
       default:
     }
@@ -295,7 +301,7 @@ const PurState = (props) => {
         switchOsCurrent,
         getMaterialPrice,
         deleteOs,
-        updateCondition,
+        updatePOInform,
         uploadPO,
         toggleConfirmDate,
       }}

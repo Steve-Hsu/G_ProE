@@ -17,6 +17,7 @@ import ItemSelector from '../itemSelector/ItemSelector';
 import GoBackBtn from '../elements/btns/GoBackBtn';
 import SqToggleSwitchL from '../elements/btns/SqToggleSwitchL';
 import DeleteBtnSmall from '../elements/btns/DeleteBtnSmall';
+import LockedBadge from '../elements/badge/LockedBadge';
 
 const CaseForm = ({ props }) => {
   //@ Init Context
@@ -243,12 +244,13 @@ const CaseForm = ({ props }) => {
                   </select>
                 </div>
                 {osNo ? (
-                  <div className='grid-4 mt-md round-card bg-cp-bg-light-c mb-0'>
-                    <div className='v-center-content'>Order Summary.</div>
-                    <div className='v-center-content'>{osNo}</div>
-                    <div className='v-center-content'>Date.</div>
-                    <div className='v-center-content'>{poDate}</div>
-                  </div>
+                  <LockedBadge
+                    labels={[
+                      `Order Summary : ${osNo}`,
+                      `Date ${poDate}`,
+                      "The case's purchase order is made, therefore you can't update the case",
+                    ]}
+                  />
                 ) : null}
               </div>
 

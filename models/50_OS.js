@@ -35,6 +35,18 @@ const OSSchema = mongoose.Schema({
       supplier: {
         type: String,
       },
+      address: {
+        type: String,
+      },
+      attn: {
+        type: String,
+      },
+      email: {
+        type: String,
+      },
+      tel: {
+        type: String,
+      },
       conditions: {
         type: Array,
       },

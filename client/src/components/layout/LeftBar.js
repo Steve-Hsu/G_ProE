@@ -6,6 +6,7 @@ import SearchBar from './SearchBar';
 // import Papa from 'papaparse';
 import readXlsxFile from 'read-excel-file';
 import SqBtnLarge from '../elements/btns/SqBtnLarge';
+import LockedBadge from '../elements/badge/LockedBadge';
 // Components
 import SizeSelector from '../40_quo/40_03_01_sizeSelector';
 import CWaySelector from '../40_quo/40_03_02_cWaySelector';
@@ -37,7 +38,7 @@ const LeftBar = ({ currentPath }) => {
     downLoadmtrlPrice,
   } = quoContext;
 
-  const { openPage, toggleConfirmDate } = purContext;
+  const { openPage, toggleConfirmDate, currentPo } = purContext;
 
   const theCase = quotation.theCase;
 
@@ -320,16 +321,10 @@ const LeftBar = ({ currentPath }) => {
           ? normalSummitBtn()
           : null}
         {/*Submit BTN Purchase Set */}
-        {currentPage === 'purchase' && openPage === 'caseSelector' ? (
-          normalSummitBtn()
-        ) : currentPage === 'purchase' && openPage === 'purchaseOrder' ? (
-          <div>
-            {normalSummitBtn()}
-            <div>
-              <SqBtnLarge onClick={toggleConfirmDate} label='Confirme' />
-            </div>
-          </div>
-        ) : null}
+        {(currentPage === 'purchase' && openPage === 'caseSelector') ||
+        (currentPage === 'purchase' && openPage === 'purchaseOrder')
+          ? normalSummitBtn()
+          : null}
         {/* Other Btns */}
         {/* Case Sets */}
         {isEditingCase && currentPage === 'case' ? (
@@ -464,7 +459,36 @@ const LeftBar = ({ currentPath }) => {
         }
         {/* Purchase Set */}
         {currentPath === '/api/purchase' && openPage === 'purchaseOrder' ? (
-          <div>{printOutElement()}</div>
+          <div>
+            {printOutElement()}
+            <div className='round-area bd-light'>
+              <div>
+                <i className='fas fa-file-import'> Confirm the PO</i>
+              </div>
+              {currentPo.poConfirmDate ? (
+                <LockedBadge
+                  labels={[
+                    <i className='fas fa-check-circle'> PO Has Confirmed</i>,
+                  ]}
+                  style={{ marginTop: '0.5rem' }}
+                  className='h-center-content'
+                />
+              ) : (
+                <LockedBadge
+                  labels={['Not Confirmed']}
+                  style={{
+                    background: 'var(--fade-color)',
+                    marginTop: '0.5rem',
+                  }}
+                  className='h-center-content'
+                />
+              )}
+              <div className='h-scatter-content mt-05'>
+                <div></div>
+                <SqBtnLarge onClick={toggleConfirmDate} label='Confirme' />
+              </div>
+            </div>
+          </div>
         ) : null}
       </div>
     </div>

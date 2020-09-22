@@ -1,31 +1,34 @@
 import React, { useContext, Fragment } from 'react';
 import PurContext from '../../context/pur/purContext';
 import Board from '../elements/board/Board';
+import DeleteBtnSmall from '../elements/btns/DeleteBtnSmall';
+import PopoverContext from '../../context/popover/popoverContext';
+import DeletePopover from '../layout/DeletePopover';
+import LockedBadge from '../elements/badge/LockedBadge';
 
 const OrderSummary = () => {
-  // const { downloadCase } = caseContext;
+  const popoverContext = useContext(PopoverContext);
+  const { popover, current, togglePopover } = popoverContext;
+
   const purContext = useContext(PurContext);
   const { switchPage, currentOrderSummary } = purContext;
-  const { osNo, cNos, suppliers } = currentOrderSummary;
-
-  // const labelSwitcher = (label) => {
-  //   switch (label) {
-  //     case 'osNo':
-  //       return 'Order Summary No.';
-  //     default:
-  //       return label.charAt(0).toUpperCase() + label.slice(1);
-  //   }
-  // };
-
-  // const onClick = (e) => {
-  //   e.preventDefault();
-  //   switchPage(e.target.value, e.target.id);
-  // };
+  const { _id, osNo, cNos, suppliers, osConfirmDate } = currentOrderSummary;
 
   return (
     <Fragment>
+      {popover ? <DeletePopover key={current._id} /> : null}
       <div className='round-area bd-light bg-cp-1 mb-05 mt-05'>
-        <div className='mb-5'>The Order Summary : {osNo}</div>
+        <div className='h-scatter-content'>
+          {' '}
+          <div className='mb-5'>The Order Summary : {osNo}</div>
+          <DeleteBtnSmall
+            name='deleteOs'
+            onClick={togglePopover}
+            value={_id}
+            className='m-0 noPrint'
+          />
+        </div>
+
         <div>
           The case purchased :{' '}
           {cNos.map((cNo) => {
@@ -36,6 +39,14 @@ const OrderSummary = () => {
             );
           })}
         </div>
+        {osConfirmDate !== null ? (
+          <LockedBadge
+            labels={[
+              'All the Purchase Order is confirmed.',
+              'The date is sent to accounting Department',
+            ]}
+          />
+        ) : null}
       </div>
 
       <Board

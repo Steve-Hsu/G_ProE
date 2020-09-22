@@ -1431,9 +1431,7 @@ input[type='submit']:focus {
 .mt {
   margin-top: var(--gap);
 }
-.mt-0 {
-  margin-top: 0;
-}
+
 .mt-05 {
   margin-top: 0.5rem;
 }
@@ -1458,9 +1456,7 @@ input[type='submit']:focus {
 .mb {
   margin-bottom: var(--gap);
 }
-.mb-0 {
-  margin-bottom: 0;
-}
+
 .mb-05 {
   margin-bottom: 0.5rem;
 }
@@ -1473,13 +1469,12 @@ input[type='submit']:focus {
 .mb-3 {
   margin-bottom: 3rem;
 }
+
 /* Margin - left */
 .ml {
   margin-left: var(--gap);
 }
-.ml-0 {
-  margin-left: 0;
-}
+
 .ml-05 {
   margin-left: 0.5rem;
 }
@@ -1497,9 +1492,7 @@ input[type='submit']:focus {
 .mr {
   margin-right: var(--gap);
 }
-.mr-0 {
-  margin-right: 0;
-}
+
 .mr-05 {
   margin-right: 0.5rem;
 }
@@ -1511,6 +1504,21 @@ input[type='submit']:focus {
 }
 .mr-3 {
   margin-right: 3rem;
+}
+
+/* Margin - cancel */
+.mt-0 {
+  margin-top: 0;
+}
+
+.mb-0 {
+  margin-bottom: 0;
+}
+.ml-0 {
+  margin-left: 0;
+}
+.mr-0 {
+  margin-right: 0;
 }
 
 .m-0 {
@@ -1650,6 +1658,10 @@ input[type='submit']:focus {
   background: var(--success-color);
 }
 
+.bg-fade {
+  background: var(--fade-color);
+}
+
 .bg-no {
   background: rgba(255, 255, 255, 0);
 }
@@ -1762,6 +1774,12 @@ input[type='submit']:focus {
   transform: rotate(90deg);
   transition: all 0.3s;
 }
+/* 
+.hover-no:hover, .hover-0:hover{
+  cursor:
+  transition: all 0;
+
+}  */
 
 /* @Print setting */
 

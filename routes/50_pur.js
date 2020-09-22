@@ -371,21 +371,35 @@ router.delete('/deleteos/:osId', authUser, async (req, res) => {
 
   const comId = req.user.company;
   const osId = req.params.osId;
-  const theOS = await OS.findOne({ company: comId, _id: osId }, { cNos: 1 });
+  const theOS = await OS.findOne(
+    { company: comId, _id: osId },
+    { cNos: 1, osConfirmDate: 1 }
+  );
+
   console.log(osId); // Test Code
   //@ Turn the poDate of cases back to "null"
   // Don't need return any of this result immediately, so don't make any promise here.
   const caseList = theOS.cNos;
-  caseList.map(async (c) => {
-    await Case.updateOne({ cNo: c }, { poDate: null, osNo: null });
-  });
-
-  await OS.findOneAndDelete({ company: comId, _id: osId }).then(() => {
-    console.log(`The order summary ${osId} is deleted.`);
-    return res.json({
-      msg: `The order summary ${osId} is deleted.`,
+  const osConfirmDate = theOS.osConfirmDate;
+  if (!osConfirmDate) {
+    caseList.map(async (c) => {
+      await Case.updateOne({ cNo: c }, { poDate: null, osNo: null });
     });
-  });
+
+    await OS.findOneAndDelete({ company: comId, _id: osId }).then(() => {
+      const returnMsg = `The order summary ${osId} is deleted.`;
+      console.log(returnMsg);
+      return res.json({
+        msg: returnMsg,
+      });
+    });
+  } else {
+    const returnMsg = `The order summary ${osId} is confirmed, It can't be delete, for deleting the OS, please cancel all the poConfirmDate in the Po of the os.`;
+    console.log(returnMsg);
+    return res.json({
+      msg: returnMsg,
+    });
+  }
 });
 
 // @route   POST api/purchase/updatecondition/:osId/:supplierId
@@ -411,7 +425,13 @@ router.post('/purchaseorder/:osId', authUser, async (req, res) => {
       const updatedSuppliers = await OS.findOneAndUpdate(
         { company: comId, _id: osId, 'suppliers._id': supplier._id },
         {
-          $set: { 'suppliers.$.conditions': supplier.conditions },
+          $set: {
+            'suppliers.$.address': supplier.address,
+            'suppliers.$.attn': supplier.attn,
+            'suppliers.$.email': supplier.email,
+            'suppliers.$.tel': supplier.tel,
+            'suppliers.$.conditions': supplier.conditions,
+          },
           $currentDate: { 'suppliers.$.poConfirmDate': Date },
         },
         { new: true }
@@ -504,6 +524,10 @@ router.post('/purchaseorder/:osId', authUser, async (req, res) => {
         { company: comId, _id: osId, 'suppliers._id': supplier._id },
         {
           $set: {
+            'suppliers.$.address': supplier.address,
+            'suppliers.$.attn': supplier.attn,
+            'suppliers.$.email': supplier.email,
+            'suppliers.$.tel': supplier.tel,
             'suppliers.$.conditions': supplier.conditions,
             'suppliers.$.poConfirmDate': null,
           },
@@ -541,7 +565,7 @@ router.post('/purchaseorder/:osId', authUser, async (req, res) => {
           {
             $set: {
               caseMtrls: newCaseMtrl,
-              osNo: null,
+              osConfirmDate: null,
             },
           },
           { new: true }

@@ -101,7 +101,11 @@ const DeletePopover = () => {
   };
 
   const doubleCheckInput = () => {
-    if (current.target === 'case' || current.target === 'quoForm') {
+    if (
+      current.target === 'case' ||
+      current.target === 'quoForm' ||
+      current.target === 'deleteOs'
+    ) {
       return (
         <div key='doubleCheckDiv' className='px-1'>
           <div className='fs-tiny'>Enter the Number for deleting</div>
@@ -110,7 +114,13 @@ const DeletePopover = () => {
             type='text'
             value={doubleCheck || ''}
             onChange={addDoubleCheckValue}
-            placeholder={current.cNo ? current.cNo : current.quoNo}
+            placeholder={
+              current.cNo
+                ? current.cNo
+                : current.quoNo
+                ? current.quoNo
+                : current.osNo
+            }
           />
         </div>
       );
@@ -143,8 +153,10 @@ const DeletePopover = () => {
               <div className='center-content w-50'>
                 {(current.target === 'case' && doubleCheck != current.cNo) ||
                 (current.target === 'quoForm' &&
-                  doubleCheck != current.quoNo) ? (
-                  <div className='btn btn-sq btn-block sq-block bg-cp-2 fc-cp-3 center-content'>
+                  doubleCheck != current.quoNo) ||
+                (current.target === 'deleteOs' &&
+                  doubleCheck != current.osNo) ? (
+                  <div className='sq-block bd-radius-s  bg-fade fc-fade-dark center-content'>
                     Delete
                   </div>
                 ) : (

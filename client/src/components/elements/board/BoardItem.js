@@ -4,6 +4,7 @@ import PopoverContext from '../../../context/popover/popoverContext';
 import SrMtrl from '../../30_srMtrl/30_01_srMtrl';
 
 import Mtrl from '../../20_cases/1_6_Mtrl';
+import LockedBadge from '../badge/LockedBadge';
 
 const BoardItem = ({
   id,
@@ -78,14 +79,37 @@ const BoardItem = ({
       ) : purpose === 'purchaseOrder' ? (
         <div
           className='boardChild round-card bg-cp-elem bd-light hover-cp-2'
-          // style={selectedBackGround(id)}
+          style={{ position: 'relative' }}
           onClick={onClick}
         >
           <div>
             No.
             {idx + 1}
           </div>
-          {subject.supplier}
+          <div>{subject.supplier}</div>
+          {subject.poConfirmDate ? (
+            <div
+              className='flexBox w-100'
+              style={{
+                position: 'absolute',
+                bottom: '0.5rem',
+                marginLeft: '-1rem',
+                paddingLeft: '1rem',
+                paddingRight: '1rem',
+              }}
+            >
+              <LockedBadge
+                id={id}
+                key={`confirmedBadge${id}`}
+                labels={[<i className='fas fa-check-circle'> Confirmed</i>]}
+                className='center-content mt-0'
+                style={{
+                  height: '2rem',
+                  flex: '1 1 auto',
+                }}
+              />
+            </div>
+          ) : null}
         </div>
       ) : (
         <div
@@ -108,10 +132,6 @@ const BoardItem = ({
               </div>
             );
           })}
-          {/* <div>{subject[target]}</div>
-          <div>{subject.supplier}</div>
-          <div>{subject.ref_no}</div>
-          <div>{subject.position}</div> */}
         </div>
       )}
     </Fragment>
