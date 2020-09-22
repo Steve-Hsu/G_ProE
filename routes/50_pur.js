@@ -423,9 +423,11 @@ router.post('/purchaseorder/:osId', authUser, async (req, res) => {
             company: comId,
             _id: osId,
           },
-          { caseMtrls: 1 }
+          { caseMtrls: 1, suppliers: 1 }
         );
         const caseMtrls = orderSummary.caseMtrls;
+        const suppliers = orderSummary.suppliers;
+
         // console.log('the caseMtrls', caseMtrls); // Test code
         // console.log('The priceList', priceList); // test code
         const insertPrice = new Promise(async (resolve) => {
@@ -448,30 +450,47 @@ router.post('/purchaseorder/:osId', authUser, async (req, res) => {
           });
         });
 
-        Promise.all([insertPrice]).then(async (result) => {
-          const newCaseMtrl = result[0];
-          console.log('the newCaseMtrl', newCaseMtrl);
-          await OS.findOneAndUpdate(
-            {
-              company: comId,
-              _id: osId,
-            },
-            {
-              $set: {
-                caseMtrls: newCaseMtrl,
-              },
-            },
-            { new: true }
-          ).then((result) => {
-            const results = {
-              updatedSuppliers: updatedSuppliers.suppliers,
-              updateCaseMtrl: result.caseMtrls,
-            };
-            console.log('The result with suppliers and caseMtrl is returned');
-            // console.log('the result', results);
-            return res.json(results);
-          });
+        const checkSuppliersOsDate = new Promise(async (resolve) => {
+          const poConfirmDateNulls = suppliers.filter(
+            (s) => s.poConfirmDate === null
+          ).length;
+          console.log(poConfirmDateNulls);
+          if (poConfirmDateNulls) {
+            resolve(null);
+          } else {
+            resolve(Date.now());
+          }
         });
+
+        Promise.all([insertPrice, checkSuppliersOsDate]).then(
+          async (result) => {
+            const newCaseMtrl = result[0];
+            const osConfirmDate = result[1];
+            console.log('the newCaseMtrl', newCaseMtrl);
+            console.log('The osConfirm Date', osConfirmDate);
+            await OS.findOneAndUpdate(
+              {
+                company: comId,
+                _id: osId,
+              },
+              {
+                $set: {
+                  caseMtrls: newCaseMtrl,
+                  osConfirmDate: osConfirmDate,
+                },
+              },
+              { new: true }
+            ).then((result) => {
+              const results = {
+                updatedSuppliers: updatedSuppliers.suppliers,
+                updateCaseMtrl: result.caseMtrls,
+              };
+              console.log('The result with suppliers and caseMtrl is returned');
+              // console.log('the result', results);
+              return res.json(results);
+            });
+          }
+        );
       } else {
         console.log('The priceList is empty, return the suppliers only');
         const result = {
@@ -522,6 +541,7 @@ router.post('/purchaseorder/:osId', authUser, async (req, res) => {
           {
             $set: {
               caseMtrls: newCaseMtrl,
+              osNo: null,
             },
           },
           { new: true }
