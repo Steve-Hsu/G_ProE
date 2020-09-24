@@ -19,6 +19,7 @@ const PurchaseOrder = () => {
     getMaterialPrice,
     updatePOInform,
     uploadPO,
+    getPOTotal,
   } = purContext;
   const { _id, osNo, caseMtrls } = currentOrderSummary;
 
@@ -29,10 +30,12 @@ const PurchaseOrder = () => {
     const currentMtrls = caseMtrls.filter((mtrl) => {
       return mtrl.supplier === currentPo.supplier;
     });
+    getPOTotal(currentPo.supplier);
 
     getMaterialPrice(currentPo, currentMtrls);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPo]);
+  }, [currentPo, currentPo.poConfirmDate]);
 
   // let currentMtrls = [];
 
@@ -140,7 +143,7 @@ const PurchaseOrder = () => {
         })}
         <div className='mt-05 h-scatter-content'>
           <div></div>
-          <div>{`Subtotal : `}</div>
+          <div>{`Total : `}</div>
         </div>
       </section>
 

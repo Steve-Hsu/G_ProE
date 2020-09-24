@@ -28,7 +28,7 @@ const PurState = (props) => {
     currentPoPriceList: [],
   };
   const [state, dispatch] = useReducer(PurReducer, initialState);
-  const { caseList, openPage, currentOrderSummary } = state;
+  const { caseList, openPage, currentOrderSummary, currentPo } = state;
   //@ Id for prevent uuid duplicated
   const generateId = () => {
     return (
@@ -283,6 +283,72 @@ const PurState = (props) => {
     dispatch({ type: PO_CURRENT, payload: subject });
   };
 
+  const getPOTotal = (supplier) => {
+    console.log('getPOTotal triggered');
+    let mPrice = 0;
+    let moq = 0;
+    let moqPrice = 0;
+    let total = 0;
+    const theMtrlPrice = (purchaseQtySumUp, mPrice, moq, moqPrice) => {
+      if (typeof moq === 'Number' && typeof moqPrice === 'Number') {
+        if (purchaseQtySumUp > moq) {
+          return Number(mPrice);
+        } else {
+          return Number(moqPrice);
+        }
+      } else {
+        return Number(mPrice);
+      }
+    };
+
+    const cal = new Promise(async (resolve) => {
+      console.log('getPOTotal promise');
+      await currentOrderSummary.caseMtrls.map(async (osMtrl, idx) => {
+        console.log('getPOotal the map');
+        if (osMtrl.supplier == supplier) {
+          if (currentPo.currentMtrlPrice) {
+            const currentMtrlPrice = currentPo.currentMtrlPrice;
+            mPrice = currentMtrlPrice.mPrice;
+            moq = currentMtrlPrice.moq;
+            moqPrice = currentMtrlPrice.moqPrice;
+            // }
+          } else {
+            if (osMtrl.price) {
+              mPrice = osMtrl.price.mPrice;
+              moq = osMtrl.price.moq;
+              moqPrice = osMtrl.price.moqPrice;
+            }
+          }
+          total =
+            total +
+            osMtrl.purchaseQtySumUp *
+              theMtrlPrice(osMtrl.purchaseQtySumUp, mPrice, moq, moqPrice);
+          if (idx + 1 === currentOrderSummary.caseMtrls.length) {
+            console.log('1');
+            resolve(total);
+          }
+        } else {
+          if (idx + 1 === currentOrderSummary.caseMtrls.length) {
+            console.log('2');
+            resolve(total);
+          }
+        }
+        // if (idx + 1 === currentOrderSummary.length) {
+        //   resolve(total);
+        // }
+        // console.log('3');
+      });
+    });
+
+    Promise.all([cal]).then((result) => {
+      console.log('the promise all');
+      const totalFigure = result[0];
+      const subject = currentPo;
+      subject.poTotalFigure = totalFigure;
+      dispatch({ type: PO_CURRENT, payload: subject });
+    });
+  };
+
   return (
     <PurContext.Provider
       value={{
@@ -305,6 +371,7 @@ const PurState = (props) => {
         updatePOInform,
         uploadPO,
         toggleConfirmDate,
+        getPOTotal,
       }}
     >
       {props.children}

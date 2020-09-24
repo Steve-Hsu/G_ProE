@@ -3,7 +3,7 @@ import PurContext from '../../context/pur/purContext';
 
 const PoItem = ({ osMtrl, theNumber, className }) => {
   const purContext = useContext(PurContext);
-  const { currentPoPriceList } = purContext;
+  const { currentPoPriceList, currentPo } = purContext;
   //   const { suppliers } = currentOrderSummary;
 
   //   const labelSwitcher = (label) => {
@@ -30,12 +30,29 @@ const PoItem = ({ osMtrl, theNumber, className }) => {
   let mPrice = 0;
   let moq = 0;
   let moqPrice = 0;
+
+  // if (currentPo.poConfirmDate) {
+  //   unit = osMtrl.price.poUnit;
+  //   currency = osMtrl.price.currency;
+  //   mPrice = osMtrl.price.mPrice;
+  //   moq = osMtrl.price.moq;
+  //   moqPrice = osMtrl.price.moqPrice;
+  // } else {
   if (currentMtrlPrice) {
     unit = currentMtrlPrice.poUnit;
     currency = currentMtrlPrice.currency;
     mPrice = currentMtrlPrice.mPrice;
     moq = currentMtrlPrice.moq;
     moqPrice = currentMtrlPrice.moqPrice;
+    // }
+  } else {
+    if (osMtrl.price) {
+      unit = osMtrl.price.poUnit;
+      currency = osMtrl.price.currency;
+      mPrice = osMtrl.price.mPrice;
+      moq = osMtrl.price.moq;
+      moqPrice = osMtrl.price.moqPrice;
+    }
   }
 
   return (
