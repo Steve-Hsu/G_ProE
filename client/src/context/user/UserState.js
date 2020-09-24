@@ -61,18 +61,18 @@ const UserState = (props) => {
 
   //@ Confirm Delete User
   // Before delete User check again with the name of the user
-  const confirmDeleteUser = (name) => {
-    dispatch({
-      type: CONFIRM_DELETE_USER,
-      payload: name,
-    });
-  };
+  // const confirmDeleteUser = (name) => {
+  //   dispatch({
+  //     type: CONFIRM_DELETE_USER,
+  //     payload: name,
+  //   });
+  // };
 
-  const clearConfirmDelete = () => {
-    dispatch({
-      type: CLEAR_CONFIRM_DELETE,
-    });
-  };
+  // const clearConfirmDelete = () => {
+  //   dispatch({
+  //     type: CLEAR_CONFIRM_DELETE,
+  //   });
+  // };
 
   //@ Delete USER
   const deleteUser = async (id) => {
@@ -151,8 +151,8 @@ const UserState = (props) => {
         clearFilterUser,
         getUsers,
         clearUsers,
-        confirmDeleteUser,
-        clearConfirmDelete,
+        // confirmDeleteUser,
+        // clearConfirmDelete,
       }}
     >
       {props.children}

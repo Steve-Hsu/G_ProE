@@ -6,6 +6,8 @@ import PopoverContext from '../../context/popover/popoverContext';
 import QuoContext from '../../context/quo/quoContext';
 import PurContext from '../../context/pur/purContext';
 import Spinner from '../../components/layout/Spinner';
+import UserContext from '../../context/user/userContext';
+import userContext from '../../context/user/userContext';
 
 const DeletePopover = () => {
   const casesContext = useContext(CasesContext);
@@ -13,8 +15,9 @@ const DeletePopover = () => {
   const srMtrlContext = useContext(SrMtrlContext);
   const popoverContext = useContext(PopoverContext);
   const purContext = useContext(PurContext);
-  const { _id, cNo, deleteMtrl, deletecWayOrgSize, deleteCase } = casesContext;
   const quoContext = useContext(QuoContext);
+  const userContext = useContext(UserContext);
+  const { _id, cNo, deleteMtrl, deletecWayOrgSize, deleteCase } = casesContext;
   const { deleteSRMtrlByMtrl, deleteSrMtrlPrice } = srMtrlContext;
   const { comName, comSymbol } = authUserContext;
   const {
@@ -27,6 +30,7 @@ const DeletePopover = () => {
   } = popoverContext;
   const { deleteQuoForm, deletemQuo, switchQuoForm } = quoContext;
   const { deleteOs } = purContext;
+  const { deleteUser, clearCurrent } = userContext;
   // }
   const onChangeDelete = (e) => {
     e.preventDefault();
@@ -67,6 +71,11 @@ const DeletePopover = () => {
         };
         deleteSrMtrlPrice(ids);
         break;
+      case 'user':
+        deleteUser(current._id);
+        clearCurrent();
+        alert('The user is deleted');
+        break;
       default:
     }
     toggleLoading(e);
@@ -94,7 +103,8 @@ const DeletePopover = () => {
         return `Order Summary : ${current.osNo}`;
       case 'deleteMPrice':
         return ` Price in SPEC : ${current.sizeSPEC}, and Color : ${current.mColor}`;
-
+      case 'user':
+        return `user ${current.name}`;
       default:
         return 'No defined';
     }
@@ -104,11 +114,14 @@ const DeletePopover = () => {
     if (
       current.target === 'case' ||
       current.target === 'quoForm' ||
-      current.target === 'deleteOs'
+      current.target === 'deleteOs' ||
+      current.target === 'user'
     ) {
       return (
         <div key='doubleCheckDiv' className='px-1'>
-          <div className='fs-tiny'>Enter the Number for deleting</div>
+          <div className='fs-tiny'>{`Enter the ${
+            current.cNo || current.quoNo || current.osNo ? 'Number' : 'Name'
+          } for deleting`}</div>
           <input
             key='doubleCheckInput'
             type='text'
@@ -120,6 +133,8 @@ const DeletePopover = () => {
                 : current.quoNo
                 ? current.quoNo
                 : current.osNo
+                ? current.osNo
+                : current.name
             }
           />
         </div>
@@ -140,7 +155,7 @@ const DeletePopover = () => {
               <h3>Are you sure?</h3>
             </div>
 
-            <div className='h-20 px-2'>{doubleCheckInput()}</div>
+            <div className='h-20 px-2 py-0'>{doubleCheckInput()}</div>
             <div className='h-scatter-content p-1 h-20'>
               <div className='center-content w-50'>
                 <button
@@ -155,7 +170,8 @@ const DeletePopover = () => {
                 (current.target === 'quoForm' &&
                   doubleCheck != current.quoNo) ||
                 (current.target === 'deleteOs' &&
-                  doubleCheck != current.osNo) ? (
+                  doubleCheck != current.osNo) ||
+                (current.target === 'user' && doubleCheck != current.name) ? (
                   <div className='sq-block bd-radius-s  bg-fade fc-fade-dark center-content'>
                     Delete
                   </div>

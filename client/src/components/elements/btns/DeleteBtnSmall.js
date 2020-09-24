@@ -6,7 +6,7 @@ const DeleteBtnSmall = ({ name, onClick, value, className, style }) => {
       name={name}
       value={value}
       onClick={onClick}
-      className={`btn btn-warning btn-sq btn-sq-small mt-05 ${className}`}
+      className={`btn btn-warning btn-sq btn-sq-small mt-05 bg-fade fc-fade-dark bd-no center-content ${className}`}
       style={style}
     >
       x

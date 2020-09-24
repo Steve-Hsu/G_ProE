@@ -24,13 +24,18 @@ const UserFilter = () => {
   };
 
   return (
-    <form>
-      <input
-        ref={text}
-        type='text'
-        placeholder='Filter Users...'
-        onChange={onChange}
-      ></input>
+    <form className='flexBox w-100'>
+      <div className='mr-05 center-content'>
+        <i className='fas fa-search'></i>
+      </div>
+      <div style={{ flex: '1 1' }}>
+        <input
+          ref={text}
+          type='text'
+          placeholder='Filter Users...'
+          onChange={onChange}
+        />
+      </div>
     </form>
   );
 };

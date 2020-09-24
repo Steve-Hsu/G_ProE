@@ -13,6 +13,7 @@ import CasesContext from '../../context/cases/casesContext';
 import SrMtrlContext from '../../context/srMtrl/srMtrlContext';
 import QuoContext from '../../context/quo/quoContext';
 import PurContext from '../../context/pur/purContext';
+import UserContext from '../../context/user/userContext';
 
 const PopoverState = (props) => {
   //State -------
@@ -27,10 +28,12 @@ const PopoverState = (props) => {
   const srMtrlContext = useContext(SrMtrlContext);
   const quoContext = useContext(QuoContext);
   const purContext = useContext(PurContext);
+  const userContext = useContext(UserContext);
   const { _id, cNo, cWays, sizes, mtrls } = casesContext;
   const { srMtrls } = srMtrlContext;
   const { quotation } = quoContext;
   const { osList } = purContext;
+  const { users } = userContext;
 
   //Action -------
 
@@ -64,6 +67,9 @@ const PopoverState = (props) => {
           let srMtrl = srMtrls.find(({ _id }) => _id === targetId);
           subject = srMtrl.mPrices.find(({ id }) => id === subId);
           subject.srMtrlId = targetId;
+          break;
+        case 'user':
+          subject = users.find(({ _id }) => _id === targetId);
           break;
         default:
           subject = { key: 'no target id' };

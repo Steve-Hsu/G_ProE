@@ -1,6 +1,7 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, Fragment } from 'react';
 import UserContext from '../../context/user/userContext';
 import AlertContext from '../../context/alert/alertContext';
+import SqBtnLarge from '../elements/btns/SqBtnLarge';
 
 const UserForm = () => {
   const userContext = useContext(UserContext);
@@ -102,95 +103,100 @@ const UserForm = () => {
   };
 
   return (
-    <form onSubmit={onSubmit}>
-      <h2 className='text-primary'>{current ? 'Edit User' : 'Add User'}</h2>
-      <input
-        type='text'
-        placeholder='User Name'
-        name='name'
-        // React require add || '' to prevent warning the input changed from controlled to uncontrolled.
-        value={name || ''}
-        onChange={onChange}
-      />
-      <input
-        type='email'
-        placeholder='User email'
-        name='email'
-        value={email || ''}
-        onChange={onChange}
-      />
-      <input
-        type='password'
-        placeholder='Password - Setting password'
-        name='password'
-        value={password || ''}
-        onChange={onChange}
-      />
-      <input
-        type='password'
-        placeholder='Password confirmation - Enter the password again.'
-        name='password2'
-        value={password2 || ''}
-        onChange={onChange}
-      />
-      <input
-        type='checkbox'
-        name='cases'
-        //Setting default when the box is checked, means the state.cases is true.
-        checked={cases === true}
-        onChange={onChangeCB}
-      />{' '}
-      Case{' '}
-      <input
-        type='checkbox'
-        name='mtrl'
-        checked={mtrl === true}
-        onChange={onChangeCB}
-      />{' '}
-      Material{' '}
-      <input
-        type='checkbox'
-        name='cspt'
-        checked={cspt === true}
-        onChange={onChangeCB}
-      />{' '}
-      Cunsumption{' '}
-      <input
-        type='checkbox'
-        name='mp'
-        checked={mp === true}
-        onChange={onChangeCB}
-      />{' '}
-      Material Price{' '}
-      <input
-        type='checkbox'
-        name='quo'
-        checked={quo === true}
-        onChange={onChangeCB}
-      />{' '}
-      Quotation{' '}
-      <input
-        type='checkbox'
-        name='po'
-        checked={po === true}
-        onChange={onChangeCB}
-      />{' '}
-      Purchase order{' '}
-      <div>
-        <input
-          type='submit'
-          value={current ? 'Update User' : 'Add User'}
-          className='btn btn-primary btn-block'
-        />
-      </div>
-      {current && (
-        <div>
-          <button className='btn btn-light btn-block' onClick={clearAll}>
-            Clear
-          </button>
-        </div>
-      )}
-    </form>
+    <Fragment>
+      <section id='userFormArea' className='round-area bd-light bg-cp-1'>
+        <form onSubmit={onSubmit}>
+          <div className='text-primary fs-lead'>
+            {current ? 'Edit User' : 'Add User'}
+          </div>
+          {['name', 'email', 'password', 'password2'].map((i) => {
+            if (
+              (current && i === 'password') ||
+              (current && i === 'password2')
+            ) {
+              return null;
+            } else {
+              return (
+                <div className='flexBox mb-05'>
+                  <div style={{ width: '8rem' }} className='v-center-content'>
+                    {i === 'name'
+                      ? 'Name'
+                      : i === 'email'
+                      ? 'Email'
+                      : i === 'password'
+                      ? 'Password'
+                      : i === 'password2'
+                      ? 'Password check'
+                      : null}
+                  </div>
+                  <div style={{ flex: '1 1' }}>
+                    <input
+                      type='text'
+                      placeholder={i}
+                      name={i}
+                      // React require add || '' to prevent warning the input changed from controlled to uncontrolled.
+                      value={user[i] || ''}
+                      onChange={onChange}
+                    />
+                  </div>
+                </div>
+              );
+            }
+          })}
+          <div className='grid-2'>
+            {['cases', 'mtrl', 'cspt', 'mp', 'quo', 'po'].map((i) => {
+              return (
+                <div className='v-center-content round-area bd-light bg-cp-1 m-05'>
+                  <input
+                    type='checkbox'
+                    name={i}
+                    //Setting default when the box is checked, means the state.cases is true.
+                    checked={user[i] === true}
+                    onChange={onChangeCB}
+                    className='w-10'
+                  />
+                  <div className='px-05'>
+                    {i === 'cases'
+                      ? 'Cases'
+                      : i === 'mtrl'
+                      ? ' Material'
+                      : i === 'cspt'
+                      ? ' Cunsumption'
+                      : i === 'mp'
+                      ? ' Material Price'
+                      : i === 'quo'
+                      ? ' Quotation'
+                      : i === 'po'
+                      ? ' Purchase order'
+                      : null}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <div>
+            <input
+              type='submit'
+              value={current ? 'Update User' : 'Add User'}
+              className='btn btn-primary btn-block sq-block bg-cp-2 w-100 mt-05'
+            />
+          </div>
+          {current && (
+            <div>
+              <button
+                className='btn btn-light btn-block sq-block w-100 mt-05'
+                onClick={clearAll}
+              >
+                Clear
+              </button>
+            </div>
+          )}
+        </form>
+      </section>
+      <section id='lossArea' className='round-area bd-light bg-cp-1 mt-1'>
+        <div className='text-primary fs-lead'>Setting loss</div>
+      </section>
+    </Fragment>
   );
 };
 
