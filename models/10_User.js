@@ -67,7 +67,7 @@ const UserSchema = mongoose.Schema({
     // default: false,
   },
   loss: {
-    type: Array,
+    type: Object,
   },
 
   // Date

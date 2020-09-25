@@ -85,7 +85,7 @@ const Select = ({
       break;
     case 'item':
       options = [
-        'Others',
+        'Other',
         'Elastic',
         'Fabric',
         'Insulation',
