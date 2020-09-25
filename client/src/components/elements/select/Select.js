@@ -37,16 +37,16 @@ const Select = ({
     case 'unit':
       options = [
         'Unit',
-        'yds',
-        'm',
         'cm',
-        'in',
-        'set',
-        // 'print size',
-        'pcs',
-        'gross',
         'doz',
         'g',
+        'gross',
+        'in',
+        'm',
+        'pcs',
+        'set',
+        'yds',
+        // 'print size',
       ];
       break;
     case 'currency':
@@ -72,15 +72,29 @@ const Select = ({
     case 'condition':
       options = [
         'Select',
-        'Payment',
         'Delivery',
-        'Shipment',
-        'Packing',
         'Forwarder',
         'Inspection',
-        'Shipping sample',
+        'Packing',
+        'Payment',
         'Remark',
+        'Shipment',
         'Shipping Mark',
+        'Shipping sample',
+      ];
+      break;
+    case 'item':
+      options = [
+        'Others',
+        'Elastic',
+        'Fabric',
+        'Insulation',
+        'Interfacing',
+        'Knit',
+        'Label',
+        'Thread',
+        'Woven',
+        'Zipper',
       ];
       break;
     default:

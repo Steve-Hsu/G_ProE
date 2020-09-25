@@ -782,6 +782,14 @@ input[type='submit']:focus {
   transition: all 0.5s;
 }
 
+.itemSelect {
+  width: 15rem;
+  border: rgba(255, 255, 255, 0);
+  background: var(--cp-1_1);
+  font-size: 40px;
+  height: 4rem;
+}
+
 /* input - Moveing place holder input */
 /* Usage : an input with class MPH-input followed by label with class MPH-input-label. The input must be set placerholder */
 /* Depanding on what class wrap the input and label, and the font-size, you have to adjust the space between label and input  */
@@ -1552,6 +1560,9 @@ input[type='submit']:focus {
 
 /* @Size of the element */
 /* Height */
+.h-3rem {
+  height: 3rem;
+}
 .h-5 {
   height: 5%;
 }
@@ -1812,12 +1823,11 @@ input[type='submit']:focus {
   transform: rotate(90deg);
   transition: all 0.3s;
 }
-/* 
-.hover-no:hover, .hover-0:hover{
-  cursor:
-  transition: all 0;
 
-}  */
+.hover-no:hover,
+.hover-0:hover {
+  opacity: 1;
+}
 
 /* @Print setting */
 

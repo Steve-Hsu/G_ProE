@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { Fragment, useContext } from 'react';
 import PropTypes from 'prop-types';
 import CasesContext from '../../context/cases/casesContext';
 import PopoverContext from '../../context/popover/popoverContext';
@@ -41,19 +41,19 @@ const Mtrl = ({ mtrl }) => {
   // Expand Panel class
   const expandPanelClass = 'grid-1-5 bg-cp-2-light pt-1 round-card bd-light';
 
-  const unitList = [
-    'Select a Unit',
-    'yds',
-    'm',
-    'cm',
-    'in',
-    'set',
-    'print size',
-    'pcs',
-    'gross',
-    'doz',
-    'g',
-  ];
+  // const unitList = [
+  //   'Select a Unit',
+  //   'yds',
+  //   'm',
+  //   'cm',
+  //   'in',
+  //   'set',
+  //   'print size',
+  //   'pcs',
+  //   'gross',
+  //   'doz',
+  //   'g',
+  // ];
 
   // Ajust the color of dropdown btn when the attached table is expaneded.
   const dropDownStyle = (subject) => {
@@ -145,27 +145,41 @@ const Mtrl = ({ mtrl }) => {
   };
 
   const onChange2 = (e) => {
-    const elem = document.getElementById(e.target.id);
+    addMtrlValue(e);
+    // const elem = document.getElementById(e.target.id);
 
-    elem.addEventListener('blur', (e) => {
-      addMtrlValue(e);
-      elem.setAttribute('value', `${mtrlAttribute('item') || ''}`);
-    });
+    // elem.addEventListener('blur', (e) => {
+    //   addMtrlValue(e);
+    //   elem.setAttribute('value', `${mtrlAttribute('item') || ''}`);
+    // });
   };
 
   const inputItemObj = (subject) => {
     if (subject === 'Item') {
-      //Prevent update when user enter the value for item, espacially in board mode, if don't, it will cause alot of delay
-      let placeholder = 'Item';
-      if (mtrlAttribute(subject)) {
-        placeholder =
-          mtrlAttribute(subject).charAt(0).toUpperCase() +
-          mtrlAttribute(subject).slice(1);
-      }
-      return (
-        <>
-          {/* <div className='fs-tiny  transition'>{subject}</div> */}
-          <input
+      // //Prevent update when user enter the value for item, espacially in board mode, if don't, it will cause alot of delay
+      // let placeholder = 'Item';
+      // if (mtrlAttribute(subject)) {
+      //   placeholder =
+      //     mtrlAttribute(subject).charAt(0).toUpperCase() +
+      //     mtrlAttribute(subject).slice(1);
+      // }
+      if (osNo) {
+        return <div className='itemSelect'>{mtrl.item}</div>;
+      } else {
+        return (
+          <>
+            {/* <div className='fs-tiny  transition'>{subject}</div> */}
+            <Select
+              purpose='item'
+              id={`${subject}${mtrl.id}`}
+              name={mtrl.id}
+              onChange={onChange2}
+              subject={mtrl}
+              // label='Item'
+              selectedOption={mtrl.item}
+              className='itemSelect'
+            />
+            {/* <input
             type='text'
             id={`${subject}${mtrl.id}`}
             name={mtrl.id}
@@ -174,9 +188,10 @@ const Mtrl = ({ mtrl }) => {
             className='item-input'
             maxLength={maxWdsLength}
             readOnly={osNo ? true : false}
-          />
-        </>
-      );
+          /> */}
+          </>
+        );
+      }
     } else if (subject === 'Description') {
       return (
         <>
@@ -353,7 +368,7 @@ const Mtrl = ({ mtrl }) => {
               value={mtrl.id}
               name='mtrlColor'
               onClick={expandExtraPanels}
-              className='btn btn-dropdown lead'
+              className='btn btn-dropdown fs-lead'
               style={dropDownStyle('mtrlColor')}
             >
               Color
@@ -367,7 +382,7 @@ const Mtrl = ({ mtrl }) => {
               value={mtrl.id}
               name='SizeSPEC'
               onClick={expandExtraPanels}
-              className='btn btn-dropdown lead'
+              className='btn btn-dropdown fs-lead'
               style={dropDownStyle('SizeSPEC')}
             >
               SPEC
@@ -381,22 +396,31 @@ const Mtrl = ({ mtrl }) => {
               value={mtrl.id}
               name='cspt'
               onClick={expandExtraPanels}
-              className='btn btn-dropdown lead '
+              className='btn btn-dropdown fs-lead '
               style={dropDownStyle('cspt')}
             >
               Consumption
             </button>
           </div>
           {/* Row_4 - Unit Selector */}
-          <Select
-            purpose='unit'
-            subject={mtrl}
-            onChange={addMtrlValue}
-            required={true}
-            label='Unit'
-            className='select-primary-sub  bd-light'
-            selectedOption={mtrl.unit}
-          />
+          {osNo ? (
+            <div>
+              <div className='fs-tiny  transition'>Unit</div>
+              <div className='h-3rem w-100 round-area bd-light fs-lead center-content'>
+                {mtrl.unit}
+              </div>
+            </div>
+          ) : (
+            <Select
+              purpose='unit'
+              subject={mtrl}
+              onChange={addMtrlValue}
+              required={true}
+              label='Unit'
+              className='select-primary-sub  bd-light'
+              selectedOption={mtrl.unit}
+            />
+          )}
         </div>
         {/* {Row_5} */}
         {/* Color expand panel  */}
