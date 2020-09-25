@@ -1611,6 +1611,9 @@ input[type='submit']:focus {
 .w-10vw {
   width: 10vw;
 }
+.w-15 {
+  width: 15%;
+}
 .w-15vw {
   width: 15vw;
 }

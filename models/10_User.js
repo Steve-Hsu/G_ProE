@@ -66,6 +66,9 @@ const UserSchema = mongoose.Schema({
     // required: true,
     // default: false,
   },
+  loss: {
+    type: Array,
+  },
 
   // Date
   date: {

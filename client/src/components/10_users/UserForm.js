@@ -117,7 +117,7 @@ const UserForm = () => {
               return null;
             } else {
               return (
-                <div className='flexBox mb-05'>
+                <div key={`userforminput${i}`} className='flexBox mb-05'>
                   <div style={{ width: '8rem' }} className='v-center-content'>
                     {i === 'name'
                       ? 'Name'
@@ -146,7 +146,10 @@ const UserForm = () => {
           <div className='grid-2'>
             {['cases', 'mtrl', 'cspt', 'mp', 'quo', 'po'].map((i) => {
               return (
-                <div className='v-center-content round-area bd-light bg-cp-1 m-05'>
+                <div
+                  key={`userformcheckbox${i}`}
+                  className='v-center-content round-area bd-light bg-cp-1 m-05'
+                >
                   <input
                     type='checkbox'
                     name={i}
@@ -192,9 +195,6 @@ const UserForm = () => {
             </div>
           )}
         </form>
-      </section>
-      <section id='lossArea' className='round-area bd-light bg-cp-1 mt-1'>
-        <div className='text-primary fs-lead'>Setting loss</div>
       </section>
     </Fragment>
   );

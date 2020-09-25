@@ -89,7 +89,14 @@ router.post(
       //Company Id get from token of the company
       const comId = req.company.id;
       //Insert comSymbol to new user
+
+      const existingUser = await User.findOne({ company: comId });
       const com = await Company.findOne({ _id: comId });
+
+      let loss = [{ set: 1, startPCS: 0, endPCS: 300 }];
+      if (existingUser) {
+        loss = existingUser.loss;
+      }
 
       user = new User({
         name: name.toLowerCase(),
@@ -104,6 +111,7 @@ router.post(
         mp,
         quo,
         po,
+        loss,
       });
 
       //bcrypt the password

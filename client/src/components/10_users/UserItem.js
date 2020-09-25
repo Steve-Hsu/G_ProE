@@ -78,7 +78,10 @@ const UserItem = ({ user }) => {
               default:
             }
             return user[i] ? (
-              <span className='badge badge-success bg-cp-2-light-c'>
+              <span
+                key={`badge${i}${_id}`}
+                className='badge badge-success bg-cp-2-light-c'
+              >
                 {label}
               </span>
             ) : null;
