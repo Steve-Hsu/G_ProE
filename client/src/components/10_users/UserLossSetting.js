@@ -103,7 +103,7 @@ const UserLossSetting = ({ style }) => {
                           <div
                             key={`lossGetagoryOf${i2}`}
                             className='flexBox bd-light-b py-03 bg-cp-1-light'
-                            style={i === 'loss6' ? { borderBottom: 0 } : null}
+                            style={i2 === 'loss6' ? { borderBottom: 0 } : null}
                           >
                             <div
                               style={{ flex: '1 1 ' }}
