@@ -26,9 +26,11 @@ export const ADD_USER = 'ADD_USER';
 export const DELETE_USER = 'DELETE_USER';
 export const FILTER_USER = 'FILTER_USER';
 export const CLEAR_FILTER_USER = 'CLEAR_FILTER_COMPANY';
-export const CONFIRM_DELETE_USER = 'CONFIRM_DELETE_USER';
-export const CLEAR_CONFIRM_DELETE = 'CLEAR_CONFIRM_DELETE';
+// export const CONFIRM_DELETE_USER = 'CONFIRM_DELETE_USER';
+// export const CLEAR_CONFIRM_DELETE = 'CLEAR_CONFIRM_DELETE';
 export const COM_GET_USERS = 'COM_GET_USERS';
+export const TOGGLE_LOSS_SET = 'TOGGLE_LOSS_SET';
+export const TOGGLE_LOSS_CATEGORY = 'TOGGLE_LOSS_CATEGORY';
 
 //@ User auth --------------------------------------------------------
 export const USER_REGISTER_SUCCESS = 'USER_REGISTER_SUCCESS';

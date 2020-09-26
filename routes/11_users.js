@@ -95,17 +95,25 @@ router.post(
 
       //Setting Loss
       let loss = {
-        set1: 70,
-        set2: 200,
-        set3: 500,
-        set4: 1000,
-        set5: 3000,
+        sets: [
+          { set1: 70 },
+          { set2: 200 },
+          { set3: 500 },
+          { set4: 1000 },
+          { set5: 3000 },
+        ],
+        // set1: 70,
+        // set2: 200,
+        // set3: 500,
+        // set4: 1000,
+        // set5: 3000,
         elastic: {
           loss1: 0.05,
           loss2: 0.05,
           loss3: 0.05,
           loss4: 0.05,
           loss5: 0.05,
+          loss6: 0.05,
         },
         fabric: {
           loss1: 0.04,
@@ -113,6 +121,7 @@ router.post(
           loss3: 0.02,
           loss4: 0.015,
           loss5: 0.01,
+          loss6: 0.01,
         },
         insulation: {
           loss1: 0.03,
@@ -120,6 +129,7 @@ router.post(
           loss3: 0.015,
           loss4: 0.01,
           loss5: 0.01,
+          loss6: 0.01,
         },
         interfacing: {
           loss1: 0.03,
@@ -127,6 +137,7 @@ router.post(
           loss3: 0.015,
           loss4: 0.01,
           loss5: 0.01,
+          loss6: 0.01,
         },
         knit: {
           loss1: 0.06,
@@ -134,6 +145,7 @@ router.post(
           loss3: 0.035,
           loss4: 0.03,
           loss5: 0.02,
+          loss6: 0.02,
         },
         label: {
           loss1: 0.01,
@@ -141,6 +153,7 @@ router.post(
           loss3: 0.01,
           loss4: 0.01,
           loss5: 0.01,
+          loss6: 0.01,
         },
         thread: {
           loss1: 0.05,
@@ -148,6 +161,7 @@ router.post(
           loss3: 0.05,
           loss4: 0.05,
           loss5: 0.05,
+          loss6: 0.05,
         },
         woven: {
           loss1: 0.04,
@@ -155,6 +169,7 @@ router.post(
           loss3: 0.02,
           loss4: 0.015,
           loss5: 0.01,
+          loss6: 0.01,
         },
         zipper: {
           loss1: 0.05,
@@ -162,6 +177,15 @@ router.post(
           loss3: 0.02,
           loss4: 0.01,
           loss5: 0.01,
+          loss6: 0.01,
+        },
+        other: {
+          loss1: 0.01,
+          loss2: 0.01,
+          loss3: 0.01,
+          loss4: 0.01,
+          loss5: 0.01,
+          loss6: 0.01,
         },
       };
       if (existingUser) {

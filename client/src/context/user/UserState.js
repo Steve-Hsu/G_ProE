@@ -11,8 +11,10 @@ import {
   USER_ERROR,
   COM_GET_USERS,
   CLEAR_USERS_STATE,
-  CONFIRM_DELETE_USER,
-  CLEAR_CONFIRM_DELETE,
+  // CONFIRM_DELETE_USER,
+  // CLEAR_CONFIRM_DELETE,
+  TOGGLE_LOSS_SET,
+  TOGGLE_LOSS_CATEGORY,
 } from '../types';
 
 const UserState = (props) => {
@@ -22,6 +24,8 @@ const UserState = (props) => {
     filtered: null,
     error: null,
     confirmDelete: null,
+    openLossSets: false,
+    openLossCategory: [],
   };
 
   const [state, dispatch] = useReducer(userReducer, initialState);
@@ -134,6 +138,24 @@ const UserState = (props) => {
     dispatch({ type: CLEAR_FILTER_USER });
   };
 
+  const togglePanel = (e) => {
+    const targeName = e.target.name;
+    switch (targeName) {
+      case 'lossSets':
+        dispatch({ type: TOGGLE_LOSS_SET });
+        break;
+      default:
+        let subjects = state.openLossCategory;
+        const pushedValue = e.target.name;
+        if (subjects.includes(pushedValue)) {
+          subjects = state.openLossCategory.filter((i) => i != pushedValue);
+        } else {
+          subjects.push(pushedValue);
+        }
+        dispatch({ type: TOGGLE_LOSS_CATEGORY, payload: subjects });
+    }
+  };
+
   return (
     <UserContext.Provider
       value={{
@@ -142,6 +164,8 @@ const UserState = (props) => {
         filtered: state.filtered,
         error: state.error,
         confirmDelete: state.confirmDelete,
+        openLossSets: state.openLossSets,
+        openLossCategory: state.openLossCategory,
         addUser,
         deleteUser,
         setCurrent,
@@ -151,6 +175,7 @@ const UserState = (props) => {
         clearFilterUser,
         getUsers,
         clearUsers,
+        togglePanel,
         // confirmDeleteUser,
         // clearConfirmDelete,
       }}

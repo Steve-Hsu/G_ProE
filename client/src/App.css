@@ -15,6 +15,7 @@
   --cp-1_4: #41444b;
 
   /* color family */
+  --cp-1_1-light: #fbfaf5;
   --cp-1_2-light: #ffef9f;
 
   /* Complementary color */
@@ -1224,9 +1225,6 @@ input[type='submit']:focus {
 .p {
   padding: var(--gap);
 }
-.p-0 {
-  padding: 0;
-}
 
 .p-05 {
   padding: 0.5rem;
@@ -1272,6 +1270,11 @@ input[type='submit']:focus {
 .py {
   padding-top: var(--gap);
   padding-bottom: var(--gap);
+}
+
+.py-03 {
+  padding-top: 0.3rem;
+  padding-bottom: 0.3rem;
 }
 
 .py-05 {
@@ -1327,6 +1330,10 @@ input[type='submit']:focus {
 }
 .pb-0 {
   padding-bottom: 0;
+}
+
+.pb-03 {
+  padding-bottom: 0.3rem;
 }
 .pb-05 {
   padding-bottom: 0.5rem;
@@ -1384,6 +1391,15 @@ input[type='submit']:focus {
   padding-right: 3rem;
 }
 
+.py-0 {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.p-0 {
+  padding: 0;
+}
+
 /* @Margin */
 .m {
   margin: var(--gap);
@@ -1410,10 +1426,12 @@ input[type='submit']:focus {
 .my {
   margin: var(--gap) 0;
 }
-.my-0 {
-  margin-top: 0;
-  margin-bottom: 0;
+
+.my-03 {
+  margin-top: 0.3rem;
+  margin-bottom: 0.3rem;
 }
+
 .my-05 {
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
@@ -1431,6 +1449,10 @@ input[type='submit']:focus {
   margin-bottom: 3rem;
 }
 
+.my-0 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
 /* Margin - x axis */
 .mx {
   margin: 0 var(--gap);
@@ -1488,6 +1510,10 @@ input[type='submit']:focus {
 /* Margin - bottom */
 .mb {
   margin-bottom: var(--gap);
+}
+
+.mb-03 {
+  margin-bottom: 0.3rem;
 }
 
 .mb-05 {
@@ -1667,6 +1693,10 @@ input[type='submit']:focus {
 .bg-cp-elem {
   background: var(--cp-1_1);
 }
+.bg-cp-1-light {
+  background: var(--cp-1_1-light);
+}
+
 .bg-cp-2 {
   background: var(--cp-1_2);
 }
@@ -1716,6 +1746,10 @@ input[type='submit']:focus {
 
 .bd-light-2px {
   border: 2px solid var(--fade-color);
+}
+
+.bd-light-t {
+  border-top: 1px solid var(--fade-color);
 }
 
 .bd-light-b {

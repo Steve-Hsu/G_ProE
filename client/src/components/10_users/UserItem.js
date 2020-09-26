@@ -27,7 +27,7 @@ const UserItem = ({ user }) => {
   return (
     <Fragment>
       {popover ? <Deletepopover /> : null}
-      <div className='round-area bg-cp-1 bd-light-2px mt-1'>
+      <div className='round-area bg-cp-1-light bd-light mt-1'>
         <div className='h-scatter-content mb-05'>
           <div className='fs-lead'>
             {' '}

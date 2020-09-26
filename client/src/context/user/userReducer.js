@@ -8,8 +8,10 @@ import {
   USER_ERROR,
   COM_GET_USERS,
   CLEAR_USERS_STATE,
-  CONFIRM_DELETE_USER,
-  CLEAR_CONFIRM_DELETE,
+  // CONFIRM_DELETE_USER,
+  // CLEAR_CONFIRM_DELETE,
+  TOGGLE_LOSS_SET,
+  TOGGLE_LOSS_CATEGORY,
 } from '../types';
 
 export default (state, action) => {
@@ -37,17 +39,17 @@ export default (state, action) => {
     //     ),
     //     loading: false,
     //   };
-    case CONFIRM_DELETE_USER:
-      return {
-        ...state,
-        confirmDelete: action.payload,
-      };
+    // case CONFIRM_DELETE_USER:
+    //   return {
+    //     ...state,
+    //     confirmDelete: action.payload,
+    //   };
 
-    case CLEAR_CONFIRM_DELETE:
-      return {
-        ...state,
-        confirmDelete: null,
-      };
+    // case CLEAR_CONFIRM_DELETE:
+    //   return {
+    //     ...state,
+    //     confirmDelete: null,
+    //   };
     case DELETE_USER:
       return {
         ...state,
@@ -89,6 +91,16 @@ export default (state, action) => {
       return {
         ...state,
         error: action.payload,
+      };
+    case TOGGLE_LOSS_SET:
+      return {
+        ...state,
+        openLossSets: !state.openLossSets,
+      };
+    case TOGGLE_LOSS_CATEGORY:
+      return {
+        ...state,
+        openLossCategory: action.payload,
       };
     default:
       return state;

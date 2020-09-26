@@ -148,7 +148,7 @@ const UserForm = () => {
               return (
                 <div
                   key={`userformcheckbox${i}`}
-                  className='v-center-content round-area bd-light bg-cp-1 m-05'
+                  className='v-center-content round-area bd-light bg-cp-1-light m-05'
                 >
                   <input
                     type='checkbox'
