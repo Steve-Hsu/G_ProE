@@ -12,6 +12,7 @@ import {
   // CLEAR_CONFIRM_DELETE,
   TOGGLE_LOSS_SET,
   TOGGLE_LOSS_CATEGORY,
+  UPDATE_LOSS,
 } from '../types';
 
 export default (state, action) => {
@@ -101,6 +102,16 @@ export default (state, action) => {
       return {
         ...state,
         openLossCategory: action.payload,
+      };
+    case UPDATE_LOSS:
+      return {
+        ...state,
+        users: state.users.map((u) => {
+          if (u._id === action.payload._id) {
+            u = action.payload;
+          }
+          return u;
+        }),
       };
     default:
       return state;

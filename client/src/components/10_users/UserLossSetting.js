@@ -5,7 +5,13 @@ import GoBackBtnSpinSmall from '../elements/btns/GoBackBtnSpinSmall';
 
 const UserLossSetting = ({ style }) => {
   const userContext = useContext(UserContext);
-  const { users, togglePanel, openLossSets, openLossCategory } = userContext;
+  const {
+    users,
+    togglePanel,
+    openLossSets,
+    openLossCategory,
+    lossInputUpdate,
+  } = userContext;
 
   const onClickLossSets = (e) => {
     e.target.name = 'lossSets';
@@ -15,6 +21,21 @@ const UserLossSetting = ({ style }) => {
   const onClickLossCategory = (e) => {
     e.target.name = e.target.id;
     togglePanel(e);
+  };
+
+  const onChange = (e) => {
+    const num = e.target.value;
+    if (num <= 99 && String(num).length < 5) {
+      lossInputUpdate(e);
+    } else {
+      if (String(num).length > 4) {
+        const negative = String(num).length - 4;
+        e.target.value = String(num).slice(0, -negative);
+      } else {
+        e.target.value = 99;
+        lossInputUpdate(e);
+      }
+    }
   };
 
   return (
@@ -132,12 +153,13 @@ const UserLossSetting = ({ style }) => {
                             <div className='mr-05' style={{ flex: '0 0 7rem' }}>
                               <input
                                 type='number'
-                                value={
-                                  Number(
-                                    users[0].loss[i.toLocaleLowerCase()][i2] *
-                                      100
-                                  ).toFixed(2) || ''
-                                }
+                                id={`input${i.toLowerCase()}`}
+                                maxLength='4'
+                                min='0'
+                                max='99'
+                                name={i2}
+                                value={users[0].loss[i.toLowerCase()][i2] || ''}
+                                onChange={onChange}
                               />
                             </div>
                             <div className='center-content'>%</div>

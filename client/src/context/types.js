@@ -31,6 +31,7 @@ export const CLEAR_FILTER_USER = 'CLEAR_FILTER_COMPANY';
 export const COM_GET_USERS = 'COM_GET_USERS';
 export const TOGGLE_LOSS_SET = 'TOGGLE_LOSS_SET';
 export const TOGGLE_LOSS_CATEGORY = 'TOGGLE_LOSS_CATEGORY';
+export const UPDATE_LOSS = 'UPDATE_LOSS';
 
 //@ User auth --------------------------------------------------------
 export const USER_REGISTER_SUCCESS = 'USER_REGISTER_SUCCESS';

@@ -15,6 +15,7 @@ import {
   // CLEAR_CONFIRM_DELETE,
   TOGGLE_LOSS_SET,
   TOGGLE_LOSS_CATEGORY,
+  UPDATE_LOSS,
 } from '../types';
 
 const UserState = (props) => {
@@ -156,6 +157,21 @@ const UserState = (props) => {
     }
   };
 
+  const lossInputUpdate = (e) => {
+    const lossCategory = e.target.id.slice(5) || null;
+    const loss = e.target.name;
+    const lossValue = Number(e.target.value);
+    const user = state.users[0];
+
+    // console.log('the lossCategory', lossCategory);
+    // console.log('The loss', loss);
+    if (user) {
+      user.loss[lossCategory][loss] = lossValue;
+
+      dispatch({ type: UPDATE_LOSS, payload: user });
+    }
+  };
+
   return (
     <UserContext.Provider
       value={{
@@ -178,6 +194,7 @@ const UserState = (props) => {
         togglePanel,
         // confirmDeleteUser,
         // clearConfirmDelete,
+        lossInputUpdate,
       }}
     >
       {props.children}
