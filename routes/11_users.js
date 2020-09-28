@@ -15,7 +15,7 @@ const User = require('../models/10_User');
 // @access  Private
 router.get('/', authCom, async (req, res) => {
   try {
-    const users = await User.find({ company: req.company.id })
+    const users = await User.find({ company: req.company.id }, { company: 0 })
       .select('-password')
       .sort({
         date: -1,
@@ -297,13 +297,15 @@ router.put('/:id', authCom, async (req, res) => {
     user = await User.findByIdAndUpdate(
       req.params.id,
       { $set: userForm },
-      // if there are no this user, just create a new user.
+      // Return the updated one.
       { new: true }
       // The method .select('-password) is for not showing the password on result
     ).select('-password');
     // console.log(user);
     // res.json(user);
-    res.json({ msg: `User ${user.name}Update succssed!` });
+    const userName = user.name;
+    console.log(`User ${userName} Update succssed!`);
+    res.json({ msg: `User ${userName} Update succssed!` });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
@@ -362,4 +364,70 @@ router.delete('/:id/', authCom, async (req, res) => {
   }
 });
 
+// @route   POST api/users/uploadloss
+// @desc    load loss of all the User
+// @access  Private
+router.post('/uploadloss', authCom, async (req, res) => {
+  // Get the id from URL by params
+
+  let company = await Company.findById(req.company.id);
+  if (!company) {
+    console.log('company User not found');
+    return res.status(404).json({ msg: 'company User not found' });
+  }
+  const comId = req.company.id;
+  const loss = req.body;
+
+  const checkNum = new Promise((resolve) => {
+    console.log('Promise is calling');
+    loss.sets.map((i, idx2) => {
+      console.log('The start of the map');
+      switch (idx2) {
+        case 0:
+          break;
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+          if (i[`set${idx2 + 1}`] <= loss.sets[idx2 - 1][`set${idx2}`]) {
+            i[`set${idx2 + 1}`] =
+              loss.sets[idx2 - 1][`set${idx2}`] +
+              Number(
+                idx2 === 1
+                  ? 130
+                  : idx2 === 2
+                  ? 300
+                  : idx2 === 3
+                  ? 500
+                  : idx2 === 4
+                  ? 2000
+                  : 7
+              );
+          }
+          break;
+        default:
+      }
+      if (idx2 + 1 === loss.sets.length) {
+        resolve();
+      }
+    });
+  });
+
+  return Promise.all([checkNum]).then(async () => {
+    console.log('Promise all is triggered');
+    try {
+      await User.updateMany({ company: comId }, { $set: { loss: loss } });
+      const users = await User.find({ company: comId }, { company: 0 })
+        .select('-password')
+        .sort({
+          date: -1,
+        });
+      console.log('The loss uploaded');
+      res.json(users);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
+    }
+  });
+});
 module.exports = router;

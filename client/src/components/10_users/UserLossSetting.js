@@ -10,7 +10,9 @@ const UserLossSetting = ({ style }) => {
     togglePanel,
     openLossSets,
     openLossCategory,
+    lossSetInputUpdate,
     lossInputUpdate,
+    uploadLoss,
   } = userContext;
 
   const onClickLossSets = (e) => {
@@ -21,6 +23,17 @@ const UserLossSetting = ({ style }) => {
   const onClickLossCategory = (e) => {
     e.target.name = e.target.id;
     togglePanel(e);
+  };
+
+  const onChangeLossSet = (e) => {
+    const num = e.target.value;
+
+    if (num <= 9999999) {
+      lossSetInputUpdate(e);
+    } else {
+      e.target.value = 9999999;
+      lossSetInputUpdate(e);
+    }
   };
 
   const onChange = (e) => {
@@ -36,6 +49,10 @@ const UserLossSetting = ({ style }) => {
         lossInputUpdate(e);
       }
     }
+  };
+
+  const onClickUploadLoss = (e) => {
+    uploadLoss(e);
   };
 
   return (
@@ -75,8 +92,11 @@ const UserLossSetting = ({ style }) => {
                       </div>
                       <div className='mr-05' style={{ flex: '0 0 7rem' }}>
                         <input
+                          id={`inputoflosssetof${idx}${i}`}
                           type='number'
+                          name={i}
                           value={users[0].loss.sets[idx][i] || ''}
+                          onChange={onChangeLossSet}
                         />
                       </div>
                       <div className='v-center-content' style={{ flex: '0 0' }}>
@@ -176,7 +196,11 @@ const UserLossSetting = ({ style }) => {
 
       <div className='h-scatter-content'>
         <div></div>
-        <SqBtnLarge className='mt-1' />
+        <SqBtnLarge
+          className='mt-1'
+          onClick={onClickUploadLoss}
+          label={`Save`}
+        />
       </div>
     </div>
   );

@@ -156,6 +156,14 @@ const UserState = (props) => {
         dispatch({ type: TOGGLE_LOSS_CATEGORY, payload: subjects });
     }
   };
+  const lossSetInputUpdate = (e) => {
+    const lossSet = e.target.name;
+    const lossSetValue = Number(e.target.value);
+    const user = state.users[0];
+    const idx = Number(String(lossSet.slice(-1))) - 1;
+    user.loss.sets[idx][lossSet] = lossSetValue;
+    dispatch({ type: UPDATE_LOSS, payload: user });
+  };
 
   const lossInputUpdate = (e) => {
     const lossCategory = e.target.id.slice(5) || null;
@@ -169,6 +177,24 @@ const UserState = (props) => {
       user.loss[lossCategory][loss] = lossValue;
 
       dispatch({ type: UPDATE_LOSS, payload: user });
+    }
+  };
+
+  const uploadLoss = async () => {
+    const config = {
+      header: {
+        'Content-Type:': 'application/json',
+      },
+    };
+    const loss = state.users[0].loss;
+    try {
+      const res = await axios.post('/api/users/uploadloss', loss, config);
+      dispatch({ type: COM_GET_USERS, payload: res.data });
+    } catch (err) {
+      dispatch({
+        type: USER_ERROR,
+        payload: err.response.msg,
+      });
     }
   };
 
@@ -194,7 +220,9 @@ const UserState = (props) => {
         togglePanel,
         // confirmDeleteUser,
         // clearConfirmDelete,
+        lossSetInputUpdate,
         lossInputUpdate,
+        uploadLoss,
       }}
     >
       {props.children}
