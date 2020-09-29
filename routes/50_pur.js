@@ -13,10 +13,6 @@ const Case = require('../models/20_Case');
 const SRMtrl = require('../models/30_srMtrl');
 const OS = require('../models/50_OS');
 
-// @route   GET api/purchase
-// @desc    Read the compnay's case with cNo, style, client,
-// @access  Private
-
 // @route   GET api/purchase/ordersummary
 // @desc    Read the compnay's all of order Summary from database
 // @access  Private
@@ -46,6 +42,7 @@ router.post('/', authUser, async (req, res) => {
   const comId = req.user.company;
   const caseIds = req.body;
   const comSymbol = user.comSymbol;
+  const lossInform = user.loss;
 
   // @ Create OS number -------------------------------------------------
 
@@ -91,7 +88,7 @@ router.post('/', authUser, async (req, res) => {
 
   // @ create object for caseMtrls -------------------------------------------------
   // Loop through cases
-  const insertCaseMtrls = new Promise(async (resolve, reject) => {
+  const insertCaseMtrls = new Promise(async (resolve) => {
     console.log('Start the promise, inserCaseMtrls');
     let caseNum = 0;
     caseIds.map(async (item) => {
@@ -103,12 +100,11 @@ router.post('/', authUser, async (req, res) => {
         poDate: null,
       });
       if (!theCase) {
-        console.log(
-          "One of case dosen't exist or has being purchased by other order summary"
-        );
+        const msg =
+          "One of case dosen't exist or has being purchased by other order summary";
+        console.log(msg);
         return res.status(404).json({
-          msg:
-            "One of case dosen't exist or has being purchased by other order summary",
+          msg: msg,
         });
       }
 
@@ -126,15 +122,54 @@ router.post('/', authUser, async (req, res) => {
         clientList.push(theCase.clients);
         mtrls.map((mtrl) => {
           let csptNum = 0;
-          const mtrlId = mtrl.id;
+          // const mtrlId = mtrl.id;
           const cspts = mtrl.cspts;
           const supplier = mtrl.supplier;
           const ref_no = mtrl.ref_no;
           // console.log('mtrl start ', caseId, mtrlId); // Test Code
+          const itemNameOfTheMtrl = mtrl.item
+            ? mtrl.item.toLowerCase()
+            : 'other';
+          const lossItemOfTheMtrl =
+            lossInform[itemNameOfTheMtrl] || lossInform['other'];
+
           cspts.map((cspt) => {
             //Check the Existing caseMtrls object
             //The condition
             // console.log('cspt start ', caseId, mtrlId, cspt.id); // Test Code
+
+            // Check the loss of cspt
+            lossInform;
+            let theLossPercentage = 0;
+            const thegQty = gQtys.filter(
+              (i) => i.cWay === cspt.cWay && i.size === cspt.size
+            )[0];
+            if (thegQty.gQty > lossInform.sets[2]['set3']) {
+              if (thegQty.gQty > lossInform.sets[3]['set4']) {
+                if (thegQty.gQty > lossInform.sets[4]['set5']) {
+                  theLossPercentage = lossItemOfTheMtrl.loss6;
+                } else {
+                  theLossPercentage = lossItemOfTheMtrl.loss5;
+                }
+              } else {
+                theLossPercentage = lossItemOfTheMtrl.loss4;
+              }
+            } else {
+              if (thegQty.gQty < lossInform.sets[1]['set2']) {
+                if (thegQty.gQty < lossInform.sets[0]['set1']) {
+                  theLossPercentage = lossItemOfTheMtrl.loss1;
+                } else {
+                  theLossPercentage = lossItemOfTheMtrl.loss2;
+                }
+              } else {
+                theLossPercentage = lossItemOfTheMtrl.loss3;
+              }
+            }
+
+            //The quantity of the mtrl
+            const purchaseLossQtySumUp =
+              cspt.requiredMQty * Number(theLossPercentage / 100);
+
             const currentCsptMtrl = {
               supplier: supplier,
               ref_no: ref_no,
@@ -173,6 +208,7 @@ router.post('/', authUser, async (req, res) => {
                 mColor: cspt.mColor,
                 mSizeSPEC: cspt.mSizeSPEC,
                 purchaseQtySumUp: cspt.requiredMQty,
+                purchaseLossQtySumUp: purchaseLossQtySumUp,
               });
             } else {
               // existCaseMtrl.purchaseQtySumUp += cspt.requiredMQty;
@@ -183,6 +219,7 @@ router.post('/', authUser, async (req, res) => {
                     caseMtrl.cases.push(theCase.cNo);
                   }
                   caseMtrl.purchaseQtySumUp += cspt.requiredMQty;
+                  caseMtrl.purchaseLossQtySumUp += purchaseLossQtySumUp;
                 }
               });
             }
