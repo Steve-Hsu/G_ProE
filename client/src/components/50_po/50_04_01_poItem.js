@@ -68,11 +68,14 @@ const PoItem = ({ osMtrl, theNumber, className }) => {
   const displayPrice = () => {
     if (moq) {
       if (purchaseQtySumUp + purchaseLossQtySumUp + purchaseMoqQty > moq) {
+        // return Number(mPrice).toFixed(2);
         return mPrice;
       } else {
+        // return Number(moqPrice).toFixed(2);
         return moqPrice;
       }
     } else {
+      // return Number(mPrice).toFixed(2);
       return mPrice;
     }
   };
@@ -82,7 +85,7 @@ const PoItem = ({ osMtrl, theNumber, className }) => {
       if (purchaseQtySumUp + purchaseLossQtySumUp + purchaseMoqQty > moq) {
         return null;
       } else {
-        return <div className='fs-tiny fc-cp-2-c'>MOQ Price</div>;
+        return <div className='fs-tiny fc-success'>MOQ Price</div>;
       }
     } else {
       return null;
@@ -107,39 +110,118 @@ const PoItem = ({ osMtrl, theNumber, className }) => {
       <div className='bd-light bd-no-t v-center-content px-05 py-03'>
         {mSizeSPEC}
       </div>
-      <div className='bd-light bd-no-t px-05 py-03'>
-        {moqLabel()}
-        <div className='v-center-content'>
-          {displayPrice()} {currency}/{unit}
+      <div className='bd-light bd-no-t v-center-content px-05 py-03'>
+        <div>
+          <div className='v-center-content'>{moqLabel()}</div>
+          <div className='v-center-content'>
+            {displayPrice()} {currency}/{unit}
+          </div>
         </div>
       </div>
-      <div className='bd-light bd-no-t px-05 py-03'>
-        <div className='fs-tiny fc-cp-2-c v-center-content noPrint'>
-          <div>Required : {purchaseQtySumUp}</div>
-          <div>Loss : {purchaseLossQtySumUp}</div>
-          {moq && purchaseQtySumUp + purchaseLossQtySumUp < moq ? (
-            <div>Even Moq : {purchaseMoqQty} </div>
-          ) : null}
-        </div>
-        <div className='h-scatter-content'>
-          <div className='v-center-content'>
+      <div className='bd-light bd-no-t px-05 py-03 h-scatter-content'>
+        <div className='v-center-content'>
+          <div
+            className='mr-05 round-area noPrint'
+            style={{
+              marginLeft: '-0.5rem',
+              marginTop: '-0.5rem',
+              marginBottom: '-0.5rem',
+            }}
+          >
+            <div className='h-scatter-content noPrint'>
+              <div className='fs-tiny fc-cp-2-c mr-1'>
+                <div>Qty</div>
+                <div>{purchaseQtySumUp}</div>
+              </div>
+              <div className='fs-tiny fc-cp-2-c'>
+                <div>Loss</div>
+                <div>{purchaseLossQtySumUp}</div>
+              </div>
+            </div>
+            <div
+              className='v-center-content'
+              style={{ height: 'var(--btn-h-m)' }}
+            >
+              {purchaseQtySumUp + purchaseLossQtySumUp + purchaseMoqQty}
+            </div>
+          </div>
+          <div className='showWhenPrint'>
             {purchaseQtySumUp + purchaseLossQtySumUp + purchaseMoqQty}
           </div>
-          {moq && currentPo.poConfirmDate === null ? (
-            purchaseQtySumUp + purchaseLossQtySumUp > moq ? null : (
-              <div className='noPrint'>
-                <SqBtnLarge
-                  label={purchaseMoqQty === 0 ? 'Even MOQ' : 'Cancel MOQ'}
-                  onClick={onClick}
-                />
-              </div>
-            )
-          ) : null}
         </div>
+        {moq && purchaseQtySumUp + purchaseLossQtySumUp < moq ? (
+          <div
+            className='noPrint round-area '
+            style={{
+              marginTop: '-0.5rem',
+              marginBottom: '-0.5rem',
+              marginRight: '-0.5rem',
+            }}
+          >
+            <div className='fs-tiny fc-success'>
+              <div>Even Moq</div>
+              <div>{purchaseMoqQty} </div>
+            </div>
+
+            {moq && currentPo.poConfirmDate === null ? (
+              purchaseQtySumUp + purchaseLossQtySumUp > moq ? null : (
+                <div className='noPrint'>
+                  <SqBtnLarge
+                    label={purchaseMoqQty === 0 ? 'Even' : 'Cancel Even'}
+                    onClick={onClick}
+                    className='fs-small'
+                  />
+                </div>
+              )
+            ) : null}
+          </div>
+        ) : null}
+
+        {/* <div className='w-100'>
+          <div className='fs-tiny fc-cp-2-c v-center-content noPrint'>
+            <div className='mr-2'>
+              <div>Required</div>
+              <div>{purchaseQtySumUp}</div>
+            </div>
+            <div className='mr-2'>
+              <div>Loss</div>
+              <div>{purchaseLossQtySumUp}</div>
+            </div>
+
+            {moq && purchaseQtySumUp + purchaseLossQtySumUp < moq ? (
+              <div className=''>
+                <div>Even Moq</div>
+                <div>{purchaseMoqQty} </div>
+              </div>
+            ) : null}
+          </div>
+
+          <div className='h-scatter-content '>
+            <div className='v-center-content'>
+              {purchaseQtySumUp + purchaseLossQtySumUp + purchaseMoqQty}
+            </div>
+            {moq && currentPo.poConfirmDate === null ? (
+              purchaseQtySumUp + purchaseLossQtySumUp > moq ? null : (
+                <div className='noPrint'>
+                  <SqBtnLarge
+                    label={purchaseMoqQty === 0 ? 'Even MOQ' : 'Cancel MOQ'}
+                    onClick={onClick}
+                  />
+                </div>
+              )
+            ) : null}
+          </div>
+        </div> */}
       </div>
       <div className='bd-light bd-no-t v-center-content px-05 py-03'>
-        {(purchaseQtySumUp + purchaseLossQtySumUp + purchaseMoqQty) *
-          displayPrice()}
+        {Math.round(
+          (Number(
+            (purchaseQtySumUp + purchaseLossQtySumUp + purchaseMoqQty) *
+              displayPrice()
+          ) +
+            Number.EPSILON) *
+            100
+        ) / 100}
       </div>
     </div>
   );
