@@ -279,7 +279,7 @@ img {
 
 .grid-Pur-Mtrl {
   display: grid;
-  grid-template-columns: 2rem 10rem 10rem 1fr 8rem 5rem 5rem;
+  grid-template-columns: 2rem 10rem 10rem 1fr 8rem 1fr 5rem;
 }
 
 /* grid gap */
@@ -1900,6 +1900,11 @@ input[type='submit']:focus {
   .grid-Quo-otherExpanse {
     display: grid;
     grid-template-columns: 7rem 1fr 5rem;
+  }
+
+  .grid-Pur-Mtrl {
+    display: grid;
+    grid-template-columns: 2rem 10rem 10rem 1fr 8rem 5rem 5rem;
   }
 
   .grid-Pur-Mtrl {

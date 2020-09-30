@@ -200,6 +200,7 @@ router.post('/', authUser, async (req, res) => {
                 });
               }
 
+              // New caseMtrls
               caseMtrls.push({
                 id: uuidv4() + myModule.generateId(),
                 cases: [theCase.cNo],
@@ -209,6 +210,7 @@ router.post('/', authUser, async (req, res) => {
                 mSizeSPEC: cspt.mSizeSPEC,
                 purchaseQtySumUp: cspt.requiredMQty,
                 purchaseLossQtySumUp: purchaseLossQtySumUp,
+                purchaseMoqQty: 0,
               });
             } else {
               // existCaseMtrl.purchaseQtySumUp += cspt.requiredMQty;
@@ -450,7 +452,7 @@ router.post('/purchaseorder/:osId', authUser, async (req, res) => {
   }
   const comId = req.user.company;
   const osId = req.params.osId;
-  const { supplier, priceList } = req.body;
+  const { supplier, priceList, inputCaseMtrls } = req.body;
   // console.log('the body', req.body); // test Code
   // the currentPo is the name of the supplier
   const checkIfConfirmed = supplier.poConfirmDate;
@@ -468,6 +470,7 @@ router.post('/purchaseorder/:osId', authUser, async (req, res) => {
             'suppliers.$.email': supplier.email,
             'suppliers.$.tel': supplier.tel,
             'suppliers.$.conditions': supplier.conditions,
+            caseMtrls: inputCaseMtrls,
           },
           $currentDate: { 'suppliers.$.poConfirmDate': Date },
         },
@@ -482,7 +485,7 @@ router.post('/purchaseorder/:osId', authUser, async (req, res) => {
           },
           { caseMtrls: 1, suppliers: 1 }
         );
-        const caseMtrls = orderSummary.caseMtrls;
+        const caseMtrls = inputCaseMtrls;
         const suppliers = orderSummary.suppliers;
 
         // console.log('the caseMtrls', caseMtrls); // Test code
@@ -513,8 +516,10 @@ router.post('/purchaseorder/:osId', authUser, async (req, res) => {
           ).length;
           console.log(poConfirmDateNulls);
           if (poConfirmDateNulls) {
+            // If any po of supplier is not confirmed, then return null, not set the osConfirm Date
             resolve(null);
           } else {
+            //If all po of suppliers is confirmed the po date, then set the os as confirmed.
             resolve(Date.now());
           }
         });
@@ -565,6 +570,7 @@ router.post('/purchaseorder/:osId', authUser, async (req, res) => {
             'suppliers.$.tel': supplier.tel,
             'suppliers.$.conditions': supplier.conditions,
             'suppliers.$.poConfirmDate': null,
+            caseMtrls: inputCaseMtrls,
           },
         },
         { new: true }

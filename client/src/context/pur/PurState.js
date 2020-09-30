@@ -15,6 +15,7 @@ import {
   PO_CURRENT_MTRLPRICE,
   OS_DELETE,
   UPDATE_SUPPLIERS,
+  UPDATE_MOQPOQTY,
   // UPDATE_CASEMTRL,
 } from '../types';
 
@@ -241,7 +242,13 @@ const PurState = (props) => {
       priceList = state.currentPoPriceList;
     }
 
-    const body = { supplier: currentPo, priceList: priceList };
+    const inputCaseMtrls = state.currentOrderSummary.caseMtrls;
+
+    const body = {
+      supplier: currentPo,
+      priceList: priceList,
+      inputCaseMtrls: inputCaseMtrls,
+    };
     try {
       const res = await axios.post(
         `/api/purchase/purchaseorder/${osId}`,
@@ -349,6 +356,20 @@ const PurState = (props) => {
     });
   };
 
+  const evenMoq = (moq, totalQty, purchaseMoqQty, id) => {
+    let newPurchasedMoqQty = 0;
+    if (purchaseMoqQty) {
+    } else {
+      newPurchasedMoqQty = moq - totalQty + 1;
+    }
+    const payload = {
+      id: id,
+      newPurchasedMoqQty: newPurchasedMoqQty,
+    };
+
+    dispatch({ type: UPDATE_MOQPOQTY, payload: payload });
+  };
+
   return (
     <PurContext.Provider
       value={{
@@ -372,6 +393,7 @@ const PurState = (props) => {
         uploadPO,
         toggleConfirmDate,
         getPOTotal,
+        evenMoq,
       }}
     >
       {props.children}

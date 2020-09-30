@@ -9,6 +9,7 @@ import {
   PO_CURRENT_MTRLPRICE,
   OS_DELETE,
   UPDATE_SUPPLIERS,
+  UPDATE_MOQPOQTY,
   // UPDATE_CASEMTRL,
 } from '../types';
 
@@ -76,6 +77,19 @@ export default (state, action) => {
         // currentPo: action.payload.find(
         //   ({ _id }) => _id === state.currentPo._id
         // ),
+      };
+    case UPDATE_MOQPOQTY:
+      return {
+        ...state,
+        currentOrderSummary: {
+          ...state.currentOrderSummary,
+          caseMtrls: state.currentOrderSummary.caseMtrls.map((i) => {
+            if (i.id === action.payload.id) {
+              i.purchaseMoqQty = action.payload.newPurchasedMoqQty;
+            }
+            return i;
+          }),
+        },
       };
     // case UPDATE_CASEMTRL:
     //   return {

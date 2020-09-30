@@ -1,9 +1,10 @@
 import React, { useContext, Fragment } from 'react';
 import PurContext from '../../context/pur/purContext';
+import SqBtnLarge from '../elements/btns/SqBtnLarge';
 
 const PoItem = ({ osMtrl, theNumber, className }) => {
   const purContext = useContext(PurContext);
-  const { currentPoPriceList, currentPo } = purContext;
+  const { currentPoPriceList, currentPo, evenMoq } = purContext;
   //   const { suppliers } = currentOrderSummary;
 
   //   const labelSwitcher = (label) => {
@@ -19,7 +20,16 @@ const PoItem = ({ osMtrl, theNumber, className }) => {
   //     e.preventDefault();
   //     switchPage(e.target.value);
   //   };
-  const { supplier, ref_no, mColor, mSizeSPEC, purchaseQtySumUp } = osMtrl;
+  const {
+    id,
+    // supplier,
+    ref_no,
+    mColor,
+    mSizeSPEC,
+    purchaseQtySumUp,
+    purchaseLossQtySumUp,
+    purchaseMoqQty,
+  } = osMtrl;
   const currentMtrlPrice = currentPoPriceList.find(
     ({ osMtrlId }) => osMtrlId === osMtrl.id
   );
@@ -55,6 +65,34 @@ const PoItem = ({ osMtrl, theNumber, className }) => {
     }
   }
 
+  const displayPrice = () => {
+    if (moq) {
+      if (purchaseQtySumUp + purchaseLossQtySumUp + purchaseMoqQty > moq) {
+        return mPrice;
+      } else {
+        return moqPrice;
+      }
+    } else {
+      return mPrice;
+    }
+  };
+
+  const moqLabel = () => {
+    if (moq) {
+      if (purchaseQtySumUp + purchaseLossQtySumUp + purchaseMoqQty > moq) {
+        return null;
+      } else {
+        return <div className='fs-tiny fc-cp-2-c'>MOQ Price</div>;
+      }
+    } else {
+      return null;
+    }
+  };
+
+  const onClick = () => {
+    evenMoq(moq, purchaseQtySumUp + purchaseLossQtySumUp, purchaseMoqQty, id);
+  };
+
   return (
     <div className={`grid-Pur-Mtrl m-0 p-0 bd-light bd-no-t ${className}`}>
       <div className='bd-light bd-no-t v-center-content px-05 py-03'>
@@ -69,15 +107,39 @@ const PoItem = ({ osMtrl, theNumber, className }) => {
       <div className='bd-light bd-no-t v-center-content px-05 py-03'>
         {mSizeSPEC}
       </div>
-      <div className='bd-light bd-no-t v-center-content px-05 py-03'>
-        {mPrice}
-        {currency} per {unit}
+      <div className='bd-light bd-no-t px-05 py-03'>
+        {moqLabel()}
+        <div className='v-center-content'>
+          {displayPrice()} {currency}/{unit}
+        </div>
+      </div>
+      <div className='bd-light bd-no-t px-05 py-03'>
+        <div className='fs-tiny fc-cp-2-c v-center-content noPrint'>
+          <div>Required : {purchaseQtySumUp}</div>
+          <div>Loss : {purchaseLossQtySumUp}</div>
+          {moq && purchaseQtySumUp + purchaseLossQtySumUp < moq ? (
+            <div>Even Moq : {purchaseMoqQty} </div>
+          ) : null}
+        </div>
+        <div className='h-scatter-content'>
+          <div className='v-center-content'>
+            {purchaseQtySumUp + purchaseLossQtySumUp + purchaseMoqQty}
+          </div>
+          {moq && currentPo.poConfirmDate === null ? (
+            purchaseQtySumUp + purchaseLossQtySumUp > moq ? null : (
+              <div className='noPrint'>
+                <SqBtnLarge
+                  label={purchaseMoqQty === 0 ? 'Even MOQ' : 'Cancel MOQ'}
+                  onClick={onClick}
+                />
+              </div>
+            )
+          ) : null}
+        </div>
       </div>
       <div className='bd-light bd-no-t v-center-content px-05 py-03'>
-        {purchaseQtySumUp}
-      </div>
-      <div className='bd-light bd-no-t v-center-content px-05 py-03'>
-        {purchaseQtySumUp * mPrice}
+        {(purchaseQtySumUp + purchaseLossQtySumUp + purchaseMoqQty) *
+          displayPrice()}
       </div>
     </div>
   );
