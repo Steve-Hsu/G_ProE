@@ -5,21 +5,7 @@ import SqBtnLarge from '../elements/btns/SqBtnLarge';
 const PoItem = ({ osMtrl, theNumber, className }) => {
   const purContext = useContext(PurContext);
   const { currentPoPriceList, currentPo, evenMoq } = purContext;
-  //   const { suppliers } = currentOrderSummary;
 
-  //   const labelSwitcher = (label) => {
-  //     switch (label) {
-  //       case 'osNo':
-  //         return 'Order Summary No.';
-  //       default:
-  //         return label.charAt(0).toUpperCase() + label.slice(1);
-  //     }
-  //   };
-
-  //   const onClick = (e) => {
-  //     e.preventDefault();
-  //     switchPage(e.target.value);
-  //   };
   const {
     id,
     // supplier,
@@ -41,27 +27,20 @@ const PoItem = ({ osMtrl, theNumber, className }) => {
   let moq = 0;
   let moqPrice = 0;
 
-  // if (currentPo.poConfirmDate) {
-  //   unit = osMtrl.price.poUnit;
-  //   currency = osMtrl.price.currency;
-  //   mPrice = osMtrl.price.mPrice;
-  //   moq = osMtrl.price.moq;
-  //   moqPrice = osMtrl.price.moqPrice;
-  // } else {
-  if (currentMtrlPrice) {
-    unit = currentMtrlPrice.poUnit;
-    currency = currentMtrlPrice.currency;
-    mPrice = currentMtrlPrice.mPrice;
-    moq = currentMtrlPrice.moq;
-    moqPrice = currentMtrlPrice.moqPrice;
+  if (osMtrl.price && currentPo.poConfirmDate) {
+    unit = osMtrl.price.poUnit;
+    currency = osMtrl.price.currency;
+    mPrice = osMtrl.price.mPrice;
+    moq = osMtrl.price.moq;
+    moqPrice = osMtrl.price.moqPrice;
     // }
   } else {
-    if (osMtrl.price) {
-      unit = osMtrl.price.poUnit;
-      currency = osMtrl.price.currency;
-      mPrice = osMtrl.price.mPrice;
-      moq = osMtrl.price.moq;
-      moqPrice = osMtrl.price.moqPrice;
+    if (currentMtrlPrice) {
+      unit = currentMtrlPrice.poUnit;
+      currency = currentMtrlPrice.currency;
+      mPrice = currentMtrlPrice.mPrice;
+      moq = currentMtrlPrice.moq;
+      moqPrice = currentMtrlPrice.moqPrice;
     }
   }
 

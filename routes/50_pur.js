@@ -302,100 +302,89 @@ router.post('/materialprice', authUser, async (req, res) => {
   const comId = req.user.company;
   const { currentPo, caseMtrls } = req.body;
   // the currentPo is the name of the supplier
-  const checkConfirmed = currentPo.poConfirmDate;
-  if (!checkConfirmed) {
-    // console.log('the currentPo', currentPo); // Test Code
 
-    //This is the result will be returned to client
-    const materialPriceList = [];
+  const materialPriceList = [];
 
-    const filteredCaseMtrls = caseMtrls.filter((mtrl) => {
-      return mtrl.supplier === currentPo.supplier;
-    });
+  const filteredCaseMtrls = caseMtrls.filter((mtrl) => {
+    return mtrl.supplier === currentPo.supplier;
+  });
+  // console.log('filterdCaseMtrls in getting price', filteredCaseMtrls); // Test Code
 
-    // console.log('The caseMtrls passed in', caseMtrls);
+  let caseMtrlsCount = 0;
+  const insertSrPrice = new Promise(async (resolve, reject) => {
+    filteredCaseMtrls.map(async (mtrl) => {
+      const { id, supplier, ref_no, mColor, mSizeSPEC } = mtrl;
 
-    // console.log('filterdCaseMtrls in getting price', filteredCaseMtrls); // Test Code
-
-    let caseMtrlsCount = 0;
-    const insertSrPrice = new Promise(async (resolve, reject) => {
-      filteredCaseMtrls.map(async (mtrl) => {
-        const { id, supplier, ref_no, mColor, mSizeSPEC } = mtrl;
-
-        const srMtrl = await SRMtrl.findOne({
-          company: comId,
-          supplier: currentPo.supplier,
-          ref_no: ref_no,
-        });
-        if (!srMtrl || srMtrl.mPrices.length === 0) {
-          console.log(
-            "No such material or the material dosen't have any price built in the srMtrl database"
-          );
-          materialPriceList.push({
-            osMtrlId: id,
-            poUnit: 'no srMtrl',
-            currency: 0,
-            mPrice: 0,
-            moq: 0,
-            moqPrice: 0,
-          });
-        } else {
-          // extract the mPrice that match to the current material with name of supplier, ref_no, mColor and mSizeSPEC
-          const { mPrices } = srMtrl;
-          const mainPrice = srMtrl.mainPrice;
-          const currentSrMtrlPrice = mPrices.filter((i, idx) => {
-            if (i.mColor === mColor && i.sizeSPEC === mSizeSPEC) {
-              return i;
-            } else if (mainPrice) {
-              return i.id === mainPrice;
-            } else {
-              return i.id === mPrices[0].id;
-            }
-          });
-          // console.log('the mPrice selected', currentSrMtrlPrice); // Test code
-
-          const itemNames = ['unit', 'currency', 'mPrice', 'moq', 'moqPrice'];
-          const theValues = itemNames.map((i, idx) => {
-            if (!currentSrMtrlPrice[0][i]) {
-              return { [i]: 'undefined' };
-            } else {
-              return { [i]: currentSrMtrlPrice[0][i] };
-            }
-          });
-
-          // console.log(theValues); // Test code
-
-          materialPriceList.push({
-            osMtrlId: id,
-            poUnit: theValues[0].unit,
-            currency: theValues[1].currency,
-            mPrice: theValues[2].mPrice,
-            moq: theValues[3].moq,
-            moqPrice: theValues[4].moqPrice,
-          });
-        }
-        caseMtrlsCount = caseMtrlsCount + 1;
-        if (caseMtrlsCount === filteredCaseMtrls.length) {
-          resolve();
-        }
+      const srMtrl = await SRMtrl.findOne({
+        company: comId,
+        supplier: currentPo.supplier,
+        ref_no: ref_no,
       });
-    }).catch((err) => {
+      if (!srMtrl || srMtrl.mPrices.length === 0) {
+        console.log(
+          "No such material or the material dosen't have any price built in the srMtrl database"
+        );
+        materialPriceList.push({
+          osMtrlId: id,
+          poUnit: 'no srMtrl',
+          currency: 0,
+          mPrice: 0,
+          moq: 0,
+          moqPrice: 0,
+        });
+      } else {
+        // extract the mPrice that match to the current material with name of supplier, ref_no, mColor and mSizeSPEC
+        const { mPrices } = srMtrl;
+        const mainPrice = srMtrl.mainPrice;
+        const currentSrMtrlPrice = mPrices.filter((i, idx) => {
+          if (i.mColor === mColor && i.sizeSPEC === mSizeSPEC) {
+            return i;
+          } else if (mainPrice) {
+            return i.id === mainPrice;
+          } else {
+            return i.id === mPrices[0].id;
+          }
+        });
+        // console.log('the mPrice selected', currentSrMtrlPrice); // Test code
+
+        const itemNames = ['unit', 'currency', 'mPrice', 'moq', 'moqPrice'];
+        const theValues = itemNames.map((i, idx) => {
+          if (!currentSrMtrlPrice[0][i]) {
+            return { [i]: 'undefined' };
+          } else {
+            return { [i]: currentSrMtrlPrice[0][i] };
+          }
+        });
+
+        // console.log(theValues); // Test code
+
+        materialPriceList.push({
+          osMtrlId: id,
+          poUnit: theValues[0].unit,
+          currency: theValues[1].currency,
+          mPrice: theValues[2].mPrice,
+          moq: theValues[3].moq,
+          moqPrice: theValues[4].moqPrice,
+        });
+      }
+      caseMtrlsCount = caseMtrlsCount + 1;
+      if (caseMtrlsCount === filteredCaseMtrls.length) {
+        resolve();
+      }
+    });
+  }).catch((err) => {
+    console.log(err);
+  });
+
+  Promise.all([insertSrPrice])
+    .then(() => {
+      // console.log('the mtaterialPriceList', materialPriceList); // Test Code
+      console.log('the material Price is returned!');
+      return res.json(materialPriceList);
+    })
+    .catch((err) => {
       console.log(err);
     });
-
-    Promise.all([insertSrPrice])
-      .then(() => {
-        // console.log('the mtaterialPriceList', materialPriceList); // Test Code
-        console.log('the material Price is returned!');
-        return res.json(materialPriceList);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  } else {
-    console.log('Nothing update, since the po is confirmed');
-    return res.json([]);
-  }
 });
 
 // @route   GET api/purchase/materialprice
@@ -453,6 +442,7 @@ router.post('/purchaseorder/:osId', authUser, async (req, res) => {
   const comId = req.user.company;
   const osId = req.params.osId;
   const { supplier, priceList, inputCaseMtrls } = req.body;
+  console.log('The priceList', priceList);
   // console.log('the body', req.body); // test Code
   // the currentPo is the name of the supplier
   const checkIfConfirmed = supplier.poConfirmDate;
@@ -578,7 +568,7 @@ router.post('/purchaseorder/:osId', authUser, async (req, res) => {
       );
 
       const caseMtrls = updatedSuppliers.caseMtrls;
-      console.log('the caseMTrls', caseMtrls);
+      // console.log('the caseMTrls', caseMtrls);
 
       const deletePrice = new Promise(async (resolve) => {
         let newCaseMtrl = [];
@@ -586,7 +576,7 @@ router.post('/purchaseorder/:osId', authUser, async (req, res) => {
           if (mtrl.supplier === supplier.supplier) {
             delete mtrl.price;
             newCaseMtrl.push(mtrl);
-            console.log('The mtrl is delete price', mtrl);
+            // console.log('The mtrl is delete price', mtrl);
           } else {
             newCaseMtrl.push(mtrl);
           }
