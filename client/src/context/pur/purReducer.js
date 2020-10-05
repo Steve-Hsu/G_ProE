@@ -10,6 +10,7 @@ import {
   OS_DELETE,
   UPDATE_SUPPLIERS,
   UPDATE_MOQPOQTY,
+  UPDATE_HSCODE,
   // UPDATE_CASEMTRL,
 } from '../types';
 
@@ -86,6 +87,19 @@ export default (state, action) => {
           caseMtrls: state.currentOrderSummary.caseMtrls.map((i) => {
             if (i.id === action.payload.id) {
               i.purchaseMoqQty = action.payload.newPurchasedMoqQty;
+            }
+            return i;
+          }),
+        },
+      };
+    case UPDATE_HSCODE:
+      return {
+        ...state,
+        currentOrderSummary: {
+          ...state.currentOrderSummary,
+          caseMtrls: state.currentOrderSummary.caseMtrls.map((i) => {
+            if (i.id === action.payload.id) {
+              i.hsCode = action.payload.hsCode;
             }
             return i;
           }),

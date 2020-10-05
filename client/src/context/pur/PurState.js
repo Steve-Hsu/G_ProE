@@ -16,6 +16,7 @@ import {
   OS_DELETE,
   UPDATE_SUPPLIERS,
   UPDATE_MOQPOQTY,
+  UPDATE_HSCODE,
   // UPDATE_CASEMTRL,
 } from '../types';
 
@@ -122,10 +123,9 @@ const PurState = (props) => {
         dispatch({ type: PURPAGE_SWITCH, payload: value });
         dispatch({ type: PO_CURRENT, payload: subject });
         break;
-      // case null:
-      // case '':
-      //   dispatch({ type: PURPAGE_SWITCH, payload: null });
-      //   break;
+      case 'oSMtrlList':
+        dispatch({ type: PURPAGE_SWITCH, payload: value });
+        break;
       default:
         console.log('no value is triggered ');
       // dispatch({ type: PURPAGE_SWITCH, payload: value });
@@ -370,6 +370,37 @@ const PurState = (props) => {
     dispatch({ type: UPDATE_MOQPOQTY, payload: payload });
   };
 
+  const enterHsCode = (e) => {
+    const id = e.target.id;
+    const value = e.target.value;
+    const payload = {
+      id: id.slice(6),
+      hsCode: value,
+    };
+    dispatch({ type: UPDATE_HSCODE, payload: payload });
+  };
+
+  const uploadHsCode = async () => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    const body = {
+      inputCaseMtrls: currentOrderSummary.caseMtrls,
+    };
+    try {
+      const res = await axios.post(
+        `/api/purchase/updatehscode/${currentOrderSummary._id}`,
+        body,
+        config
+      );
+      console.log('Upload hs-code succeed');
+    } catch (err) {
+      console.log(err.msg, 'Upload hs-code failed');
+    }
+  };
+
   return (
     <PurContext.Provider
       value={{
@@ -394,6 +425,8 @@ const PurState = (props) => {
         toggleConfirmDate,
         getPOTotal,
         evenMoq,
+        enterHsCode,
+        uploadHsCode,
       }}
     >
       {props.children}

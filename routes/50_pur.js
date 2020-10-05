@@ -211,6 +211,7 @@ router.post('/', authUser, async (req, res) => {
                 purchaseQtySumUp: cspt.requiredMQty,
                 purchaseLossQtySumUp: purchaseLossQtySumUp,
                 purchaseMoqQty: 0,
+                hsCode: null,
               });
             } else {
               // existCaseMtrl.purchaseQtySumUp += cspt.requiredMQty;
@@ -430,7 +431,7 @@ router.delete('/deleteos/:osId', authUser, async (req, res) => {
   }
 });
 
-// @route   POST api/purchase/updatecondition/:osId/:supplierId
+// @route   POST api/purchase/updatecondition/:osId
 // @desc    Update the conditions in the suppliers of OS and return the suppliers
 // @access  Private
 router.post('/purchaseorder/:osId', authUser, async (req, res) => {
@@ -613,6 +614,40 @@ router.post('/purchaseorder/:osId', authUser, async (req, res) => {
         });
       });
     }
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+// @route   POST api/purchase/updatehscode/:osId
+// @desc    Update the HS-CODE in the caseMtrls of the orderSummary
+// @access  Private
+router.post('/updatehscode/:osId', authUser, async (req, res) => {
+  console.log('Start upload Po'); // Test Code
+  let user = await User.findById(req.user.id);
+  if (!user.po) {
+    return res.status(400).json({ msg: 'Out of authority' });
+  }
+  const comId = req.user.company;
+  const osId = req.params.osId;
+  console.log('the OSId', osId);
+  const { inputCaseMtrls } = req.body;
+  console.log('the caseMtrls', inputCaseMtrls[0]);
+  try {
+    await OS.updateOne(
+      {
+        company: comId,
+        _id: osId,
+      },
+      {
+        $set: {
+          caseMtrls: inputCaseMtrls,
+        },
+      }
+    );
+    const msg = 'The hs-code is uploaded.';
+    console.log(msg);
+    return res.json({ msg: msg });
   } catch (err) {
     console.log(err);
   }

@@ -5,6 +5,7 @@ import DeleteBtnSmall from '../elements/btns/DeleteBtnSmall';
 import PopoverContext from '../../context/popover/popoverContext';
 import DeletePopover from '../layout/DeletePopover';
 import LockedBadge from '../elements/badge/LockedBadge';
+import SqBtnLarge from '../elements/btns/SqBtnLarge';
 
 const OrderSummary = () => {
   const popoverContext = useContext(PopoverContext);
@@ -13,6 +14,11 @@ const OrderSummary = () => {
   const purContext = useContext(PurContext);
   const { switchPage, currentOrderSummary } = purContext;
   const { _id, osNo, cNos, suppliers, osConfirmDate } = currentOrderSummary;
+
+  const onClick = (e) => {
+    e.preventDefault();
+    switchPage('oSMtrlList');
+  };
 
   return (
     <Fragment>
@@ -40,6 +46,10 @@ const OrderSummary = () => {
               </span>
             );
           })}
+        </div>
+        <div className='h-scatter-content'>
+          <div></div>
+          <SqBtnLarge onClick={onClick} label='List' />
         </div>
         {osConfirmDate !== null ? (
           <LockedBadge

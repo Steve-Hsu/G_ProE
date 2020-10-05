@@ -1,4 +1,4 @@
-import React, { useContext, Fragment } from 'react';
+import React, { useContext } from 'react';
 import PurContext from '../../context/pur/purContext';
 import SqBtnLarge from '../elements/btns/SqBtnLarge';
 
@@ -74,6 +74,16 @@ const PoItem = ({ osMtrl, theNumber, className }) => {
   const onClick = () => {
     evenMoq(moq, purchaseQtySumUp + purchaseLossQtySumUp, purchaseMoqQty, id);
   };
+
+  const amount =
+    Math.round(
+      (Number(
+        (purchaseQtySumUp + purchaseLossQtySumUp + purchaseMoqQty) *
+          displayPrice()
+      ) +
+        Number.EPSILON) *
+        100
+    ) / 100;
 
   return (
     <div className={`grid-Pur-Mtrl m-0 p-0 bd-light bd-no-t ${className}`}>
@@ -193,14 +203,7 @@ const PoItem = ({ osMtrl, theNumber, className }) => {
         </div> */}
       </div>
       <div className='bd-light bd-no-t v-center-content px-05 py-03'>
-        {Math.round(
-          (Number(
-            (purchaseQtySumUp + purchaseLossQtySumUp + purchaseMoqQty) *
-              displayPrice()
-          ) +
-            Number.EPSILON) *
-            100
-        ) / 100}
+        {amount ? amount : null}
       </div>
     </div>
   );

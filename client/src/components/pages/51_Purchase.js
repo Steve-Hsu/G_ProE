@@ -6,6 +6,7 @@ import ItemSelector from '../itemSelector/ItemSelector';
 import OsSelector from '../50_po/50_02_osSelector';
 import OrderSummary from '../50_po/50_03_orderSummary';
 import PurchaseOrder from '../50_po/50_04_purchaseOrder';
+import OsMtrlList from '../50_po/50_05_osMtrlList';
 import GoBackBtn from '../elements/btns/GoBackBtn';
 
 // Context
@@ -83,6 +84,14 @@ const Purchase = (props) => {
           <div className='container container-with-navbar whenPrint'>
             <GoBackBtn onClick={goOrderSummanry} className='noPrint' />
             <PurchaseOrder />
+          </div>
+        </div>
+      ) : openPage === 'oSMtrlList' ? (
+        <div className='grid-1-4'>
+          <LeftBar currentPath={currentPath} />
+          <div className='container container-with-navbar whenPrint'>
+            <GoBackBtn onClick={goOrderSummanry} className='noPrint' />
+            <OsMtrlList />
           </div>
         </div>
       ) : null}
