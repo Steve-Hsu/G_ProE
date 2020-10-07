@@ -130,12 +130,7 @@ const PurchaseOrder = () => {
             theNumber = theNumber + 1;
             // console.log(mtrl.supplier);
             return (
-              <PoItem
-                key={osMtrl.id}
-                osMtrl={osMtrl}
-                theNumber={theNumber}
-                className='whenPrintFSSmall'
-              />
+              <PoItem key={osMtrl.id} osMtrl={osMtrl} theNumber={theNumber} />
             );
           } else {
             return null;

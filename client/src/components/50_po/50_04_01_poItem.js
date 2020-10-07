@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import PurContext from '../../context/pur/purContext';
 import SqBtnLarge from '../elements/btns/SqBtnLarge';
 
-const PoItem = ({ osMtrl, theNumber, className }) => {
+const PoItem = ({ osMtrl, theNumber }) => {
   const purContext = useContext(PurContext);
   const { currentPoPriceList, currentPo, evenMoq } = purContext;
 
@@ -86,9 +86,7 @@ const PoItem = ({ osMtrl, theNumber, className }) => {
     ) / 100;
 
   return (
-    <div
-      className={`grid-Pur-Mtrl m-0 p-0 bd-light bd-light-t-05 bd-light-b-05  noBreak ${className}`}
-    >
+    <div className='grid-Pur-Mtrl m-0 p-0 bd-light bd-light-t-05 bd-light-b-05  noBreak whenPrintFSSmall'>
       <div className='bd-light bd-no-t v-center-content px-05 py-03'>
         {theNumber}
       </div>

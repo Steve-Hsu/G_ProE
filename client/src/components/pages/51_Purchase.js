@@ -89,7 +89,7 @@ const Purchase = (props) => {
       ) : openPage === 'oSMtrlList' ? (
         <div className='grid-1-4'>
           <LeftBar currentPath={currentPath} />
-          <div className='container container-with-navbar whenPrint landscape'>
+          <div className='container container-with-navbar whenPrint long-row-print'>
             <GoBackBtn onClick={goOrderSummanry} className='noPrint' />
             <OsMtrlList />
           </div>
