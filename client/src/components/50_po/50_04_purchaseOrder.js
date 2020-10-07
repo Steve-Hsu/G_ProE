@@ -134,7 +134,7 @@ const PurchaseOrder = () => {
                 key={osMtrl.id}
                 osMtrl={osMtrl}
                 theNumber={theNumber}
-                className='noBreak whenPrintFSSmall'
+                className='whenPrintFSSmall'
               />
             );
           } else {

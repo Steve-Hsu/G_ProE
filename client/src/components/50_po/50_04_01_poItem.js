@@ -86,7 +86,9 @@ const PoItem = ({ osMtrl, theNumber, className }) => {
     ) / 100;
 
   return (
-    <div className={`grid-Pur-Mtrl m-0 p-0 bd-light bd-no-t ${className}`}>
+    <div
+      className={`grid-Pur-Mtrl m-0 p-0 bd-light bd-light-t-05 bd-light-b-05  noBreak ${className}`}
+    >
       <div className='bd-light bd-no-t v-center-content px-05 py-03'>
         {theNumber}
       </div>

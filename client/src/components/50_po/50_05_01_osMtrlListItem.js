@@ -27,7 +27,7 @@ const OsMtrlListItem = ({ osMtrl, theNumber, className }) => {
 
   return (
     <div
-      className={`grid-OsMtrl m-0 p-0 bd-light bd-no-t fs-small ${className}`}
+      className={`grid-OsMtrl m-0 p-0 bd-light bd-light-t-05 bd-light-b-05 fs-small ${className}`}
     >
       <div className='bd-light bd-no-t v-center-content px-05 py-03 '>
         {theNumber}
