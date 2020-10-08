@@ -54,8 +54,8 @@ const QuoMtrl = ({ mtrl, className }) => {
 
   return (
     <div className={`grid-Quo-Mtrl m-0 p-0 bd-light bd-no-t ${className}`}>
-      <div className='bd-light bd-no-t v-center-content p-05'>{mtrl.item}</div>
-      <div className='bd-light bd-no-t v-center-content p-05'>
+      <div className='bd-light bd-no-t v-center-content px-05'>{mtrl.item}</div>
+      <div className='bd-light bd-no-t v-center-content px-05'>
         {mtrl.supplier} / {mtrl.ref_no} / {mtrl.sizeSPECs[0].mSizeSPEC} /{' '}
         {mtrl.position}
       </div>
@@ -92,7 +92,7 @@ const QuoMtrl = ({ mtrl, className }) => {
         <div className='showWhenPrint m-05'>{mQuoAddvised}</div>
       </div>
       {/* <div className='bd-light bd-no-t v-center-content p-05'>{currency}</div> */}
-      <div className='bd-light bd-no-t v-center-content p-05'>
+      <div className='bd-light bd-no-t v-center-content px-05'>
         {materialFinalQuotation}
       </div>
     </div>

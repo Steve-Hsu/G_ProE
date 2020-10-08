@@ -6,7 +6,7 @@ import CWayTable from './21_01_03_CWayTable';
 const CardItem = ({ cNo, style, cWays, sizes, mtrl, no }) => {
   return (
     <div className='mt-05 noBreak'>
-      <div className='fw-bold fs-small'>
+      <div className='fw-bold fs-small fc-fade-dark'>
         {style} - {cNo}
       </div>
       <div className='bd-light-2px '>

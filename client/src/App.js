@@ -84,8 +84,8 @@ const App = () => {
                                     component={UserLogin}
                                   />
                                   {/* <PrivateRoute */}
-                                  {/* <PrivateComRoute */}
-                                  <Route
+                                  {/* <Route */}
+                                  <PrivateComRoute
                                     exact
                                     path='/api/users'
                                     component={UserManager}
