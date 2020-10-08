@@ -5,7 +5,7 @@ const GoBackBtn = ({ name, onClick, className, value }) => {
     <button
       name={name}
       value={value}
-      className={`btn btn-sq center-content bd-round bd-no ${className}`}
+      className={`btn btn-sq center-content bd-round bd-no noPrint ${className}`}
       onClick={onClick}
     >
       <i className='fas fa-chevron-left'></i>

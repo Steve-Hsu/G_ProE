@@ -28,6 +28,7 @@ import {
   TOGGLE_DISPALYTITALES,
   INPUTTAG_FILE_NAME,
   CASE_LIST_DOWNLOAD,
+  CASE_MTRL_CARD,
 } from '../types';
 
 const CasesState = (props) => {
@@ -68,6 +69,7 @@ const CasesState = (props) => {
     isBoardMode: false,
     isImportedExcel: false,
     inputFileName: 'Select a File...',
+    showMtrlCard: false,
   };
 
   const generateId = () => {
@@ -1236,6 +1238,10 @@ const CasesState = (props) => {
     defaultCase();
   };
 
+  const toggleMtrlCard = () => {
+    dispatch({ type: CASE_MTRL_CARD });
+  };
+
   return (
     <CasesContext.Provider
       value={{
@@ -1261,6 +1267,7 @@ const CasesState = (props) => {
         inputFileName: state.inputFileName,
         osNo: state.osNo,
         poDate: state.poDate,
+        showMtrlCard: state.showMtrlCard,
         addCaseValue,
         addcWay,
         updatecWay,
@@ -1286,6 +1293,7 @@ const CasesState = (props) => {
         getM_list,
         getCaseList,
         deleteCase,
+        toggleMtrlCard,
       }}
     >
       {props.children}

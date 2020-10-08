@@ -28,6 +28,8 @@ const LeftBar = ({ currentPath }) => {
     isImportedExcel,
     inputFileName,
     isEditingCase,
+    toggleMtrlCard,
+    showMtrlCard,
   } = casesContext;
   const {
     isQuotating,
@@ -78,6 +80,11 @@ const LeftBar = ({ currentPath }) => {
   const onClick = (e) => {
     e.preventDefault();
     clearcNo(mtrls);
+  };
+
+  const onClick2 = (e) => {
+    e.preventDefault();
+    toggleMtrlCard();
   };
 
   const onClickQuo = () => {
@@ -312,6 +319,7 @@ const LeftBar = ({ currentPath }) => {
           </div>
         ) : currentPage === 'case' &&
           osNo === null &&
+          showMtrlCard === false &&
           isEditingCase === true ? (
           normalSummitBtn()
         ) : null}
@@ -332,87 +340,114 @@ const LeftBar = ({ currentPath }) => {
           ? normalSummitBtn()
           : null}
         {/* Other Btns */}
-        {/* Case Sets */}
+        {/* @Case Sets */}
         {isEditingCase && currentPage === 'case' ? (
           <>
             {/* Read CSV */}
-            {osNo ? null : (
+            {showMtrlCard ? (
+              printOutElement()
+            ) : (
               <div>
-                {currentPage === 'case' ? (
-                  isImportedExcel ? (
-                    <div className='btn-block bd-radius-s bg-cp-2-light-c center-content mt-1'>
-                      Have imported Style from Excel
+                {' '}
+                {osNo ? null : (
+                  <div>
+                    {currentPage === 'case' ? (
+                      isImportedExcel ? (
+                        <div className='btn-block bd-radius-s bg-cp-2-light-c center-content mt-1'>
+                          Have imported Style from Excel
+                        </div>
+                      ) : (
+                        <div className='round-area bg-cp-3 mt-1'>
+                          <i className='fas fa-table fc-cp-1'>
+                            {' '}
+                            Read Bom from Excel
+                          </i>
+                          <label className='btn btn-block mt-05 bd-radius-s bd-light bg-cp-1 fs-small'>
+                            <input
+                              type='file'
+                              id='upload-excel'
+                              name='inputFileName'
+                              accept='.xls, .xlsx'
+                              style={{
+                                position: 'fixed',
+                                right: '100%',
+                                bottom: '100%',
+                              }}
+                              onChange={labelOfReadExcel}
+                            />
+                            {excelName.length > 0 ? String(excelName) : null}
+                            {inputFileName}
+                          </label>
+                          {inputFileName == 'Select a File...' ? null : (
+                            <button
+                              className='btn btn-block mt-05 h-100 bd-radius-s bd-light bg-cp-2'
+                              onClick={readExcel}
+                            >
+                              Read
+                            </button>
+                          )}
+                        </div>
+                      )
+                    ) : null}
+                    <div className='h-scatter-content mt-1'>
+                      <div> Color Way</div>
+                      <SqBtnLarge
+                        label={<i className='fas fa-swatchbook'> Color ＋</i>}
+                        onClick={addcWay}
+                      />
                     </div>
-                  ) : (
-                    <div className='round-area bg-cp-3 mt-1'>
-                      <i className='fas fa-table fc-cp-1'>
-                        {' '}
-                        Read Bom from Excel
-                      </i>
-                      <label className='btn btn-block mt-05 bd-radius-s bd-light bg-cp-1 fs-small'>
-                        <input
-                          type='file'
-                          id='upload-excel'
-                          name='inputFileName'
-                          accept='.xls, .xlsx'
-                          style={{
-                            position: 'fixed',
-                            right: '100%',
-                            bottom: '100%',
-                          }}
-                          onChange={labelOfReadExcel}
-                        />
-                        {excelName.length > 0 ? String(excelName) : null}
-                        {inputFileName}
-                      </label>
-                      {inputFileName == 'Select a File...' ? null : (
-                        <button
-                          className='btn btn-block mt-05 h-100 bd-radius-s bd-light bg-cp-2'
-                          onClick={readExcel}
-                        >
-                          Read
-                        </button>
-                      )}
+                    <div className='h-scatter-content mt-05'>
+                      <div>Size </div>
+                      <SqBtnLarge
+                        label={<i className='fas fa-ruler'> Size ＋</i>}
+                        onClick={addSize}
+                      />
                     </div>
-                  )
-                ) : null}
-                <div className='h-scatter-content mt-1'>
-                  <div> Color Way</div>
-                  <SqBtnLarge
-                    label={<i className='fas fa-swatchbook'> Color ＋</i>}
-                    onClick={addcWay}
-                  />
-                </div>
-                <div className='h-scatter-content mt-05'>
-                  <div>Size </div>
-                  <SqBtnLarge
-                    label={<i className='fas fa-ruler'> Size ＋</i>}
-                    onClick={addSize}
-                  />
-                </div>
-                <div className='h-scatter-content mt-05'>
-                  <div>Material</div>
-                  <SqBtnLarge
-                    label={<i className='fab fa-buffer '> Item ＋</i>}
-                    onClick={addMtrl}
-                  />
-                </div>
+                    <div className='h-scatter-content mt-05'>
+                      <div>Material</div>
+                      <SqBtnLarge
+                        label={<i className='fab fa-buffer '> Item ＋</i>}
+                        onClick={addMtrl}
+                      />
+                    </div>
+                  </div>
+                )}
+                {/* <div>
+                  {cNo === null ? null : (
+                    <input
+                      type='submit'
+                      // form='caseForm'
+                      className='btn btn-block bg-cp-1 mt-1'
+                      value='Material Card'
+                      onClick={onClick2}
+                    />
+                  )}
+                </div> */}
+                {/* <div> */}
+                {cNo === null ? null : (
+                  <div>
+                    <input
+                      type='submit'
+                      // form='caseForm'
+                      className='btn btn-block bg-cp-1 mt-1'
+                      value='Material Card'
+                      onClick={onClick2}
+                    />
+                    <input
+                      type='submit'
+                      // form='caseForm'
+                      className='btn btn-block bg-cp-1 mt-1'
+                      value='Copy this case as a new Case'
+                      onClick={onClick}
+                    />
+                  </div>
+                )}
+                {/* </div> */}
               </div>
             )}
-            <div>
-              {cNo === null ? null : (
-                <input
-                  type='submit'
-                  // form='caseForm'
-                  className='btn btn-block bg-cp-1 mt-1'
-                  value='Copy this case as a new Case'
-                  onClick={onClick}
-                />
-              )}
-            </div>
           </>
         ) : null}
-        {/* Quotation Set */}
+        {/* @Quotation Set */}
         {
           (currentPage =
             'quotation' && quotateFor === 'garment' ? (
@@ -463,7 +498,7 @@ const LeftBar = ({ currentPath }) => {
               )
             ) : null)
         }
-        {/* Purchase Set */}
+        {/* @Purchase Set */}
         {(currentPath === '/api/purchase' && openPage === 'purchaseOrder') ||
         (currentPath === '/api/purchase' && openPage === 'oSMtrlList') ? (
           <div>

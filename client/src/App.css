@@ -1106,6 +1106,7 @@ input[type='submit']:focus {
 
 /* @Like Forced important style ----------------  */
 /* @Text */
+/* @Font */
 /* Font-size */
 .fs-large {
   font-size: 2rem;
@@ -1753,6 +1754,10 @@ input[type='submit']:focus {
   border: 1px solid var(--fade-color);
 }
 
+.bd-light-r {
+  border-right: 1px solid var(--fade-color);
+}
+
 .bd-light-2px {
   border: 2px solid var(--fade-color);
 }
@@ -1955,8 +1960,6 @@ div.landscape {
     /* margin: 10px auto; */
     /* padding: 10mm; */
     /* border: solid 1px black; */
-    margin: 0;
-    padding: 0;
     border: none;
     background: none;
     overflow: hidden;

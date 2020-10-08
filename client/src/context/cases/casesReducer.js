@@ -23,6 +23,7 @@ import {
   TOGGLE_CASE,
   TOGGLE_DISPALYTITALES,
   INPUTTAG_FILE_NAME,
+  CASE_MTRL_CARD,
 } from '../types';
 
 export default (state, action) => {
@@ -147,6 +148,8 @@ export default (state, action) => {
         inputFileName: 'Select a File...',
         osNo: null,
         poDate: null,
+        isImportedExcel: false,
+        showMtrlCard: false,
       };
     case CASENO_CLEAR:
       return {
@@ -159,6 +162,7 @@ export default (state, action) => {
         osNo: null,
         poData: null,
         isImportedExcel: false,
+        showMtrlCard: false,
       };
     case TOGGLE_ISUPDATE:
       return {
@@ -185,6 +189,11 @@ export default (state, action) => {
       return {
         ...state,
         inputFileName: action.payload,
+      };
+    case CASE_MTRL_CARD:
+      return {
+        ...state,
+        showMtrlCard: !state.showMtrlCard,
       };
     default:
   }
