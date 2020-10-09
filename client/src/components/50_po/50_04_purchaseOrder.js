@@ -8,6 +8,8 @@ import NoAndDateHeader from '../../components/elements/formPart/NoAndDateHeader'
 import FormTitle from '../../components/elements/formPart/FormTitle';
 import Conditions from '../elements/formPart/Conditions/Conditions';
 import ConfirmArea from '../elements/formPart/ConfirmArea';
+import DeletePopover from '../../components/layout/DeletePopover';
+import PopoverContext from '../../context/popover/popoverContext';
 
 const PurchaseOrder = () => {
   // const { downloadCase } = caseContext;
@@ -21,7 +23,9 @@ const PurchaseOrder = () => {
     uploadPO,
     getPOTotal,
   } = purContext;
+  const popoverContext = useContext(PopoverContext);
   const { _id, osNo, caseMtrls } = currentOrderSummary;
+  const { isLoading, toggleLoading } = popoverContext;
 
   // const authUserContext = useContext(AuthUserContext);
   // const { comName, comNameTail, comAddress, comPhone } = authUserContext;
@@ -46,9 +50,12 @@ const PurchaseOrder = () => {
     updatePOInform(e);
   };
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-    uploadPO(_id, currentPo);
+    toggleLoading();
+    await uploadPO(_id, currentPo).then(() => {
+      toggleLoading();
+    });
   };
 
   const onChange = (e) => {
@@ -58,6 +65,7 @@ const PurchaseOrder = () => {
 
   return (
     <div className=''>
+      {isLoading === true ? <DeletePopover key='PurchaseOrderPopover' /> : null}
       {/* {currentPoPriceList === [] ? null : (
         <div> */}
       <NoAndDateHeader No={osNo} />

@@ -3,9 +3,11 @@ import QuoContext from '../../context/quo/quoContext';
 import DeletePopover from '../layout/DeletePopover';
 import Table from '../elements/table/Table';
 import GoBackBtn from '../elements/btns/GoBackBtn';
+import PopoverContext from '../../context/popover/popoverContext';
 
 const QuoForm = () => {
   const quoContext = useContext(QuoContext);
+  const popoverContext = useContext(PopoverContext);
 
   const {
     isQuotating,
@@ -15,17 +17,23 @@ const QuoForm = () => {
     uploadQuoForm,
   } = quoContext;
 
-  const addNewQuotation = (e) => {
-    e.preventDefault();
+  const { toggleLoading, isLoading } = popoverContext;
 
-    uploadQuoForm(isQuotating, true).then((result) => {
-      const quoForms = result.quoForms;
-      console.log(result);
-      const newQuoFormId = quoForms[quoForms.length - 1]._id;
-      console.log(newQuoFormId);
-      switchQuoForm(newQuoFormId);
-      setTimeout(() => {}, 300);
-    });
+  const addNewQuotation = async (e) => {
+    e.preventDefault();
+    toggleLoading();
+    await uploadQuoForm(isQuotating, true)
+      .then((result) => {
+        const quoForms = result.quoForms;
+        // console.log(result); // test Code
+        const newQuoFormId = quoForms[quoForms.length - 1]._id;
+        // console.log(newQuoFormId); // Test Code
+        switchQuoForm(newQuoFormId);
+      })
+      .then(() => {
+        toggleLoading();
+        console.log('New Quotation form is added.');
+      });
   };
 
   const displayTitles = [
@@ -45,7 +53,7 @@ const QuoForm = () => {
 
   return (
     <Fragment>
-      {/* {popover ? <DeletePopover key={current.id} current={current} /> : null} */}
+      {isLoading ? <DeletePopover key='quoFormSelectorPopover' /> : null}
       <div className='container container-with-navbar'>
         <form id='addNewQuoForm' onSubmit={addNewQuotation}></form>
         <GoBackBtn onClick={goBack} />

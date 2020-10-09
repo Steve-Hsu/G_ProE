@@ -25,16 +25,19 @@ const Purchase = (props) => {
   const currentPath = props.location.pathname;
 
   const popoverContext = useContext(PopoverContext);
-  const { popover, current } = popoverContext;
+  const { popover, current, toggleLoading, isLoading } = popoverContext;
 
   const goBack = () => {
     props.history.push('/api/case/director');
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
+    toggleLoading();
     console.log('order summary is triggered');
-    createOrderSummary(selectedCases);
+    await createOrderSummary(selectedCases).then(() => {
+      toggleLoading();
+    });
   };
 
   //Here use same function the "switchPage", but separate to 2 onClick func the "goOsSelector" and "goOrderSummary", if not do so, the render seems sometime not refering to the value soon enough, cause the func in the state will enter an null value
@@ -50,7 +53,9 @@ const Purchase = (props) => {
 
   return (
     <Fragment>
-      {popover ? <DeletePopover key={current._id} current={current} /> : null}
+      {popover === true || isLoading === true ? (
+        <DeletePopover key='purchasePagePopover' current={current} />
+      ) : null}
       {/* Grid-1 */}
       {openPage === 'caseSelector' ? (
         <div className='grid-1-4'>

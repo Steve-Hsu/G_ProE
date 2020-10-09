@@ -27,12 +27,10 @@ const QuoForm = () => {
     switchQuoForm,
     downLoadmtrlPrice,
     currentQuoForm,
-    quotateFor,
     uploadQuoForm,
     isQuotating,
     updateCurrentQuoForm,
     quotation,
-    deleteQuoForm,
   } = quoContext;
   const {
     _id,
@@ -40,7 +38,6 @@ const QuoForm = () => {
     quoSizes,
     quocWays,
     currency,
-    mQuos,
     mQuosTotal,
     otherExpenses,
     cm,
@@ -69,29 +66,25 @@ const QuoForm = () => {
     mtrls = theCases.mtrls;
   }
 
-  // const {
-  //   cNo,
-  //   caseType,
-  //   style,
-  //   client,
-  //   cWays,
-  //   sizes,
-  //   gQtys,
-  //   mtrls,
-  //   defaultCase,
-  // } = quotation.theCase;
-  const { popover, current, togglePopover } = popoverContext;
-  const onSubmitQuoForm = (e) => {
+  const {
+    popover,
+    // current,
+    togglePopover,
+    toggleLoading,
+    isLoading,
+  } = popoverContext;
+  const onSubmitQuoForm = async (e) => {
     // console.log('here triggered'); // Test Code
     e.preventDefault();
     // uploadQuoForm(isQuotating, true);
-
-    uploadQuoForm(isQuotating, false, currentQuoForm)
+    toggleLoading();
+    await uploadQuoForm(isQuotating, false, currentQuoForm)
       .then(() => {
         console.log('QuoForm is updated');
       })
       .then(() => {
         switchQuoForm(_id);
+        toggleLoading();
       });
   };
 
@@ -144,7 +137,9 @@ const QuoForm = () => {
 
   return (
     <Fragment>
-      {popover ? <DeletePopover key={current._id} /> : null}
+      {popover === true || isLoading === true ? (
+        <DeletePopover key='quoFormPopover' />
+      ) : null}
       <div
         className='container container-with-navbar whenPrint'
         id='quotationForm'

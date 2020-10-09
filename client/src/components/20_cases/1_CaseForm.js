@@ -54,7 +54,13 @@ const CaseForm = ({ props }) => {
   } = casesContext;
   const { comName, comSymbol } = authUserContext;
   const { updateSrMtrlByMtrl } = srMtrlContext;
-  const { popover, current, togglePopover } = popoverContext;
+  const {
+    popover,
+    isLoading,
+    current,
+    togglePopover,
+    toggleLoading,
+  } = popoverContext;
 
   //@ Make a body to submit
   const cases = {
@@ -130,10 +136,24 @@ const CaseForm = ({ props }) => {
     if (cNo === null) {
       // update the state of mPrice
       // console.log('uploadNewCase is called'); // Test Code
-      updatedCases = await uploadCase(cases);
+
+      toggleLoading();
+      updatedCases = await uploadCase(cases).then((result) => {
+        if (result) {
+          toggleLoading();
+          return result;
+        }
+      });
     } else {
       //Delete the refs of srMtrls from database, that deleted in UI by user
-      updatedCases = await uploadCase(cases, _id);
+
+      toggleLoading();
+      updatedCases = await uploadCase(cases, _id).then((result) => {
+        if (result) {
+          toggleLoading();
+          return result;
+        }
+      });
     }
     // updatedCases = await uploadCase(cases, _id);
 
@@ -168,7 +188,9 @@ const CaseForm = ({ props }) => {
     <Fragment>
       {/* // Ask the user when they want to jump to another page wihout saving datas */}
       <Prompt when={formIsHalfFilledOut} message='Hey' />
-      {popover ? <DeletePopover key={current._id} /> : null}
+      {popover === true || isLoading === true ? (
+        <DeletePopover key={`casepopover`} />
+      ) : null}
       {isEditingCase ? (
         <div className='container container-with-navbar'>
           <div className='h-scatter-content'>

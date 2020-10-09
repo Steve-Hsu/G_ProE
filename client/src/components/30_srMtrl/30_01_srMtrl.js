@@ -13,7 +13,7 @@ const SrMtrl = ({ srMtrl, currentPath }) => {
   const srMtrlContext = useContext(SrMtrlContext);
   const popoverContext = useContext(PopoverContext);
   const { addMPrice, openSrMtrl } = srMtrlContext;
-  const { popover, current, togglePopover } = popoverContext;
+  const { popover, isLoading, togglePopover } = popoverContext;
   // let options = [];
   const onClick = (e) => {
     e.preventDefault();
@@ -43,7 +43,9 @@ const SrMtrl = ({ srMtrl, currentPath }) => {
       style={{ width: '100%' }}
     >
       {/* {popover ? <DeletePopover key={current.id} /> : null} */}
-      {popover ? <DeletePopover key={'eee'} /> : null}
+      {popover === true || isLoading === true ? (
+        <DeletePopover key={'srMtrlPopover'} />
+      ) : null}
       <GoBackBtnSpinSmall onClick={goBack} />
       <div className='ml-1 w-90' style={{ flex: '1 1 auto' }}>
         <div className='grid-2'>

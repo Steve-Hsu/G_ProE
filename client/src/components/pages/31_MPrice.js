@@ -5,15 +5,20 @@ import LeftBar from '../layout/LeftBar';
 // ItemSelector
 import ItemSelector from '../itemSelector/ItemSelector';
 import SrMtrlContext from '../../context/srMtrl/srMtrlContext';
+// import DeletePopover from '../layout/DeletePopover';
+import PopoverContext from '../../context/popover/popoverContext';
 
 export const MPrice = (props) => {
   const srMtrlContext = useContext(SrMtrlContext);
+  const popoverContext = useContext(PopoverContext);
   const currentPath = props.location.pathname;
   const { srMtrls, updateMPrices, updateMPricesQuotation } = srMtrlContext;
+  const { toggleLoading } = popoverContext;
 
   const onSubmitSrMtrl = async (e) => {
     console.log('yes the submit is hit');
     e.preventDefault();
+    toggleLoading();
     const body = [];
     await srMtrls.map((srMtrl) => {
       body.push({
@@ -23,7 +28,9 @@ export const MPrice = (props) => {
       });
     });
     if (currentPath === '/api/case/mprice') {
-      updateMPrices(body);
+      await updateMPrices(body).then(() => {
+        toggleLoading();
+      });
     }
   };
 
