@@ -34,12 +34,18 @@ export const ItemSelector = ({ props, purpose, currentPath }) => {
     switch (purpose) {
       case 'srMtrlSelector':
       case 'quoSrMtrlSelector':
-        getSrMtrls();
+        toggleLoading();
+        getSrMtrls().then(() => {
+          toggleLoading();
+        });
         break;
       case 'CaseSelector':
       case 'quoCaseSelector':
       case 'purCaseSelector':
-        getCaseList();
+        toggleLoading();
+        getCaseList().then(() => {
+          toggleLoading();
+        });
         break;
       default:
     }

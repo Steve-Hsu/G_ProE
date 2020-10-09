@@ -1885,6 +1885,41 @@ input[type='submit']:focus {
   opacity: 1;
 }
 
+/* @Loader */
+/* @Loading spinner */
+.loader {
+  border: 3px dotted var(--cp-1_3);
+  border-radius: 50%;
+  /* border-top: 5px dotted var(--cp-1_2-c); */
+  width: 55px;
+  height: 55px;
+  -webkit-animation: spin 5s linear infinite; /* Safari */
+  animation: spin 5s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(360deg);
+    opacity: 1;
+  }
+}
+
 /* @Print setting */
 
 .showWhenPrint {
