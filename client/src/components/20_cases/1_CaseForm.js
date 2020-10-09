@@ -1,5 +1,5 @@
 import React, { useContext, Fragment, useEffect } from 'react';
-import { Prompt } from 'react-router-dom';
+// import { Prompt } from 'react-router-dom';
 import CasesContext from '../../context/cases/casesContext';
 import AuthUserContext from '../../context/authUser/authUserContext';
 import SrMtrlContext from '../../context/srMtrl/srMtrlContext';
@@ -187,7 +187,7 @@ const CaseForm = ({ props }) => {
   return (
     <Fragment>
       {/* // Ask the user when they want to jump to another page wihout saving datas */}
-      <Prompt when={formIsHalfFilledOut} message='Hey' />
+      {/* <Prompt when={formIsHalfFilledOut} message='Hey' /> */}
       {popover === true || isLoading === true ? (
         <DeletePopover key={`casepopover`} />
       ) : null}

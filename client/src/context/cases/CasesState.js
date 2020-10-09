@@ -951,6 +951,7 @@ const CasesState = (props) => {
 
     try {
       const res = await axios.get(`/api/case/existingcase/${id}`, config);
+
       console.log('Download succeed!');
       dispatch({ type: CASE_DOWNLOAD, payload: res.data[0] });
     } catch (err) {

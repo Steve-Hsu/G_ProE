@@ -5,6 +5,7 @@ import CaseContext from '../../context/cases/casesContext';
 import SrMtrlContext from '../../context/srMtrl/srMtrlContext';
 import QuoContext from '../../context/quo/quoContext';
 import PurContext from '../../context/pur/purContext';
+import PopoverContext from '../../context/popover/popoverContext';
 // Components
 import Table from '../elements/table/Table';
 import Board from '../elements/board/Board';
@@ -16,6 +17,7 @@ export const ItemSelector = ({ props, purpose, currentPath }) => {
   const srMtrlContext = useContext(SrMtrlContext);
   const quoContext = useContext(QuoContext);
   const purContext = useContext(PurContext);
+  const popoverContext = useContext(PopoverContext);
   const {
     getCaseList,
     downloadCase,
@@ -27,7 +29,7 @@ export const ItemSelector = ({ props, purpose, currentPath }) => {
   const { srMtrls, getSrMtrls, openSrMtrl, editingList } = srMtrlContext;
   const { switchQuoFormSelector, quotation, switchQuoForm } = quoContext;
   const { selectCase, selectedCases, switchPage } = purContext;
-
+  const { toggleLoading } = popoverContext;
   useEffect(() => {
     switch (purpose) {
       case 'srMtrlSelector':
@@ -63,7 +65,13 @@ export const ItemSelector = ({ props, purpose, currentPath }) => {
       ];
       switch (purpose) {
         case 'CaseSelector':
-          attributes = [downloadCase, addCaseValue];
+          const aFunc = async (id) => {
+            toggleLoading();
+            await downloadCase(id).then(() => {
+              toggleLoading();
+            });
+          };
+          attributes = [aFunc, addCaseValue];
           goBack = () => {
             props.history.push('/api/case/director');
           };
