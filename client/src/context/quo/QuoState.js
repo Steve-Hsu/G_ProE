@@ -79,17 +79,42 @@ const QuoState = (props) => {
     // }
   };
 
-  const switchQuoFormSelector = (cNo) => {
+  const switchQuoFormSelector = async (cNo) => {
     if (isQuotating === null) {
       dispatch({ type: QUOFORM_SELECTOR_SWITCH, payload: cNo });
-      downLoadQuoHead(cNo);
-      // return cNo;
+      const res = await axios.get(`/api/quogarment/quohead/${cNo}`);
+      dispatch({ type: QUOTATION_DOWNLOAD, payload: res.data });
+      // await downLoadQuoHead(cNo).then(() => {
+      //   // resolve();
+      // });
+
+      return cNo;
     } else {
       dispatch({ type: QUOFORM_SELECTOR_SWITCH, payload: null });
-      downLoadQuoHead(null);
-      // return null;
+      dispatch({
+        type: QUOTATION_DOWNLOAD,
+        payload: { quoForms: [], theCase: null },
+      });
+
+      // await downLoadQuoHead(null).then(() => {
+      //   // resolve();
+      // });
+      return null;
     }
   };
+
+  // const downLoadQuoHead = async (check) => {
+  //   // console.log('downLoadQuoHead is called, the check', check); // Test Code
+  //   if (check !== null) {
+  //     const res = await axios.get(`/api/quogarment/quohead/${check}`);
+  //     dispatch({ type: QUOTATION_DOWNLOAD, payload: res.data });
+  //   } else {
+  //     dispatch({
+  //       type: QUOTATION_DOWNLOAD,
+  //       payload: { quoForms: [], theCase: null },
+  //     });
+  //   }
+  // };
 
   const switchQuoForm = (quoFormId) => {
     if (quoFormId === null) {
@@ -122,19 +147,6 @@ const QuoState = (props) => {
       return resolve(res.data);
     });
     return upLoad;
-  };
-
-  const downLoadQuoHead = async (check) => {
-    // console.log('downLoadQuoHead is called, the check', check); // Test Code
-    if (check !== null) {
-      const res = await axios.get(`/api/quogarment/quohead/${check}`);
-      dispatch({ type: QUOTATION_DOWNLOAD, payload: res.data });
-    } else {
-      dispatch({
-        type: QUOTATION_DOWNLOAD,
-        payload: { quoForms: [], theCase: null },
-      });
-    }
   };
 
   const downLoadmtrlPrice = async (body) => {
@@ -342,7 +354,7 @@ const QuoState = (props) => {
         switchQuoFormSelector,
         switchQuoForm,
         uploadQuoForm,
-        downLoadQuoHead,
+        // downLoadQuoHead,
         downLoadmtrlPrice,
         deleteQuoForm,
         deletemQuo,

@@ -83,23 +83,23 @@ export const ItemSelector = ({ props, purpose, currentPath }) => {
           };
           break;
         case 'quoCaseSelector':
-          attributes = switchQuoFormSelector;
+          const quoFunc = async (cNo) => {
+            console.log('hit hit ');
+            toggleLoading();
+            await switchQuoFormSelector(cNo).then(() => {
+              toggleLoading();
+            });
+          };
+          attributes = quoFunc;
           goBack = () => {
             props.history.push('/api/case/director');
           };
-          // attributes = switchQuoFormSelector;
-          // goBack = () => {
-          //   quoContext.switchPage();
-          // };
           break;
         case 'purCaseSelector':
           attributes = [selectCase, selectedCases];
           goBack = () => {
             props.history.push('/api/case/director');
           };
-          // goBack = () => {
-          //   switchPage(null);
-          // };
           break;
         default:
       }
