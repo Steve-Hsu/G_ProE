@@ -64,6 +64,7 @@ export default (state, action) => {
     case OS_DELETE:
       return {
         ...state,
+        openPage: 'osSelector',
         osList: state.osList.filter((os) => {
           return os._id !== action.payload;
         }),

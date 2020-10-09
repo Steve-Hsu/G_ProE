@@ -32,7 +32,7 @@ const DeletePopover = () => {
   const { deleteOs } = purContext;
   const { deleteUser, clearCurrent } = userContext;
   // }
-  const onChangeDelete = (e) => {
+  const onChangeDelete = async (e) => {
     e.preventDefault();
     const caseId = _id;
 
@@ -62,7 +62,10 @@ const DeletePopover = () => {
         switchQuoForm(null);
         break;
       case 'deleteOs':
-        deleteOs(current._id);
+        toggleLoading();
+        await deleteOs(current._id).then(() => {
+          toggleLoading();
+        });
         break;
       case 'deleteMPrice':
         const ids = {
