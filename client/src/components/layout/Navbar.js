@@ -96,7 +96,7 @@ const Navbar = ({ title, icon }) => {
   const updateNotice = (notice) => {
     return (
       <Fragment>
-        <h1>{notice}</h1>
+        <div className='fs-lead fc-success'>{notice}</div>
       </Fragment>
     );
   };
@@ -108,11 +108,12 @@ const Navbar = ({ title, icon }) => {
           <i className={icon} /> {title}
         </Link>
       </h1>
-      {sm.isUpdated && c.isUpdated
-        ? updateNotice('The Case upload succeed !!')
+      {/* {sm.isUpdated && c.isUpdated
+        ? updateNotice('Upload succeed')
         : sm.isUpdated
-        ? updateNotice('The Prices upload succeed !!')
-        : null}
+        ? updateNotice('Upload succeed')
+        : null} */}
+
       <ul>
         {acom.isAuthenticated !== true && au.isAuthenticated !== true
           ? guestLinks

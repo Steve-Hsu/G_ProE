@@ -191,7 +191,7 @@ const DeletePopover = () => {
           </div>
         ) : (
           <div className='popup-container bd-light bd-radius-s bg-cp-2'>
-            <div className='h-10 w-100 p-1'>Loading...</div>
+            <div className='h-10 w-100 p-1'>Server is working...</div>
 
             <div className='center-content h-80 w-100'>
               <Spinner />
