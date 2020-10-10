@@ -16,9 +16,8 @@
     "read-excel-file": "^4.0.7",
     "uuid": "^8.1.0"
   },
-  "main": "app.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
