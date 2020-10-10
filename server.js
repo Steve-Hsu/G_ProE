@@ -70,6 +70,16 @@ app.use('/api/purchase', require('./routes/50_pur'));
 // Query cases of Purchase
 app.use('/api/purchase/query', require('./routes/51_queryPur'));
 
+/// Server static assets in production
+if (process.env.NODE_ENV === 'production') {
+  //Set static folder
+  app.use(express.static('client/build'));
+  //Set the route
+  app.get('*', (req, res) =>
+    res.sendFine(path.resolve(__dirname, 'client', 'build', 'index.html'))
+  );
+}
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
